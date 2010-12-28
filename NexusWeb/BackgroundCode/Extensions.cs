@@ -3,7 +3,7 @@ using System.Web.UI;
 
 namespace NexusWeb
 {
-	public static class DateTimeExtensions
+	internal static class DateTimeExtensions
 	{
 		public static string ToHumanReadableString(this DateTime input)
 		{
@@ -34,6 +34,11 @@ namespace NexusWeb
 				span += "s"; // Not good for globalization TODO: Fix
 
 			return count + " " + span;
+		}
+
+		public static DateTime AsUTC(this DateTime input)
+		{
+			return new DateTime(input.Year, input.Month, input.Day, input.Hour, input.Minute, input.Second, DateTimeKind.Utc);
 		}
 	}
 

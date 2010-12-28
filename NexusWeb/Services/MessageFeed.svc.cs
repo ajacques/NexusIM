@@ -57,7 +57,7 @@ namespace NexusWeb.Services
 				mArticleId = su.Id,
 				mUserId = su.Userid,
 				mUserPrefix = "nx",
-				mTimeStamp = su.Timestamp,
+				mTimeStamp = su.Timestamp.AsUTC(),
 				mMessageBody = su.MessageBody,
 				mSourceType = ClientArticleSourceType.User,
 				mComments = GetComments(ac => ac.ArticleId == su.Id && ac.ArticleType == "status"),

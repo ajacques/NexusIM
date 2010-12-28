@@ -27,9 +27,6 @@
 			<span id="Span1" runat="server" style="color: White; top: -35px; font-family: verdana; font-size: 10pt; font-weight: 600; position: relative">
 				<asp:HyperLink runat="server" id="ProminantMyUsername" NavigateUrl="user.aspx?userid={0}" style="color: White" />
 			</span>
-			<span id="SearchBar" style="margin-left: 50px">
-				<input type="text" />
-			</span>
 		</asp:Panel>
 		<asp:ContentPlaceHolder ID="HeaderPlaceHolder" runat="Server" />
 	</div>

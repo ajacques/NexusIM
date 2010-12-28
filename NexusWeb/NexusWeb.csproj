@@ -60,6 +60,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>NexusWeb.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Facebook">
       <HintPath>..\..\..\References\Facebook\Facebook.dll</HintPath>
@@ -151,6 +157,7 @@
       <LastGenOutput>NexusAuditLog.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="NexusWeb.snk" />
     <None Include="Service References\AdminChannel\AdminChannel1.wsdl" />
     <None Include="Service References\AdminChannel\AdminChannel3.xsd">
       <SubType>Designer</SubType>

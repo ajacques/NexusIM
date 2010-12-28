@@ -1,5 +1,7 @@
 ﻿/// <reference path="http://ajax.microsoft.com/ajax/4.0/1/MicrosoftAjax.debug.js" />
 /// <reference path="http://dev.nexus-im.com/Services/MessageFeed.svc/jsdebug" />
+/// <reference path="http://dev.nexus-im.com/locales/strings.en-US.js" />
+/// <reference path="http://code.jquery.com/jquery-1.4.1-vsdoc.js" />
 
 Type.registerNamespace("NewsFeed");
 
@@ -47,9 +49,41 @@ NewsFeed.setupMap = function ()
 	mapsetup = true;
 }
 
-NewsFeed.generateReadableDate = function(date)
+NewsFeed.UpdateTimestamps = function()
 {
-	return $.format(date, "h:MM:ss"); // jQuery Globalization plug-in
+	var now = (new Date()).getTime();
+
+	$(".ArticleTimestamp").each(function(item)
+	{
+		var iDate = this.getAttribute("timestamp");
+
+		var seconds = (now - iDate) / 1000;
+		if (seconds < 60)
+		{
+			this.innerHTML = Strings.PluralSecondsAgo.format(Math.ceil(seconds));
+			return;
+		}
+		var minutes = seconds / 60;
+		if (minutes < 60)
+		{
+			this.innerHTML = Strings.PluralMinutesAgo.format(Math.ceil(minutes));
+			return;
+		}
+		var hours = minutes / 60;
+		if (hours < 24)
+		{
+			this.innerHTML = Strings.PluralHoursAgo.format(Math.ceil(hours));
+			return;
+		}
+		var days = hours / 24;
+		if (days < 7)
+		{
+			this.innerHTML = Strings.PluralDaysAgo.format(Math.ceil(days));
+			return;
+		}
+		var weeks = days / 7;
+		this.innerHTML = Strings.PluralWeeksAgo.format(Math.ceil(weeks));
+	});
 }
 
 NewsFeed.onArticlesDownload = function (content)
@@ -60,13 +94,13 @@ NewsFeed.onArticlesDownload = function (content)
 		var obj = content[i];
 		$("ul#feed").append(NewsFeed.handleAddArticleMessage(obj));
 	}
+	NewsFeed.UpdateTimestamps();
 	NewsFeed.ArticleLongPoll();
 }
 
 NewsFeed.handleAddArticleMessage = function(obj)
 {
 	var time = obj["TimeStamp"];
-	var timestring = NewsFeed.generateReadableDate(time);
 
 	// DOM generation
 	var li = document.createElement("li");
@@ -102,7 +136,7 @@ NewsFeed.handleAddArticleMessage = function(obj)
 	var cmdtable = document.createElement("table");
 
 	var datetd = document.createElement("td");
-	datetd.innerHTML = timestring;
+	datetd.setAttribute("timestamp", time.getTime());
 	datetd.setAttribute("class", "ArticleTimestamp");
 
 	var cmdtd = document.createElement("td");
@@ -138,9 +172,8 @@ NewsFeed.handleAddArticleMessage = function(obj)
 		return; // Bad idea
 
 	userhref.setAttribute("href", "user.aspx?userid=" + obj["UserId"]);
-	userhref.setAttribute("class", "articleuserhref");
+	userhref.setAttribute("class", "ArticleUserHref");
 	userhref.innerHTML = friendobj.FirstName + " " + friendobj.LastName;
-	userhref.setAttribute("style", "font-weight: bold");
 	userhref.setAttribute("onmouseover", "javascript:NewsFeed.onUserLinkHover(" + obj["UserId"] + ");");
 	userhref.setAttribute("onmouseout", "javascript:NewsFeed.onUserLinkHoverOut();");
 
@@ -234,7 +267,7 @@ NewsFeed.doUserHoverHide = function ()
 
 NewsFeed.ArticleLongPoll = function ()
 {
-	MessageFeed.GetStatusUpdatesSinceLongPoll(lastStreamRequest);
+	//MessageFeed.GetStatusUpdatesSinceLongPoll(lastStreamRequest);
 }
 
 NewsFeed.downloadStatus = function ()
@@ -406,3 +439,16 @@ NewsFeed.postStatusMessage = function()
 		$(li).slideDown();
 	});
 }
+
+$("body").ready(function()
+{
+	NewsFeed.startStream();
+	//NewsFeed.fillStatusBox();
+	$("#headerright").gradient({
+		from: 'BABABA',
+		to: '000000',
+		direction: 'vertical'
+	});
+	if (Modernizr.geolocation)
+		$("span#GeoLoc").show();
+});

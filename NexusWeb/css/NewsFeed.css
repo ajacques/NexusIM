@@ -1,12 +1,38 @@
-﻿a 
+﻿@media print
 {
+	#StatusUpdateContainer, #rightcol
+	{
+		display: none;
+	}
+	#bodyDiv
+	{
+		width: 100%
+	}
+	#total
+	{
+		width: 100%;
+	}
+}
+
+*
+{
+	font-family: Verdana;
+}
+
+a {
 	-webkit-transition: color 0.3s ease-out;
 	-moz-transition: color 0.3s ease-out;
 }
 
 .statusbody
 {
-	padding-left: 5px
+	padding-left: 5px;
+	font-family:"Verdana";
+	color: #444;
+	text-align: left;
+	letter-spacing: 0;
+	line-height: 1.2em;
+	font-size: 10pt;;
 }
 
 #feed li
@@ -21,25 +47,70 @@
 	min-height: 50px
 }
 
+#feed .ArticleUserHref
+{
+	font-size: 10pt;
+	line-height: 10px;
+	font-weight: bold;
+}
+
 #feed .ArticleMainImageContainer
 {
 	vertical-align: top;
 	width: 32px;
 }
 
+#feed .ArticleCommandBar
+{
+	font-family: Verdana;
+	padding-top: 5px;
+	word-spacing: -1.5pt;
+	text-align: left;
+	letter-spacing: 0;
+	line-height: 0.1em;
+	font-size: 8pt;
+}
+
+#feed li table.ArticleTable
+{
+	width: 100%;
+}
+
+#feed table.ArticleCommandBar td.ArticleTimestamp
+{
+	min-width: 50px;
+	color: gray;
+}
+
 #statusupdate
 {
+	-moz-transition-delay: 0s, 0s;
+	-moz-transition-duration: 0.2s, 0.2s;
+	-moz-transition-property: border, -moz-box-shadow;
+	-moz-transition-timing-function: linear, linear;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	border: 1px solid #aaaaaa;
+	margin-bottom: 10px;
+	margin-top: 2px;
+	margin-right: 10px;
+	padding: 5px;
 	min-width: 530px;
 	max-width: 530px;
 	min-height: 25px;
 	height: 25px;
 	max-height: 75px;
-	font-family: 'helvetica', sans-serif;
+	font-family: 'helvetica', sans-serif;	
 }
 
-#feed .ArticleCommandBar a
+#statusupdate:focus
 {
-	font-size: smaller;
+	-moz-box-shadow: 0 0 8px rgba(82, 168, 236, 0.5);
+	box-shadow: 0 0 20px rgba(82, 168, 236, 0.5);
+	border: 1px solid rgba(82, 168, 236, 0.75);
+	outline-color: -moz-use-text-color;
+	outline-style: none;
+	outline-width: medium;
 }
 
 .faded
@@ -54,16 +125,6 @@
 	width: 250px;
 	margin-right: auto;
 	padding-left: 40px;
-}
-
-#feed li table.ArticleTable
-{
-	width: 100%;
-}
-
-table.ArticleCommandBar td.ArticleTimestamp
-{
-	width: 50px;
 }
 
 tr.ArticlePostCommentTr textarea
@@ -96,27 +157,4 @@ tr.ArticlePostCommentTr textarea
 #UserHoverCardContent
 {
 	width: 100%;
-}
-
-#statusupdate
-{
-	-moz-transition-delay: 0s, 0s;
-	-moz-transition-duration: 0.2s, 0.2s;
-	-moz-transition-property: border, -moz-box-shadow;
-	-moz-transition-timing-function: linear, linear;
-	-moz-border-radius: 3px;
-	border: 1px solid #aaaaaa;
-	margin-bottom: 10px;
-	margin-top: 2px;
-	margin-right: 10px;
-	padding: 5px;
-}
-
-#statusupdate:focus
-{
-	-moz-box-shadow: 0 0 8px rgba(82, 168, 236, 0.5);
-	border: 1px solid rgba(82, 168, 236, 0.75);
-	outline-color: -moz-use-text-color;
-	outline-style: none;
-	outline-width: medium;
 }

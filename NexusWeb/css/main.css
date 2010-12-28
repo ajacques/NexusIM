@@ -38,7 +38,6 @@ A, A:link, A:visited
 A:hover
 {
 	color: red;
-	text-decoration: underline;
 }
 
 body
@@ -66,17 +65,6 @@ body
 	padding-right: 0pt;
 	width: 300px;
 }
-
-@media handheld
-{
-	#header h1
-	{
-		padding-left: 30px !important;
-		padding-top: 10px !important;
-		font-size: 13pt;
-	}
-}
-
 img
 {
 	border: 0px;
