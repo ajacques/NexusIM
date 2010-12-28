@@ -1,0 +1,32 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="WindowsPhone" maxBufferSize="2147483647" maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+            </basicHttpBinding>
+            <customBinding>
+                <binding name="Silverlight">
+                    <binaryMessageEncoding />
+                    <httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
+                </binding>
+                <binding name="Default">
+                    <binaryMessageEncoding />
+                    <httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
+                </binding>
+            </customBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://core.nexus-im.com/Services/CoreService.svc/silverlight"
+                binding="customBinding" bindingConfiguration="Silverlight"
+                contract="SilverlightContactMap.NexusCore.ICoreService" name="Silverlight" />
+            <endpoint address="http://core.nexus-im.com/Services/CoreService.svc/winphone"
+                binding="basicHttpBinding" bindingConfiguration="WindowsPhone"
+                contract="SilverlightContactMap.NexusCore.ICoreService" name="WindowsPhone" />
+            <endpoint address="http://core.nexus-im.com/Services/CoreService.svc"
+                binding="customBinding" bindingConfiguration="Default" contract="NexusCore.CoreService"
+                name="Default" />
+        </client>
+    </system.serviceModel>
+</configuration>

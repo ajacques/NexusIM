@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="NexusCore.Services.PushCallback" CodeBehind="PushCallback.svc.cs" %>

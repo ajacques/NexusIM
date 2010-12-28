@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="com.adrensoftware.nexusim" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="com.adrensoftware.nexusim" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="com.adrensoftware.nexusim/Imports">
+      <xsd:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd0" namespace="com.adrensoftware.nexusim" />
+      <xsd:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd2" namespace="com.adrensoftware.nexus" />
+      <xsd:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" />
+      <xsd:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/InstantMessage" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IWebIMService_Login_InputMessage">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_Login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_Disconnect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Disconnect" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_Disconnect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DisconnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetNewContacts_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNewContacts" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetNewContacts_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNewContactsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetAllContacts_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllContacts" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetAllContacts_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllContactsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetMessages_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMessages" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetMessages_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMessagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_SetStatusMessage_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetStatusMessage" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_SetStatusMessage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetStatusMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_SetStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetStatus" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_SetStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatus" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_GetStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_SendMessage_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessage" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMService_SendMessage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessageResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IWebIMService">
+    <wsdl:operation name="Login">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/Login" message="tns:IWebIMService_Login_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/LoginResponse" message="tns:IWebIMService_Login_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/Disconnect" message="tns:IWebIMService_Disconnect_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/DisconnectResponse" message="tns:IWebIMService_Disconnect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewContacts">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetNewContacts" message="tns:IWebIMService_GetNewContacts_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetNewContactsResponse" message="tns:IWebIMService_GetNewContacts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllContacts">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetAllContacts" message="tns:IWebIMService_GetAllContacts_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetAllContactsResponse" message="tns:IWebIMService_GetAllContacts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMessages">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetMessages" message="tns:IWebIMService_GetMessages_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetMessagesResponse" message="tns:IWebIMService_GetMessages_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetStatusMessage">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/SetStatusMessage" message="tns:IWebIMService_SetStatusMessage_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/SetStatusMessageResponse" message="tns:IWebIMService_SetStatusMessage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetStatus">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/SetStatus" message="tns:IWebIMService_SetStatus_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/SetStatusResponse" message="tns:IWebIMService_SetStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStatus">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetStatus" message="tns:IWebIMService_GetStatus_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/GetStatusResponse" message="tns:IWebIMService_GetStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <wsdl:input wsaw:Action="com.adrensoftware.nexusim/IWebIMService/SendMessage" message="tns:IWebIMService_SendMessage_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.nexusim/IWebIMService/SendMessageResponse" message="tns:IWebIMService_SendMessage_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

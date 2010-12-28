@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="InstantMessage.IMBuddy" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>SEQBEGA0iIByRAQEKwSQHJDhgAGwBGQJgAgQgMBAIAQ=</HashCode>
+      <FileName>Extensions.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="InstantMessage.BasicXmlSettingsBinding" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="8" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>IAAAgIAASSAEQAgIkAAMAIggIAQATqCAAEAAAAKAkCA=</HashCode>
+      <FileName>Managers\BasicXmlSettingsBinding.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="InstantMessage.OTRManager">
+    <Position X="11.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAACAAAACAAAAAAAACAEgAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Managers\OTRManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IProtocolManager">
+    <Position X="10" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAMAAACAAACAAAAAAABAAAAAAAAAAEABCAAAAAAA=</HashCode>
+      <FileName>Managers\ProtocolManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMSettings">
+    <Position X="6.5" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAgQAAISAAAAAAEAAEAAgAAABACACAAAAAAAKAEAA=</HashCode>
+      <FileName>Managers\SettingsManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMFacebookProtocol" Collapsed="true">
+    <Position X="3" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQUAAAIAAAAAAAAAACAAAAAAAAQAAAAAAAAQAAAABAA=</HashCode>
+      <FileName>Protocols\FacebookProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMGoogleVoiceProtocol" Collapsed="true">
+    <Position X="3" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAQBAAAAAA=</HashCode>
+      <FileName>Protocols\GoogleVoiceProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMProtocol">
+    <Position X="1" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="InstantMessage.IMProtocol.PacketEventArgs" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Protocols\IMProtocol.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gyeGIINEjIATQIAdkyaICABAgBcgVvAnAB04J4o5LEA=</HashCode>
+      <FileName>Protocols\IMProtocol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="InstantMessage.ChatRoomContainer">
+    <Position X="8.25" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAIAgAACBAAAAA=</HashCode>
+      <FileName>Protocols\IMProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMJabberProtocol" Collapsed="true">
+    <Position X="3" Y="4" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AwUKgAIBIAAAAwAQADAAAABAAAVAwAAlAAARAAAAhQA=</HashCode>
+      <FileName>Protocols\JabberProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMMSNProtocol" Collapsed="true">
+    <Position X="3" Y="3" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>IAQAAAAAAAAACAggAIAAQAADASQAAAAQAAUQAgAAEQA=</HashCode>
+      <FileName>Protocols\MSNProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.IMYahooProtocol" Collapsed="true">
+    <Position X="3" Y="5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>IxcSAAIEEQEwAZYYCLMgISTBAQQoQHajQCs4JMIAEQA=</HashCode>
+      <FileName>Protocols\YahooProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InstantMessage.BuddyAvatar">
+    <Position X="8.25" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABQAAAAAAAAAgAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Structures\BuddyAvatar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BaseWindowsProtocolLibrary.Translation.GoogleTranslator" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Translation\GoogleTranslator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="InstantMessage.ISettings">
+    <Position X="6.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAgIAAASAAAAgIEAAMAAgAAAAACiCAAAAAAAKAgAA=</HashCode>
+      <FileName>Managers\ISettings.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="InstantMessage.SettingAttributes">
+    <Position X="6.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIEAAAA=</HashCode>
+      <FileName>Managers\ISettings.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InstantMessage.IMStatus">
+    <Position X="3" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAQiAAAAAAAAAAEAAACAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Protocols\IMProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InstantMessage.IMProtocolStatus">
+    <Position X="3" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAQAAAAAAAAAAAACAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Protocols\IMProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InstantMessage.IMBuddyStatus">
+    <Position X="3" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAABAAQAAQAAAIAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Protocols\IMProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="InstantMessage.UserVisibilityStatus">
+    <Position X="3" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAgAEAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Protocols\IMProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

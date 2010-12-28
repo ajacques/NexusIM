@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.36" Name="My FxCop Project">
+ <ProjectOptions>
+  <PlatformAssembliesLocation>C:\Windows\Microsoft.NET\Framework\v4.0.30319</PlatformAssembliesLocation>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">c:\program files (x86)\microsoft fxcop\Xml\FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-US" />
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+ </ProjectOptions>
+ <Targets>
+  <AssemblyReferenceDirectories>
+   <Directory>C:/Program Files (x86)/Reference Assemblies/Microsoft/Framework/.NETFramework/v4.0/</Directory>
+   <Directory>C:/Windows/Microsoft.NET/Framework/v2.0.50727/</Directory>
+   <Directory>C:/Windows/Microsoft.NET/Framework/v4.0.30319/</Directory>
+  </AssemblyReferenceDirectories>
+  <Target Name="$(ProjectDir)/BaseProtocolLibrary/bin/Debug/BaseWindowsProtocolLibrary.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/Common/bin/Debug/Common.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/NexusCore/bin/NexusCore.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/NexusIM/bin/Debug/NexusIM.exe" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/NexusWeb/bin/NexusWeb.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="False">
+    <Rule Name="DoNotNameEnumValuesReserved" Enabled="True" />
+    <Rule Name="DoNotPrefixEnumValuesWithTypeName" Enabled="True" />
+    <Rule Name="EventsShouldNotHaveBeforeOrAfterPrefix" Enabled="True" />
+    <Rule Name="FlagsEnumsShouldHavePluralNames" Enabled="True" />
+    <Rule Name="IdentifiersShouldDifferByMoreThanCase" Enabled="True" />
+    <Rule Name="IdentifiersShouldHaveCorrectPrefix" Enabled="True" />
+    <Rule Name="IdentifiersShouldHaveCorrectSuffix" Enabled="True" />
+    <Rule Name="IdentifiersShouldNotContainTypeNames" Enabled="True" />
+    <Rule Name="IdentifiersShouldNotContainUnderscores" Enabled="True" />
+    <Rule Name="IdentifiersShouldNotHaveIncorrectPrefix" Enabled="True" />
+    <Rule Name="IdentifiersShouldNotHaveIncorrectSuffix" Enabled="True" />
+    <Rule Name="IdentifiersShouldNotMatchKeywords" Enabled="True" />
+    <Rule Name="OnlyFlagsEnumsShouldHavePluralNames" Enabled="True" />
+    <Rule Name="ParameterNamesShouldMatchBaseDeclaration" Enabled="True" />
+    <Rule Name="ParameterNamesShouldNotMatchMemberNames" Enabled="True" />
+    <Rule Name="PropertyNamesShouldNotMatchGetMethods" Enabled="True" />
+    <Rule Name="ResourceStringCompoundWordsShouldBeCasedCorrectly" Enabled="True" />
+    <Rule Name="ResourceStringsShouldBeSpelledCorrectly" Enabled="True" />
+    <Rule Name="TypeNamesShouldNotMatchNamespaces" Enabled="True" />
+   </RuleFile>
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+</FxCopProject>

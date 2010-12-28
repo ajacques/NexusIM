@@ -1,0 +1,20 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:m="clr-namespace:Microsoft.Maps.MapControl;assembly=Microsoft.Maps.MapControl"
+	xmlns:navigation="clr-namespace:Microsoft.Maps.MapControl.Navigation;assembly=Microsoft.Maps.MapControl"
+	xmlns:overlays="clr-namespace:Microsoft.Maps.MapControl.Overlays;assembly=Microsoft.Maps.MapControl"
+    mc:Ignorable="d" x:Class="SilverlightContactMap.MainPage"
+    d:DesignWidth="640" d:DesignHeight="480"
+	Loaded="UserControl_Loaded">
+	<Grid x:Name="LayoutRoot">
+		<m:Map x:Name="contacts" CredentialsProvider="AsS2Xi9W1iyJWYJv67X3CnPtgqpQrITIGqlBqKBuSkRh0benHS3vkAaC2V-s_2nP" Mode="Aerial" LogoVisibility="Collapsed" ScaleVisibility="Collapsed">
+			<TextBlock Foreground="White" m:MapLayer.Position="46, -87" Text="Test" />
+			<m:MapLayer x:Name="pLayer" />
+		</m:Map>
+		<overlays:ShadowText x:Name="ver" FontSize="10" VerticalAlignment="Bottom" Foreground="White" HorizontalAlignment="Left" />
+		<TextBlock x:Name="Output" FontSize="7" TextAlignment="Center" Margin="0, 0, 0, 10" VerticalAlignment="Bottom" Foreground="White" />
+		<TextBlock x:Name="Description" Text="Test Development Build - Internal Use Only" FontSize="7" TextAlignment="Center" VerticalAlignment="Bottom" Foreground="White" />
+	</Grid>
+</UserControl>

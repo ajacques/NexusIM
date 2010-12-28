@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="NexusCore.Services.AuthTokenService" CodeBehind="AuthTokenService.svc.cs" %>

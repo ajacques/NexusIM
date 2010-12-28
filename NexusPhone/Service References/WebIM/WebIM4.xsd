@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="PushChannelType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GenericTcp" />
+      <xs:enumeration value="GenericUdp" />
+      <xs:enumeration value="MicrosoftPN" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="PushChannelType" nillable="true" type="tns:PushChannelType" />
+</xs:schema>

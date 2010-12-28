@@ -1,0 +1,17 @@
+﻿<configuration>
+	<system.serviceModel>
+		<bindings>
+			<customBinding>
+				<binding name="Default">
+					<httpCookieContainer />
+					<textMessageEncoding />
+					<httpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
+				</binding>
+			</customBinding>
+		</bindings>
+		<client>
+			<endpoint address="http://core.nexus-im.com/Services/CoreService.svc/winphone" binding="customBinding" bindingConfiguration="Default" contract="NexusCore.CoreService" name="Default" />
+			<endpoint address="http://core.nexus-im.com/Services/WebIM.svc/winphone" binding="customBinding" bindingConfiguration="Default" contract="WebIM.IWebIMWinPhone" name="WindowsPhone" />
+		</client>
+	</system.serviceModel>
+</configuration>

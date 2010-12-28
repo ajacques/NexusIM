@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://localhost:64796/Services/WebIM.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/InstantMessage" />
+  <xs:complexType name="ArrayOfBuddyData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="BuddyData" nillable="true" type="tns:BuddyData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfBuddyData" nillable="true" type="tns:ArrayOfBuddyData" />
+  <xs:complexType name="BuddyData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="mGuid" type="ser:guid" />
+      <xs:element minOccurs="0" name="mNickname" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="mProtocolGuid" type="ser:guid" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/InstantMessage" minOccurs="0" name="mStatus" type="q1:IMBuddyStatus" />
+      <xs:element minOccurs="0" name="mStatusMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BuddyData" nillable="true" type="tns:BuddyData" />
+  <xs:complexType name="ArrayOfMessageData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MessageData" nillable="true" type="tns:MessageData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfMessageData" nillable="true" type="tns:ArrayOfMessageData" />
+  <xs:complexType name="MessageData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="mMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="mProtocol" type="ser:guid" />
+      <xs:element minOccurs="0" name="mSender" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MessageData" nillable="true" type="tns:MessageData" />
+</xs:schema>

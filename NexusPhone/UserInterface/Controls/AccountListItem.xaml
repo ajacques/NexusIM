@@ -1,0 +1,18 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:NexusPhone="clr-namespace:NexusPhone" x:Class="NexusPhone.UserInterface.AccountListItem"
+	mc:Ignorable="d"
+	x:FieldModifier="private"
+	Height="50" d:DesignWidth="480">
+	<UserControl.Resources>
+		<NexusPhone:CloudHostedProtocol x:Key="CloudHostedProtocolDataSource" d:IsDataSource="True"/>
+	</UserControl.Resources>
+	<Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource CloudHostedProtocolDataSource}}">
+		<TextBlock x:Name="Username" Margin="88,8,0,0" VerticalAlignment="Top" Text="{Binding Username}" FontSize="16" HorizontalAlignment="Left" />
+		<Path Data="M141.625,-0.425000000000011C63.406,-0.425000000000011,0,44.204,0,99.274C0,154.348,63.406,199.001,141.625,199.001C219.844,199.001,283.25,154.348,283.25,99.274C283.25,44.204,219.844,-0.425000000000011,141.625,-0.425000000000011z M106.273,45.973C119.75,45.93,136.484,46.259,139.125,46.575L138.227,52.927C134.473,53.864,116.395,54.223,111.699,55.473C123.902,73.622,143.191,96.977,149.449,106.052C152.895,101.044,183.137,80.247,184.074,73.052C179.379,72.106,163.828,69.876,161.324,69.876L159.852,61.677C164.109,61.009,186.516,61.677,197.648,61.677C207.262,61.677,227.789,61.673,233.625,62.149L228.273,69.876C225.145,70.184,212.133,73.087,207.75,74.024C203.059,75.274,160.191,108.395,157.375,116.524C156.75,119.341,156.426,123.68,156.426,127.751L156.125,134.325C156.125,139.012,157.426,146.559,158.051,150.626C160.867,151.255,181.246,150.7,185,151.325L184.551,159.751C180.883,159.481,154.996,159.552,140.199,159.552C132.688,159.552,108.543,160.372,101.125,160.149L102.523,152.149C106.594,151.833,123.422,152.884,127.125,148.973C128.965,147.036,128.375,144.962,128.375,133.7L128.375,128.376C128.375,125.872,128.379,121.18,127.75,116.802C126.188,112.106,88.449,64.958,78.75,57.45C75.934,56.512,58.281,54.739,53.898,53.802L53.676,46.598C55.859,45.505,75.484,46.88,94.523,46.177C97.652,46.059,101.781,45.989,106.273,45.973z M106.273,45.973" Fill="#FF592C71" Height="32" Canvas.Left="0" Stretch="Fill" Canvas.Top="-0.425" Width="32" HorizontalAlignment="Left" Margin="8,8,0,10" UseLayoutRounding="False" d:LayoutOverrides="Width"/>
+		<CheckBox IsChecked="{Binding AccountInfo.Enabled, Mode=TwoWay}" HorizontalAlignment="Left" Margin="36,-11,0,-11" />
+	</Grid>
+</UserControl>

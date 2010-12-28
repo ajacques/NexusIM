@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="com.nexusim.core" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="com.nexusim.core" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="com.nexusim.core/Imports">
+      <xsd:import />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" />
+      <xsd:import namespace="com.nexusim.core" />
+      <xsd:import namespace="com.nexus-im" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/InstantMessage" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="CoreService_Logout_InputMessage">
+    <wsdl:part name="parameters" element="Logout" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_Logout_OutputMessage">
+    <wsdl:part name="parameters" element="LogoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetLocation_InputMessage">
+    <wsdl:part name="parameters" element="GetLocation" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetLocation_OutputMessage">
+    <wsdl:part name="parameters" element="GetLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_Login_InputMessage">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_Login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_CookieLogin_InputMessage">
+    <wsdl:part name="parameters" element="tns:CookieLogin" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_CookieLogin_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CookieLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_LoginWithToken_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoginWithToken" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_LoginWithToken_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginWithTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetLocationData_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLocationData" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetLocationData_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLocationDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetMultipleLocations_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMultipleLocations" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetMultipleLocations_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMultipleLocationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetAccounts_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccounts" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetAccounts_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAccountsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetMyAccountInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetMyAccountInfo" />
+  </wsdl:message>
+  <wsdl:message name="CoreService_GetMyAccountInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetMyAccountInfoResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CoreService">
+    <wsdl:operation name="Logout">
+      <wsdl:input wsaw:Action="urn:JSCoreService/Logout" message="tns:CoreService_Logout_InputMessage" />
+      <wsdl:output wsaw:Action="urn:JSCoreService/LogoutResponse" message="tns:CoreService_Logout_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLocation">
+      <wsdl:input wsaw:Action="urn:JSCoreService/GetLocation" message="tns:CoreService_GetLocation_InputMessage" />
+      <wsdl:output wsaw:Action="urn:JSCoreService/GetLocationResponse" message="tns:CoreService_GetLocation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Login">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/Login" message="tns:CoreService_Login_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/LoginResponse" message="tns:CoreService_Login_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CookieLogin">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/CookieLogin" message="tns:CoreService_CookieLogin_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/CookieLoginResponse" message="tns:CoreService_CookieLogin_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginWithToken">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/LoginWithToken" message="tns:CoreService_LoginWithToken_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/LoginWithTokenResponse" message="tns:CoreService_LoginWithToken_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLocationData">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/GetLocationData" message="tns:CoreService_GetLocationData_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/GetLocationDataResponse" message="tns:CoreService_GetLocationData_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMultipleLocations">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/GetMultipleLocations" message="tns:CoreService_GetMultipleLocations_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/GetMultipleLocationsResponse" message="tns:CoreService_GetMultipleLocations_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccounts">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/GetAccounts" message="tns:CoreService_GetAccounts_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/GetAccountsResponse" message="tns:CoreService_GetAccounts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMyAccountInfo">
+      <wsdl:input wsaw:Action="com.nexusim.core/CoreService/GetMyAccountInfo" message="tns:CoreService_GetMyAccountInfo_InputMessage" />
+      <wsdl:output wsaw:Action="com.nexusim.core/CoreService/GetMyAccountInfoResponse" message="tns:CoreService_GetMyAccountInfo_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

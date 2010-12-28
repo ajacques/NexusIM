@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GeoData" Class="GeoDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=GeoData;Integrated Security=True;Application Name=NexusWeb" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="GeoDataConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Cities" Member="Cities">
+    <Type Name="City" Id="ID2">
+      <Column Name="geonameid" Type="System.Int32" DbType="Int NOT NULL" IsReadOnly="true" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="modification_date" Type="System.DateTime" DbType="Date NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(200) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="asciiname" Type="System.String" DbType="NVarChar(200)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="alternatenames" Type="System.String" DbType="NVarChar(MAX)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="latitude" Type="System.Double" DbType="Float NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="longitude" Type="System.Double" DbType="Float NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="feature_class" Type="System.String" DbType="Char(2)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="feature_code" Type="System.String" DbType="NVarChar(10)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="country_code" Type="System.String" DbType="Char(3) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="cc2" Type="System.String" DbType="Char(60)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="admin1_code" Type="System.String" DbType="NVarChar(20)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="admin2_code" Type="System.String" DbType="NVarChar(80)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="admin3_code" Type="System.String" DbType="NVarChar(20)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="admin4_code" Type="System.String" DbType="NVarChar(20)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="population" Type="System.Int32" DbType="Int" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="elevation" Type="System.Int32" DbType="Int" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="gtopo30" Type="System.Int32" DbType="Int" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="timezone" Type="System.String" DbType="Char(31)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="geog" Type="Microsoft.SqlServer.Types.SqlGeography" IsReadOnly="true" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Countries" Member="Countries">
+    <Type Name="Country" Id="ID1">
+      <Column Name="ISO" Type="System.String" DbType="VarChar(2) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="ISO3" Type="System.String" DbType="VarChar(3) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="[ISO-Numeric]" Member="ISO_Numeric" Type="System.Int32" DbType="Int NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="fips" Type="System.String" DbType="VarChar(2)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(70) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="Capital" Type="System.String" DbType="NVarChar(70)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="[Area(in sq km)]" Member="Area" Type="System.Single" DbType="Real" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="Population" Type="System.Int64" DbType="BigInt" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="Continent" Type="System.String" DbType="VarChar(2) NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="tld" Type="System.String" DbType="VarChar(3)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="CurrencyCode" Type="System.String" DbType="VarChar(3)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="CurrencyName" Type="System.String" DbType="VarChar(13)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="Phone" Type="System.String" DbType="VarChar(16)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="[Postal Code Format]" Member="Postal_Code_Format" Type="System.String" DbType="VarChar(200)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="[Postal Code Regex]" Member="Postal_Code_Regex" Type="System.String" DbType="VarChar(200)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="Languages" Type="System.String" DbType="VarChar(100)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="geonameid" Type="System.Int64" DbType="BigInt NOT NULL" IsReadOnly="true" CanBeNull="false" />
+      <Column Name="neighbours" Type="System.String" DbType="VarChar(41)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="EquivalentFipsCode" Type="System.String" DbType="VarChar(2)" IsReadOnly="true" CanBeNull="true" />
+      <Column Name="GeoData" Type="Microsoft.SqlServer.Types.SqlGeometry" IsReadOnly="true" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AdminLevel1" Member="AdminLevel1s">
+    <Type Name="AdminLevel1" Id="ID3">
+      <Column Name="RowId" Member="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="ISO" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="AltName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="HASC" Type="System.String" DbType="Char(11) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(64)" CanBeNull="true" />
+      <Column Name="Type2" Type="System.String" DbType="VarChar(64)" CanBeNull="true" />
+      <Column Name="ValidFrom" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="ValidTo" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Association Name="AdminLevel1_AdminLevel2" Member="AdminLevel2s" ThisKey="Id" OtherKey="ParentId" Type="AdminLevel2" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AdminLevel2" Member="AdminLevel2s">
+    <Type Name="AdminLevel2" Id="ID4">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="CountryISO" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="TwoDigitId" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="VarName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ParentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="HASC" Type="System.String" DbType="Char(11) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="EnglishType" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="ValidFrom" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="ValidTo" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Association Name="AdminLevel1_AdminLevel2" Member="AdminLevel1" ThisKey="ParentId" OtherKey="Id" Type="AdminLevel1" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.GetCountry" Method="GetCountry">
+    <Parameter Name="lat" Type="System.Double" DbType="Float" />
+    <Parameter Name="lng" Type="System.Double" DbType="Float" />
+    <ElementType IdRef="ID1" />
+  </Function>
+  <Function Name="dbo.GetNearestCity" Method="GetNearestCity">
+    <Parameter Name="lat" Type="System.Double" DbType="Float" />
+    <Parameter Name="lng" Type="System.Double" DbType="Float" />
+    <ElementType IdRef="ID2" />
+  </Function>
+  <Function Name="dbo.GetAdminLevel1" Method="GetAdminLevel1">
+    <Parameter Name="lat" Type="System.Double" DbType="Float" />
+    <Parameter Name="lng" Type="System.Double" DbType="Float" />
+    <ElementType IdRef="ID3" />
+  </Function>
+  <Function Name="dbo.GetAdminLevel2" Method="GetAdminLevel2">
+    <Parameter Name="lat" Type="System.Double" DbType="Float" />
+    <Parameter Name="lng" Type="System.Double" DbType="Float" />
+    <ElementType IdRef="ID4" />
+  </Function>
+</Database>

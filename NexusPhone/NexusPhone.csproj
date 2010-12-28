@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NexusPhone</RootNamespace>
+    <AssemblyName>NexusPhone</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <TargetFrameworkProfile>WindowsPhone</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>true</SilverlightApplication>
+    <SupportedCultures>
+    </SupportedCultures>
+    <XapOutputs>true</XapOutputs>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
+    <XapFilename>NexusPhone.xap</XapFilename>
+    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
+    <SilverlightAppEntry>NexusPhone.App</SilverlightAppEntry>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.20901.0</ExpressionBlendVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE;DEBUG</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Devices.Sensors" />
+    <Reference Include="Microsoft.Expression.Interactions" />
+    <Reference Include="Microsoft.Phone" />
+    <Reference Include="Microsoft.Phone.Controls" />
+    <Reference Include="Microsoft.Phone.Controls.Maps" />
+    <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="Newtonsoft.Json.Silverlight">
+      <HintPath>..\..\..\References\Json.Net\Silverlight\Newtonsoft.Json.Silverlight.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Device" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Interactivity" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BackgroundCode\AccountManager.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BackgroundCode\BasicGuid.cs" />
+    <Compile Include="BackgroundCode\ExtensionMethods.cs" />
+    <Compile Include="BackgroundCode\PushPipeline.cs" />
+    <Compile Include="BackgroundCode\SettingNames.cs" />
+    <Compile Include="BackgroundCode\FixedHttpTransportBindingElement.cs" />
+    <Compile Include="BackgroundCode\FixedHttpTransportChannelFactory.cs" />
+    <Compile Include="BackgroundCode\IMProtocol\IMMessage.cs" />
+    <Compile Include="BackgroundCode\IMProtocol\Tuple.cs" />
+    <Compile Include="BackgroundCode\UI\TiltEffect.cs" />
+    <Compile Include="Converters\BuddyStatusToStrokeBrush.cs" />
+    <Compile Include="BackgroundCode\IMProtocol\CloudHostedProtocol.cs" />
+    <Compile Include="BackgroundCode\UI\DispatcherExtensions.cs" />
+    <Compile Include="BackgroundCode\IMProtocol\IMBuddy.cs" />
+    <Compile Include="Converters\BuddyStatusToFillBrush.cs" />
+    <Compile Include="Converters\EnumerableCountConverter.cs" />
+    <Compile Include="Converters\FontShrinkerConverter.cs" />
+    <Compile Include="Converters\MessageToUIMessage.cs" />
+    <Compile Include="Converters\UnreadVisibilityConverter.cs" />
+    <Compile Include="Service References\NexusCore\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\WebIM\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Controls\AccountListItem.xaml.cs">
+      <DependentUpon>AccountListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Controls\Turnstile\Enums.cs" />
+    <Compile Include="UserInterface\Controls\Turnstile\ExtensionMethods.cs" />
+    <Compile Include="UserInterface\Controls\Turnstile\Turnstile.cs" />
+    <Compile Include="UserInterface\Controls\UIChatMessage.xaml.cs">
+      <DependentUpon>UIChatMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Windows\AccountWindow.xaml.cs">
+      <DependentUpon>AccountWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Windows\ChatWindow.xaml.cs">
+      <DependentUpon>ChatWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Controls\ContactListItem.xaml.cs">
+      <DependentUpon>ContactListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Controls\LoginControl.xaml.cs">
+      <DependentUpon>LoginControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Windows\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BackgroundCode\ResourceHelper.cs" />
+    <Compile Include="BackgroundCode\UI\WindowSystem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AppManifest.xml" />
+    <None Include="Properties\WMAppManifest.xml" />
+    <None Include="Service References\NexusCore\CoreService1.wsdl" />
+    <None Include="Service References\NexusCore\CoreService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService2.wsdl" />
+    <None Include="Service References\NexusCore\CoreService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\NexusPhone.NexusCore.AccountInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\NexusCore\NexusPhone.NexusCore.ContactInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\WebIM\WebIM1.wsdl" />
+    <None Include="Service References\WebIM\configuration91.svcinfo" />
+    <None Include="Service References\WebIM\configuration.svcinfo" />
+    <None Include="Service References\WebIM\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\NexusCore\configuration91.svcinfo" />
+    <None Include="Service References\NexusCore\configuration.svcinfo" />
+    <None Include="Service References\NexusCore\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\WebIM\WebIM4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WebIM\WebIM41.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WebIM\WebIM42.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WebIM\WebIM43.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WebIM\WebIMService1.wsdl" />
+    <Resource Include="Resources\yahoobang.png" />
+    <Content Include="ServiceReferences.ClientConfig">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ApplicationIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UserInterface\Controls\AccountListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Controls\UIChatMessage.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Windows\AccountWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Windows\ChatWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Controls\ContactListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Controls\LoginControl.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Windows\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\NexusCore\" />
+    <WCFMetadataStorage Include="Service References\WebIM\" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions />
+</Project>

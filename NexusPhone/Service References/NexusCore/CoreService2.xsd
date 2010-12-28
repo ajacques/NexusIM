@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="com.nexus-im" elementFormDefault="qualified" targetNamespace="com.nexus-im" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://core.nexus-im.com/CoreService?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://core.nexus-im.com/CoreService?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/InstantMessage" />
+  <xs:complexType name="ContactInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PhoneNumbers" nillable="true" type="tns:ArrayOfPhoneNumber" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactInfo" nillable="true" type="tns:ContactInfo" />
+  <xs:complexType name="ArrayOfPhoneNumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PhoneNumber" nillable="true" type="tns:PhoneNumber" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPhoneNumber" nillable="true" type="tns:ArrayOfPhoneNumber" />
+  <xs:complexType name="PhoneNumber">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CountryCode" type="xs:unsignedShort" />
+      <xs:element minOccurs="0" name="Extension" nillable="true" type="xs:unsignedShort">
+        <xs:annotation>
+          <xs:appinfo>
+            <DefaultValue EmitDefaultValue="false" xmlns="http://schemas.microsoft.com/2003/10/Serialization/" />
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element minOccurs="0" name="SubscriberNumber" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" type="tns:PhoneType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PhoneNumber" nillable="true" type="tns:PhoneNumber" />
+  <xs:simpleType name="PhoneType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Mobile" />
+      <xs:enumeration value="Home" />
+      <xs:enumeration value="Office" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="PhoneType" nillable="true" type="tns:PhoneType" />
+  <xs:complexType name="ArrayOfAccountInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AccountInfo" nillable="true" type="tns:AccountInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAccountInfo" nillable="true" type="tns:ArrayOfAccountInfo" />
+  <xs:complexType name="AccountInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AccountId" type="xs:int" />
+      <xs:element minOccurs="0" name="Enabled" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Guid" type="ser:guid" />
+      <xs:element minOccurs="0" name="Password" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ProtocolType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Server" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/InstantMessage" minOccurs="0" name="Status" type="q1:IMProtocolStatus" />
+      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AccountInfo" nillable="true" type="tns:AccountInfo" />
+</xs:schema>

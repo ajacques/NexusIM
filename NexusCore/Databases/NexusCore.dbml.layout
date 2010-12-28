@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 12.125, 9.25" name="NexusCore">
+  <DataContextMoniker Name="/NexusCoreDataContext" />
+  <nestedChildShapes>
+    <classShape Id="824a4109-a8e0-4748-9c47-a74cc118d03c" absoluteBounds="0.75, 0.75, 2, 2.7324039713541666">
+      <DataClassMoniker Name="/NexusCoreDataContext/Account" />
+      <nestedChildShapes>
+        <elementListCompartment Id="53283b9e-a916-41e9-b186-4486a6d143da" absoluteBounds="0.765, 1.21, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="573602ab-c41a-417d-b344-5ea35531bccc" absoluteBounds="3.75, 2.375, 2, 3.1170068359374996">
+      <DataClassMoniker Name="/NexusCoreDataContext/User" />
+      <nestedChildShapes>
+        <elementListCompartment Id="85b40a26-858d-44ba-ac86-081232646356" absoluteBounds="3.7650000000000006, 2.835, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e523d1cd-ea53-451a-990d-7f7ff7034d35" absoluteBounds="0.75, 4, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/NexusCoreDataContext/AccountSetting" />
+      <nestedChildShapes>
+        <elementListCompartment Id="74f3db0a-cb4a-45f7-8ed2-c3b556d63a2f" absoluteBounds="0.765, 4.46, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="46b978c9-9c1a-42c8-9d3b-4634f3911b5b" absoluteBounds="3, 0.5, 2, 1.3862939453124996">
+      <DataClassMoniker Name="/NexusCoreDataContext/AuthToken" />
+      <nestedChildShapes>
+        <elementListCompartment Id="f4c7e827-10d9-4adb-afbc-3abd32f64fca" absoluteBounds="3.015, 0.96, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="c12ad036-67f7-4cfa-94db-1af4a5223ce6" absoluteBounds="7.375, 5.625, 2, 2.3478011067708344">
+      <DataClassMoniker Name="/NexusCoreDataContext/Device" />
+      <nestedChildShapes>
+        <elementListCompartment Id="124d3480-ae41-42b2-8b4d-4abfd4ea1cfc" absoluteBounds="7.39, 6.085, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="4843f26f-f09b-4952-9c6f-ff39b8403515" absoluteBounds="7.375, 1, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/NexusCoreDataContext/LocationPrivacy" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9b508014-2efc-45ca-8245-602db0c7d9d4" absoluteBounds="7.3900000000000006, 1.46, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="c8306c86-a522-4e26-969d-3520865adf17" absoluteBounds="7.375, 3, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/NexusCoreDataContext/UserLocation" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c1a3abfd-815a-46c3-af80-aa2fd5699a55" absoluteBounds="7.3900000000000006, 3.46, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f72cb478-6355-46d0-b1eb-e902b6ae5bc3" absoluteBounds="9.875, 6.125, 2, 2.9247054036458331">
+      <DataClassMoniker Name="/NexusCoreDataContext/DeviceType" />
+      <nestedChildShapes>
+        <elementListCompartment Id="fe8839f6-7aac-4c96-b3b4-f8370b92e0b3" absoluteBounds="9.89, 6.5850000000000009, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(3.75 : 2.92870198567708); (2.75 : 2.92870198567708)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_Account" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="824a4109-a8e0-4748-9c47-a74cc118d03c" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(1.75 : 3.48240397135417); (1.75 : 4)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/Account/Account_AccountSetting" />
+      <nodes>
+        <classShapeMoniker Id="824a4109-a8e0-4748-9c47-a74cc118d03c" />
+        <classShapeMoniker Id="e523d1cd-ea53-451a-990d-7f7ff7034d35" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(4.375 : 2.375); (4.375 : 1.8862939453125)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_AuthToken" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="46b978c9-9c1a-42c8-9d3b-4634f3911b5b" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.75 : 5.35734013671875); (8.375 : 5.35734013671875); (8.375 : 5.625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_Device" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="c12ad036-67f7-4cfa-94db-1af4a5223ce6" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(9.375 : 7.04890055338542); (9.875 : 7.04890055338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/Device/Device_DeviceType" />
+      <nodes>
+        <classShapeMoniker Id="c12ad036-67f7-4cfa-94db-1af4a5223ce6" />
+        <classShapeMoniker Id="f72cb478-6355-46d0-b1eb-e902b6ae5bc3" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.75 : 4.07774983723958); (7.375 : 4.07774983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_UserLocation" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="c8306c86-a522-4e26-969d-3520865adf17" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.75 : 2.93618985239429); (7.8437475 : 2.93618985239429); (7.8437475 : 2.57859537760417)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_LocationPrivacy" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="4843f26f-f09b-4952-9c6f-ff39b8403515" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(8.375 : 3); (8.375 : 2.57859537760417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/UserLocation/UserLocation_LocationPrivacy" />
+      <nodes>
+        <classShapeMoniker Id="c8306c86-a522-4e26-969d-3520865adf17" />
+        <classShapeMoniker Id="4843f26f-f09b-4952-9c6f-ff39b8403515" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="fdb68b2b-6ac3-423f-8d6d-644ad183ff40" absoluteBounds="3.75, 5.875, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/NexusCoreDataContext/Friend" />
+      <nestedChildShapes>
+        <elementListCompartment Id="32a4d242-96be-405e-b1d3-b869a3685b90" absoluteBounds="3.7650000000000006, 6.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.46875 : 5.4920068359375); (4.46875 : 5.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_Friend" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="fdb68b2b-6ac3-423f-8d6d-644ad183ff40" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.1406225 : 5.4920068359375); (5.1406225 : 5.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_Friend1" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="fdb68b2b-6ac3-423f-8d6d-644ad183ff40" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="bff9b82c-6a55-415f-9c55-455fba4c0b49" absoluteBounds="0.75, 5.875, 2, 1.9631982421875">
+      <DataClassMoniker Name="/NexusCoreDataContext/PhoneNumber" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3dfb3f2a-c427-47fe-b846-43f2c4f318cd" absoluteBounds="0.76499999999999968, 6.3350000000000009, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(3.75 : 5.44161049939077); (3.14895833333333 : 5.44161049939077); (3.14895833333333 : 5.73484537760417); (1.75 : 5.73484537760417); (1.75 : 5.875)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/NexusCoreDataContext/User/User_PhoneNumber" />
+      <nodes>
+        <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
+        <classShapeMoniker Id="bff9b82c-6a55-415f-9c55-455fba4c0b49" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

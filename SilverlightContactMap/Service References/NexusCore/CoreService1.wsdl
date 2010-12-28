@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="/Imports">
+      <xsd:import schemaLocation="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd0" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd1" namespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd2" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd3" namespace="com.nexusim.core" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd4" namespace="com.adrensoftware.nexus" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:portType name="JSCoreService">
+    <wsdl:operation name="Logout">
+      <wsdl:input xmlns:q1="com.nexusim.core" wsaw:Action="urn:JSCoreService/Logout" message="q1:CoreService_Logout_InputMessage" />
+      <wsdl:output xmlns:q2="com.nexusim.core" wsaw:Action="urn:JSCoreService/LogoutResponse" message="q2:CoreService_Logout_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLocation">
+      <wsdl:input xmlns:q3="com.nexusim.core" wsaw:Action="urn:JSCoreService/GetLocation" message="q3:CoreService_GetLocation_InputMessage" />
+      <wsdl:output xmlns:q4="com.nexusim.core" wsaw:Action="urn:JSCoreService/GetLocationResponse" message="q4:CoreService_GetLocation_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

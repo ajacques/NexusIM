@@ -1,0 +1,30 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:m="clr-namespace:Microsoft.Maps.MapControl;assembly=Microsoft.Maps.MapControl"
+	xmlns:overlays="clr-namespace:Microsoft.Maps.MapControl.Overlays;assembly=Microsoft.Maps.MapControl"
+	xmlns:CustomControls="clr-namespace:SilverlightContactMap.Controls"
+	xmlns:CustomWindows="clr-namespace:SilverlightContactMap.Windows"
+	mc:Ignorable="d"
+	x:Class="SilverlightContactMap.Windows.MainPage"
+    d:DesignWidth="900" d:DesignHeight="500"
+	Loaded="UserControl_Loaded">
+	<Grid x:Name="LayoutRoot">
+		<m:Map x:Name="contacts" CredentialsProvider="AsS2Xi9W1iyJWYJv67X3CnPtgqpQrITIGqlBqKBuSkRh0benHS3vkAaC2V-s_2nP" Mode="Road" ScaleVisibility="Collapsed">
+			<m:MapLayer x:Name="pLayer" />
+		</m:Map>
+		<Grid VerticalAlignment="Top" HorizontalAlignment="Right" Background="#BE000000" Height="23">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="60" />
+			</Grid.ColumnDefinitions>
+			<TextBlock x:Name="Name" Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="White" FontSize="12" Text="Test Name" Margin="8,0,8,0" />
+			<Path Grid.Column="0" Data="M 0,0 l -10,5 -10,-5" Fill="LightBlue" Stretch="Fill" VerticalAlignment="Bottom" Height="5" Width="10" UseLayoutRounding="True" HorizontalAlignment="Center" d:LayoutOverrides="Width" />
+			<Polyline Grid.Column="1" Points="0,6 0,18" Stroke="LightBlue" Margin="-1,0,0,0" />
+			<TextBlock x:Name="signout" Grid.Column="1" Text="Sign Out" TextWrapping="Wrap" Foreground="White" Cursor="Hand" MouseEnter="TextBlock_MouseEnter" MouseLeave="signout_MouseLeave" FontSize="12" MouseLeftButtonUp="signout_MouseLeftButtonUp" VerticalAlignment="Center" HorizontalAlignment="Center" />
+		</Grid>
+		<overlays:ShadowText x:Name="ver" HorizontalAlignment="Left" VerticalAlignment="Bottom" Text="Version={0}" />
+		<overlays:ShadowText x:Name="Description" Text="Test Development Build - Internal Use Only" FontSize="10" VerticalAlignment="Bottom" Foreground="White" HorizontalAlignment="Center" />
+	</Grid>
+</UserControl>

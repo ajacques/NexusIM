@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="NexusAuditLog">
+  <DataContextMoniker Name="/NexusAuditLogDataContext" />
+  <nestedChildShapes>
+    <classShape Id="081d63fe-f983-4604-bbfa-9d527f061d12" absoluteBounds="4.625, 1.625, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/NexusAuditLogDataContext/LoginAttempt" />
+      <nestedChildShapes>
+        <elementListCompartment Id="141be179-5cde-46e2-a506-67f870390f96" absoluteBounds="4.64, 2.085, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

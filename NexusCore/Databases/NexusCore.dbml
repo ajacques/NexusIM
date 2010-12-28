@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NexusCore" Class="NexusCoreDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=NexusCore;Integrated Security=True;Application Name=NexusCore" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="NexusCoreConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Accounts" Member="Accounts">
+    <Type Name="Account">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="guid" Type="System.String" DbType="Char(36) NOT NULL" CanBeNull="false" />
+      <Column Name="acctype" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="server" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="enabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="LoginState" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="HostComputer" Type="System.String" DbType="varchar(20)" CanBeNull="true" />
+      <Association Name="Account_AccountSetting" Member="Settings" ThisKey="id" OtherKey="accountid" Type="AccountSetting" />
+      <Association Name="User_Account" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="User">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.String" DbType="Char(64) NOT NULL" CanBeNull="false" />
+      <Column Name="firstname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="locationsharestate" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="canlogin" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="emailauthtoken" Type="System.String" DbType="Char(20)" CanBeNull="true" />
+      <Column Name="dateregistered" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="lastseen" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AccountListVersion" Type="System.UInt16" DbType="smallint" CanBeNull="false" />
+      <Column Name="IsIMSignedIn" Type="bool" DbType="bit" CanBeNull="false" />
+      <Column Name="lastname" Member="LastName" Storage="_lastname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="User_Account" Member="Accounts" ThisKey="id" OtherKey="userid" Type="Account" />
+      <Association Name="User_AuthToken" Member="AuthTokens" ThisKey="id" OtherKey="userid" Type="AuthToken" />
+      <Association Name="User_Device" Member="Devices" ThisKey="id" OtherKey="userid" Type="Device" Cardinality="One" />
+      <Association Name="User_LocationPrivacy" Member="LocationPrivacies" ThisKey="id" OtherKey="userid" Type="LocationPrivacy" />
+      <Association Name="User_UserLocation" Member="UserLocations" ThisKey="id" OtherKey="userid" Type="UserLocation" />
+      <Association Name="User_Friend" Member="Friends" ThisKey="id" OtherKey="userid" Type="Friend" />
+      <Association Name="User_Friend1" Member="Friends1" ThisKey="id" OtherKey="friendid" Type="Friend" />
+      <Association Name="User_PhoneNumber" Member="PhoneNumbers" ThisKey="id" OtherKey="UserId" Type="PhoneNumber" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AccountSettings" Member="AccountSettings">
+    <Type Name="AccountSetting">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="accountid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="configkey" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="configvalue" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Association Name="Account_AccountSetting" Member="Account" ThisKey="accountid" OtherKey="id" Type="Account" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AuthTokens" Member="AuthTokens">
+    <Type Name="AuthToken">
+      <Column Name="token" Type="System.String" DbType="Char(30) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="expires" Storage="_lastuse" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="User_AuthToken" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Devices" Member="Devices">
+    <Type Name="Device">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="devicetype" Storage="_type" Type="System.Int32" DbType="int NOT NULL" CanBeNull="false" />
+      <Column Name="lastseen" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="lastsignin" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="logintoken" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="lastaction" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Device_DeviceType" Member="DeviceTypes" ThisKey="devicetype" OtherKey="Id" Type="DeviceType" />
+      <Association Name="User_Device" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LocationPrivacy" Member="LocationPrivacies">
+    <Type Name="LocationPrivacy">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="locationid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="accountid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="User_LocationPrivacy" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
+      <Association Name="UserLocation_LocationPrivacy" Member="UserLocation" ThisKey="locationid" OtherKey="id" Type="UserLocation" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserLocation" Member="UserLocations">
+    <Type Name="UserLocation">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="service" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="identifier" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="messagable" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="priority" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="UserLocation_LocationPrivacy" Member="LocationPrivacies" ThisKey="id" OtherKey="locationid" Type="LocationPrivacy" />
+      <Association Name="User_UserLocation" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DeviceTypes" Member="DeviceTypes">
+    <Type Name="DeviceType">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ShortName" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="LongName" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="Enabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="MarketplaceInstall" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="DownloadUrl" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="PlatformMinVersion" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="ProductMaker" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="ProductUrl" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="RequiresCustomPush" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CustomPushPattern" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="Device_DeviceType" Member="Device" ThisKey="Id" OtherKey="devicetype" Type="Device" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Friends" Member="Friends">
+    <Type Name="Friend">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="friendid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="displayname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Timestamp" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Association Name="User_Friend" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
+      <Association Name="User_Friend1" Member="User1" ThisKey="friendid" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PhoneNumbers" Member="PhoneNumbers">
+    <Type Name="PhoneNumber">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PhoneType" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="CountryCode" Type="System.UInt16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="PhoneNumber" Member="SubscriberNumber" Storage="_PhoneNumber1" Type="System.String" DbType="VarChar(14) NOT NULL" CanBeNull="false" />
+      <Column Name="Extension" Type="System.UInt16" DbType="SmallInt" CanBeNull="true" />
+      <Association Name="User_PhoneNumber" Member="User" ThisKey="UserId" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

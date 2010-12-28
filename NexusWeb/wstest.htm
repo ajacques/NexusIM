@@ -1,0 +1,20 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>websocket client</title>
+		<script type="text/javascript" src="http://ajax.microsoft.com/ajax/4.0/1/MicrosoftAjax.js"></script>
+		<script type="text/javascript" src="test2.js"></script>
+		<script type="text/javascript">
+		// You know you're over-engineering when... You use a WebSocket to push status updates to the user with ~<50ms latency (*not actually tested, but is plausible)
+		// The WebSocket Server was written by someone who either dropped out of elementary school, or who's main language is NOT English
+		INewsFeedPush.set_Path('ws://5.64.115.83:8181/newsfeed');
+		INewsFeedPush.add_OnOpen(function () {
+			INewsFeedPush.PostStatusMessage("YAHHHH");
+		});
+		INewsFeedPush.Open();
+		</script>
+	</head>
+	<body>
+		<pre id="incoming"></pre>
+	</body>
+</html>

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<browsers>
+	<browser id="Safari">
+		<identification>
+			<userAgent match="Safari" />
+			<userAgent nonMatch="Chrome" />
+		</identification>
+		<capture>
+			<userAgent match="AppleWebKit/(?'layoutVersion'\d+)" />
+		</capture>
+		<capabilities>
+			<capability name="layoutEngine" value="WebKit" />
+			<capability name="layoutEngineVersion" value="${layoutVersion}" />
+			<capability name="browser" value="Safari" />
+			<capability name="type" value="Safari" />
+		</capabilities>
+	</browser>
+	<!--browser id="NokiaN810">
+		<identification>
+			<userAgent match="Mozilla/[45].0 \(X11; U; Linux armv6l; [a-zA-Z-]{5}; rv:1.9a6pre\) Gecko/[0-9]{8} Firefox/[0-9.a-z]{0,5} Tablet browser [0-9.]{0,6} RX-34([a-zA-Z0-9+-_]*)" />
+			<userAgent match="Mozilla/4.0 \(compatible; MSIE 6.0; X11; Linux armv6l; U\) Opera [0-9.]{0,4} \[[a-zA-Z_]{5}\] Tablet browser [0-9.]{0,7} [a-zA-Z0-9-_.]*" />
+		</identification>
+		<capabilities>
+			<capability name="browser" value="Firefox" />
+			<capability name="platform" value="MaemoOS" />
+			<capability name="mobileDeviceManufacturer" value="Nokia" />
+			<capability name="mobileDeviceModel" value="N810" />
+			<capability name="ScreenPixelsHeight" value="480" />
+			<capability name="ScreenPixelsWidth" value="800" />
+			<capability name="inputType" value="keyboard" />
+			<capability name="SupportedFlashVersion" value="none" />
+		</capabilities>
+	</browser>
+	<browser id="AppleiPad">
+		<identification>
+			<userAgent match="Mozilla/5.0 \(iPad; U; CPU iPhone OS [0-9_]{0,3} like Mac OS X; [a-zA-Z-]{5}\) AppleWebKit/[0-9.]{5,10} \(KHTML, like Gecko\)( [a-zA-Z/0-9]*)?" />
+		</identification>
+		<capabilities>
+			<capability name="browser" value="Safari" />
+			<capability name="version" value="${version}" />
+			<capability name="platform" value="iPhone OS" />
+			<capability name="mobileDeviceManufacturer" value="Apple" />
+			<capability name="mobileDeviceModel" value="iPad" />
+			<capability name="ScreenPixelsHeight" value="768" />
+			<capability name="ScreenPixelsWidth" value="1024" />
+			<capability name="inputType" value="virtualKeyboard" />
+		</capabilities>
+	</browser-->
+	<browser id="SamsungGalaxyTab" parentID="Safari">
+		<identification>
+			<userAgent match="^Mozilla/5.0 \(Linux; U; Android (?'anver'[0-9.]{3,4}); ([a-zA-Z-]{5}); (SCH-I800|GT-P1000|SPH-P100|SGH-I987) Build/[a-zA-Z0-9]*\)" />
+		</identification>
+		<capabilities>
+			<capability name="browser" value="Android WebKit" />
+			<capability name="version" value="${anver}" />
+			<capability name="platform" value="Android" />
+			<capability name="isMobileDevice" value="true" />
+			<capability name="mobileDeviceManufacturer" value="Samsung" />
+			<capability name="mobileDeviceModel" value="Galaxy Tab" />
+			<capability name="ScreenBitDepth" value="16" />
+			<capability name="ScreenPixelsHeight" value="600" />
+			<capability name="ScreenPixelsWidth" value="1024" />
+			<capability name="inputType" value="virtualKeyboard" />
+			<capability name="hasAccelerometer" value="true" />
+			<capability name="hasCompass" value="true" />
+			<capability name="hasLuminanceSensor" value="true" />
+			<capability name="hasGyroscope" value="true" />
+		</capabilities>
+	</browser>
+	<browser id="SamsungGalaxyTabVerizon" parentID="SamsungGalaxyTab">
+		<identification>
+			<userAgent match="SCH-I800" />
+		</identification>
+		<capabilities>
+			<capability name="MobileProvider" value="VerizonWireless" />
+		</capabilities>
+	</browser>
+	<browser id="SamsungGalaxyTabSprint" parentID="SamsungGalaxyTab">
+		<identification>
+			<userAgent match="SPH-P100" />
+		</identification>
+		<capabilities>
+			<capability name="MobileProvider" value="Sprint" />
+		</capabilities>
+	</browser>
+	<browser id="SamsungGalaxyTabATT" parentID="SamsungGalaxyTab">
+		<identification>
+			<userAgent match="SGH-I987" />
+		</identification>
+		<capabilities>
+			<capability name="MobileProvider" value="AT&amp;T" />
+		</capabilities>
+	</browser>
+</browsers>

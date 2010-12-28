@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="NexusWeb.Services.PhotoService" CodeBehind="Photos.svc.cs" %>

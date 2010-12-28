@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="SilverlightContactMap.ContactPlacard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+	xmlns:m="clr-namespace:Microsoft.Maps.MapControl;assembly=Microsoft.Maps.MapControl"
+    Width="30" Height="55">
+    <Grid x:Name="LayoutRoot" m:MapLayer.PositionOrigin="BottomCenter">
+		<TextBlock Text="Bob" Canvas.Top="0" Foreground="White" Margin="-50, 0, -50, 0" TextAlignment="Center" Name="DisplayName" Height="16" VerticalAlignment="Top">
+			<TextBlock.Effect>
+				<DropShadowEffect />
+			</TextBlock.Effect>
+		</TextBlock>
+		<Path Data="M 0,15 l 30,0 0,30 -5,0 -10,5 -10,-5 -5,0 0,-30" Fill="#CE323585" >
+			<Path.Effect>
+				<DropShadowEffect />
+			</Path.Effect>
+		</Path>
+		<Image Source="74ceb595fabb83d33c2fc8c158014540f445e919.jpg" Height="26" OpacityMask="#CE000000" Name="ContactAvatar" Margin="0,16,0,13" />
+    </Grid>
+</UserControl>

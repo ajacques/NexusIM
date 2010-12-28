@@ -1,0 +1,54 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NexusWeb.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FireEagle_UnauthorizedRequestToken" Description="Used in fireeagle_auth.aspx to request the first token as per OAuth documentation" Type="System.Uri" Scope="Application">
+      <Value Profile="(Default)">https://fireeagle.yahooapis.com/oauth/request_token</Value>
+    </Setting>
+    <Setting Name="FireEagle_ConsumerKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SmkThhsxhnJK</Value>
+    </Setting>
+    <Setting Name="FireEagle_ConsumerSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">zMsAXNg8lUyT0gXaWooJXgUMGgH5ZEB7</Value>
+    </Setting>
+    <Setting Name="FireEagle_GeneralPurposeToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">A0iiaSMKqMvT</Value>
+    </Setting>
+    <Setting Name="FireEagle_GeneralPurposeSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">sGo8oITfBJsdC0WI3IIEKrzZZUBhPuD3</Value>
+    </Setting>
+    <Setting Name="UnixEpoch" Type="System.DateTime" Scope="Application">
+      <Value Profile="(Default)">1970-12-01</Value>
+    </Setting>
+    <Setting Name="RecaptchaPublicKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">6LdgTAwAAAAAACmYjmTcFFohp3HaMKGEvfJkF_xZ</Value>
+    </Setting>
+    <Setting Name="RecaptchaPrivateKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">6LdgTAwAAAAAANoXiFB7nbPttaOmalDuumyyNoX0</Value>
+    </Setting>
+    <Setting Name="FacebookAPIKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">30d96384051f05491f8aa8f0d22f6361</Value>
+    </Setting>
+    <Setting Name="FacebookSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">503ad85c38a4c767765ac3cdb4247e51</Value>
+    </Setting>
+    <Setting Name="SecureReferrerAcceptRegex" Description="Regex match string to verify secure requests come from an authorized domain. Counter-CSRF This is designed for WCF method calls, not every web page." Type="System.String" Scope="Application">
+      <Value Profile="(Default)">(localhost|im.adrensoftware.com|5.64.115.83|dev.nexus-im.com)</Value>
+    </Setting>
+    <Setting Name="LongPollTimeout" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60000</Value>
+    </Setting>
+    <Setting Name="BingMapsApiKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">AsS2Xi9W1iyJWYJv67X3CnPtgqpQrITIGqlBqKBuSkRh0benHS3vkAaC2V-s_2nP</Value>
+    </Setting>
+    <Setting Name="GoogleOAuthConsumerKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">nexus-im.com</Value>
+    </Setting>
+    <Setting Name="GoogleOAuthConsumerSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">KQ9Wv2oRutAWOQ64uPGPsob7</Value>
+    </Setting>
+    <Setting Name="EnableAppFabricCache" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,7 @@
+﻿/* All of these separate CSS files will be combined upon release of this product
+ this makes it easier to work on stuff though, so do not use ambiguous names */
+
+img.hidden
+{
+	display: none;
+}

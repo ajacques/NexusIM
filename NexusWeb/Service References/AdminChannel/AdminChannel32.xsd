@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:64796/Services/AdminChannel.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/InstantMessage" />
+  <xs:element name="DisconnectSwarmMember">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="deviceid" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DisconnectSwarmMemberResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BroadcastNewAccount">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="accountid" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BroadcastNewAccountResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangeAllProtocolsStatusForAccount">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="userid" type="xs:int" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/InstantMessage" minOccurs="0" name="status" type="q1:IMStatus" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChangeAllProtocolsStatusForAccountResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

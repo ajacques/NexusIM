@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 12, 8.75" name="NexusCore">
+  <DataContextMoniker Name="/NexusCoreDataContext" />
+  <nestedChildShapes>
+    <classShape Id="7150ed4d-c582-43ba-8427-b1bb5a0e5d9c" absoluteBounds="0.75, 0.75, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/NexusCoreDataContext/Account" />
+      <nestedChildShapes>
+        <elementListCompartment Id="fb87ff93-d1eb-45f7-864a-5c5c79177b30" absoluteBounds="0.765, 1.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="9a38acbb-5639-4972-ba70-3f023b37343e" absoluteBounds="3.75, 0.75, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/NexusCoreDataContext/User" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a1146402-18b2-4525-b228-22acedd2451f" absoluteBounds="3.765, 1.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="82e36835-4490-49ac-ab55-2d42fc5c0a03" absoluteBounds="0.75, 3.75, 2, 1.3862939453124996">
+      <DataClassMoniker Name="/NexusCoreDataContext/AuthToken" />
+      <nestedChildShapes>
+        <elementListCompartment Id="32e3cc97-fb2b-4bf6-89c1-5d98a56c4dbe" absoluteBounds="0.765, 4.21, 1.9700000000000002, 0.8262939453125" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="85d9b516-2614-47c9-9307-53ea83f58450" absoluteBounds="3.75, 3.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/NexusCoreDataContext/CachedFriend" />
+      <nestedChildShapes>
+        <elementListCompartment Id="3a10c839-196d-4ef0-84f7-ac988071ecea" absoluteBounds="3.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="2499a184-fc8e-4aaa-a43d-25df4f8a6e83" absoluteBounds="6.75, 3.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/NexusCoreDataContext/Friend" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ce48eefb-8b22-4d6b-8e81-e787b15375d4" absoluteBounds="6.765, 4.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="c407dfd8-3ffb-46fa-9c06-1c00a7ba279f" absoluteBounds="3.75, 6.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/NexusCoreDataContext/LocationPrivacy" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e5c48afc-8f67-4498-be3d-e35872bca6c6" absoluteBounds="3.765, 7.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="cb49d75b-3615-46d1-b663-e5340a8d8d0a" absoluteBounds="6.75, 6.75, 2, 1.7708968098958327">
+      <DataClassMoniker Name="/NexusCoreDataContext/Request" />
+      <nestedChildShapes>
+        <elementListCompartment Id="f2228fd5-2ba2-4715-9da4-0f41a806af0c" absoluteBounds="6.765, 7.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a585cb29-763b-4773-9f1e-11790e58d031" absoluteBounds="9.75, 0.75, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/NexusCoreDataContext/Session" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9dcc4ea9-620b-498e-857e-3d5912afaf53" absoluteBounds="9.765, 1.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e19a326b-d077-4ee7-a72f-b1c100adab43" absoluteBounds="9.5, 3.375, 2, 1.7708968098958344">
+      <DataClassMoniker Name="/NexusCoreDataContext/UserLocation" />
+      <nestedChildShapes>
+        <elementListCompartment Id="89e4d6a3-b048-49e4-b9b5-86d6cefb6b2c" absoluteBounds="9.515, 3.8350000000000009, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="6e964df7-ad5a-43bd-9444-6f6a8f742ac2" absoluteBounds="6.75, 0.75, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/NexusCoreDataContext/Device" />
+      <nestedChildShapes>
+        <elementListCompartment Id="7e7fc162-e39e-495b-aba0-768dfed57948" absoluteBounds="6.765, 1.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="com.adrensoftware.webim" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="com.adrensoftware.webim" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="com.adrensoftware.webim/Imports">
+      <xsd:import schemaLocation="http://core.nexus-im.com/WebIM?xsd=xsd0" namespace="com.adrensoftware.webim" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/WebIM?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/WebIM?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/InstantMessage" />
+      <xsd:import schemaLocation="http://core.nexus-im.com/WebIM?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IWebIMWinPhone_LoginToCore_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoginToCore" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_LoginToCore_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginToCoreResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_LoginToCoreWithToken_InputMessage">
+    <wsdl:part name="parameters" element="tns:LoginToCoreWithToken" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_LoginToCoreWithToken_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LoginToCoreWithTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_PreconfiguredLogin_InputMessage">
+    <wsdl:part name="parameters" element="tns:PreconfiguredLogin" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_PreconfiguredLogin_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PreconfiguredLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_StartSession_InputMessage">
+    <wsdl:part name="parameters" element="tns:StartSession" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_StartSession_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StartSessionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_SendMessage_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessage" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_SendMessage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_StartPushStream_InputMessage">
+    <wsdl:part name="parameters" element="tns:StartPushStream" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_StartPushStream_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StartPushStreamResponse" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_StopPushStream_InputMessage">
+    <wsdl:part name="parameters" element="tns:StopPushStream" />
+  </wsdl:message>
+  <wsdl:message name="IWebIMWinPhone_StopPushStream_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StopPushStreamResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IWebIMWinPhone">
+    <wsdl:operation name="LoginToCore">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/ICoreLogin/LoginToCore" message="tns:IWebIMWinPhone_LoginToCore_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/ICoreLogin/LoginToCoreResponse" message="tns:IWebIMWinPhone_LoginToCore_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="LoginToCoreWithToken">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/ICoreLogin/LoginToCoreWithToken" message="tns:IWebIMWinPhone_LoginToCoreWithToken_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/ICoreLogin/LoginToCoreWithTokenResponse" message="tns:IWebIMWinPhone_LoginToCoreWithToken_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PreconfiguredLogin">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/PreconfiguredLogin" message="tns:IWebIMWinPhone_PreconfiguredLogin_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/PreconfiguredLoginResponse" message="tns:IWebIMWinPhone_PreconfiguredLogin_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="StartSession">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/StartSession" message="tns:IWebIMWinPhone_StartSession_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/StartSessionResponse" message="tns:IWebIMWinPhone_StartSession_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/SendMessage" message="tns:IWebIMWinPhone_SendMessage_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/SendMessageResponse" message="tns:IWebIMWinPhone_SendMessage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="StartPushStream">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/StartPushStream" message="tns:IWebIMWinPhone_StartPushStream_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/StartPushStreamResponse" message="tns:IWebIMWinPhone_StartPushStream_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="StopPushStream">
+      <wsdl:input wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/StopPushStream" message="tns:IWebIMWinPhone_StopPushStream_InputMessage" />
+      <wsdl:output wsaw:Action="com.adrensoftware.webim/IWebIMWinPhone/StopPushStreamResponse" message="tns:IWebIMWinPhone_StopPushStream_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

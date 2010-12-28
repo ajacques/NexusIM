@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NexusCore.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="com.nexus-im" />
+  <xs:complexType name="MyAccountInformation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="mFirstName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="mUsername" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyAccountInformation" nillable="true" type="tns:MyAccountInformation" />
+  <xs:complexType name="UserLocationData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Accuracy" type="xs:int" />
+      <xs:element minOccurs="0" name="LastUpdated" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Latitude" type="xs:double" />
+      <xs:element minOccurs="0" name="Longitude" type="xs:double" />
+      <xs:element minOccurs="0" name="ReverseGeocode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RowId" type="xs:int" />
+      <xs:element minOccurs="0" name="ServiceType" type="tns:LocationServiceType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserLocationData" nillable="true" type="tns:UserLocationData" />
+  <xs:simpleType name="LocationServiceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GoogleLatitude" />
+      <xs:enumeration value="FireEagle" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="LocationServiceType" nillable="true" type="tns:LocationServiceType" />
+  <xs:complexType name="ArrayOfContactLocationInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ContactLocationInfo" nillable="true" type="tns:ContactLocationInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfContactLocationInfo" nillable="true" type="tns:ArrayOfContactLocationInfo" />
+  <xs:complexType name="ContactLocationInfo">
+    <xs:sequence>
+      <xs:element xmlns:q1="com.nexus-im" minOccurs="0" name="AccountInfo" nillable="true" type="q1:AccountInfo" />
+      <xs:element minOccurs="0" name="LocationId" type="xs:int" />
+      <xs:element minOccurs="0" name="Messagable" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ServiceType" type="tns:LocationServiceType" />
+      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactLocationInfo" nillable="true" type="tns:ContactLocationInfo" />
+  <xs:complexType name="ArrayOfUserLocationData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="UserLocationData" nillable="true" type="tns:UserLocationData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfUserLocationData" nillable="true" type="tns:ArrayOfUserLocationData" />
+</xs:schema>

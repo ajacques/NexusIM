@@ -1,0 +1,23 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WebTests.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FireEagle_ConsumerKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SmkThhsxhnJK</Value>
+    </Setting>
+    <Setting Name="FireEagle_ConsumerSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">zMsAXNg8lUyT0gXaWooJXgUMGgH5ZEB7</Value>
+    </Setting>
+    <Setting Name="NexusCoreConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Data Source=.\SQLEXPRESS;Initial Catalog=NexusCore;User ID=root;Password=bob&lt;/ConnectionString&gt;
+  &lt;ProviderName&gt;System.Data.SqlClient&lt;/ProviderName&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Data Source=.\SQLEXPRESS;Initial Catalog=NexusCore;User ID=root;Password=bob</Value>
+    </Setting>
+    <Setting Name="NexusWebRootUri" Type="System.Uri" Scope="User">
+      <Value Profile="(Default)">http://dev.nexus-im.com/</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

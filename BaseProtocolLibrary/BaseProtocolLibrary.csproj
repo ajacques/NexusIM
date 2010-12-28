@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{70B71BCC-0992-4D73-A798-9386CFC48EF8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InstantMessage</RootNamespace>
+    <AssemblyName>BaseProtocolLibrary</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Facebook, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="jabber-net, Version=2.1.0.710, Culture=neutral, PublicKeyToken=924c5b18328d6f09, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\JabberNet\jabber-net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\WindowsAPICodePack\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Json.Net\Bin\DotNet\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChatMessageBuilder.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Managers\AccountManager.cs" />
+    <Compile Include="Managers\BasicXmlSettingsBinding.cs" />
+    <Compile Include="Managers\ISettings.cs" />
+    <Compile Include="Managers\OTRManager.cs" />
+    <Compile Include="Managers\ProtocolManager.cs" />
+    <Compile Include="Protocols\ContactDetails.cs" />
+    <Compile Include="Protocols\FacebookProtocol.cs" />
+    <Compile Include="Protocols\GoogleVoiceClient.cs" />
+    <Compile Include="Protocols\GoogleVoiceProtocol.cs" />
+    <Compile Include="Protocols\IContact.cs" />
+    <Compile Include="Protocols\IMBuddy.cs" />
+    <Compile Include="Protocols\JabberClient.cs" />
+    <Compile Include="Protocols\JabberProtocol.cs" />
+    <Compile Include="Structures\BuddyAvatar.cs" />
+    <Compile Include="Structures\ChatClassBase.cs" />
+    <Compile Include="Crypto\CRC32.cs" />
+    <Compile Include="Crypto\CRC32Managed.cs" />
+    <Compile Include="Structures\EventArgClasses.cs" />
+    <Compile Include="Protocols\IMProtocol.cs" />
+    <Compile Include="Protocols\MSNProtocol.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Managers\SettingsManager.cs" />
+    <Compile Include="Protocols\YahooProtocol.cs" />
+    <Compile Include="Translation\GoogleTranslator.cs" />
+    <Compile Include="Translation\ITranslator.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

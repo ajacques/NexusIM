@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 12.625, 8.5" name="GeoData">
+  <DataContextMoniker Name="/GeoDataDataContext" />
+  <nestedChildShapes>
+    <classShape Id="3312a1f6-e80c-4ca9-87ef-8dcba5909983" absoluteBounds="1.875, 1.5, 2, 4.6554182942708326">
+      <DataClassMoniker Name="/GeoDataDataContext/City" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ad2b2fee-531d-43e2-ac0f-12643ab676ed" absoluteBounds="1.8899999999999997, 1.96, 1.9700000000000002, 4.095418294270833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="526b8545-7191-4525-bdae-325f72bc17c8" absoluteBounds="4.875, 1.5, 2, 4.6554182942708326">
+      <DataClassMoniker Name="/GeoDataDataContext/Country" />
+      <nestedChildShapes>
+        <elementListCompartment Id="30b137bd-5dce-4100-b4dc-9b96ce599285" absoluteBounds="4.89, 1.96, 1.9700000000000002, 4.095418294270833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f844ab7b-fb49-4e3c-b2db-7d26b930aea7" absoluteBounds="7.625, 1.5, 2, 2.7324039713541666">
+      <DataClassMoniker Name="/GeoDataDataContext/AdminLevel1" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c70c4511-398f-42ff-8a29-b77f45aec545" absoluteBounds="7.64, 1.96, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="17e5741e-c25f-4d29-b617-618ecd89c74d" absoluteBounds="10.375, 1.625, 2, 3.1170068359375">
+      <DataClassMoniker Name="/GeoDataDataContext/AdminLevel2" />
+      <nestedChildShapes>
+        <elementListCompartment Id="bd6c1b09-68a7-403e-b09f-ea06a3bb4857" absoluteBounds="10.39, 2.085, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(9.625 : 2.92870198567708); (10.375 : 2.92870198567708)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/GeoDataDataContext/AdminLevel1/AdminLevel1_AdminLevel2" />
+      <nodes>
+        <classShapeMoniker Id="f844ab7b-fb49-4e3c-b2db-7d26b930aea7" />
+        <classShapeMoniker Id="17e5741e-c25f-4d29-b617-618ecd89c74d" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

@@ -1,0 +1,291 @@
+﻿@media print
+{
+	.menu
+	{
+		display: none;
+	}
+	.header
+	{
+		background-color: #ffffff;
+		color: #000000;
+	}
+}
+
+@media handheld
+{
+	#menu
+	{
+		display: none;
+	}
+	#header
+	{
+		height: 30px !important;
+	}
+	#header h1
+	{
+		padding-left: 30px !important;
+		padding-top: 10px !important;
+		font-size: 13pt;
+	}
+}
+
+A, A:link, A:visited
+{
+	color: #0000ff;
+	text-decoration: none;
+}
+
+A:hover
+{
+	color: red;
+	text-decoration: underline;
+}
+
+body
+{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background-color: rgb(240, 240, 240);
+}
+
+#header
+{
+	height: 50px;
+	width: 100%;
+	background-color: #000000;
+	padding: 0;
+	margin: 0;
+	color: #fff;
+}
+
+#header h1
+{
+	margin: 0 0;
+	padding-left: 200px;
+	padding-right: 0pt;
+	width: 300px;
+}
+
+@media handheld
+{
+	#header h1
+	{
+		padding-left: 30px !important;
+		padding-top: 10px !important;
+		font-size: 13pt;
+	}
+}
+
+img
+{
+	border: 0px;
+}
+
+#jserror
+{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+#menu
+{
+	float: left;
+	bottom: 0px;
+	margin-top: 0;
+	border-collapse: collapse;
+	width: 100%;
+	border: 0;
+}
+
+#bodyDiv
+{
+	margin-top: 0px;
+	padding: 20px;
+	width: 540px;
+}
+
+#bodyDiv p
+{
+	margin-top: 0;
+}
+
+#footer
+{
+	border-top: 1px solid #DCDCC8;
+	bottom: 5px;
+	font-size: 7pt;
+	font-weight: 600;
+	left: 0;
+	text-align: center;
+	width: 100%;
+	padding: 5px 0 5px 0;
+	position: static;
+	font-family: Sans-Serif;
+}
+
+#total
+{
+	background-color: #ffffff;
+	padding: 0;
+	min-height: 600px;
+	margin: 0 auto;
+	width: 800px;
+}
+
+.bordertable
+{
+	text-align: left;
+	border: solid 1px #000000;
+	border-collapse: collapse;
+}
+
+.bordertable tr td
+{
+	text-align: left;
+}
+
+.bordertable tr th
+{
+	text-align: left;
+	border: solid 1px #000000;
+}
+
+.bordertable tr td
+{
+	border: solid 1px #000000;
+}
+
+#quickmenu
+{
+	float: right;
+	background-color: #F0F0F0;
+	padding: 5px;
+	display: none;
+}
+
+.accountsectiontitle
+{
+	font-size: 16pt;
+	border-bottom: solid 1px #000000;
+}
+
+.accountsectiontitlelink
+{
+	float: right;
+	font-size: medium;
+}
+
+.accountsectioncontent
+{
+	margin: 5px;
+}
+
+.errormessage
+{
+	border: 1px solid #CC6600;
+	background-color: #FFCC00;
+	margin: 0px;
+	padding-left: 5px;
+}
+
+#rightcol
+{
+	float: right;
+	display: block;
+	padding-top: 20px;
+	width: 230px;
+}
+
+.colheadline
+{
+	font-weight: 700;
+	border-bottom: solid 1px #cccccc;
+	font-size: 10pt;
+}
+
+table tr th
+{
+	font-size: 80%;
+	font-weight: normal;
+}
+
+.headertable
+{
+	border-collapse: collapse;
+	border: solid 1px #000000;
+}
+
+.headertable tr th
+{
+	background-color: rgb(240, 240, 240);
+	border-bottom: solid 1px rgb(170, 170, 170);
+}
+
+#tasklist
+{
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-top: 7px;
+	padding-left: 0;
+	list-style-position: inside;
+	list-style-type: square;
+}
+
+.popupouter
+{
+	height: 0;
+	left: 0;
+	overflow: visible;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 101;
+}
+
+.popupmid
+{
+	height: 0;
+	margin: auto;
+	overflow: visible;
+	position: relative;
+	top: 125px;
+	width: 465px;
+}
+
+.popupinner
+{
+	background-color: White;
+	border: solid 1px #000000;
+}
+
+.popuptitle
+{
+	font-size: 12pt;
+	font-weight: 700;
+	background-color: black;
+	color: white;
+	border: solid 1px #000000;
+}
+
+.popupcontent
+{
+	padding: 5px;
+}
+
+.popupbuttons
+{
+	float: right;
+}
+
+#popupbuttoncontainer
+{
+	height: 26px;
+}
+
+.BackShadow
+{
+	-webkit-box-shadow: 0px 7px 10px rgba(127,127,127,0.5);
+	-moz-box-shadow: 0px 7px 10px rgba(127,127,127,0.5);
+	box-shadow: 0px 7px 10px rgba(127,127,127,0.5);
+}
