@@ -174,7 +174,6 @@
     <Compile Include="Protocol\AIMProtocol.cs" />
     <Compile Include="Protocol\CoreWrapperProtocol.cs" />
     <Compile Include="Protocol\IMDataStruct.cs" />
-    <Compile Include="Protocol\IRCProtocol.cs" />
     <Compile Include="Protocol\MetaContact.cs" />
     <Compile Include="Protocol\MSNProtocol.cs" />
     <Compile Include="Protocol\PNMProtocol.cs" />
@@ -600,7 +599,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

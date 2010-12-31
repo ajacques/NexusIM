@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Data.Services.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NexusWeb.Services.DataContracts
 {
@@ -86,6 +87,12 @@ namespace NexusWeb.Services.DataContracts
 				return mResolvedGeoTag;
 			}
 		}
+		public bool HasComments
+		{
+			get	{
+				return mComments.Any();
+			}
+		}
 
 		[DataMember(Name = "MessageBody")]
 		public string mMessageBody;
@@ -141,9 +148,9 @@ namespace NexusWeb.Services.DataContracts
 		public string Prefix;
 		[DataMember(Order = 1)]
 		public int UserId;
-		[DataMember(Order = 2)]
+		[DataMember(Order = 2, EmitDefaultValue = false)]
 		public string FirstName;
-		[DataMember(Order = 3)]
+		[DataMember(Order = 3, EmitDefaultValue = false)]
 		public string LastName;
 		[DataMember(Order = 4, EmitDefaultValue = false)]
 		public DateTime? DateOfBirth;

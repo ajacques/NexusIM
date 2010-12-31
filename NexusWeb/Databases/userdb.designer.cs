@@ -165,14 +165,6 @@ namespace NexusWeb.Databases
 			}
 		}
 		
-		public System.Data.Linq.Table<ArticleComment> ArticleComments
-		{
-			get
-			{
-				return this.GetTable<ArticleComment>();
-			}
-		}
-		
 		public System.Data.Linq.Table<UserAccessControl> UserAccessControls
 		{
 			get
@@ -218,6 +210,14 @@ namespace NexusWeb.Databases
 			get
 			{
 				return this.GetTable<User>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ArticleComment> ArticleComments
+		{
+			get
+			{
+				return this.GetTable<ArticleComment>();
 			}
 		}
 		
@@ -1679,123 +1679,6 @@ namespace NexusWeb.Databases
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ArticleComments")]
-	public partial class ArticleComment
-	{
-		
-		private int _Id;
-		
-		private int _UserId;
-		
-		private string _ArticleType;
-		
-		private int _ArticleId;
-		
-		private System.DateTime _TimeStamp;
-		
-		private string _MessageBody;
-		
-		public ArticleComment()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this._Id = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="Int NOT NULL")]
-		public int UserId
-		{
-			get
-			{
-				return this._UserId;
-			}
-			set
-			{
-				if ((this._UserId != value))
-				{
-					this._UserId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ArticleType", DbType="VarChar(15) NOT NULL", CanBeNull=false)]
-		public string ArticleType
-		{
-			get
-			{
-				return this._ArticleType;
-			}
-			set
-			{
-				if ((this._ArticleType != value))
-				{
-					this._ArticleType = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ArticleId", DbType="Int NOT NULL")]
-		public int ArticleId
-		{
-			get
-			{
-				return this._ArticleId;
-			}
-			set
-			{
-				if ((this._ArticleId != value))
-				{
-					this._ArticleId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TimeStamp", DbType="DateTime NOT NULL")]
-		public System.DateTime TimeStamp
-		{
-			get
-			{
-				return this._TimeStamp;
-			}
-			set
-			{
-				if ((this._TimeStamp != value))
-				{
-					this._TimeStamp = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MessageBody", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string MessageBody
-		{
-			get
-			{
-				return this._MessageBody;
-			}
-			set
-			{
-				if ((this._MessageBody != value))
-				{
-					this._MessageBody = value;
-				}
 			}
 		}
 	}
@@ -3472,6 +3355,123 @@ namespace NexusWeb.Databases
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ArticleComments")]
+	public partial class ArticleComment
+	{
+		
+		private int _Id;
+		
+		private int _UserId;
+		
+		private string _ArticleType;
+		
+		private int _ArticleId;
+		
+		private System.DateTime _TimeStamp;
+		
+		private string _MessageBody;
+		
+		public ArticleComment()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this._Id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="Int NOT NULL")]
+		public int UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					this._UserId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ArticleType", DbType="VarChar(15) NOT NULL", CanBeNull=false)]
+		public string ArticleType
+		{
+			get
+			{
+				return this._ArticleType;
+			}
+			set
+			{
+				if ((this._ArticleType != value))
+				{
+					this._ArticleType = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ArticleId", DbType="Int NOT NULL")]
+		public int ArticleId
+		{
+			get
+			{
+				return this._ArticleId;
+			}
+			set
+			{
+				if ((this._ArticleId != value))
+				{
+					this._ArticleId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TimeStamp", DbType="DateTime NOT NULL")]
+		public System.DateTime TimeStamp
+		{
+			get
+			{
+				return this._TimeStamp;
+			}
+			set
+			{
+				if ((this._TimeStamp != value))
+				{
+					this._TimeStamp = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MessageBody", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string MessageBody
+		{
+			get
+			{
+				return this._MessageBody;
+			}
+			set
+			{
+				if ((this._MessageBody != value))
+				{
+					this._MessageBody = value;
+				}
+			}
 		}
 	}
 }

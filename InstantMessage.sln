@@ -36,7 +36,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusCore", "NexusCore\Nexu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusWeb", "NexusWeb\NexusWeb.csproj", "{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseWindowsProtocolLibrary", "BaseProtocolLibrary\BaseWindowsProtocolLibrary.csproj", "{80D4A705-5573-46DD-BC98-5E80F8DA2752}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseProtocolLibrary", "BaseProtocolLibrary\BaseProtocolLibrary.csproj", "{80D4A705-5573-46DD-BC98-5E80F8DA2752}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIM_Icons", "NexusIM_Icons\NexusIM_Icons.csproj", "{E851D4D7-09AB-4A1B-BCE6-5BA5AB7D9832}"
 EndProject

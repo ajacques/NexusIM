@@ -1,23 +1,14 @@
 using System;
-using System.Collections;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Security.Authentication;
+using System.Threading;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net.Sockets;
-using System.Net;
-using System.Xml;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading;
-using System.Runtime.Serialization;
-using System.Diagnostics;
-using System.Collections.Specialized;
-using System.Security.Authentication;
-using System.Reflection;
-using System.Collections.Specialized;
-using System.Collections.ObjectModel;
+using InstantMessage.Events;
 
 namespace InstantMessage
 {
@@ -141,7 +132,7 @@ namespace InstantMessage
 	/// <summary>
 	/// Stores information and handles communication for specific IM networks
 	/// </summary>
-	public class IMProtocol
+	public class IMProtocol : INotifyPropertyChanged
 	{
 		public IMProtocol()
 		{
@@ -278,7 +269,10 @@ namespace InstantMessage
 		{
 			return "";
 		}
-		public virtual void JoinChatRoom(string room) {}
+		public virtual IChatRoom JoinChatRoom(string room)
+		{
+			throw new NotSupportedException();
+		}
 		public virtual void LeaveChatRoom(string room) {}
 		public virtual void ReplyToBuddyAddRequest(string username, bool isAdded) {}
 		public virtual void HandleProtocolCMDArg(string input) {}
@@ -556,6 +550,11 @@ namespace InstantMessage
 			}
 		}
 		
+		protected void NotifyPropertyChanged(string propertyName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 		/// <summary>
 		/// Gets the current internal protocol status
 		/// </summary>
@@ -644,6 +643,7 @@ namespace InstantMessage
 		public static event EventHandler<IMMessageEventArgs> onMessageSend;
 		public static event EventHandler<IMEmailEventArgs> onEmailReceive;
 		public static event EventHandler<IMSendMessageEventArgs> onSendMessage;
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		// Internal Event Triggers
 		protected void triggerOnLogin(EventArgs e)
@@ -758,40 +758,19 @@ namespace InstantMessage
 		protected Exception mLoginException;
 	}
 
-	public class ChatRoomContainer
+	public interface IChatRoom
 	{
-		public ChatRoomContainer(string roomname, List<string> people)
+		string Name
 		{
-			roomName = roomname;
-			occupants.InsertRange(0, people);
+			get;
 		}
+		IEnumerable<string> Participants
+		{
+			get;
+		}
+		void SayMessage(string message);
 
-		public List<string> Occupants
-		{
-			get {
-				return occupants;
-			}
-		}
-		public string RoomName
-		{
-			get {
-				return roomName;
-			}
-		}
-		public object ChatWindow
-		{
-			get {
-				return chatWindow;
-			}
-			set {
-				chatWindow = value;
-			}
-		}
-
-		// Variables
-		private object chatWindow = null;
-		private string roomName = "";
-		private Dictionary<string, IMBuddy> buddyMap = new Dictionary<string, IMBuddy>();
-		private List<string> occupants = new List<string>();
+		event EventHandler<IMMessageEventArgs> OnMessageReceived;
+		event EventHandler OnUserListReceived;
 	}
 }

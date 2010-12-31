@@ -9,6 +9,14 @@
 		background-color: #ffffff;
 		color: #000000;
 	}
+	#bodyDiv
+	{
+		width: 100%
+	}
+	#total
+	{
+		width: 100%;
+	}
 }
 
 @media handheld
@@ -29,10 +37,20 @@
 	}
 }
 
+/* CSS Reset */
+*
+{
+	margin: 0;
+	padding: 0;
+	font-family: Verdana;
+}
+
 A, A:link, A:visited
 {
 	color: #0000ff;
 	text-decoration: none;
+	-webkit-transition: color 0.3s ease-out;
+	-moz-transition: color 0.3s ease-out;
 }
 
 A:hover
@@ -41,21 +59,30 @@ A:hover
 }
 
 body
-{
-	margin: 0;
-	padding: 0;
-	width: 100%;
+{	width: 100%;
 	background-color: rgb(240, 240, 240);
 }
 
 #header
 {
-	height: 50px;
+	height: 70px;
 	width: 100%;
-	background-color: #000000;
-	padding: 0;
-	margin: 0;
-	color: #fff;
+	color: black;
+}
+
+#headerright
+{	
+	background: -webkit-gradient(linear, left, right, from(#BABABA), to(#000));
+	background: -moz-linear-gradient(left,  #BABABA, #000);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#BABABA', endColorstr='#000000');
+}
+
+#headerleft
+{	
+	width: 25%;
+	background: -webkit-gradient(linear, right, left, from(#BABABA), to(#000));
+	background: -moz-linear-gradient(right,  #BABABA,  #000);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#000000', endColorstr='##BABABA');
 }
 
 #header h1
@@ -64,26 +91,6 @@ body
 	padding-left: 200px;
 	padding-right: 0pt;
 	width: 300px;
-}
-img
-{
-	border: 0px;
-}
-
-#jserror
-{
-	margin-top: 0px;
-	margin-bottom: 0px;
-}
-
-#menu
-{
-	float: left;
-	bottom: 0px;
-	margin-top: 0;
-	border-collapse: collapse;
-	width: 100%;
-	border: 0;
 }
 
 #bodyDiv
@@ -114,9 +121,9 @@ img
 
 #total
 {
+	-moz-border-radius-bottomleft: 10px;
+	-moz-border-radius-bottomright: 10px;
 	background-color: #ffffff;
-	padding: 0;
-	min-height: 600px;
 	margin: 0 auto;
 	width: 800px;
 }
@@ -142,14 +149,6 @@ img
 .bordertable tr td
 {
 	border: solid 1px #000000;
-}
-
-#quickmenu
-{
-	float: right;
-	background-color: #F0F0F0;
-	padding: 5px;
-	display: none;
 }
 
 .accountsectiontitle
@@ -185,11 +184,11 @@ img
 	width: 230px;
 }
 
-.colheadline
+#rightcol .colheadline
 {
 	font-weight: 700;
 	border-bottom: solid 1px #cccccc;
-	font-size: 10pt;
+	font-size: 9pt;
 }
 
 table tr th
@@ -269,6 +268,11 @@ table tr th
 #popupbuttoncontainer
 {
 	height: 26px;
+}
+
+#ProminantMyUsername:hover
+{
+	text-decoration: underline;
 }
 
 .BackShadow

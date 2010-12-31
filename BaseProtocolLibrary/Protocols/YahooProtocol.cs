@@ -14,6 +14,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using System.Diagnostics;
+using InstantMessage.Events;
 
 namespace InstantMessage
 {
@@ -419,13 +420,6 @@ namespace InstantMessage
 				spacket.AddParameter("97", "1");
 
 				sendPacket(spacket);
-			}
-		}
-		public override void JoinChatRoom(string room)
-		{
-			if (roominvites.ContainsKey(room))
-			{
-
 			}
 		}
 		public void StartIMVironment(string username, YahooIMVironment type)
@@ -1531,7 +1525,6 @@ namespace InstantMessage
 		private bool mCompletedCarrierSetup = false;
 		
 		private Dictionary<string, string> roominvites = new Dictionary<string, string>();
-		private Dictionary<string, ChatRoomContainer> joinedrooms = new Dictionary<string, ChatRoomContainer>();
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private Dictionary<string, string> logincookies = new Dictionary<string, string>();
 		private List<YPacket> queuedpackets = new List<YPacket>();

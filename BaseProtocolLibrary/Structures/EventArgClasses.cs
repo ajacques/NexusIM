@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InstantMessage
+namespace InstantMessage.Events
 {
 	/// <summary>
 	/// Used to pass information about a protocol error back to event handlers for higher-level error processing
@@ -39,7 +39,6 @@ namespace InstantMessage
 		private ErrorReason mReason;
 		private string mMessage;
 	}
-
 	/// <summary>
 	/// Used to pass information about the protocol disconnect back to event handlers for higher-level error processing
 	/// </summary>
@@ -64,12 +63,11 @@ namespace InstantMessage
 		}
 		private DisconnectReason mReason;
 	}
-
 	public class IMMessageEventArgs : EventArgs
 	{
 		public IMMessageEventArgs(string from, string to, string message)
 		{
-			//mSender = IMBuddy.FromUsername(from);
+			mSenderStr = from;
 			mReceiver = to;
 			mMessage = message;
 		}
@@ -97,11 +95,20 @@ namespace InstantMessage
 				return mMessage;
 			}
 		}
-		private IMBuddy mSender;
-		private string mReceiver = "";
-		private string mMessage = "";
-	}
+		public string SenderString
+		{
+			get
+			{
+				return mSenderStr;
+			}
+		}
 
+
+		private IMBuddy mSender;
+		private string mSenderStr;
+		private string mReceiver;
+		private string mMessage;
+	}
 	public class IMFriendEventArgs : EventArgs
 	{
 		public IMFriendEventArgs(IMBuddy buddy)
@@ -116,7 +123,6 @@ namespace InstantMessage
 		}
 		private IMBuddy mBuddy;
 	}
-
 	public class IMFriendRequestEventArgs : EventArgs
 	{
 		public IMFriendRequestEventArgs(string username, string message, string displayname)
@@ -152,7 +158,6 @@ namespace InstantMessage
 		private string mMessage = "";
 		private string mDisplayName = "";
 	}
-
 	public class IMEmailEventArgs : EventArgs
 	{
 		public IMEmailEventArgs(string sender, string displayname, string subject)
@@ -183,7 +188,6 @@ namespace InstantMessage
 		private string mDisplayName = "";
 		private string mSubject = "";
 	}
-
 	public class IMRoomInviteEventArgs : EventArgs
 	{
 		public IMRoomInviteEventArgs(string sender, string roomname, string message)
@@ -214,7 +218,6 @@ namespace InstantMessage
 		private string mRoomName = "";
 		private string mMessage = "";
 	}
-
 	public class IMSendMessageEventArgs : EventArgs
 	{
 		public IMSendMessageEventArgs(IMProtocol fromProtocol, IMBuddy buddy, string message)
@@ -259,5 +262,31 @@ namespace InstantMessage
 		private bool mHandled = false;
 		private IMBuddy mBuddy;
 		private string mMessage = "";
+	}
+	public class IMKickedFromRoomEventArgs : EventArgs
+	{
+		public string Message
+		{
+			get;
+			internal set;
+		}
+		public string KickedBy
+		{
+			get;
+			internal set;
+		}
+	}
+	public class IMChatRoomGenericEventArgs : EventArgs
+	{
+		public string Username
+		{
+			get;
+			internal set;
+		}
+		public string Message
+		{
+			get;
+			internal set;
+		}
 	}
 }

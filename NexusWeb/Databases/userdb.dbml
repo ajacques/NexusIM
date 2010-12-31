@@ -78,18 +78,8 @@
       <Column Name="MessageBody" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
       <Column Name="GeoTag" Type="Microsoft.SqlServer.Types.SqlGeography" CanBeNull="true" />
       <Column Name="GeoTagAccuracy" Type="System.Single" DbType="float" CanBeNull="true" />
+      <Association Name="StatusUpdate_StatusUpdateComment" Member="ArticleComments" Storage="_StatusUpdateComments" ThisKey="Id" OtherKey="ArticleId" Type="ArticleComment" />
       <Association Name="User_StatusUpdate" Member="User" ThisKey="Userid" OtherKey="id" Type="User" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.ArticleComments" Member="ArticleComments">
-    <Type Name="ArticleComment">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ArticleType" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
-      <Column Name="ArticleId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="TimeStamp" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="MessageBody" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Association Name="User_ArticleComment" Member="User" ThisKey="UserId" OtherKey="id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.UserAccessControl" Member="UserAccessControls">
@@ -171,9 +161,21 @@
       <Association Name="User_LocationPrivacy" Member="LocationPrivacies" ThisKey="id" OtherKey="userid" Type="LocationPrivacy" />
       <Association Name="User_UserLocation" Member="UserLocations" ThisKey="id" OtherKey="userid" Type="UserLocation" />
       <Association Name="User_StatusUpdate" Member="StatusUpdates" ThisKey="id" OtherKey="Userid" Type="StatusUpdate" />
-      <Association Name="User_ArticleComment" Member="ArticleComments" ThisKey="id" OtherKey="UserId" Type="ArticleComment" />
       <Association Name="User_Album" Member="Albums" ThisKey="id" OtherKey="OwnerUserID" Type="Album" />
       <Association Name="User_Account" Member="Accounts" ThisKey="id" OtherKey="userid" Type="Account" />
+      <Association Name="User_StatusUpdateComment" Member="ArticleComments" ThisKey="id" OtherKey="UserId" Type="ArticleComment" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ArticleComments" Member="ArticleComments">
+    <Type Name="ArticleComment">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ArticleType" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="ArticleId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TimeStamp" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="MessageBody" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="User_StatusUpdateComment" Member="User" ThisKey="UserId" OtherKey="id" Type="User" IsForeignKey="true" />
+      <Association Name="StatusUpdate_StatusUpdateComment" Member="StatusUpdate" ThisKey="ArticleId" OtherKey="Id" Type="StatusUpdate" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GeoTagStatusMessage" Method="GeoTagStatusMessage">

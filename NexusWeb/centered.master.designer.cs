@@ -40,15 +40,6 @@ namespace NexusWeb.Masters {
         protected global::System.Web.UI.WebControls.ContentPlaceHolder ErrorMessagePlaceHolder;
         
         /// <summary>
-        /// headerright control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel headerright;
-        
-        /// <summary>
         /// MyDisplayImageByUpdatebox control.
         /// </summary>
         /// <remarks>
@@ -83,24 +74,6 @@ namespace NexusWeb.Masters {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder HeaderPlaceHolder;
-        
-        /// <summary>
-        /// accountquicklink control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor accountquicklink;
-        
-        /// <summary>
-        /// logoutquicklink control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor logoutquicklink;
         
         /// <summary>
         /// rightcol control.

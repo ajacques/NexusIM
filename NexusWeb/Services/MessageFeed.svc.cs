@@ -21,8 +21,6 @@ using Microsoft.ApplicationServer.Caching;
 using NexusWeb.Databases;
 using NexusWeb.Properties;
 using NexusWeb.Services.DataContracts;
-using Microsoft.SqlServer.Types;
-using System.Data.Common;
 
 namespace NexusWeb.Services
 {
@@ -203,11 +201,6 @@ namespace NexusWeb.Services
 			return GetComments(c => c.ArticleId == articleId && c.ArticleType == articleType);
 		}
 
-		/// <summary>
-		/// Returns the last 
-		/// </summary>
-		/// <param name="targetid"></param>
-		/// <returns></returns>
 		[OperationContract]
 		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesForUserPage(int targetid)
@@ -220,7 +213,7 @@ namespace NexusWeb.Services
 
 		[OperationContract]
 		[Obsolete("Will be replaced by the new OData Service", false)]
-		public UserDetails[] GetFriends()
+		public IEnumerable<UserDetails> GetFriends()
 		{
 			int userid;
 			HandleWCFAuth(out userid);
@@ -236,11 +229,26 @@ namespace NexusWeb.Services
 				UserId = u.id,
 				LocationAllowed = db.HasLocationViewPermission(u.id, userid)//,
 				//LocationId = db.Get
-			}).ToList();
+			});
 
-			db.Dispose();
+			return friends;
+		}
+		
+		[OperationContract]
+		[WebGet]
+		public IEnumerable<UserDetails> GetFriendSuggestions(string name)
+		{
+			int userid;
+			HandleWCFAuth(out userid);
 
-			return friends.ToArray();
+			userdbDataContext db = new userdbDataContext();
+
+			// Add their friends
+			var friends = from u in db.GetFriends(userid)
+						  where (u.firstname + " " + u.lastname).Contains(name)
+						  select new UserDetails() { Prefix = "nx", UserId = u.id };
+
+			return friends;
 		}
 
 		/// <summary>
@@ -482,7 +490,7 @@ namespace NexusWeb.Services
 			return db.ArticleComments.Where(whereclause).Select(c => new ClientArticleComment() { mUserId = c.UserId, mTimeStamp = c.TimeStamp, mMessageBody = c.MessageBody });
 		}
 
-		private static Func<StatusUpdate, ClientStatusUpdate> mDbToUsableStatusUpdate;
+		internal static Func<StatusUpdate, ClientStatusUpdate> mDbToUsableStatusUpdate;
 		private static Dictionary<int, ArticlePollDelegate> mStatusUpdateCallbacks = new Dictionary<int, ArticlePollDelegate>();
 		private static DataCacheFactory mAppFabricFactory;
 		private static Encoding mEncoding = Encoding.Unicode;

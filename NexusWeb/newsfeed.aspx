@@ -3,26 +3,29 @@
 <asp:Content ContentPlaceHolderID="head" runat="server">
 	<link href="css/NewsFeed.css" type="text/css" rel="Stylesheet" />
 	<script type="text/javascript" src="js/modernizer.js"></script>
+	<script type="text/javascript" src="js/newsfeed.js"></script>
+	<script type="text/javascript" src="js/LocationBuilder.js"></script>
+	<script type="text/javascript" src="js/jStorage.js"></script>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="rightcolcontent" runat="server">
 	<div class="colheadline">Requests</div>
-	<span runat="Server" ID="Span1"></span>
-	<div class="colheadline">Tasks</div>
-	<asp:BulletedList runat="server">
-	</asp:BulletedList>
+	<div class="colheadline" style="display: none">Tasks</div>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="body" runat="server">
 	<div id="UserHoverCard" onmouseover="cancelHoverBoxHide = true;" onmouseout="cancelHoverBoxHide = false;NewsFeed.onUserLinkHoverOut();">
 		<div id="UserHoverCardContent" style="position: absolute"></div>
 	</div>
-	<div id="StatusUpdateContainer" onclick="cancelStatusMsgHide = true;" style="width: 100%; border-bottom: solid 1px #eeeeee; ">
+	<div id="StatusUpdateContainer" onclick="cancelStatusMsgHide = true;" style="width: 540px; border-bottom: solid 1px #eeeeee; ">
 		<label for="statusupdate" style="font-family: 'Lucida Grande',sans-serif; margin-bottom: 10px; font-size: 20px;">How are you today?</label>
-		<textarea ID="statusupdate" onkeypress="return NewsFeed.statusKeyPress();"></textarea> <!-- onfocus="NewsFeed.clearStatusBox();" onblur="NewsFeed.fillStatusBox();" -->
+		<textarea ID="statusupdate" onkeyup="return NewsFeed.statusKeyPress(event);"></textarea> <!-- onfocus="NewsFeed.clearStatusBox();" onblur="NewsFeed.fillStatusBox();" -->
+		<div id="StatusUpdateSuggestions" style="display: none;">
+			<ul id="susuggest"></ul>
+		</div>
 		<div id="PostSpan" style="height: 25px;">
-			<span id="GeoLoc" style="display: none";>
-				<a id="GeoLocLink" href="javascript:NewsFeed.enableGeoLocation();" style="font-size: 11px; font-family: 'Lucida Grande',sans-serif;">Add Location</a>
-				<span id="GeoLocStatus" style="font-size: smaller"></span>
-				<a id="GeoLocDisableLink" href="javascript:NewsFeed.disableGeoLocation();" style="font-size: smaller; display: none">×</a>
+			<span id="GeoLoc" style="display: none">
+				<a id="GeoLocLink" href="javascript:NewsFeed.enableGeoLocation();" style="font-size: 8pt;">Add Location</a>
+				<span id="GeoLocStatus" style="font-size: 8pt"></span>
+				<a id="GeoLocDisableLink" href="javascript:NewsFeed.disableGeoLocation();" style="font-size: 8pt; display: none;">×</a>
 			</span>
 			<input id="PostButton" type="button" value="Post" onclick="NewsFeed.postStatusMessage();" style="float: right; margin-right: 5px; font-family: 'helvetica'" />
 		</div>
@@ -30,6 +33,9 @@
 	<script type="text/javascript">
 		var friendListVersion = <%= this.ver %>;
 		var selfId = <%= this.selfid %>;
+		var Self = new Object();
+		Self.FirstName = "<%= this.user.firstname %>";
+		Self.LastName = "<%= this.user.lastname %>";
 		var isTempLogin = false;
 	</script>
 	<ul id="feed" style="list-style-type: none">

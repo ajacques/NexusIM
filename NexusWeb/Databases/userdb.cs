@@ -5,9 +5,34 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Security;
+using System.Data.Services.Common;
+using System.Data.Services;
+using System.Data.Linq;
 
 namespace NexusWeb.Databases
 {
+	[DataServiceKey("Id")]
+	[IgnoreProperties("GeoTag", "User")]
+	partial class StatusUpdate
+	{
+		public double Latitude
+		{
+			get	{
+				return GeoTag != null ? GeoTag.Lat.Value : 0;
+			}
+		}
+	}
+	[DataServiceKey("Id")]
+	partial class ArticleComment
+	{
+
+	}
+	[DataServiceKey("id")]
+	[IgnoreProperties("password", "AuthTokens", "Accounts", "UserLocations", "LocationPrivacies", "Albums", "canlogin", "IsIMSignedIn", "username", "locationsharestate", "FriendListVersion", "DefaultPhotoAcl", "AccountListVersion", "emailauthtoken", "FriendListVersion")]
+	partial class User
+	{
+	}
+
 	partial class userdbDataContext
 	{
 		public User TryLogin(string username, string password)
@@ -19,7 +44,11 @@ namespace NexusWeb.Databases
 						select c).FirstOrDefault();
 
 			user.lastseen = DateTime.UtcNow;
-			SubmitChanges();
+			try	{
+				SubmitChanges();
+			} catch (ChangeConflictException) { // Workaround for Expression Web 4 SuperPreview loading two pages at once
+
+			}
 
 			return user;
 		}

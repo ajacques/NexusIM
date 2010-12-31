@@ -12,6 +12,7 @@ using jabber.client;
 using jabber.connection;
 using jabber.protocol;
 using jabber.protocol.client;
+using InstantMessage.Events;
 
 namespace InstantMessage
 {

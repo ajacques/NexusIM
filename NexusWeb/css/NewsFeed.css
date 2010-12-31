@@ -4,35 +4,17 @@
 	{
 		display: none;
 	}
-	#bodyDiv
-	{
-		width: 100%
-	}
-	#total
-	{
-		width: 100%;
-	}
-}
-
-*
-{
-	font-family: Verdana;
-}
-
-a {
-	-webkit-transition: color 0.3s ease-out;
-	-moz-transition: color 0.3s ease-out;
 }
 
 .statusbody
 {
 	padding-left: 5px;
-	font-family:"Verdana";
+	font-family: "Verdana";
 	color: #444;
 	text-align: left;
 	letter-spacing: 0;
 	line-height: 1.2em;
-	font-size: 10pt;;
+	font-size: 10pt;
 }
 
 #feed li
@@ -40,11 +22,13 @@ a {
 	margin-bottom: 5px;
 	background-color: #F7F7FF;
 	-moz-border-radius: 5px;
+	padding: 5px;
 }
 
 #feed .ArticleBody
 {
-	min-height: 50px
+	min-height: 50px;
+	padding-left: 5px;
 }
 
 #feed .ArticleUserHref
@@ -100,14 +84,14 @@ a {
 	min-height: 25px;
 	height: 25px;
 	max-height: 75px;
-	font-family: 'helvetica', sans-serif;	
+	font-family: 'helvetica', 'Verdana', sans-serif;	
 }
 
 #statusupdate:focus
 {
 	-moz-box-shadow: 0 0 8px rgba(82, 168, 236, 0.5);
 	box-shadow: 0 0 20px rgba(82, 168, 236, 0.5);
-	border: 1px solid rgba(82, 168, 236, 0.75);
+	border: 1px solid rgba(82, 168, 236, 0.75);	
 	outline-color: -moz-use-text-color;
 	outline-style: none;
 	outline-width: medium;
@@ -157,4 +141,45 @@ tr.ArticlePostCommentTr textarea
 #UserHoverCardContent
 {
 	width: 100%;
+}
+
+#StatusUpdateSuggestions 
+{
+	position: absolute;
+	background-color: rgb(240, 240, 240);
+	width: 520px;
+	border-width: 0pt 1px 1px;
+	border-style: solid;
+	border-color: black;
+	padding: 5px;
+	margin-left: 5px;
+	margin-top: -10px;
+	-moz-border-radius: 0pt 0pt 5px 5px;
+}
+
+#StatusUpdateSuggestions ul
+{
+	list-style: none;
+	padding-top: 0;
+}
+
+#StatusUpdateSuggestions ul li
+{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px #AAA solid;
+	padding-left: 5px;
+}
+
+#StatusUpdateSuggestions ul li:hover
+{
+	background-color: #DCDCDC;
+	cursor: pointer;
+	-moz-border-radius: 2px;
+	border-radius: 4px;
+}
+
+#StatusUpdateSuggestions ul li:last-child
+{
+	border-bottom: 0;
 }

@@ -67,12 +67,6 @@
     <AssemblyOriginatorKeyFile>NexusWeb.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Facebook">
-      <HintPath>..\..\..\References\Facebook\Facebook.dll</HintPath>
-    </Reference>
-    <Reference Include="Facebook.Web">
-      <HintPath>..\..\..\References\Facebook\Facebook.Web.dll</HintPath>
-    </Reference>
     <Reference Include="LinqToCache.Net4.0">
       <HintPath>..\..\..\References\LinqToCache.Net4.0.dll</HintPath>
     </Reference>
@@ -81,6 +75,7 @@
     <Reference Include="Microsoft.SqlServer.Types" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.Services" />
     <Reference Include="System.Data.Services.Client" />
@@ -386,9 +381,6 @@
     <Compile Include="registeraccount.aspx.designer.cs">
       <DependentUpon>registeraccount.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Services\SocialNetworks.svc.cs">
-      <DependentUpon>SocialNetworks.svc</DependentUpon>
-    </Compile>
     <Compile Include="Services\ValidationFunctions.svc.cs">
       <DependentUpon>ValidationFunctions.svc</DependentUpon>
     </Compile>
@@ -495,7 +487,6 @@
     <Content Include="locationmap.aspx" />
     <Content Include="Services\Devices.svc" />
     <Content Include="registeraccount.aspx" />
-    <Content Include="Services\SocialNetworks.svc" />
     <Content Include="Services\ValidationFunctions.svc" />
     <Content Include="finishregistering.aspx" />
     <Content Include="config\myaccounts.aspx" />

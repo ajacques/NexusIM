@@ -12,7 +12,7 @@ var cancelHoverBoxShow = false;
 var mapsetup = false;
 var mapobj = null;
 var userHoverDelay = 500;
-var Self = null;
+//var Self = null;
 var lastStreamRequest = null;
 var cancelStatusMsgBoxHide = false;
 var lastGeoLoc = null;
@@ -21,10 +21,10 @@ var waitingMsgBody = "";
 
 NewsFeed.startStream = function ()
 {
-	MessageFeed.GetUserDetails(selfId, function(data)
+	/*MessageFeed.GetUserDetails(selfId, function(data)
 	{
 		Self = data;
-	});
+	});*/
 	MessageFeed.GetFriends(function (data)
 	{
 		for (var i = 0; i < data.length; i++)
@@ -303,13 +303,43 @@ NewsFeed.fillStatusBox = function ()
 	}
 }
 
-NewsFeed.statusKeyPress = function ()
-{
-	if (window.event && window.event.keyCode == 13)
-	{
-		var box = $("#statusupdate");
+var atTypingName = false;
 
-		return false;
+NewsFeed.statusKeyPress = function(e)
+{
+	var keyCode = null;
+
+	if (window.event) // IE
+		keyCode = e.keyCode;
+	else if (e.which) // Netscape/Firefox/Opera
+		keyCode = e.which;
+
+	if (keyCode = 64) // @
+		atTypingName = true;
+
+	if (atTypingName) // When we submit this to the server, we will encode it as ${nx:1}
+	{
+		var regex = new RegExp(".*@([a-zA-Z ]+)$");
+
+		var result = regex.exec($("#statusupdate").val());
+		
+		$("#susuggest").html("");
+		var foundOne = false;
+		for (item in Friends)
+		{			
+			if (Friends[item].FirstName.substring(0, result[1].length) == result[1])
+			{
+				var li = document.createElement("li");
+				li.innerHTML = Friends[item].FirstName + " " + Friends[item].LastName;
+				li.setAttribute("uid", Friends[item].Prefix + ":" + Friends[item].UserId);
+				$("#susuggest").append(li);
+				foundOne = true;
+			}
+		}
+		if (foundOne)
+			$("#StatusUpdateSuggestions").show();
+		else
+			$("#StatusUpdateSuggestions").hide();
 	}
 }
 
@@ -444,11 +474,6 @@ $("body").ready(function()
 {
 	NewsFeed.startStream();
 	//NewsFeed.fillStatusBox();
-	$("#headerright").gradient({
-		from: 'BABABA',
-		to: '000000',
-		direction: 'vertical'
-	});
 	if (Modernizr.geolocation)
 		$("span#GeoLoc").show();
 });

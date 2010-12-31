@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
 using System.Runtime.Serialization;
+using InstantMessage.Events;
 
 namespace InstantMessage
 {

@@ -13,49 +13,141 @@ using NexusWeb.Databases;
 
 namespace NexusWeb.Services
 {
-	public class ArticleService
+	public class DbArticleService
 	{
-		public ArticleService()
+		/// <summary>
+		/// Returns an IQueryable of StatusUpdates
+		/// </summary>
+		public IQueryable<StatusUpdate> StatusUpdates
 		{
+			get	{
+				HttpContext context = HttpContext.Current;
+				//if (context.Session["userid"] == null)
+				//	throw WCFExceptions.BadCredentials;
 
+				int userid = 1;//(int)context.Session["userid"];
+
+				userdbDataContext db = new userdbDataContext();
+				var users = db.GetFriends(userid).Select(u => u.id);
+
+				var result = from su in db.StatusUpdates
+					where users.Contains(su.Userid) || su.Userid == userid
+					select su;
+
+				return result;
+			}
+		}
+		public IQueryable<User> Users
+		{
+			get
+			{
+				HttpContext context = HttpContext.Current;
+				//if (context.Session["userid"] == null)
+				//	throw WCFExceptions.BadCredentials;
+
+				int userid = 1;
+
+				userdbDataContext db = new userdbDataContext();
+
+				return db.Users;
+			}
+		}
+		public IQueryable<ArticleComment> Comments
+		{
+			get	{
+				userdbDataContext db = new userdbDataContext();
+
+				var results = from ac in db.ArticleComments
+							  select ac;
+
+				return results;
+			}
 		}
 
+		[WebGet]
+		public IQueryable<ArticleComment> GetCommentsForStatusUpdate(int sid)
+		{
+			HttpContext context = HttpContext.Current;
+			//if (context.Session["userid"] == null)
+			//	throw WCFExceptions.BadCredentials;
+
+			int userid = 1;//(int)context.Session["userid"];
+
+			userdbDataContext db = new userdbDataContext();
+
+			var result = from ac in db.ArticleComments
+						 where ac.ArticleId == sid && ac.ArticleType == "status"
+						 select ac;
+			
+			return result;
+		}
+	}
+
+	public class ArticleService
+	{
 		/// <summary>
-		/// Returns an IQueryable`1 of StatusUpdates
+		/// Returns an IQueryable of StatusUpdates
 		/// </summary>
 		public IQueryable<ClientStatusUpdate> StatusUpdates
 		{
 			get	{
 				HttpContext context = HttpContext.Current;
-				if (context.Session["userid"] == null)
-					throw WCFExceptions.BadCredentials;
+				//if (context.Session["userid"] == null)
+				//	throw WCFExceptions.BadCredentials;
 
-				int userid = (int)context.Session["userid"];
+				int userid = 1;//(int)context.Session["userid"];
 
 				userdbDataContext db = new userdbDataContext();
 				var users = db.GetFriends(userid).Select(u => u.id);
 
-				return MessageFeed.GetStatusUpdates(su => users.Contains(su.Userid)).AsQueryable<ClientStatusUpdate>();
+				var result = from su in db.StatusUpdates
+							 where users.Contains(su.Userid) || su.Userid == userid
+							 select MessageFeed.mDbToUsableStatusUpdate(su);
+
+				return result.ToArray().AsQueryable(); //! TODO: This prevents WCF Data Services from carrying the query out on the server and causes the entire request set that matches above and forces .net to do the searching
 			}
 		}
 
-		public IQueryable<ClientArticleComment> Comments
+		public IQueryable<StatusUpdate> Update
 		{
 			get	{
+				throw new NotImplementedException();
+			}
+		}
+		public IQueryable<User> Users
+		{
+			get	{
+				HttpContext context = HttpContext.Current;
+				//if (context.Session["userid"] == null)
+				//	throw WCFExceptions.BadCredentials;
+
+				int userid = 1;
+
+				userdbDataContext db = new userdbDataContext();
+
+				return db.Users;
+			}
+		}
+		public IQueryable<ClientArticleComment> Comments
+		{
+			get
+			{
 				throw new NotImplementedException();
 			}
 		}
 	}
 
 	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
-	public class ArticleFeed : DataService<ArticleService>
+	public class ArticleFeed : DataService<DbArticleService>
 	{
 		// This method is called only once to initialize service-wide policies.
 		public static void InitializeService(DataServiceConfiguration config)
 		{
 			config.SetEntitySetAccessRule("StatusUpdates", EntitySetRights.AllRead);
+			//config.SetEntitySetAccessRule("Update", EntitySetRights.AllRead);
 			config.SetEntitySetAccessRule("Comments", EntitySetRights.AllRead);
-			config.RegisterKnownType(typeof(ClientArticleUpdate));
+			config.SetEntitySetAccessRule("Users", EntitySetRights.AllRead);
+			//config.RegisterKnownType(typeof(ClientArticleUpdate));
 		}
 	}
 }

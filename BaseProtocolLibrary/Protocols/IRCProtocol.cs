@@ -1,0 +1,389 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
+using System.IO;
+using InstantMessage.Events;
+using System.Linq;
+using System.Collections;
+
+namespace InstantMessage.Protocols.Irc
+{
+	public class IRCChannel : IChatRoom
+	{
+		internal IRCChannel(string channelName, IRCProtocol protocol)
+		{
+			mChannelName = channelName;
+			mProtocol = protocol;
+			mInChannel = true;
+
+			if (OnJoin != null)
+				OnJoin(this, null);
+		}
+
+		// Methods
+		public void SayMessage(string message)
+		{
+			mProtocol.SendRawMessage(String.Format("PRIVMSG {0} :{1}", mChannelName, message));	
+		}
+		public void KickUser(string username)
+		{
+			mProtocol.SendRawMessage(String.Format("KICK {0} {1}", mChannelName, username));
+		}
+		public void KickUser(string username, string message)
+		{
+			mProtocol.SendRawMessage(String.Format("KICK {0} {1} :{2}", mChannelName, username, message));;
+		}
+		public void Rejoin()
+		{
+			if (mInChannel)
+				return;
+
+			mProtocol.SendRawMessage("JOIN " + mChannelName);
+			if (OnJoin != null)
+				OnJoin(this, null);
+		}
+		public void ApplyUserMode(string username, IrcUserModes modes)
+		{
+			mProtocol.ApplyIRCModeToUser(username, mChannelName, modes);
+		}
+
+		internal void ReceiveMessage(string sender, string message)
+		{
+			try {
+				if (OnMessageReceived != null)
+					OnMessageReceived(this, new IMMessageEventArgs(sender, null, message));
+			} catch (Exception e) {
+				e=e;
+			}
+		}
+		internal void SetParticipants(IList<string> participants)
+		{
+			mParticipants = participants;
+			if (OnUserListReceived != null)
+				OnUserListReceived(this, null);
+		}
+		internal void TriggerOnKicked(string kicker, string reason)
+		{
+			mInChannel = false;
+			if (OnKickedFromChannel != null)
+				OnKickedFromChannel(this, new IMKickedFromRoomEventArgs() { KickedBy = kicker, Message = reason });
+		}
+		internal void TriggerOnUserJoin(string username)
+		{
+			if (OnUserJoin != null)
+				OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = username});
+		}
+
+		// Properties
+		public string Name
+		{
+			get {
+				return mChannelName;
+			}
+		}
+		public IEnumerable<string> Participants
+		{
+			get {
+				return mParticipants;
+			}
+		}
+
+		// Events
+		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
+		public event EventHandler OnUserListReceived;
+		public event EventHandler<IMKickedFromRoomEventArgs> OnKickedFromChannel;
+		public event EventHandler OnJoin;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
+
+		//Variables
+		private bool mInChannel;
+		private IList<string> mParticipants;
+		private IRCProtocol mProtocol;
+		private string mChannelName;
+	}
+	[Flags]
+	public enum IrcUserModes
+	{
+		None,
+		Protected, // ASCII for a
+		Operator, // ASCII for o
+	}
+	[Flags]
+	public enum IrcChannelModes
+	{
+
+	}
+	public class IRCProtocol : IMProtocol, IDisposable
+	{
+		public IRCProtocol()
+		{
+			protocolType = "IRC";
+			mProtocolTypeShort = "irc";
+			supportsMUC = true;
+			needPassword = false;
+		}
+		public IRCProtocol(string hostname, int port) : this()
+		{
+			Server = hostname;
+		}
+		public void Dispose()
+		{
+			if (status != IMProtocolStatus.OFFLINE)
+			{
+				Debug.WriteLine("Dispose Requested... Cleanup resources");
+				triggerOnDisconnect(this, null);
+				status = IMProtocolStatus.OFFLINE;
+			}
+
+			mTextStream = null;
+			mWriter = null;
+			client.Close();
+			client = null;
+			mDataQueue = null;
+		}
+		public override void BeginLogin()
+		{
+			client = new TcpClient();
+
+			client.BeginConnect(mServer, 6667, new AsyncCallback(OnSocketConnect), null);
+			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
+		}
+		public override void Disconnect()
+		{
+			Dispose();
+		}
+		public override IChatRoom JoinChatRoom(string room)
+		{
+			sendData("JOIN " + room);
+
+			IRCChannel channel = new IRCChannel(room, this);
+			mChannels.Add(channel);
+
+			return channel;
+		}
+		public void LoginAsOperator(string username, string password)
+		{
+			sendData(String.Format("OPER {0} {1}", username, password));
+		}
+		public void ApplyIRCModeToUser(string username, string channel, IrcUserModes mode)
+		{
+			string modemask = UserModeToString(mode);
+
+			sendData(String.Format("MODE {0} +{1} {2}", channel, modemask, username));
+		}
+		public void RemoveIRCModeFromUser(string username, string channel, IrcUserModes mode)
+		{
+			string modemask = UserModeToString(mode);
+
+			sendData(String.Format("MODE {0} -{1} {2}", channel, modemask, username));
+		}
+		internal void SendRawMessage(string message)
+		{
+			sendData(message);
+		}
+		private string UserModeToString(IrcUserModes modes)
+		{
+			StringBuilder builder = new StringBuilder();
+			if (modes.HasFlag(IrcUserModes.Protected))
+				builder.Append("a");
+			if (modes.HasFlag(IrcUserModes.Operator))
+				builder.Append("o");
+
+			return builder.ToString();
+		}
+
+		// Properties
+		public string RealName
+		{
+			get	{
+				return mRealName;
+			}
+			set	{
+				mRealName = value;
+			}
+		}
+		public string Nickname
+		{
+			get	{
+				return mNickname;
+			}
+			set	{
+				mNickname = value;
+
+				NotifyPropertyChanged("Nickname");
+
+				if (status == IMProtocolStatus.ONLINE)
+					sendData("NICK " + mNickname);
+			}
+		}
+
+		private void ParseLine(string line)
+		{
+			Debug.WriteLine("<-- " + line);
+
+			if (line[0] == ':') // Standard message type
+			{
+				string[] parameters = line.Substring(1).Split(' ');
+				// First param will be the from server
+				// Second param is the command
+
+				int numericReply;
+
+				if (Int32.TryParse(parameters[1], out numericReply))
+				{
+					switch (numericReply)
+					{
+						case 353: // Users in the channel
+							{
+								HandleChannelNamesList(parameters.First(s => s.StartsWith("#") | s.StartsWith("&")), parameters.Last(s => s.StartsWith(":")).Substring(1));
+								break;
+							}
+					}
+				} else {
+					switch (parameters[1].ToUpper())
+					{
+						case "PRIVMSG":
+							{
+								HandleMessagePacket(line, parameters);
+								break;
+							}
+						case "KICK":
+							{
+								HandleKickPacket(parameters);
+								break;
+							}
+						case "JOIN":
+							{
+								HandleUserJoinPacket(parameters);
+								break;
+							}
+					}
+				}
+			} else {
+				if (line.StartsWith("PING"))
+				{
+					string destination = line.Substring(line.IndexOf(":") + 1);
+					HandlePingPacket(destination);
+				}
+			}
+		}
+
+		private void HandleUserJoinPacket(string[] parameters)
+		{
+			if (ExtractNickname(parameters[0]) != mNickname)
+				mChannels.First(c => c.Name == parameters[2].Replace(":", "")).TriggerOnUserJoin(parameters[0]);
+		}
+		private void HandleKickPacket(string[] parameters)
+		{
+			if (parameters[3] == mNickname) // It's us! 
+			{
+				mChannels.First(c => c.Name == parameters[2]).TriggerOnKicked(parameters[0], "");
+			}
+		}
+		private void HandlePingPacket(string destination)
+		{
+			sendData("PONG " + destination);
+		}
+		private void HandleChannelNamesList(string channel, string list)
+		{
+
+		}
+		private void HandleMessagePacket(string line, string[] parameters)
+		{
+			string recipient = parameters[2];
+
+			if (recipient[0] == '#') // IRC Channel
+			{
+				IRCChannel channel = mChannels.FirstOrDefault(chan => chan.Name == recipient);
+
+				int messageStartIndex = line.LastIndexOf(':');
+				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
+			}
+		}
+		private void readDataAsync(IAsyncResult e)
+		{
+			int bytesRead = mTextStream.EndRead(e);
+
+			if (bytesRead == 0)
+			{
+				Dispose();
+				return;
+			}
+			
+			string streamBuf = mTextEncoder.GetString(mDataQueue, 0, bytesRead);
+			IEnumerable<string> lines = streamBuf.Split(new char[] { '\r', '\n' } ,StringSplitOptions.RemoveEmptyEntries);
+			int lineCount = lines.Count();
+
+			IEnumerable<string> readableLines = lines;
+			if (mBufferCutoffMessage != null)
+			{
+				mBufferCutoffMessage.Append(lines.First());
+
+				if (lineCount >= 2)
+				{
+					string[] last = new string[] { mBufferCutoffMessage.ToString() };
+					mBufferCutoffMessage = null;
+
+					readableLines = last.Skip(1).Union(readableLines);
+				}
+			}
+
+			if (bytesRead == mBufferSize) // Check to see if we've read up until the buffer's end
+				readableLines = lines.Take(lineCount - 1);
+
+			foreach (string line in readableLines)
+				ParseLine(line);
+
+			if (bytesRead == mBufferSize)
+				mBufferCutoffMessage = new StringBuilder(lines.Last()); // The last message will be queued up for the rest of the message
+
+			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+		}
+		private void OnSocketConnect(IAsyncResult e)
+		{
+			client.EndConnect(e);
+			mTextStream = client.GetStream();
+			mWriter = new StreamWriter(mTextStream);
+			mWriter.AutoFlush = true;
+
+			if (!String.IsNullOrEmpty(Password))
+				sendData("PASS " + Password);
+
+			if (!String.IsNullOrEmpty(mNickname))
+				sendData("NICK " + mNickname);
+			sendData(String.Format("USER {0} {1} {2} :{3}", String.IsNullOrEmpty(mNickname) ? mUsername : mNickname, Environment.MachineName, mServer, mRealName));
+
+			status = IMProtocolStatus.ONLINE;
+
+			LoginWaitHandle.Set();
+			triggerOnLogin(null);
+
+			mDataQueue = new byte[mBufferSize];
+			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+		}
+		private void sendData(string data)
+		{
+			Debug.WriteLine("--> " + data);
+			mWriter.WriteLine(data);
+		}
+		private string ExtractNickname(string hostmask)
+		{
+			return hostmask.Substring(0, hostmask.IndexOf("!"));
+		}
+
+		// Variables
+		private string mRealName = "nexusim";
+		private string mNickname;
+		private StringBuilder mBufferCutoffMessage;
+		private IList<IRCChannel> mChannels = new List<IRCChannel>();
+		private byte[] mDataQueue;
+		private TcpClient client;
+		private StreamWriter mWriter;
+		private Stream mTextStream;
+		private const int mBufferSize = 1024;
+		private static Encoding mTextEncoder = Encoding.ASCII;
+	}
+}

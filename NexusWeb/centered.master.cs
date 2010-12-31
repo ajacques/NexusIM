@@ -26,7 +26,7 @@ namespace NexusWeb.Masters
 							where u.id == userid
 							select new { u.firstname, u.lastname }).First();
 
-				headerright.Visible = true;
+				//headerright.Visible = true;
 				MyDisplayImageByUpdatebox.ImageUrl = String.Format(MyDisplayImageByUpdatebox.ImageUrl, userid);
 				ProminantMyUsername.Text = user.firstname + " " + user.lastname;
 				ProminantMyUsername.NavigateUrl = String.Format(ProminantMyUsername.NavigateUrl, userid);

@@ -75,12 +75,12 @@ namespace WebTests
 			int userid = 1;
 			mLocalSession.Add("userid", userid);
 
-			ArticleService service = new ArticleService();
+			DbArticleService service = new DbArticleService();
 
 			userdbDataContext db = new userdbDataContext();
 			IQueryable<int> friends = db.GetFriends(userid).Select(u => u.id);
 
-			var results = service.StatusUpdates.Any(cs => !friends.Contains(cs.UserId));
+			var results = service.StatusUpdates.Any(cs => !friends.Contains(cs.Id));
 
 			Assert.IsFalse(results);
 		}
@@ -89,7 +89,7 @@ namespace WebTests
 		[ExpectedException(typeof(WebFaultException<string>))]
 		public void NotLoggedInTest()
 		{
-			ArticleService service = new ArticleService();
+			DbArticleService service = new DbArticleService();
 
 			bool result = service.StatusUpdates.Any();
 		}
