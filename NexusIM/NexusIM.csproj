@@ -569,9 +569,9 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BaseProtocolLibrary\BaseWindowsProtocolLibrary.csproj">
+    <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
       <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
-      <Name>BaseWindowsProtocolLibrary</Name>
+      <Name>BaseProtocolLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}</Project>
@@ -599,7 +599,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

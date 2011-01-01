@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using InstantMessage;
 using NexusIM.Managers;
+using InstantMessage.Events;
 
 namespace NexusIM
 {
@@ -16,7 +17,7 @@ namespace NexusIM
 		public static void Setup()
 		{
 			UserIdle.onUserReturn += new EventHandler(UserIdle_onUserReturn);
-			IMProtocol.onMessageReceive += new EventHandler<IMMessageEventArgs>(MessageReceive);
+			//IMProtocol.onMessageReceive += new EventHandler<IMMessageEventArgs>(MessageReceive);
 		}
 		/// <summary>
 		/// Cleans up all data and pointers used by the Auto Responder
@@ -24,7 +25,7 @@ namespace NexusIM
 		public static void Shutdown()
 		{
 			UserIdle.onUserReturn -= new EventHandler(UserIdle_onUserReturn);
-			IMProtocol.onMessageReceive -= new EventHandler<IMMessageEventArgs>(MessageReceive);
+			//IMProtocol.onMessageReceive -= new EventHandler<IMMessageEventArgs>(MessageReceive);
 			usershandled.Clear();
 			usershandled = null;
 		}

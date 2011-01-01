@@ -1,5 +1,6 @@
 ﻿using System;
 using InstantMessage;
+using InstantMessage.Events;
 
 namespace NexusIM
 {

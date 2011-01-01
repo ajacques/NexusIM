@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using InstantMessage;
 using Microsoft.WindowsAPICodePack.Net;
+using InstantMessage.Events;
 
 namespace NexusIM.Managers
 {

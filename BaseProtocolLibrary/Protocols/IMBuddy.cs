@@ -72,7 +72,7 @@ namespace InstantMessage
 		public void ShowRecvMessage(string message)
 		{
 			if (onReceiveMessage != null)
-				onReceiveMessage(this, new IMMessageEventArgs(this, mProtocol.Username, message));
+				onReceiveMessage(this, new IMMessageEventArgs(this, message));
 			if (IMProtocol.CustomProtocolManager != null)
 				IMProtocol.CustomProtocolManager.ShowReceivedMessage(this, message);
 		}

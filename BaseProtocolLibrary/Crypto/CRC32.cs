@@ -18,7 +18,7 @@ namespace System.Security.Cryptography
     /// <summary>
     /// Computes a <strong>CRC32</strong> hash for the input data.
     /// </summary>   
-    public abstract class CRC32 : HashAlgorithm
+    abstract class CRC32 : HashAlgorithm
     {
         #region Constants
 

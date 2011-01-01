@@ -889,7 +889,7 @@ namespace InstantMessage
 				// Use weird, messed up way to support yahoo UTF-8 messages
 				buddy.ShowRecvMessage(newmsg);
 				buddy.ShowIsTypingMessage(false);
-				triggerOnMessageReceive(new IMMessageEventArgs(buddy, mUsername, newmsg));
+				triggerOnMessageReceive(new IMMessageEventArgs(buddy, newmsg));
 			}
 
 			// Tell the Yahoo servers we got this message

@@ -63,30 +63,17 @@ namespace InstantMessage.Events
 		}
 		private DisconnectReason mReason;
 	}
-	public class IMMessageEventArgs : EventArgs
+	public class IMMessageEventArgs<T> : EventArgs
 	{
-		public IMMessageEventArgs(string from, string to, string message)
-		{
-			mSenderStr = from;
-			mReceiver = to;
-			mMessage = message;
-		}
-		public IMMessageEventArgs(IMBuddy from, string to, string message)
+		public IMMessageEventArgs(T from, string message)
 		{
 			mSender = from;
-			mReceiver = to;
 			mMessage = message;
 		}
-		public IMBuddy Sender
+		public T Sender
 		{
 			get	{
 				return mSender;
-			}
-		}
-		public string Receiver
-		{
-			get	{
-				return mReceiver;
 			}
 		}
 		public string Message
@@ -95,19 +82,13 @@ namespace InstantMessage.Events
 				return mMessage;
 			}
 		}
-		public string SenderString
-		{
-			get
-			{
-				return mSenderStr;
-			}
-		}
-
-
-		private IMBuddy mSender;
-		private string mSenderStr;
-		private string mReceiver;
+		
+		private T mSender;
 		private string mMessage;
+	}
+	public class IMMessageEventArgs : IMMessageEventArgs<IMBuddy>
+	{
+		public IMMessageEventArgs(IMBuddy from, string message) : base(from, message) {}
 	}
 	public class IMFriendEventArgs : EventArgs
 	{
@@ -284,6 +265,14 @@ namespace InstantMessage.Events
 			internal set;
 		}
 		public string Message
+		{
+			get;
+			internal set;
+		}
+	}
+	public class IMChatRoomEventArgs : EventArgs
+	{
+		public IChatRoom ChatRoom
 		{
 			get;
 			internal set;

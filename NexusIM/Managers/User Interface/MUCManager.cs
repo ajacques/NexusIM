@@ -1,4 +1,5 @@
-﻿
+﻿using InstantMessage.Events;
+
 namespace InstantMessage
 {
 	static class MUCManager

@@ -8,6 +8,8 @@
 	<script type="text/javascript" src="js/jStorage.js"></script>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="rightcolcontent" runat="server">
+	<div class="colheadline">Search</div>
+	<input type="text" />
 	<div class="colheadline">Requests</div>
 	<div class="colheadline" style="display: none">Tasks</div>
 </asp:Content>

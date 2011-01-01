@@ -108,9 +108,9 @@
     <Compile Include="WCFTestTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BaseProtocolLibrary\BaseWindowsProtocolLibrary.csproj">
+    <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
       <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
-      <Name>BaseWindowsProtocolLibrary</Name>
+      <Name>BaseProtocolLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\NexusWeb\NexusWeb.csproj">
       <Project>{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}</Project>

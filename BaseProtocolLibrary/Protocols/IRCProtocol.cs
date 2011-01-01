@@ -49,12 +49,22 @@ namespace InstantMessage.Protocols.Irc
 		{
 			mProtocol.ApplyIRCModeToUser(username, mChannelName, modes);
 		}
+		public void Leave(string reason)
+		{
+			if (!mInChannel)
+				throw new InvalidOperationException();
+
+			if (reason != null)
+				mProtocol.SendRawMessage(String.Format("PART {0} :{1}", mChannelName, reason));
+			else
+				mProtocol.SendRawMessage("PART " + mChannelName);
+		}
 
 		internal void ReceiveMessage(string sender, string message)
 		{
 			try {
 				if (OnMessageReceived != null)
-					OnMessageReceived(this, new IMMessageEventArgs(sender, null, message));
+					OnMessageReceived(this, new IMMessageEventArgs<object>(new IrcUserMask(sender), message));
 			} catch (Exception e) {
 				e=e;
 			}
@@ -90,9 +100,18 @@ namespace InstantMessage.Protocols.Irc
 				return mParticipants;
 			}
 		}
+		public bool Joined
+		{
+			get	{
+				return mInChannel;
+			}
+			internal set {
+				mInChannel = value;
+			}
+		}
 
 		// Events
-		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
+		public event EventHandler<IMMessageEventArgs<object>> OnMessageReceived;
 		public event EventHandler OnUserListReceived;
 		public event EventHandler<IMKickedFromRoomEventArgs> OnKickedFromChannel;
 		public event EventHandler OnJoin;
@@ -104,12 +123,44 @@ namespace InstantMessage.Protocols.Irc
 		private IRCProtocol mProtocol;
 		private string mChannelName;
 	}
+	public class IrcUserMask
+	{
+		public IrcUserMask(string input)
+		{
+			int exclaim = input.IndexOf("!");
+			int at = input.IndexOf("@");
+
+			Nickname = input.Substring(0, exclaim);
+			Username = input.Substring(exclaim + 1, at - exclaim - 1);
+			Hostname = new Uri("irc://" + input.Substring(at + 1));
+		}
+		public override string ToString()
+		{
+			return String.Format("{0}!{1}@{2}", Nickname, Username, Hostname.Host);
+		}
+		public string Nickname
+		{
+			get;
+			set;
+		}
+		public string Username
+		{
+			get;
+			set;
+		}
+		public Uri Hostname
+		{
+			get;
+			set;
+		}
+	}
 	[Flags]
 	public enum IrcUserModes
 	{
-		None,
-		Protected, // ASCII for a
-		Operator, // ASCII for o
+		None = 0,
+		Invisible = 1,
+		Protected = 2, // ASCII for a
+		Operator = 4, // ASCII for o
 	}
 	[Flags]
 	public enum IrcChannelModes
@@ -153,10 +204,15 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public override void Disconnect()
 		{
+			sendData("SQUIT");
+
 			Dispose();
 		}
 		public override IChatRoom JoinChatRoom(string room)
 		{
+			if (mChannels.Any(chan => chan.Name == room))
+				return mChannels.First(chan => chan.Name == room);
+
 			sendData("JOIN " + room);
 
 			IRCChannel channel = new IRCChannel(room, this);
@@ -164,33 +220,64 @@ namespace InstantMessage.Protocols.Irc
 
 			return channel;
 		}
+		public override void SendMessage(string friendName, string message)
+		{
+			sendData(String.Format("PRIVMSG {0} :{1}", friendName, message));
+		}
+
+		public void Disconnect(string reason)
+		{
+			sendData("SQUIT :" + reason);
+			Dispose();
+		}
 		public void LoginAsOperator(string username, string password)
 		{
 			sendData(String.Format("OPER {0} {1}", username, password));
 		}
 		public void ApplyIRCModeToUser(string username, string channel, IrcUserModes mode)
 		{
-			string modemask = UserModeToString(mode);
+			int numModes;
+			string modemask = UserModeToString(mode, out numModes);
+			string userMask = "";
 
-			sendData(String.Format("MODE {0} +{1} {2}", channel, modemask, username));
+			for (int i = 0; i < numModes; i++)
+				userMask += username + " ";
+
+			sendData(String.Format("MODE {0} +{1} {2}", channel, modemask, userMask));
 		}
 		public void RemoveIRCModeFromUser(string username, string channel, IrcUserModes mode)
 		{
-			string modemask = UserModeToString(mode);
+			int numModes;
+			string modemask = UserModeToString(mode, out numModes);
 
 			sendData(String.Format("MODE {0} -{1} {2}", channel, modemask, username));
 		}
+
 		internal void SendRawMessage(string message)
 		{
 			sendData(message);
 		}
-		private string UserModeToString(IrcUserModes modes)
+		private string UserModeToString(IrcUserModes modes, out int numModes)
 		{
+			int modeCount = 0;
 			StringBuilder builder = new StringBuilder();
 			if (modes.HasFlag(IrcUserModes.Protected))
+			{
 				builder.Append("a");
+				modeCount++;
+			}
+			if (modes.HasFlag(IrcUserModes.Invisible))
+			{
+				builder.Append("i");
+				modeCount++;
+			}
 			if (modes.HasFlag(IrcUserModes.Operator))
+			{
 				builder.Append("o");
+				modeCount++;
+			}
+
+			numModes = modeCount;
 
 			return builder.ToString();
 		}
@@ -238,7 +325,7 @@ namespace InstantMessage.Protocols.Irc
 					{
 						case 353: // Users in the channel
 							{
-								HandleChannelNamesList(parameters.First(s => s.StartsWith("#") | s.StartsWith("&")), parameters.Last(s => s.StartsWith(":")).Substring(1));
+								HandleChannelNamesList(parameters.First(s => s.StartsWith("#") | s.StartsWith("&")), line.Substring(line.LastIndexOf(':') + 1));
 								break;
 							}
 					}
@@ -273,8 +360,31 @@ namespace InstantMessage.Protocols.Irc
 
 		private void HandleUserJoinPacket(string[] parameters)
 		{
+			string name = parameters[2].Replace(":", "");
 			if (ExtractNickname(parameters[0]) != mNickname)
-				mChannels.First(c => c.Name == parameters[2].Replace(":", "")).TriggerOnUserJoin(parameters[0]);
+				mChannels.First(c => c.Name == name).TriggerOnUserJoin(parameters[0]);
+			else {
+				if (!mChannels.Any(chan => chan.Name == name))
+				{
+					IRCChannel channel = new IRCChannel(name, this);
+					mChannels.Add(channel);
+
+					if (OnForceJoinChannel != null)
+						OnForceJoinChannel(channel, null);
+				} else{
+					IRCChannel channel = mChannels.First(chan => chan.Name == name);
+
+					if (channel.Joined)
+						return;
+					channel.Joined = true;
+
+					if (OnForceJoinChannel != null)
+						OnForceJoinChannel(channel, null);
+				}
+
+				
+			}
+
 		}
 		private void HandleKickPacket(string[] parameters)
 		{
@@ -287,9 +397,11 @@ namespace InstantMessage.Protocols.Irc
 		{
 			sendData("PONG " + destination);
 		}
-		private void HandleChannelNamesList(string channel, string list)
+		private void HandleChannelNamesList(string channelName, string list)
 		{
+			IRCChannel channel = mChannels.FirstOrDefault(chan => chan.Name == channelName);
 
+			channel.SetParticipants(list.Split(' '));
 		}
 		private void HandleMessagePacket(string line, string[] parameters)
 		{
@@ -299,7 +411,7 @@ namespace InstantMessage.Protocols.Irc
 			{
 				IRCChannel channel = mChannels.FirstOrDefault(chan => chan.Name == recipient);
 
-				int messageStartIndex = line.LastIndexOf(':');
+				int messageStartIndex = line.IndexOf(':', 5);
 				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
 			}
 		}
@@ -373,6 +485,9 @@ namespace InstantMessage.Protocols.Irc
 		{
 			return hostmask.Substring(0, hostmask.IndexOf("!"));
 		}
+
+		// Events
+		public event EventHandler OnForceJoinChannel;
 
 		// Variables
 		private string mRealName = "nexusim";

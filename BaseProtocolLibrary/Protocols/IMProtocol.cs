@@ -569,6 +569,7 @@ namespace InstantMessage
 		/// </summary>
 		/// <param name="name">The protocol type string</param>
 		/// <returns>Your fancy new IMProtocol</returns>
+		[Obsolete("", false)]
 		public static IMProtocol FromString(string name)
 		{
 			var protocol = from t in Assembly.GetCallingAssembly().GetTypes()
@@ -578,13 +579,12 @@ namespace InstantMessage
 
 
 			name = name.ToLower();
-			if (name == "yahoo")
-				return new IMYahooProtocol();
-			else if (CustomProtocolManager != null)
+			if (CustomProtocolManager != null)
 				return CustomProtocolManager.CreateCustomProtocol(name);
 			else
 				return null;
 		}
+		[Obsolete("", false)]
 		public static string FromProtocolString(string protocol)
 		{
 			protocol = protocol.ToLower();
@@ -764,13 +764,18 @@ namespace InstantMessage
 		{
 			get;
 		}
+		bool Joined
+		{
+			get;
+		}
 		IEnumerable<string> Participants
 		{
 			get;
 		}
 		void SayMessage(string message);
+		void Leave(string reason);
 
-		event EventHandler<IMMessageEventArgs> OnMessageReceived;
+		event EventHandler<IMMessageEventArgs<object>> OnMessageReceived;
 		event EventHandler OnUserListReceived;
 	}
 }
