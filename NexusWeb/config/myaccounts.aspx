@@ -1,4 +1,4 @@
-﻿<%@ Page Title="My IM Accounts" Language="C#" MasterPageFile="~/w/centered.master" AutoEventWireup="true" CodeBehind="myaccounts.aspx.cs" Inherits="NexusWeb.Pages.MyNetworkAccounts" %>
+﻿<%@ Page Title="My IM Accounts" Language="C#" MasterPageFile="~/centered.master" AutoEventWireup="true" CodeBehind="myaccounts.aspx.cs" Inherits="NexusWeb.Pages.MyNetworkAccounts" %>
 <asp:Content ContentPlaceHolderID="head" runat="server">
 	<style type="text/css">
 		.headertable tr:hover

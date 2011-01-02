@@ -11,6 +11,19 @@ using System.Collections;
 
 namespace InstantMessage.Protocols.Irc
 {
+	public class IRCModeChangeEventArgs : EventArgs
+	{
+		public IGrouping<string, IrcUserModes> AddedModes
+		{
+			get;
+			internal set;
+		}
+		public IGrouping<string, IrcUserModes> RemovedModes
+		{
+			get;
+			internal set;
+		}
+	}
 	public class IRCChannel : IChatRoom
 	{
 		internal IRCChannel(string channelName, IRCProtocol protocol)
@@ -66,7 +79,7 @@ namespace InstantMessage.Protocols.Irc
 				if (OnMessageReceived != null)
 					OnMessageReceived(this, new IMMessageEventArgs<object>(new IrcUserMask(sender), message));
 			} catch (Exception e) {
-				e=e;
+				Trace.TraceError(e.Message);
 			}
 		}
 		internal void SetParticipants(IList<string> participants)
@@ -116,6 +129,7 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<IMKickedFromRoomEventArgs> OnKickedFromChannel;
 		public event EventHandler OnJoin;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
+		public event EventHandler<IRCModeChangeEventArgs> OnModeChange;
 
 		//Variables
 		private bool mInChannel;
@@ -159,13 +173,16 @@ namespace InstantMessage.Protocols.Irc
 	{
 		None = 0,
 		Invisible = 1,
-		Protected = 2, // ASCII for a
-		Operator = 4, // ASCII for o
+		Protected = 2, // a
+		Operator = 4, // o
+		Voice = 8 // v
 	}
 	[Flags]
 	public enum IrcChannelModes
 	{
-
+		None,
+		Moderated,
+		InviteOnly,
 	}
 	public class IRCProtocol : IMProtocol, IDisposable
 	{
@@ -276,6 +293,11 @@ namespace InstantMessage.Protocols.Irc
 				builder.Append("o");
 				modeCount++;
 			}
+			if (modes.HasFlag(IrcUserModes.Voice))
+			{
+				builder.Append("v");
+				modeCount++;
+			}
 
 			numModes = modeCount;
 
@@ -358,6 +380,13 @@ namespace InstantMessage.Protocols.Irc
 			}
 		}
 
+		private void HandleModeChangePacket(string[] parameters)
+		{
+			string channelName = parameters[3];
+			string mode = parameters[4];
+
+
+		}
 		private void HandleUserJoinPacket(string[] parameters)
 		{
 			string name = parameters[2].Replace(":", "");
@@ -415,6 +444,7 @@ namespace InstantMessage.Protocols.Irc
 				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
 			}
 		}
+
 		private void readDataAsync(IAsyncResult e)
 		{
 			int bytesRead = mTextStream.EndRead(e);
@@ -466,7 +496,7 @@ namespace InstantMessage.Protocols.Irc
 
 			if (!String.IsNullOrEmpty(mNickname))
 				sendData("NICK " + mNickname);
-			sendData(String.Format("USER {0} {1} {2} :{3}", String.IsNullOrEmpty(mNickname) ? mUsername : mNickname, Environment.MachineName, mServer, mRealName));
+			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, Environment.MachineName, mServer, mRealName));
 
 			status = IMProtocolStatus.ONLINE;
 

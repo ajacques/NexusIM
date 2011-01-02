@@ -777,5 +777,6 @@ namespace InstantMessage
 
 		event EventHandler<IMMessageEventArgs<object>> OnMessageReceived;
 		event EventHandler OnUserListReceived;
+		event EventHandler OnJoin;
 	}
 }

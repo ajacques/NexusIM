@@ -92,7 +92,10 @@ NewsFeed.onArticlesDownload = function (content)
 	for (var i = 0; i < content.length; i++)
 	{
 		var obj = content[i];
-		$("ul#feed").append(NewsFeed.handleAddArticleMessage(obj));
+		var li = NewsFeed.handleAddArticleMessage(obj);
+		$(li).css("display", "none");
+		$("ul#feed").append(li);
+		$(li).delay(500 + (i * 25)).fadeIn('normal');
 	}
 	NewsFeed.UpdateTimestamps();
 	NewsFeed.ArticleLongPoll();
@@ -323,24 +326,63 @@ NewsFeed.statusKeyPress = function(e)
 
 		var result = regex.exec($("#statusupdate").val());
 		
-		$("#susuggest").html("");
-		var foundOne = false;
-		for (item in Friends)
-		{			
-			if (Friends[item].FirstName.substring(0, result[1].length) == result[1])
-			{
-				var li = document.createElement("li");
-				li.innerHTML = Friends[item].FirstName + " " + Friends[item].LastName;
-				li.setAttribute("uid", Friends[item].Prefix + ":" + Friends[item].UserId);
-				$("#susuggest").append(li);
-				foundOne = true;
+		if (result != null)
+		{
+			$("#susuggest").html("");
+			var foundOne = false;
+			for (item in Friends)
+			{			
+				if (Friends[item].FirstName.substring(0, result[1].length) == result[1])
+				{
+					var li = document.createElement("li");
+					li.innerHTML = Friends[item].FirstName + " " + Friends[item].LastName;
+					li.setAttribute("uid", Friends[item].Prefix + Friends[item].UserId);
+					$("#susuggest").append(li);
+					foundOne = true;
+				}
 			}
+			if (foundOne)
+				$("#StatusUpdateSuggestions").show();
+			else
+				$("#StatusUpdateSuggestions").hide();
 		}
-		if (foundOne)
-			$("#StatusUpdateSuggestions").show();
-		else
-			$("#StatusUpdateSuggestions").hide();
 	}
+}
+
+NewsFeed.searchBarKeyUp = function(e)
+{
+	var keyCode = null;
+
+	if (window.event)
+		keyCode = e.keyCode;
+	else if (e.which)
+		keyCode = e.which;
+	var searchCode = $("#SearchBox").val();
+
+	if (keyCode == 13)
+	{
+		window.location.href = "search.aspx?query=" + searchCode;
+		return false;
+	}
+
+	$("#SearchSuggestList").html("");
+	var foundOne = false;
+	for (item in Friends)
+	{			
+		if (Friends[item].FirstName.substring(0, searchCode.length) == searchCode)
+		{
+			var li = document.createElement("li");
+			li.innerHTML = Friends[item].FirstName + " " + Friends[item].LastName;
+			li.setAttribute("uid", Friends[item].Prefix + Friends[item].UserId);
+			$("#SearchSuggestList").append(li);
+			foundOne = true;
+		}
+	}
+
+	if (foundOne)
+		$("#SearchBoxSuggest").show();
+	else
+		$("#SearchBoxSuggest").hide();
 }
 
 NewsFeed.onPostStatusBoxLoseFocus = function (target)
@@ -467,6 +509,7 @@ NewsFeed.postStatusMessage = function()
 		$(li).hide();
 		$("ul#feed").prepend(li);
 		$(li).slideDown();
+		NewsFeed.UpdateTimestamps();
 	});
 }
 
@@ -476,4 +519,5 @@ $("body").ready(function()
 	//NewsFeed.fillStatusBox();
 	if (Modernizr.geolocation)
 		$("span#GeoLoc").show();
+	window.setInterval("NewsFeed.UpdateTimestamps()", 2000);
 });

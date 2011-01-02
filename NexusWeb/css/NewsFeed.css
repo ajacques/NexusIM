@@ -143,7 +143,7 @@ tr.ArticlePostCommentTr textarea
 	width: 100%;
 }
 
-#StatusUpdateSuggestions 
+.SuggestionBox
 {
 	position: absolute;
 	background-color: rgb(240, 240, 240);
@@ -157,13 +157,13 @@ tr.ArticlePostCommentTr textarea
 	-moz-border-radius: 0pt 0pt 5px 5px;
 }
 
-#StatusUpdateSuggestions ul
+.SuggestionBox ul
 {
 	list-style: none;
 	padding-top: 0;
 }
 
-#StatusUpdateSuggestions ul li
+.SuggestionBox ul li
 {
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -171,7 +171,7 @@ tr.ArticlePostCommentTr textarea
 	padding-left: 5px;
 }
 
-#StatusUpdateSuggestions ul li:hover
+.SuggestionBox ul li:hover
 {
 	background-color: #DCDCDC;
 	cursor: pointer;
@@ -179,7 +179,7 @@ tr.ArticlePostCommentTr textarea
 	border-radius: 4px;
 }
 
-#StatusUpdateSuggestions ul li:last-child
+.SuggestionBox ul li:last-child
 {
 	border-bottom: 0;
 }

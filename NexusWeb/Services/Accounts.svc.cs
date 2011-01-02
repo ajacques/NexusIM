@@ -80,22 +80,31 @@ namespace NexusWeb.Services
 			if (!CounterCSRF.IsValidFromSecureWCF())
 			{
 				Trace.TraceError(String.Format("NexusWeb: Attempted WCF call from outside secure website boundaries (Method: AccountService.SetLocationShareState): {0}", HttpContext.Current.Request.UrlReferrer.AbsoluteUri));
-				throw new FaultException<SecurityException>(new SecurityException("Attempted HTTP request outside of secure website boundaries"), new FaultReason("Attempted HTTP request outside of secure website boundaries"), new FaultCode("Sender"));
+				throw WCFExceptions.CrossSiteViolation;
 			}
 
 			HttpSessionState session = HttpContext.Current.Session;
 			HttpResponse response = HttpContext.Current.Response;
 
+			if (session["userid"] != null)
+				return;
+
 			userdbDataContext db = new userdbDataContext();
-			User userrow = db.TryLogin(username, password);
+			var userrow = db.TryLogin(username, password);
+			NexusAuditLogDataContext audit = new NexusAuditLogDataContext();
 
 			if (userrow == null)
 			{
 				Trace.WriteLine("NexusWeb: Invalid login credentials");
-				throw new FaultException<SecurityException>(new SecurityException("You have provided a invalid login credential"), new FaultReason("You have provided an invalid login credential"), new FaultCode("Sender", new FaultCode("BadCredentials")));
-			}
 
-			session.Remove("logintoken");
+				db.Dispose();
+
+				audit.LogLoginAttempt(username, null);
+
+				throw WCFExceptions.BadCredentials;
+			}
+			audit.LogLoginAttempt(userrow.id);
+
 			session.Add("userid", userrow.id);
 			session.Add("username", userrow.username);
 

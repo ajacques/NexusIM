@@ -9,9 +9,17 @@
 </asp:Content>
 <asp:Content ContentPlaceHolderID="rightcolcontent" runat="server">
 	<div class="colheadline">Search</div>
-	<input type="text" />
+	<form action="search.aspx">
+		<input id="SearchBox" type="text" style="margin: 10px; -moz-box-shadow: 0 0 15px rgba(0, 168, 50, 0.5); width: 200px; border: solid 1px rgba(0, 168, 50, 1)" onkeyup="NewsFeed.searchBarKeyUp(event);" onblur="$('#SearchBoxSuggest').hide();" />
+	</form>
+	<div id="SearchBoxSuggest" class="SuggestionBox" style="display: none; margin-left: 10px; width: 189px">
+		<ul id="SearchSuggestList"></ul>
+	</div>
 	<div class="colheadline">Requests</div>
 	<div class="colheadline" style="display: none">Tasks</div>
+	<ul>
+		<li><a href="config/myaccount.aspx">Account Settings</a></li>
+	</ul>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="body" runat="server">
 	<div id="UserHoverCard" onmouseover="cancelHoverBoxHide = true;" onmouseout="cancelHoverBoxHide = false;NewsFeed.onUserLinkHoverOut();">
@@ -20,7 +28,7 @@
 	<div id="StatusUpdateContainer" onclick="cancelStatusMsgHide = true;" style="width: 540px; border-bottom: solid 1px #eeeeee; ">
 		<label for="statusupdate" style="font-family: 'Lucida Grande',sans-serif; margin-bottom: 10px; font-size: 20px;">How are you today?</label>
 		<textarea ID="statusupdate" onkeyup="return NewsFeed.statusKeyPress(event);"></textarea> <!-- onfocus="NewsFeed.clearStatusBox();" onblur="NewsFeed.fillStatusBox();" -->
-		<div id="StatusUpdateSuggestions" style="display: none;">
+		<div id="StatusUpdateSuggestions" class="SuggestionBox" style="display: none;">
 			<ul id="susuggest"></ul>
 		</div>
 		<div id="PostSpan" style="height: 25px;">
@@ -38,6 +46,7 @@
 		var Self = new Object();
 		Self.FirstName = "<%= this.user.firstname %>";
 		Self.LastName = "<%= this.user.lastname %>";
+		Self.UserId = <%= this.user.id %>;
 		var isTempLogin = false;
 	</script>
 	<ul id="feed" style="list-style-type: none">

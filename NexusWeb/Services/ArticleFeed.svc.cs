@@ -65,6 +65,13 @@ namespace NexusWeb.Services
 		}
 
 		[WebGet]
+		public IQueryable<User> SearchUsersByDistance(int centerPoint)
+		{
+			userdbDataContext db = new userdbDataContext();
+
+			return db.Users;
+		}
+		[WebGet]
 		public IQueryable<ArticleComment> GetCommentsForStatusUpdate(int sid)
 		{
 			HttpContext context = HttpContext.Current;
@@ -143,6 +150,7 @@ namespace NexusWeb.Services
 		// This method is called only once to initialize service-wide policies.
 		public static void InitializeService(DataServiceConfiguration config)
 		{
+			config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
 			config.SetEntitySetAccessRule("StatusUpdates", EntitySetRights.AllRead);
 			//config.SetEntitySetAccessRule("Update", EntitySetRights.AllRead);
 			config.SetEntitySetAccessRule("Comments", EntitySetRights.AllRead);

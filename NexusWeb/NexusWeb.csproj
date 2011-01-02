@@ -120,6 +120,7 @@
     <Content Include="js\newsfeed.js" />
     <Content Include="js\popup.js" />
     <Content Include="js\registeraccount.js" />
+    <Content Include="js\search.js" />
     <Content Include="js\Silverlight.debug.js" />
     <Content Include="js\Silverlight.js" />
     <Content Include="js\Silverlight.supportedUserAgent.debug.js" />
@@ -129,6 +130,8 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="nxpush.js" />
+    <Content Include="search.aspx" />
+    <Content Include="SearchUserResult.html" />
     <Content Include="Services\ArticleFeed.svc" />
     <Content Include="Services\GeoServices.svc" />
     <Content Include="Services\Photos.svc" />
@@ -226,6 +229,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="BackgroundCode\RemoveServerHeader.cs" />
+    <Compile Include="search.aspx.cs">
+      <DependentUpon>search.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="search.aspx.designer.cs">
+      <DependentUpon>search.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Service References\AdminChannel\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

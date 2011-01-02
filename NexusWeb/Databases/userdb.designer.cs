@@ -2792,9 +2792,9 @@ namespace NexusWeb.Databases
 		
 		private EntitySet<StatusUpdate> _StatusUpdates;
 		
-		private EntitySet<Album> _Albums;
-		
 		private EntitySet<Account> _Accounts;
+		
+		private EntitySet<Album> _Albums;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2842,8 +2842,8 @@ namespace NexusWeb.Databases
 			this._LocationPrivacies = new EntitySet<LocationPrivacy>(new Action<LocationPrivacy>(this.attach_LocationPrivacies), new Action<LocationPrivacy>(this.detach_LocationPrivacies));
 			this._UserLocations = new EntitySet<UserLocation>(new Action<UserLocation>(this.attach_UserLocations), new Action<UserLocation>(this.detach_UserLocations));
 			this._StatusUpdates = new EntitySet<StatusUpdate>(new Action<StatusUpdate>(this.attach_StatusUpdates), new Action<StatusUpdate>(this.detach_StatusUpdates));
-			this._Albums = new EntitySet<Album>(new Action<Album>(this.attach_Albums), new Action<Album>(this.detach_Albums));
 			this._Accounts = new EntitySet<Account>(new Action<Account>(this.attach_Accounts), new Action<Account>(this.detach_Accounts));
+			this._Albums = new EntitySet<Album>(new Action<Album>(this.attach_Albums), new Action<Album>(this.detach_Albums));
 			OnCreated();
 		}
 		
@@ -3239,19 +3239,6 @@ namespace NexusWeb.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Album", Storage="_Albums", ThisKey="id", OtherKey="OwnerUserID")]
-		public EntitySet<Album> Albums
-		{
-			get
-			{
-				return this._Albums;
-			}
-			set
-			{
-				this._Albums.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Account", Storage="_Accounts", ThisKey="id", OtherKey="userid")]
 		public EntitySet<Account> Accounts
 		{
@@ -3262,6 +3249,19 @@ namespace NexusWeb.Databases
 			set
 			{
 				this._Accounts.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Album", Storage="_Albums", ThisKey="id", OtherKey="OwnerUserID")]
+		public EntitySet<Album> Albums
+		{
+			get
+			{
+				return this._Albums;
+			}
+			set
+			{
+				this._Albums.Assign(value);
 			}
 		}
 		
@@ -3333,18 +3333,6 @@ namespace NexusWeb.Databases
 			entity.User = null;
 		}
 		
-		private void attach_Albums(Album entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = this;
-		}
-		
-		private void detach_Albums(Album entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = null;
-		}
-		
 		private void attach_Accounts(Account entity)
 		{
 			this.SendPropertyChanging();
@@ -3352,6 +3340,18 @@ namespace NexusWeb.Databases
 		}
 		
 		private void detach_Accounts(Account entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
+		private void attach_Albums(Album entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Albums(Album entity)
 		{
 			this.SendPropertyChanging();
 			entity.User = null;

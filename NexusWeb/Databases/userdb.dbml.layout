@@ -121,7 +121,7 @@
         <classShapeMoniker Id="4ac0530b-e6a8-423b-85fc-4b35df623498" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.5 : 4.1250025); (18.4166716666667 : 4.1250025 : JumpStart); (18.5833383333333 : 4.1250025 : JumpEnd); (19.125 : 4.1250025); (19.125 : 5.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(6.5 : 4.1250025); (19.125 : 4.1250025); (19.125 : 5.375)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/userdbDataContext/User/User_UserLocation" />
       <nodes>
         <classShapeMoniker Id="68783053-717b-4d20-8792-170d99151a22" />
@@ -133,13 +133,6 @@
       <nodes>
         <classShapeMoniker Id="68783053-717b-4d20-8792-170d99151a22" />
         <classShapeMoniker Id="0b290d35-e082-47e3-9dff-554a802e5ef2" />
-      </nodes>
-    </associationConnector>
-    <associationConnector edgePoints="[(6.5 : 3.25); (6.5 : 0.37625); (6.15625 : 0.125); (11 : 0.125); (11 : 0.375); (19.05046440075 : 4.400232200375 : JumpStart); (19.19953559925 : 4.474767799625 : JumpEnd); (20.75 : 5.25)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
-      <AssociationMoniker Name="/userdbDataContext/User/User_Album" />
-      <nodes>
-        <classShapeMoniker Id="68783053-717b-4d20-8792-170d99151a22" />
-        <classShapeMoniker Id="808f9bdb-366e-46c0-8dca-90f182297a87" />
       </nodes>
     </associationConnector>
     <associationConnector edgePoints="[(6.5 : 6.16425699869792); (10.5 : 6.16425699869792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
@@ -156,17 +149,24 @@
       </nestedChildShapes>
     </classShape>
     <associationConnector edgePoints="[(4.5 : 6.60175699869792); (3.625 : 6.60175699869792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/userdbDataContext/User/User_StatusUpdateComment" />
+      <AssociationMoniker Name="/userdbDataContext/User/User_ArticleComment" />
       <nodes>
         <classShapeMoniker Id="68783053-717b-4d20-8792-170d99151a22" />
         <classShapeMoniker Id="be9919b9-7f2b-49b5-86f5-90e67932c219" />
       </nodes>
     </associationConnector>
     <associationConnector edgePoints="[(2.625 : 5.2131982421875); (2.625 : 5.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
-      <AssociationMoniker Name="/userdbDataContext/StatusUpdate/StatusUpdate_StatusUpdateComment" />
+      <AssociationMoniker Name="/userdbDataContext/StatusUpdate/StatusUpdate_ArticleComment" />
       <nodes>
         <classShapeMoniker Id="0b290d35-e082-47e3-9dff-554a802e5ef2" />
         <classShapeMoniker Id="be9919b9-7f2b-49b5-86f5-90e67932c219" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(6.5 : 3.65624875); (21.75 : 3.65624875); (21.75 : 5.25)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/userdbDataContext/User/User_Album" />
+      <nodes>
+        <classShapeMoniker Id="68783053-717b-4d20-8792-170d99151a22" />
+        <classShapeMoniker Id="808f9bdb-366e-46c0-8dca-90f182297a87" />
       </nodes>
     </associationConnector>
   </nestedChildShapes>

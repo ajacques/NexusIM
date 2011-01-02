@@ -11,7 +11,7 @@ LoginPage.Redirect = function()
 	var result = regex.exec(window.location.href);
 	if (result == null)
 	{
-		window.location.href = "/newsfeed.aspx";
+		window.location.href = "newsfeed.aspx";
 	} else {
 		window.location.href = result[1];
 	}
@@ -35,10 +35,10 @@ LoginPage.DoLogin = function()
 	} else
 		$("#txtPassword").removeClass("badinput");
 
-	var password = Crypto.SHA256($("input#txtPassword").val());
+	var password = $("input#txtPassword").val();
 
 	$("#logininprogress").fadeIn('normal');
-	AccountService.LoginHashedPassword(username, password, function (data, data2)
+	AccountService.Login(username, password, function (data, data2)
 	{
 		// Success! Now go redirect the user
 		LoginPage.Redirect();

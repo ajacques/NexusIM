@@ -22,6 +22,5 @@
 	<script type="text/javascript">
 	var userid = <%= remoteid %>;
 	User.loadData();
-	$("#statbox").corner("");
 	</script>
 </asp:Content>

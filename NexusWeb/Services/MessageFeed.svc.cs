@@ -83,7 +83,6 @@ namespace NexusWeb.Services
 		/// <param name="messagesSince">Only show messages newer than this</param>
 		/// <returns>A list of all the requested status updates</returns>
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesSince(DateTime messagesSince)
 		{
 			int userid;
@@ -99,7 +98,6 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesBetween(DateTime startdate, DateTime enddate)
 		{
 			if (!CounterCSRF.IsValidFromSecureWCF())
@@ -128,7 +126,6 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesSinceLongPoll(DateTime messagesSince)
 		{
 			// Same code as above, but this time we will wait for messages if there are none
@@ -164,7 +161,6 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleUpdate> test(DateTime messagesSince)
 		{
 			// Same code as above, but this time we will wait for messages if there are none
@@ -192,7 +188,6 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleComment> GetArticleComments(string articleType, int articleId)
 		{
 			int userid;
@@ -202,7 +197,6 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesForUserPage(int targetid)
 		{
 			int userid;
@@ -212,7 +206,6 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public IEnumerable<UserDetails> GetFriends()
 		{
 			int userid;
@@ -233,7 +226,7 @@ namespace NexusWeb.Services
 
 			return friends;
 		}
-		
+
 		[OperationContract]
 		[WebGet]
 		public IEnumerable<UserDetails> GetFriendSuggestions(string name)
@@ -256,7 +249,6 @@ namespace NexusWeb.Services
 		/// </summary>
 		/// <param name="profileid">Target user id</param>
 		[OperationContract]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public UserDetails GetUserDetails(int profileid)
 		{
 			int userid;
@@ -346,7 +338,6 @@ namespace NexusWeb.Services
 
 		[OperationContract]
 		[WebInvoke(Method = "GET")]
-		[Obsolete("Will be replaced by the new OData Service", false)]
 		public Stream GetUserImage(int userid, PhotoSize size)
 		{
 			userdbDataContext db = new userdbDataContext();
