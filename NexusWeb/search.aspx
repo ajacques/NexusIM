@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="NexusIM - Search Results" Language="C#" MasterPageFile="~/centered.master" AutoEventWireup="true" CodeBehind="search.aspx.cs" Inherits="NexusWeb.Pages.SearchPage" %>
 <asp:Content ContentPlaceHolderID="head" runat="server">
 	<script type="text/javascript" src="js/search.js"></script>
+	<script type="text/javascript" src="Services/MessageFeed.svc/jsdebug"></script>
 	<style type="text/css">
 		#Loading
 		{
@@ -8,9 +9,11 @@
 			font-style: italic;
 			font-size: 12pt;
 			text-align: center;
-			width: 100%;
+			width: 500px;
 			background-color: White;
 			-moz-border-radius: 5px;
+			position: fixed;
+			
 		}
 		.SearchResult
 		{
@@ -29,7 +32,7 @@
 	</select>
 	<input type="button" Value="Search" onclick="Search.BeginSearch();" />
 	<h4 id="ResultPane" style="border-bottom: solid 1px #c0c0c0; display: none; margin-bottom: 10px; margin-top: 20px;">Results</h4>
+	<div id="Loading" style="display: none">Please Wait<br /><img src="images/ajax-loader.gif" style="margin-top: 10px" /></div>
 	<div id="NoResults" style="color: Blue; font-style: italic; font-size: 12pt; text-align: center; display: none;">No results found.</div>
 	<ul id="SearchResults" style="list-style: none"></ul>
-	<div id="Loading" style="display: none">Please Wait<br /><img src="images/ajax-loader.gif" style="margin-top: 10px" /></div>
 </asp:Content>

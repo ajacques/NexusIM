@@ -16,23 +16,17 @@ Search.BeginSearch = function()
 	$("#ResultPane").fadeIn('normal');
 	$("#Loading").fadeIn('normal');
 	var terms = $("#search").val();	
-
-	$.ajax({
-		type: "GET",
-		url: "SearchUserResult.html",
-		success: function(data)
-		{
-			userResultControl.innerHTML = data;
-			completedControl = true;
-			if (completedGet)
-			{
-				Search.OnSearchResults(tempResults);
-				tempResults = null;
-			}
-		}
+	
+	MessageFeed.GetFriendsMatching(terms, function(data)
+	{
+		completedGet = true;
+		if (completedControl)
+			Search.OnSearchResults(data);
+		else
+			tempResults = data.d;
 	});
 
-	$.ajax({
+	/*$.ajax({
 		type: "GET",
 		url: Search.SearchUrl.format(terms),
 		contentType: "application/json; charset=utf-8",
@@ -45,17 +39,23 @@ Search.BeginSearch = function()
 			else
 				tempResults = data.d;
 		}
-	});
+	});*/
 }
 Search.OnSearchResults = function(results)
 {
 	$("#SearchResults").html("");
 	$("#Loading").hide();
 
+	var now = new Date();
+
 	for (var result in results)
 	{
+		var user = results[result];
 		var li = userResultControl.cloneNode(true);
-		$("#FullName", li).html(results[result].firstname + " " + results[result].lastname);
+		$("#FullName", li).html(user.FirstName + " " + user.LastName);
+		var difference = Math.ceil((now.getTime() - user.DateOfBirth.getTime()) / 31536000000);
+
+		$("span#Age", li).html(difference);
 
 		$("#SearchResults").append(li);
 	}
@@ -65,6 +65,21 @@ $("body").ready(function()
 {
 	var regex = new RegExp("[\\?&]query=([^&#]*)");
 	var result = regex.exec(window.location.href);
+
+	$.ajax({
+		type: "GET",
+		url: "SearchUserResult.html",
+		success: function(data)
+		{
+			userResultControl.innerHTML = data;
+			completedControl = true;
+			if (completedGet && tempResults != null)
+			{
+				Search.OnSearchResults(tempResults);
+				tempResults = null;
+			}
+		}
+	});
 
 	if (result != null)
 	{

@@ -89,8 +89,6 @@
     <Compile Include="Protocols\SocialNetworks\XboxLiveProtocol.cs" />
     <Compile Include="Structures\BuddyAvatar.cs" />
     <Compile Include="Structures\ChatClassBase.cs" />
-    <Compile Include="Crypto\CRC32.cs" />
-    <Compile Include="Crypto\CRC32Managed.cs" />
     <Compile Include="Structures\EventArgClasses.cs" />
     <Compile Include="Protocols\IMProtocol.cs" />
     <Compile Include="Protocols\MSNProtocol.cs" />

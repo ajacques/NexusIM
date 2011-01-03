@@ -54,6 +54,8 @@ namespace InstantMessage.Protocols.Irc
 			if (mInChannel)
 				return;
 
+			UserRequestedPart = false;
+
 			mProtocol.SendRawMessage("JOIN " + mChannelName);
 			if (OnJoin != null)
 				OnJoin(this, null);
@@ -67,6 +69,8 @@ namespace InstantMessage.Protocols.Irc
 			if (!mInChannel)
 				throw new InvalidOperationException();
 
+			UserRequestedPart = true;
+
 			if (reason != null)
 				mProtocol.SendRawMessage(String.Format("PART {0} :{1}", mChannelName, reason));
 			else
@@ -77,7 +81,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			try {
 				if (OnMessageReceived != null)
-					OnMessageReceived(this, new IMMessageEventArgs<object>(new IrcUserMask(sender), message));
+					OnMessageReceived(this, new IMMessageEventArgs(new IrcUserMask(mProtocol, sender), message));
 			} catch (Exception e) {
 				Trace.TraceError(e.Message);
 			}
@@ -92,12 +96,19 @@ namespace InstantMessage.Protocols.Irc
 		{
 			mInChannel = false;
 			if (OnKickedFromChannel != null)
-				OnKickedFromChannel(this, new IMKickedFromRoomEventArgs() { KickedBy = kicker, Message = reason });
+				OnKickedFromChannel(this, new IMChatRoomGenericEventArgs() { Username = kicker, Message = reason });
 		}
 		internal void TriggerOnUserJoin(string username)
 		{
 			if (OnUserJoin != null)
 				OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = username});
+		}
+		internal void TriggerOnPart(string reason)
+		{
+			mInChannel = false;
+
+			if (OnLeave != null)
+				OnLeave(this, new IMChatRoomGenericEventArgs() { Message = reason, UserRequested = UserRequestedPart });
 		}
 
 		// Properties
@@ -122,14 +133,20 @@ namespace InstantMessage.Protocols.Irc
 				mInChannel = value;
 			}
 		}
+		internal bool UserRequestedPart
+		{
+			get;
+			private set;
+		}
 
 		// Events
-		public event EventHandler<IMMessageEventArgs<object>> OnMessageReceived;
+		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
 		public event EventHandler OnUserListReceived;
-		public event EventHandler<IMKickedFromRoomEventArgs> OnKickedFromChannel;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnKickedFromChannel;
 		public event EventHandler OnJoin;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
 		public event EventHandler<IRCModeChangeEventArgs> OnModeChange;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnLeave;
 
 		//Variables
 		private bool mInChannel;
@@ -137,10 +154,11 @@ namespace InstantMessage.Protocols.Irc
 		private IRCProtocol mProtocol;
 		private string mChannelName;
 	}
-	public class IrcUserMask
+	public class IrcUserMask : IContact
 	{
-		public IrcUserMask(string input)
+		public IrcUserMask(IRCProtocol protocol, string input)
 		{
+			Protocol = protocol;
 			int exclaim = input.IndexOf("!");
 			int at = input.IndexOf("@");
 
@@ -148,6 +166,10 @@ namespace InstantMessage.Protocols.Irc
 			Username = input.Substring(exclaim + 1, at - exclaim - 1);
 			Hostname = new Uri("irc://" + input.Substring(at + 1));
 		}
+		public void sendMessage(string message)
+		{
+		}
+
 		public override string ToString()
 		{
 			return String.Format("{0}!{1}@{2}", Nickname, Username, Hostname.Host);
@@ -166,6 +188,11 @@ namespace InstantMessage.Protocols.Irc
 		{
 			get;
 			set;
+		}
+		public IRCProtocol Protocol
+		{
+			get;
+			private set;
 		}
 	}
 	[Flags]
@@ -269,6 +296,15 @@ namespace InstantMessage.Protocols.Irc
 
 			sendData(String.Format("MODE {0} -{1} {2}", channel, modemask, username));
 		}
+		/// <summary>
+		/// Finds a known channel by the name (ex. #main)
+		/// </summary>
+		/// <param name="channelName">The name of the channel to find (ex. #help)</param>
+		/// <returns>Null if no results</returns>
+		public IRCChannel FindChannelByName(string channelName)
+		{
+			return mChannels.FirstOrDefault(chan => chan.Name == channelName);
+		}
 
 		internal void SendRawMessage(string message)
 		{
@@ -328,6 +364,12 @@ namespace InstantMessage.Protocols.Irc
 					sendData("NICK " + mNickname);
 			}
 		}
+		public IEnumerable<IRCChannel> Channels
+		{
+			get	{
+				return mChannels;
+			}
+		}
 
 		private void ParseLine(string line)
 		{
@@ -369,6 +411,11 @@ namespace InstantMessage.Protocols.Irc
 								HandleUserJoinPacket(parameters);
 								break;
 							}
+						case "PART":
+							{
+								HandlePartPacket(line, parameters);
+								break;
+							}
 					}
 				}
 			} else {
@@ -380,6 +427,18 @@ namespace InstantMessage.Protocols.Irc
 			}
 		}
 
+		private void HandlePartPacket(string line, string[] parameters)
+		{
+			IrcUserMask mask = new IrcUserMask(this, parameters[0]);
+
+			if (mask.Nickname == mNickname)
+			{
+				string channelName = parameters[2];
+
+				IRCChannel channel = mChannels.First(chan => chan.Name == channelName);
+				channel.TriggerOnPart(line.Substring(line.IndexOf(':', 5) + 1));
+			}
+		}
 		private void HandleModeChangePacket(string[] parameters)
 		{
 			string channelName = parameters[3];
@@ -406,9 +465,6 @@ namespace InstantMessage.Protocols.Irc
 					if (channel.Joined)
 						return;
 					channel.Joined = true;
-
-					if (OnForceJoinChannel != null)
-						OnForceJoinChannel(channel, null);
 				}
 
 				
@@ -442,6 +498,9 @@ namespace InstantMessage.Protocols.Irc
 
 				int messageStartIndex = line.IndexOf(':', 5);
 				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
+			} else {
+				int messageStartIndex = line.IndexOf(':', 5);
+				triggerOnMessageReceive(new IMMessageEventArgs(new IrcUserMask(this, parameters[0]), line.Substring(messageStartIndex + 1)));
 			}
 		}
 

@@ -257,7 +257,7 @@ namespace InstantMessage
 					if (protocol.Count() == 0)
 						continue;
 
-					var buddy = from IMBuddy b in protocol.First().p where b.Username == s.GetAttribute("username") select new { b };
+					//var buddy = from IMBuddy b in protocol.First().p where b.Username == s.GetAttribute("username") select new { b };
 
 					Dictionary<string, string> cdict = new Dictionary<string, string>();
 					foreach (XmlNode csetting in setting)
@@ -269,12 +269,12 @@ namespace InstantMessage
 						}
 					}
 
-					if (buddy.Count() >= 1) // If false.. timing issues! TODO: FIX ME
+					/*if (buddy.Count() >= 1) // If false.. timing issues! TODO: FIX ME
 						contactSettings.Add(buddy.First().b, cdict);
 					else {
 						string buddyname = s.GetAttribute("username") + "-" + s.GetAttribute("account") + "-" + s.GetAttribute("protocol");
 						contactBackupSettings.Add(buddyname, cdict);
-					}
+					}*/
 				}
 			}
 		}
@@ -459,7 +459,7 @@ namespace InstantMessage
 		}
 		public void SetContactSetting(string username, IMProtocol protocol, string setting, string value)
 		{
-			var buddy = from IMBuddy b in protocol where b.Username == username select new { b };
+			/*var buddy = from IMBuddy b in protocol where b.Username == username select new { b };
 			if (buddy.Count() >= 1)
 			{
 				var b = buddy.First().b;
@@ -470,7 +470,7 @@ namespace InstantMessage
 
 				if (mAutoSave)
 					Save();
-			}
+			}*/
 		}
 		public void SetCustomSetting(string setting, string value)
 		{
@@ -515,12 +515,12 @@ namespace InstantMessage
 		}
 		public void DeleteContactSetting(string username, IMProtocol protocol, string setting)
 		{
-			var buddy = from IMBuddy b in protocol where b.Username == username select new { b };
+			/*var buddy = from IMBuddy b in protocol where b.Username == username select new { b };
 
 			if (buddy.Count() >= 1)
 			{
 				contactSettings[buddy.First().b].Remove(setting);
-			}
+			}*/
 		}
 		public void DeleteCustomSetting(string setting)
 		{
@@ -559,8 +559,9 @@ namespace InstantMessage
 		/// </remarks>
 		public string GetContactSetting(string userName, IMProtocol protocol, string setting, string defaultValue)
 		{
+			throw new NotImplementedException();
 			// This stuff checks to see if this user was non-existent at the time of loading this configuration file
-			string buddyname = userName + "-" + protocol.Username + "-" + protocol.ShortProtocol;
+			/*string buddyname = userName + "-" + protocol.Username + "-" + protocol.ShortProtocol;
 			if (contactBackupSettings.ContainsKey(buddyname))
 			{
 				Dictionary<string, string> backup = contactBackupSettings[buddyname];
@@ -578,7 +579,7 @@ namespace InstantMessage
 			if (buddy.Count() >= 1 && contactSettings[buddy.First().b].ContainsKey(setting))
 				return contactSettings[buddy.First().b][setting];
 			else
-				return defaultValue;
+				return defaultValue;*/
 		}
 		public string GetContactSetting(IMBuddy buddy, string setting, string defaultValue)
 		{

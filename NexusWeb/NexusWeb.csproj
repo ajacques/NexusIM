@@ -141,7 +141,7 @@
     <Content Include="images\loadinggif.gif" />
     <Content Include="photoalbum.aspx" />
     <Content Include="ClientBin\System.Windows.Controls.zip" />
-    <None Include="App_Browsers\smartphones\mobile.browser.bak" />
+    <None Include="App_Browsers\smartphones\mobile.browser" />
     <Content Include="App_Browsers\tablets\tablets.browser">
       <SubType>Designer</SubType>
     </Content>

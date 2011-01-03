@@ -19,7 +19,7 @@ namespace InstantMessage
 	/// Stores information about a single contact
 	/// </summary>
 	[Serializable]
-	public partial class IMBuddy : IComparable<IMBuddy>
+	public partial class IMBuddy : IComparable<IMBuddy>, IContact
 	{
 		/// <summary>
 		/// Creates a new buddy

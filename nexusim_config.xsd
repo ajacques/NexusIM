@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Revision v0.1 -->
+<xs:schema targetNamespace="urn:schemas-adrensoftware:nexusim:config" attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="root">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="accounts">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element maxOccurs="unbounded" name="account">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="protocol" maxOccurs="1" type="xs:string" />
+										<xs:element name="username" type="xs:string" />
+										<xs:element minOccurs="0" maxOccurs="1" name="password">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="crc" type="xs:string" use="optional" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element minOccurs="0" maxOccurs="1" name="guid" type="xs:string" />
+										<xs:element minOccurs="0" maxOccurs="1" name="enabled" type="xs:string" />
+										<xs:element minOccurs="0" maxOccurs="unbounded" name="setting">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute name="name" type="xs:string" use="required" />
+														<xs:attribute name="encrypted" type="xs:string" use="optional" />
+														<xs:attribute name="crc" type="xs:string" use="optional" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="contacts">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="settings">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element maxOccurs="unbounded" name="contact">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="setting">
+														<xs:complexType>
+															<xs:simpleContent>
+																<xs:extension base="xs:string">
+																	<xs:attribute name="name" type="xs:string" use="required" />
+																</xs:extension>
+															</xs:simpleContent>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+												<xs:attribute name="username" type="xs:string" use="required" />
+												<xs:attribute name="protocol" type="xs:string" use="required" />
+												<xs:attribute name="account" type="xs:string" use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

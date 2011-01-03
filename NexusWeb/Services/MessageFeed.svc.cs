@@ -244,6 +244,20 @@ namespace NexusWeb.Services
 			return friends;
 		}
 
+		[OperationContract]
+		[WebGet]
+		public IEnumerable<UserDetails> GetFriendsMatching(string query)
+		{
+			userdbDataContext db = new userdbDataContext();
+
+			// Add their friends
+			var friends = from u in db.Users
+						  where (u.firstname + " " + u.lastname).ToUpper().Contains(query.ToUpper())
+						  select new UserDetails() { Prefix = "nx", UserId = u.id, FirstName = u.firstname, LastName = u.lastname, DateOfBirth = u.DateOfBirth };
+
+			return friends;
+		}
+
 		/// <summary>
 		/// Retrieves information on the requested user. You must be friends with this user to execute this command.
 		/// </summary>

@@ -40,6 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicXmlSettingsBinding.cs" />
+    <Compile Include="Crypto\Blowfish.cs" />
+    <Compile Include="Crypto\CRC32.cs" />
+    <Compile Include="Crypto\CRC32Managed.cs" />
+    <Compile Include="Endian.cs" />
     <Compile Include="GoogleTranslator.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="ITranslator.cs" />

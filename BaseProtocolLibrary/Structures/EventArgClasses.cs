@@ -86,9 +86,9 @@ namespace InstantMessage.Events
 		private T mSender;
 		private string mMessage;
 	}
-	public class IMMessageEventArgs : IMMessageEventArgs<IMBuddy>
+	public class IMMessageEventArgs : IMMessageEventArgs<IContact>
 	{
-		public IMMessageEventArgs(IMBuddy from, string message) : base(from, message) {}
+		public IMMessageEventArgs(IContact from, string message) : base(from, message) {}
 	}
 	public class IMFriendEventArgs : EventArgs
 	{
@@ -244,19 +244,6 @@ namespace InstantMessage.Events
 		private IMBuddy mBuddy;
 		private string mMessage = "";
 	}
-	public class IMKickedFromRoomEventArgs : EventArgs
-	{
-		public string Message
-		{
-			get;
-			internal set;
-		}
-		public string KickedBy
-		{
-			get;
-			internal set;
-		}
-	}
 	public class IMChatRoomGenericEventArgs : EventArgs
 	{
 		public string Username
@@ -265,6 +252,11 @@ namespace InstantMessage.Events
 			internal set;
 		}
 		public string Message
+		{
+			get;
+			internal set;
+		}
+		public bool UserRequested
 		{
 			get;
 			internal set;

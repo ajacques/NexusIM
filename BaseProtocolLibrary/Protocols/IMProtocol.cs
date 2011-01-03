@@ -758,6 +758,16 @@ namespace InstantMessage
 		protected Exception mLoginException;
 	}
 
+	public interface IContact
+	{
+		void sendMessage(string message);
+
+		string Username
+		{
+			get;
+		}
+	}
+
 	public interface IChatRoom
 	{
 		string Name
@@ -775,7 +785,7 @@ namespace InstantMessage
 		void SayMessage(string message);
 		void Leave(string reason);
 
-		event EventHandler<IMMessageEventArgs<object>> OnMessageReceived;
+		event EventHandler<IMMessageEventArgs> OnMessageReceived;
 		event EventHandler OnUserListReceived;
 		event EventHandler OnJoin;
 	}
