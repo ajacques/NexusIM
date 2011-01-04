@@ -54,7 +54,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>BaseProtocolLibrary.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">
@@ -106,7 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="BaseProtocolLibrary.snk" />
+    <None Include="InstantMessage.snk" />
     <None Include="PrivateInterface.cd" />
     <None Include="PublicInterface.cd" />
   </ItemGroup>

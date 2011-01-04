@@ -61,14 +61,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>NexusWeb.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LinqToCache.Net4.0">
-      <HintPath>..\..\..\References\LinqToCache.Net4.0.dll</HintPath>
+    <Reference Include="LinqToCache">
+      <HintPath>..\..\..\References\LinqToCache.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Client" />
     <Reference Include="Microsoft.ApplicationServer.Caching.Core" />
@@ -155,7 +155,7 @@
       <LastGenOutput>NexusAuditLog.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="NexusWeb.snk" />
+    <None Include="InstantMessage.snk" />
     <None Include="Service References\AdminChannel\AdminChannel1.wsdl" />
     <None Include="Service References\AdminChannel\AdminChannel3.xsd">
       <SubType>Designer</SubType>

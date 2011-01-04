@@ -118,20 +118,6 @@ namespace NexusWeb.Properties {
             }
         }
         
-        /// <summary>
-        /// Regex match string to verify secure requests come from an authorized domain. Counter-CSRF This is designed for WCF method calls, not every web page.
-        /// </summary>
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("Regex match string to verify secure requests come from an authorized domain. Coun" +
-            "ter-CSRF This is designed for WCF method calls, not every web page.")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("(localhost|im.adrensoftware.com|5.64.115.83|dev.nexus-im.com)")]
-        public string SecureReferrerAcceptRegex {
-            get {
-                return ((string)(this["SecureReferrerAcceptRegex"]));
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60000")]
@@ -174,6 +160,20 @@ namespace NexusWeb.Properties {
         public bool EnableAppFabricCache {
             get {
                 return ((bool)(this["EnableAppFabricCache"]));
+            }
+        }
+        
+        /// <summary>
+        /// Regex match string to verify secure requests come from an authorized domain. Counter-CSRF This is designed for WCF method calls, not every web page.
+        /// </summary>
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("Regex match string to verify secure requests come from an authorized domain. Coun" +
+            "ter-CSRF This is designed for WCF method calls, not every web page.")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("(localhost|im.adrensoftware.com|5.64.115.83|dev.nexus-im.com|pub.nexus-im.com)")]
+        public string SecureReferrerAcceptRegex {
+            get {
+                return ((string)(this["SecureReferrerAcceptRegex"]));
             }
         }
     }

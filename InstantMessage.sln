@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zune", "Zune", "{493C7BAB-7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1FDEE444-9864-425B-A92D-376315827B06}"
 	ProjectSection(SolutionItems) = preProject
+		InstantMessage.snk = InstantMessage.snk
 		InstantMessage.vsmdi = InstantMessage.vsmdi
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 	EndProjectSection
