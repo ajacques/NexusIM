@@ -116,8 +116,9 @@ namespace InstantMessage
 		{
 			connection.ChatRooms.CreateChatRoom(name, System.Globalization.CultureInfo.CurrentCulture, System.Text.Encoding.UTF8);
 		}
-		public override void JoinChatRoom(string room)
+		public override IChatRoom JoinChatRoom(string room)
 		{
+			throw new NotImplementedException();
 			connection.ChatRooms.JoinChatRoom(chatRoomInviteKeys[room]);
 		}
 		public override void SendMessageToRoom(string roomName, string message)

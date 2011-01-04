@@ -5,6 +5,7 @@ using InstantMessage.Events;
 using System.Linq;
 using System.Diagnostics;
 using InstantMessage.Internal;
+using InstantMessage.Protocols;
 
 namespace InstantMessage.Security
 {
@@ -28,7 +29,7 @@ namespace InstantMessage.Security
 		}
 		public static void SendRequest(IMBuddy buddy)
 		{
-			buddy.sendMessage(mKeyword + " if you can see this, you don't have the correct plugin.");
+			buddy.SendMessage(mKeyword + " if you can see this, you don't have the correct plugin.");
 			buddy.onReceiveMessage += new EventHandler<IMMessageEventArgs>(handleBuddyMessageResponse);
 		}
 
@@ -56,7 +57,7 @@ namespace InstantMessage.Security
 				string output = "?OTR:";
 				output += fastBase64Encode(preencode) + ".";
 
-				args.Sender.sendMessage(output);
+				args.Sender.SendMessage(output);
 			}
 		}
 		private static string fastBase64Encode(string input)
@@ -78,24 +79,51 @@ namespace InstantMessage.Security
 			mRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(OnMessage);
 		}
 
+		public void SendMessage(string message)
+		{
+			SendMessage(mRoom, message);
+		}
+		public void SendMessage(IMessagable recipient, string message)
+		{
+			if (recipient == null)
+				throw new ArgumentNullException("recipient");
+
+			byte[] msgBytes = mEncoder.GetBytes(PadToMod(message, 8));
+			byte[] cryptBytes = Encrypt(msgBytes);
+
+			recipient.SendMessage("+OK " + BlowCrypt_Encode(cryptBytes));
+		}
+
 		private void OnMessage(object sender, IMMessageEventArgs args)
 		{
 			if (args.Message.StartsWith("+OK "))
 			{
-				string cryptData = args.Message.Substring(4).PadRight(12);
-				string decoded = BlowCrypt_Decode(cryptData);
-				byte[] decodedBytes = mEncoder.GetBytes(decoded);
+				string cryptData = args.Message.Substring(4);
+				byte[] decoded = BlowCrypt_Decode(cryptData);
 
-				mBlowfish.Decipher(decodedBytes, decodedBytes.Length);
-
-				string decrypted = mEncoder.GetString(decodedBytes);
+				byte[] decrypted = Decrypt(decoded);
 
 				if (OnMessageReceived != null)
-					OnMessageReceived(sender, new IMMessageEventArgs<object>(args.Sender, decrypted));
+					OnMessageReceived(sender, new IMMessageEventArgs(args.Sender, mEncoder.GetString(decrypted), args.Flags | MessageFlags.Decrypted));
 			}
 		}
-		private string BlowCrypt_Decode(string input)
+		private string PadToMod(string input, int mod)
 		{
+			int len = input.Length;
+
+			if (len % mod == 0)
+				return input;
+
+			//int padding = (len < mod ? mod : len + (len % mod));
+			
+			while (input.Length % mod != 0)
+				input += '\0';
+
+			return input;
+		}
+		private byte[] BlowCrypt_Decode(string input)
+		{
+			input = input.PadRight(12);
 			string[] blocks = new string[(input.Length / 12)];
 			for (int i = 0; i < blocks.Length; i++)
 			{
@@ -105,11 +133,11 @@ namespace InstantMessage.Security
 					blocks[i] = input.Substring(i * 12);
 			}
 
-			string result = "";
+			byte[] blockResult = new byte[blocks.Length * 8];
 
-			foreach (string block in blocks)
+			for (int b = 0; b < blocks.Length; b++)
 			{
-				Debug.WriteLine("new s");
+				string block = blocks[b];
 				int left = 0;
 				int right = 0;				
 
@@ -132,15 +160,66 @@ namespace InstantMessage.Security
 					Array.Reverse(leftBytes);
 					Array.Reverse(rightBytes);
 				}
-				byte[] bytes = new byte[8];
 
-				Array.Copy(leftBytes, bytes, 4);
-				Array.Copy(rightBytes, 0, bytes, 4, 4);
+				Array.Copy(leftBytes, 0, blockResult, b * 8, 4);
+				Array.Copy(rightBytes, 0, blockResult, b * 8 + 4, 4);
+			}
 
-				result += mEncoder.GetString(bytes);
+			return blockResult;
+		}
+		private string BlowCrypt_Encode(byte[] input)
+		{
+			int numBlocks = input.Length / 8;
+			byte[][] blocks = new byte[numBlocks][];
+			
+			for (int i = 0; i < numBlocks; i++)
+			{
+				blocks[i] = input.Skip(i * 8).Take(8).ToArray();
+			}
+
+			string result = "";
+
+			foreach (byte[] block in blocks)
+			{
+				if (BitConverter.IsLittleEndian)
+				{
+					Array.Reverse(block, 0, 4);
+					Array.Reverse(block, 4, 4);
+				}
+				uint left = BitConverter.ToUInt32(block, 0);
+				uint right = BitConverter.ToUInt32(block, 4);
+
+				for (int i = 0; i < 6; i++)
+				{
+					result += mBase64Table[(int)(right & 0x3f)];
+					right >>= 6;
+				}
+				for (int i = 0; i < 6; i++)
+				{
+					result += mBase64Table[(int)(left & 0x3f)];
+					left >>= 6;
+				}
 			}
 
 			return result;
+		}
+		private byte[] Decrypt(byte[] input)
+		{
+			byte[] copy = input.Clone() as byte[];
+
+			mBlowfish.Decipher(copy, copy.Length);
+
+			byte[] result = copy.TakeWhile(b => b != 0).ToArray(); // Strip trailing \0
+
+			return result;
+		}
+		private byte[] Encrypt(byte[] input)
+		{
+			byte[] copy = input.Clone() as byte[];
+
+			mBlowfish.Encipher(copy, copy.Length);
+
+			return copy;
 		}
 
 		// Properties
@@ -156,7 +235,7 @@ namespace InstantMessage.Security
 		}
 
 		// Events
-		public event EventHandler<IMMessageEventArgs<object>> OnMessageReceived;
+		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
 
 		// Variables
 		private Blowfish mBlowfish;

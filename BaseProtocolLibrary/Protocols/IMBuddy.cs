@@ -45,7 +45,7 @@ namespace InstantMessage
 		/// Sends a message to this user
 		/// </summary>
 		/// <param name="message">Message contents</param>
-		public void sendMessage(string message)
+		public void SendMessage(string message)
 		{
 			mProtocol.SendMessage(mUsername, message);
 		}

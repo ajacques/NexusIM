@@ -581,10 +581,6 @@
       <Project>{E851D4D7-09AB-4A1B-BCE6-5BA5AB7D9832}</Project>
       <Name>NexusIM_Icons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\udpBinding\udpBinding.csproj">
-      <Project>{8271DD15-154C-4024-9586-F2D01B7646CC}</Project>
-      <Name>udpBinding</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\NexusCore\" />
@@ -599,7 +595,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

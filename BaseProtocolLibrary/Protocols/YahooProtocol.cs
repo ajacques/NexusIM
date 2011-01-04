@@ -648,7 +648,7 @@ namespace InstantMessage
 
 				if (packet.StatusByte == new byte[] { 0xff, 0xff, 0xff, 0xff })
 				{
-					triggerOnDisconnect(this, new IMDisconnectEventArgs(IMDisconnectEventArgs.DisconnectReason.Unknown));
+					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.Unknown));
 					CleanupBuddyList();
 					return;
 				}
@@ -758,9 +758,9 @@ namespace InstantMessage
 			if (packet.Status == Encoding.UTF8.GetString(new byte[] { 0xff, 0xff, 0xff, 0xff }, 0, 4)) // We got disconnected
 			{
 				if (packet.Parameter["66"] == "42")
-					triggerOnDisconnect(this, new IMDisconnectEventArgs(IMDisconnectEventArgs.DisconnectReason.OtherClient));
+					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.OtherClient));
 				else
-					triggerOnDisconnect(this, new IMDisconnectEventArgs(IMDisconnectEventArgs.DisconnectReason.Unknown));
+					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.Unknown));
 				status = IMProtocolStatus.OFFLINE;
 				CleanupBuddyList();
 				Disconnect();

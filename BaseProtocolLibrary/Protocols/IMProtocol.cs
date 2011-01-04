@@ -631,7 +631,7 @@ namespace InstantMessage
 		// Events
 		public static event EventHandler onLogin;
 		public static event EventHandler<IMErrorEventArgs> onError;
-		public static event EventHandler<IMDisconnectEventArgs> onDisconnect;
+		public event EventHandler<IMDisconnectEventArgs> onDisconnect;
 		public static event EventHandler<IMFriendRequestEventArgs> onFriendRequest;
 		[Obsolete("Use ContactStatusChange", false)]
 		public static event EventHandler<IMFriendEventArgs> onFriendSignIn;
@@ -758,17 +758,23 @@ namespace InstantMessage
 		protected Exception mLoginException;
 	}
 
-	public interface IContact
+	/// <summary>
+	/// Represents an object that can be messages ie a contact or a chat room
+	/// </summary>
+	public interface IMessagable
 	{
-		void sendMessage(string message);
+		void SendMessage(string message);
+	}
+	public interface IContact : IMessagable
+	{
+		void SendMessage(string message);
 
 		string Username
 		{
 			get;
 		}
 	}
-
-	public interface IChatRoom
+	public interface IChatRoom : IMessagable
 	{
 		string Name
 		{
@@ -782,7 +788,7 @@ namespace InstantMessage
 		{
 			get;
 		}
-		void SayMessage(string message);
+		void SendMessage(string message);
 		void Leave(string reason);
 
 		event EventHandler<IMMessageEventArgs> OnMessageReceived;

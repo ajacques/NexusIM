@@ -78,11 +78,15 @@
     <Compile Include="Json.cs" />
     <Compile Include="Managers\ProtocolManager.cs" />
     <Compile Include="Protocols\ContactDetails.cs" />
+    <Compile Include="Protocols\Enums.cs" />
     <Compile Include="Protocols\FacebookProtocol.cs" />
     <Compile Include="Protocols\GoogleVoiceClient.cs" />
     <Compile Include="Protocols\GoogleVoiceProtocol.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
+    <Compile Include="Protocols\IRCChannel.cs" />
+    <Compile Include="Protocols\IrcEnums.cs" />
     <Compile Include="Protocols\IRCProtocol.cs" />
+    <Compile Include="Protocols\IrcSupportClasses.cs" />
     <Compile Include="Protocols\JabberClient.cs" />
     <Compile Include="Protocols\JabberProtocol.cs" />
     <Compile Include="Protocols\SocialNetworks\ISocialNetwork.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocols\YahooProtocol.cs" />
     <Compile Include="Structures\ObservableDictionary.cs" />
+    <Compile Include="Wildcard.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -132,7 +137,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

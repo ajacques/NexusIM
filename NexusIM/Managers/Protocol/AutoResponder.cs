@@ -38,9 +38,9 @@ namespace NexusIM
 				if (!usershandled.Contains(e.Sender))
 				{
 					if (AccountManager.StatusMessage == "")
-						e.Sender.sendMessage("Auto Response: I'm currently Away from my Keyboard");
+						e.Sender.SendMessage("Auto Response: I'm currently Away from my Keyboard");
 					else
-						e.Sender.sendMessage("Auto Response: " + AccountManager.StatusMessage);
+						e.Sender.SendMessage("Auto Response: " + AccountManager.StatusMessage);
 
 					usershandled.Add(e.Sender);
 				}

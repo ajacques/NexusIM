@@ -1,7 +1,16 @@
 ﻿using System;
+using InstantMessage.Protocols;
 
 namespace InstantMessage.Events
 {
+	public enum DisconnectReason
+	{
+		OtherClient,
+		ServerError,
+		User,
+		Unknown,
+		NetworkProblem
+	}
 	/// <summary>
 	/// Used to pass information about a protocol error back to event handlers for higher-level error processing
 	/// </summary>
@@ -48,27 +57,28 @@ namespace InstantMessage.Events
 		{
 			mReason = reason;
 		}
-		public enum DisconnectReason
-		{
-			OtherClient,
-			ServerError,
-			User,
-			Unknown
-		}
+		
 		public DisconnectReason Reason
 		{
 			get	{
 				return mReason;
 			}
 		}
+		public Exception Exception
+		{
+			get;
+			internal set;
+		}
+
 		private DisconnectReason mReason;
 	}
 	public class IMMessageEventArgs<T> : EventArgs
 	{
-		public IMMessageEventArgs(T from, string message)
+		public IMMessageEventArgs(T from, string message, MessageFlags flags = MessageFlags.None)
 		{
 			mSender = from;
 			mMessage = message;
+			Flags = flags;
 		}
 		public T Sender
 		{
@@ -82,6 +92,11 @@ namespace InstantMessage.Events
 				return mMessage;
 			}
 		}
+		public MessageFlags Flags
+		{
+			get;
+			internal set;
+		}
 		
 		private T mSender;
 		private string mMessage;
@@ -89,6 +104,7 @@ namespace InstantMessage.Events
 	public class IMMessageEventArgs : IMMessageEventArgs<IContact>
 	{
 		public IMMessageEventArgs(IContact from, string message) : base(from, message) {}
+		public IMMessageEventArgs(IContact from, string message, MessageFlags flags) : base(from, message, flags) { }
 	}
 	public class IMFriendEventArgs : EventArgs
 	{
