@@ -82,10 +82,8 @@ namespace ProtocolTests
 		[TestMethod]
 		public void DecodeTest()
 		{
-			DummyChatRoom room = new DummyChatRoom();
-
-			var handler = new BlowfishMessageHandler_Accessor(room); // password is "password"
-			byte[] result = handler.BlowCrypt_Decode("BRurM1bWPZ1."); // Hi bob!
+			byte[] result = BlowfishMessageHandler_Accessor.BlowCrypt_Decode("BRurM1bWPZ1."); // Hi bob!
+			
 
 			//string correct = new string(new char[] { '\x03', '\xff', '_', '\r', '\xf2', 'v', '\r', '\xe7' });
 			byte[] correct = new byte[] { 3, 255, 95, 13, 242, 118, 13, 231 };
@@ -98,11 +96,8 @@ namespace ProtocolTests
 		[TestMethod]
 		public void EncodeTest()
 		{
-			DummyChatRoom room = new DummyChatRoom();
-
-			var handler = new BlowfishMessageHandler_Accessor(room); // password is "password"
 			byte[] input = new byte[] { 0x03, 0xff, 95, 13, 0xf2, 118, 13, 0xe7};
-			string result = handler.BlowCrypt_Encode(input);
+			string result = BlowfishMessageHandler_Accessor.BlowCrypt_Encode(input);
 
 			string expected = "BRurM1bWPZ1.";
 
@@ -112,10 +107,8 @@ namespace ProtocolTests
 		[TestMethod]
 		public void DecodeMultiBlockTest()
 		{
-			DummyChatRoom room = new DummyChatRoom();
-
-			var handler = new BlowfishMessageHandler_Accessor(room); // Password for this is "password"
-			byte[] result = handler.BlowCrypt_Decode("aWrek.SUQUO/.bxu0.5GWH6/51k0X.tfzLa.Ye2e5.px/5k1nnOHW.sjGwY097Jeg/xdeaF/"); // Long message testing here. please disregard
+			// Password for this is "password"
+			byte[] result = BlowfishMessageHandler_Accessor.BlowCrypt_Decode("aWrek.SUQUO/.bxu0.5GWH6/51k0X.tfzLa.Ye2e5.px/5k1nnOHW.sjGwY097Jeg/xdeaF/"); // Long message testing here. please disregard
 			
 			byte[] correct = new byte[] { 116, 0xeb, 110, 0xb8, 0x16, 65, 0xdf, 0x0c, 72, 0xb7, 0xcb, 0x07, 0x02, 0x82, 51, 64, 0x0c, 0xc6, 84, 95, 61, 9, 96, 0xc7, 0xd6, 0x1c, 0x18, 0xdb, 0x07, 64, 68, 62, 0xbe, 0x8a, 0xc5, 94, 60, 0xb7, 70, 89, 107, 49, 0x03, 0xe3, 82, 66, 0xf2, 75 };
 
@@ -193,13 +186,10 @@ namespace ProtocolTests
 		[TestMethod]
 		public void PaddingTest()
 		{
-			DummyChatRoom room = new DummyChatRoom();
-
-			var handler = new BlowfishMessageHandler_Accessor(room);
-			string tooshort = handler.PadToMod("12345", 8);
-			string justright = handler.PadToMod("12345678", 8);
-			string toolong = handler.PadToMod("1234567890", 8);
-			string quitelong = handler.PadToMod("1234567890530305030356", 8);
+			string tooshort = BlowfishMessageHandler_Accessor.PadToMod("12345", 8);
+			string justright = BlowfishMessageHandler_Accessor.PadToMod("12345678", 8);
+			string toolong = BlowfishMessageHandler_Accessor.PadToMod("1234567890", 8);
+			string quitelong = BlowfishMessageHandler_Accessor.PadToMod("1234567890530305030356", 8);
 
 			Assert.AreEqual(8, tooshort.Length, "Too Short");
 			Assert.AreEqual(8, justright.Length, "Just Right");
@@ -223,6 +213,22 @@ namespace ProtocolTests
 			Assert.AreEqual(expected.Length, output.Length);
 			for (int i = 0; i < output.Length; i++)
 				Assert.AreEqual(expected[i], output[i], "Incorrect digit at position " + i);
+		}
+
+		[TestMethod]
+		public void UTF8Test()
+		{
+			DummyChatRoom room = new DummyChatRoom();
+
+			Encoding mUTF8 = Encoding.UTF8;
+			string input = "ῺṻᵦƉƸeas";
+
+			var handler = new BlowfishMessageHandler_Accessor(room);
+			handler.CryptoKey = mUTF8.GetBytes("password");
+			byte[] crypt = handler.Encrypt(mUTF8.GetBytes(input));
+			byte[] decrypt = handler.Decrypt(crypt);
+
+			Assert.AreEqual(input, mUTF8.GetString(decrypt));
 		}
 
 		private static Encoding mEncoder = Encoding.ASCII;

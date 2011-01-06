@@ -16,7 +16,6 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.SessionState;
-using LinqToCache;
 using Microsoft.ApplicationServer.Caching;
 using NexusWeb.Databases;
 using NexusWeb.Properties;
@@ -45,35 +44,33 @@ namespace NexusWeb.Services
 	[KnownType(typeof(ClientArticleUpdate))]
 	public sealed class MessageFeed
 	{
-		static MessageFeed()
-		{
-			//db = new userdbDataContext();
-
-			// HOLY! Look at this code! What does it do? Well, I shall show you
-			mDbToUsableStatusUpdate = (su) => new ClientStatusUpdate() // It's a massive lambda expression that converts the database code to the custom format
-			{
-				mArticleId = su.Id,
-				mUserId = su.Userid,
-				mUserPrefix = "nx",
-				mTimeStamp = su.Timestamp.AsUTC(),
-				mMessageBody = su.MessageBody,
-				mSourceType = ClientArticleSourceType.User,
-				mComments = GetComments(ac => ac.ArticleId == su.Id && ac.ArticleType == "status"),
-				// First we make sure there is a geotag, then we convert it to the proper format
-				mGeoTag = su.GeoTag != null ? new GeoLocation()
-				{
-					mLatitude = su.GeoTag.Lat.Value,
-					mLongitude = su.GeoTag.Long.Value,
-					mAccuracy = su.GeoTagAccuracy,
-					mAltitude = !su.GeoTag.Z.IsNull ? su.GeoTag.Z.Value : 0
-				} : null
-			};
-		}
-
 		public MessageFeed()
 		{
 			if (Settings.Default.EnableAppFabricCache)
 				mAppFabricFactory = new DataCacheFactory();
+
+			if (mDbToUsableStatusUpdate == null)
+			{
+				// HOLY! Look at this code! What does it do? Well, I shall show you
+				mDbToUsableStatusUpdate = (su) => new ClientStatusUpdate() // It's a massive lambda expression that converts the database code to the custom format
+				{
+					mArticleId = su.Id,
+					mUserId = su.Userid,
+					mUserPrefix = "nx",
+					mTimeStamp = su.Timestamp.AsUTC(),
+					mMessageBody = su.MessageBody,
+					mSourceType = ClientArticleSourceType.User,
+					mComments = GetComments(ac => ac.ArticleId == su.Id && ac.ArticleType == "status"),
+					// First we make sure there is a geotag, then we convert it to the proper format
+					mGeoTag = su.GeoTag != null ? new GeoLocation()
+					{
+						mLatitude = su.GeoTag.Lat.Value,
+						mLongitude = su.GeoTag.Long.Value,
+						mAccuracy = su.GeoTagAccuracy,
+						mAltitude = !su.GeoTag.Z.IsNull ? su.GeoTag.Z.Value : 0
+					} : null
+				};
+			}
 		}
 
 		/// <summary>
@@ -176,10 +173,10 @@ namespace NexusWeb.Services
 			SqlDependency.Start(conn);
 
 			ManualResetEventSlim statusWaitMutex = new ManualResetEventSlim();
-			var results = db.StatusUpdates.Where(su => (userid == su.Userid || friends.Contains(su.Userid)) && su.Timestamp > messagesSince).AsCached("StatusUpdates", new CachedQueryOptions()
+			var results = db.StatusUpdates.Where(su => (userid == su.Userid || friends.Contains(su.Userid)) && su.Timestamp > messagesSince).Select(mDbToUsableStatusUpdate);/*.AsCached("StatusUpdates", new CachedQueryOptions()
 			{
 				OnInvalidated = (sender, args) => statusWaitMutex.Set()
-			}).Select(mDbToUsableStatusUpdate);
+			})*/
 
 			if (results.Count() == 0)
 				statusWaitMutex.Wait(Settings.Default.LongPollTimeout);
@@ -258,6 +255,44 @@ namespace NexusWeb.Services
 			return friends;
 		}
 
+		[OperationContract]
+		public void SendFriendRequest(int recipient, string message)
+		{
+			int userid;
+			HandleWCFAuth(out userid);
+
+			userdbDataContext db = new userdbDataContext();
+			if (userid == recipient)
+			{
+				Trace.WriteLine(String.Format("User {0} attempted to send friend request to them self", userid, recipient));
+				throw new Exception();
+			}
+			if (db.AreFriends(userid, recipient))
+			{
+				Trace.WriteLine(String.Format("User {0} attempted to send friend request to someone already friends with them ({1})", userid, recipient));
+				throw new Exception();
+			}
+
+
+		}
+
+		[OperationContract]
+		public void AcceptRequest(int requestId)
+		{
+			int userid;
+			HandleWCFAuth(out userid);
+
+			userdbDataContext db = new userdbDataContext();
+			var request = (from r in db.Requests
+						  where r.Id == requestId && r.RecipientUserId == userid
+						  select r).FirstOrDefault();
+
+			if (request == null)
+				throw new Exception();
+
+			//db.Requests.DeleteOnSubmit(request);
+		}
+
 		/// <summary>
 		/// Retrieves information on the requested user. You must be friends with this user to execute this command.
 		/// </summary>
@@ -300,6 +335,23 @@ namespace NexusWeb.Services
 				LocationId = locperm ? locaterow : 0,
 				LastStatusUpdate = GetStatusUpdate(laststatus)
 			};
+		}
+
+		[OperationContract]
+		[WebGet]
+		public IEnumerable<RequestDetails> GetRequests(string type)
+		{
+			int userid;
+			HandleWCFAuth(out userid);
+
+			userdbDataContext db = new userdbDataContext();
+
+			User user = db.GetUser(userid);
+			var requests = from r in user.Requests
+						   where type == "*" || r.RequestType == type
+						   select new RequestDetails(r);
+
+			return requests;
 		}
 
 		//[OperationContract]

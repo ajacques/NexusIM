@@ -16,7 +16,10 @@
 		<ul id="SearchSuggestList"></ul>
 	</div>
 	<div class="colheadline">Requests</div>
-	<div class="colheadline" style="display: none">Tasks</div>
+	<div id="RequestNoneAlert" style="font-style: italic; font-size: 9pt; text-align: center;">None</div>
+	<ul id="requestList">
+	</ul>
+	<div class="colheadline">Tasks</div>
 	<ul>
 		<li><a href="config/myaccount.aspx">Account Settings</a></li>
 	</ul>

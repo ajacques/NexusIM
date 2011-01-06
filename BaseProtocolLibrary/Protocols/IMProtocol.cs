@@ -172,7 +172,7 @@ namespace InstantMessage
 		/// <param name="nickname">Nickname to use</param>
 		/// <param name="group">Which group to place the buddy into</param>
 		public virtual void AddFriend(string name, string nickname, string group) {}
-		public virtual void AddFriend(string name, string nickname, string group, string introMsg) {}
+		public virtual void AddFriend(string name, string nickname, string group, string introMsg = null) {}
 		/// <summary>
 		/// Removes a person from the user's contact list
 		/// </summary>

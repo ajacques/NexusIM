@@ -50,9 +50,8 @@ namespace NexusWeb.Pages
 		private void HandleRequests(userdbDataContext db, int user)
 		{
 			var requests = from r in db.Requests
-						   join u in db.Users on r.sender equals u.id
-						   where r.recipient == user && r.requesttype == "location"
-						   select new { RequestId = r.id, UserId = u.id, Username = u.username, Message = r.message };
+						   where r.RecipientUserId == user && r.RequestType == "location"
+						   select new { RequestId = r.Id, UserId = r.SenderUser.id, Username = r.SenderUser.username, Message = r.MessageBody };
 
 			requests = requests.Take(3);
 			

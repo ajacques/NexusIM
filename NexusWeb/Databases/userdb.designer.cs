@@ -39,9 +39,6 @@ namespace NexusWeb.Databases
     partial void InsertLocationPrivacy(LocationPrivacy instance);
     partial void UpdateLocationPrivacy(LocationPrivacy instance);
     partial void DeleteLocationPrivacy(LocationPrivacy instance);
-    partial void InsertRequest(Request instance);
-    partial void UpdateRequest(Request instance);
-    partial void DeleteRequest(Request instance);
     partial void InsertUserLocation(UserLocation instance);
     partial void UpdateUserLocation(UserLocation instance);
     partial void DeleteUserLocation(UserLocation instance);
@@ -69,6 +66,9 @@ namespace NexusWeb.Databases
     partial void InsertUser(User instance);
     partial void UpdateUser(User instance);
     partial void DeleteUser(User instance);
+    partial void InsertRequest(Request instance);
+    partial void UpdateRequest(Request instance);
+    partial void DeleteRequest(Request instance);
     #endregion
 		
 		public userdbDataContext() : 
@@ -130,14 +130,6 @@ namespace NexusWeb.Databases
 			get
 			{
 				return this.GetTable<LocationPrivacy>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Request> Requests
-		{
-			get
-			{
-				return this.GetTable<Request>();
 			}
 		}
 		
@@ -218,6 +210,14 @@ namespace NexusWeb.Databases
 			get
 			{
 				return this.GetTable<ArticleComment>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Request> Requests
+		{
+			get
+			{
+				return this.GetTable<Request>();
 			}
 		}
 		
@@ -824,164 +824,6 @@ namespace NexusWeb.Databases
 						this._userid = default(int);
 					}
 					this.SendPropertyChanged("User");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Requests")]
-	public partial class Request : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _id;
-		
-		private int _sender;
-		
-		private int _recipient;
-		
-		private string _requesttype;
-		
-		private string _message;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnidChanging(int value);
-    partial void OnidChanged();
-    partial void OnsenderChanging(int value);
-    partial void OnsenderChanged();
-    partial void OnrecipientChanging(int value);
-    partial void OnrecipientChanged();
-    partial void OnrequesttypeChanging(string value);
-    partial void OnrequesttypeChanged();
-    partial void OnmessageChanging(string value);
-    partial void OnmessageChanged();
-    #endregion
-		
-		public Request()
-		{
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this.OnidChanging(value);
-					this.SendPropertyChanging();
-					this._id = value;
-					this.SendPropertyChanged("id");
-					this.OnidChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sender", DbType="Int NOT NULL")]
-		public int sender
-		{
-			get
-			{
-				return this._sender;
-			}
-			set
-			{
-				if ((this._sender != value))
-				{
-					this.OnsenderChanging(value);
-					this.SendPropertyChanging();
-					this._sender = value;
-					this.SendPropertyChanged("sender");
-					this.OnsenderChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_recipient", DbType="Int NOT NULL")]
-		public int recipient
-		{
-			get
-			{
-				return this._recipient;
-			}
-			set
-			{
-				if ((this._recipient != value))
-				{
-					this.OnrecipientChanging(value);
-					this.SendPropertyChanging();
-					this._recipient = value;
-					this.SendPropertyChanged("recipient");
-					this.OnrecipientChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_requesttype", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
-		public string requesttype
-		{
-			get
-			{
-				return this._requesttype;
-			}
-			set
-			{
-				if ((this._requesttype != value))
-				{
-					this.OnrequesttypeChanging(value);
-					this.SendPropertyChanging();
-					this._requesttype = value;
-					this.SendPropertyChanged("requesttype");
-					this.OnrequesttypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_message", DbType="VarChar(MAX)")]
-		public string message
-		{
-			get
-			{
-				return this._message;
-			}
-			set
-			{
-				if ((this._message != value))
-				{
-					this.OnmessageChanging(value);
-					this.SendPropertyChanging();
-					this._message = value;
-					this.SendPropertyChanged("message");
-					this.OnmessageChanged();
 				}
 			}
 		}
@@ -2792,9 +2634,13 @@ namespace NexusWeb.Databases
 		
 		private EntitySet<StatusUpdate> _StatusUpdates;
 		
+		private EntitySet<Album> _Albums;
+		
 		private EntitySet<Account> _Accounts;
 		
-		private EntitySet<Album> _Albums;
+		private EntitySet<Request> _Request1s;
+		
+		private EntitySet<Request> _Requests;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2842,8 +2688,10 @@ namespace NexusWeb.Databases
 			this._LocationPrivacies = new EntitySet<LocationPrivacy>(new Action<LocationPrivacy>(this.attach_LocationPrivacies), new Action<LocationPrivacy>(this.detach_LocationPrivacies));
 			this._UserLocations = new EntitySet<UserLocation>(new Action<UserLocation>(this.attach_UserLocations), new Action<UserLocation>(this.detach_UserLocations));
 			this._StatusUpdates = new EntitySet<StatusUpdate>(new Action<StatusUpdate>(this.attach_StatusUpdates), new Action<StatusUpdate>(this.detach_StatusUpdates));
-			this._Accounts = new EntitySet<Account>(new Action<Account>(this.attach_Accounts), new Action<Account>(this.detach_Accounts));
 			this._Albums = new EntitySet<Album>(new Action<Album>(this.attach_Albums), new Action<Album>(this.detach_Albums));
+			this._Accounts = new EntitySet<Account>(new Action<Account>(this.attach_Accounts), new Action<Account>(this.detach_Accounts));
+			this._Request1s = new EntitySet<Request>(new Action<Request>(this.attach_Request1s), new Action<Request>(this.detach_Request1s));
+			this._Requests = new EntitySet<Request>(new Action<Request>(this.attach_Requests), new Action<Request>(this.detach_Requests));
 			OnCreated();
 		}
 		
@@ -3239,6 +3087,19 @@ namespace NexusWeb.Databases
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Album", Storage="_Albums", ThisKey="id", OtherKey="OwnerUserID")]
+		public EntitySet<Album> Albums
+		{
+			get
+			{
+				return this._Albums;
+			}
+			set
+			{
+				this._Albums.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Account", Storage="_Accounts", ThisKey="id", OtherKey="userid")]
 		public EntitySet<Account> Accounts
 		{
@@ -3252,16 +3113,29 @@ namespace NexusWeb.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Album", Storage="_Albums", ThisKey="id", OtherKey="OwnerUserID")]
-		public EntitySet<Album> Albums
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Request", Storage="_Request1s", ThisKey="id", OtherKey="SenderUserId")]
+		public EntitySet<Request> SentRequests
 		{
 			get
 			{
-				return this._Albums;
+				return this._Request1s;
 			}
 			set
 			{
-				this._Albums.Assign(value);
+				this._Request1s.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Request1", Storage="_Requests", ThisKey="id", OtherKey="RecipientUserId")]
+		public EntitySet<Request> Requests
+		{
+			get
+			{
+				return this._Requests;
+			}
+			set
+			{
+				this._Requests.Assign(value);
 			}
 		}
 		
@@ -3333,6 +3207,18 @@ namespace NexusWeb.Databases
 			entity.User = null;
 		}
 		
+		private void attach_Albums(Album entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Albums(Album entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
 		private void attach_Accounts(Account entity)
 		{
 			this.SendPropertyChanging();
@@ -3345,16 +3231,28 @@ namespace NexusWeb.Databases
 			entity.User = null;
 		}
 		
-		private void attach_Albums(Album entity)
+		private void attach_Request1s(Request entity)
 		{
 			this.SendPropertyChanging();
-			entity.User = this;
+			entity.SenderUser = this;
 		}
 		
-		private void detach_Albums(Album entity)
+		private void detach_Request1s(Request entity)
 		{
 			this.SendPropertyChanging();
-			entity.User = null;
+			entity.SenderUser = null;
+		}
+		
+		private void attach_Requests(Request entity)
+		{
+			this.SendPropertyChanging();
+			entity.Recipient = this;
+		}
+		
+		private void detach_Requests(Request entity)
+		{
+			this.SendPropertyChanging();
+			entity.Recipient = null;
 		}
 	}
 	
@@ -3471,6 +3369,246 @@ namespace NexusWeb.Databases
 				{
 					this._MessageBody = value;
 				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Requests")]
+	public partial class Request : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private int _SenderUserId;
+		
+		private int _RecipientUserId;
+		
+		private string _RequestType;
+		
+		private string _MessageBody;
+		
+		private EntityRef<User> _User;
+		
+		private EntityRef<User> _User1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnSenderUserIdChanging(int value);
+    partial void OnSenderUserIdChanged();
+    partial void OnRecipientUserIdChanging(int value);
+    partial void OnRecipientUserIdChanged();
+    partial void OnRequestTypeChanging(string value);
+    partial void OnRequestTypeChanged();
+    partial void OnMessageBodyChanging(string value);
+    partial void OnMessageBodyChanged();
+    #endregion
+		
+		public Request()
+		{
+			this._User = default(EntityRef<User>);
+			this._User1 = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderUserId", DbType="Int NOT NULL")]
+		public int SenderUserId
+		{
+			get
+			{
+				return this._SenderUserId;
+			}
+			set
+			{
+				if ((this._SenderUserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSenderUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._SenderUserId = value;
+					this.SendPropertyChanged("SenderUserId");
+					this.OnSenderUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RecipientUserId", DbType="Int NOT NULL")]
+		public int RecipientUserId
+		{
+			get
+			{
+				return this._RecipientUserId;
+			}
+			set
+			{
+				if ((this._RecipientUserId != value))
+				{
+					if (this._User1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnRecipientUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._RecipientUserId = value;
+					this.SendPropertyChanged("RecipientUserId");
+					this.OnRecipientUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestType", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string RequestType
+		{
+			get
+			{
+				return this._RequestType;
+			}
+			set
+			{
+				if ((this._RequestType != value))
+				{
+					this.OnRequestTypeChanging(value);
+					this.SendPropertyChanging();
+					this._RequestType = value;
+					this.SendPropertyChanged("RequestType");
+					this.OnRequestTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MessageBody", DbType="VarChar(MAX)")]
+		public string MessageBody
+		{
+			get
+			{
+				return this._MessageBody;
+			}
+			set
+			{
+				if ((this._MessageBody != value))
+				{
+					this.OnMessageBodyChanging(value);
+					this.SendPropertyChanging();
+					this._MessageBody = value;
+					this.SendPropertyChanged("MessageBody");
+					this.OnMessageBodyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Request", Storage="_User", ThisKey="SenderUserId", OtherKey="id", IsForeignKey=true)]
+		public User SenderUser
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.SentRequests.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.SentRequests.Add(this);
+						this._SenderUserId = value.id;
+					}
+					else
+					{
+						this._SenderUserId = default(int);
+					}
+					this.SendPropertyChanged("SenderUser");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Request1", Storage="_User1", ThisKey="RecipientUserId", OtherKey="id", IsForeignKey=true)]
+		public User Recipient
+		{
+			get
+			{
+				return this._User1.Entity;
+			}
+			set
+			{
+				User previousValue = this._User1.Entity;
+				if (((previousValue != value) 
+							|| (this._User1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User1.Entity = null;
+						previousValue.Requests.Remove(this);
+					}
+					this._User1.Entity = value;
+					if ((value != null))
+					{
+						value.Requests.Add(this);
+						this._RecipientUserId = value.id;
+					}
+					else
+					{
+						this._RecipientUserId = default(int);
+					}
+					this.SendPropertyChanged("Recipient");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}

@@ -59,6 +59,12 @@
       <Visible>False</Visible>
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BasicTests.cs" />

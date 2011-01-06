@@ -32,7 +32,6 @@ namespace NexusWeb
 					UserId = "test"
 				};
 				return new WebFaultException<string>(test.ToString(), HttpStatusCode.Forbidden);
-				return new WebFaultException<object>(test, HttpStatusCode.Forbidden);
 			}
 		}
 	}

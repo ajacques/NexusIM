@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <FxCopProject Version="1.36" Name="My FxCop Project">
  <ProjectOptions>
-  <PlatformAssembliesLocation>C:\Windows\Microsoft.NET\Framework\v4.0.30319</PlatformAssembliesLocation>
   <SharedProject>True</SharedProject>
-  <Stylesheet Apply="False">c:\program files (x86)\microsoft fxcop\Xml\FxCopReport.xsl</Stylesheet>
+  <Stylesheet Apply="False">e:\program files (x86)\microsoft fxcop\Xml\FxCopReport.xsl</Stylesheet>
   <SaveMessages>
-   <Project Status="Active, Excluded" NewOnly="False" />
-   <Report Status="Active" NewOnly="False" />
+   <Project Status="Excluded" NewOnly="False" />
+   <Report Status="None" NewOnly="False" />
   </SaveMessages>
   <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
   <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
@@ -23,15 +22,19 @@
  </ProjectOptions>
  <Targets>
   <AssemblyReferenceDirectories>
-   <Directory>C:/Program Files (x86)/Reference Assemblies/Microsoft/Framework/.NETFramework/v4.0/</Directory>
-   <Directory>C:/Windows/Microsoft.NET/Framework/v2.0.50727/</Directory>
-   <Directory>C:/Windows/Microsoft.NET/Framework/v4.0.30319/</Directory>
+   <Directory>$(ProjectDir)/../../../../../../Program Files (x86)/Reference Assemblies/Microsoft/Framework/.NETFramework/v3.5/Profile/Client/</Directory>
+   <Directory>$(ProjectDir)/../../../../../../Windows/assembly/GAC_MSIL/Microsoft.ApplicationServer.Caching.Client/1.0.0.0__31bf3856ad364e35/</Directory>
+   <Directory>$(ProjectDir)/../../../../../../Windows/assembly/GAC_MSIL/Microsoft.ApplicationServer.Caching.Core/1.0.0.0__31bf3856ad364e35/</Directory>
+   <Directory>$(ProjectDir)/../../../../../../Windows/Microsoft.NET/assembly/GAC_MSIL/Microsoft.VisualStudio.QualityTools.UnitTestFramework/v4.0_10.0.0.0__b03f5f7f11d50a3a/</Directory>
   </AssemblyReferenceDirectories>
-  <Target Name="$(ProjectDir)/BaseProtocolLibrary/bin/Debug/BaseWindowsProtocolLibrary.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/BaseProtocolLibrary/bin/Debug/BaseProtocolLibrary.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/CloudTests/bin/Debug/CloudTests.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/Common/bin/Debug/Common.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/NexusCore/bin/NexusCore.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/NexusIM/bin/Debug/NexusIM.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/NexusWeb/bin/NexusWeb.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/ProtocolTests/bin/Debug/ProtocolTests.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/PushTests/bin/Debug/PushTests.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/WebTests/bin/Debug/WebTests.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -39,27 +42,7 @@
    <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
-   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="False">
-    <Rule Name="DoNotNameEnumValuesReserved" Enabled="True" />
-    <Rule Name="DoNotPrefixEnumValuesWithTypeName" Enabled="True" />
-    <Rule Name="EventsShouldNotHaveBeforeOrAfterPrefix" Enabled="True" />
-    <Rule Name="FlagsEnumsShouldHavePluralNames" Enabled="True" />
-    <Rule Name="IdentifiersShouldDifferByMoreThanCase" Enabled="True" />
-    <Rule Name="IdentifiersShouldHaveCorrectPrefix" Enabled="True" />
-    <Rule Name="IdentifiersShouldHaveCorrectSuffix" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotContainTypeNames" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotContainUnderscores" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotHaveIncorrectPrefix" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotHaveIncorrectSuffix" Enabled="True" />
-    <Rule Name="IdentifiersShouldNotMatchKeywords" Enabled="True" />
-    <Rule Name="OnlyFlagsEnumsShouldHavePluralNames" Enabled="True" />
-    <Rule Name="ParameterNamesShouldMatchBaseDeclaration" Enabled="True" />
-    <Rule Name="ParameterNamesShouldNotMatchMemberNames" Enabled="True" />
-    <Rule Name="PropertyNamesShouldNotMatchGetMethods" Enabled="True" />
-    <Rule Name="ResourceStringCompoundWordsShouldBeCasedCorrectly" Enabled="True" />
-    <Rule Name="ResourceStringsShouldBeSpelledCorrectly" Enabled="True" />
-    <Rule Name="TypeNamesShouldNotMatchNamespaces" Enabled="True" />
-   </RuleFile>
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="False" AllRulesEnabled="False" />
    <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
    <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
@@ -68,4 +51,5 @@
   <Groups />
   <Settings />
  </Rules>
+ <FxCopReport Version="1.36" />
 </FxCopProject>

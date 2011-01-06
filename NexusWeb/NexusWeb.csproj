@@ -51,6 +51,42 @@
     <CodeContractsBaseLineFile />
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <PublishDatabaseSettings>
+      <Objects>
+        <ObjectGroup Name="NexusCoreConnectionString-Deployment" Order="1">
+          <Destination Path="" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=NexusCore%3bIntegrated Security=True%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
+            <Source Path="obj\Debug\AutoScripts\NexusCoreConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+        <ObjectGroup Name="SqlDependencyConnectionString-Deployment" Order="2" Enabled="False">
+          <Destination Path="" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=NexusCore%3bUser ID=root%3bPassword=bob%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
+            <Source Path="obj\Debug\AutoScripts\SqlDependencyConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+        <ObjectGroup Name="GeoDataConnectionString-Deployment" Order="3">
+          <Destination Path="" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=GeoData%3bIntegrated Security=True%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
+            <Source Path="obj\Debug\AutoScripts\GeoDataConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+        <ObjectGroup Name="NexusAuditLogConnectionString-Deployment" Order="4">
+          <Destination Path="" />
+          <Object Type="dbFullSql">
+            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=NexusAuditLog%3bIntegrated Security=True%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
+            <Source Path="obj\Debug\AutoScripts\NexusAuditLogConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+      </Objects>
+    </PublishDatabaseSettings>
+    <IncludeIisSettings>true</IncludeIisSettings>
+    <DeployIisAppPath>NexusWeb</DeployIisAppPath>
+    <IncludeAppPool>true</IncludeAppPool>
+    <DeployIisAppPhysicalPath>%25WINDIR%25\inetpub\NexusWeb</DeployIisAppPhysicalPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -67,9 +103,6 @@
     <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LinqToCache">
-      <HintPath>..\..\..\References\LinqToCache.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationServer.Caching.Client" />
     <Reference Include="Microsoft.ApplicationServer.Caching.Core" />
     <Reference Include="Microsoft.SqlServer.Types" />
@@ -97,6 +130,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ClientBin\SilverlightContactMap.xap" />
+    <Content Include="controls\FriendRequest.html" />
     <Content Include="js\crypto-sha256.js" />
     <Content Include="js\jquery-ui-1.8.custom.min.js" />
     <Content Include="js\jquery.autocomplete.js" />
@@ -130,8 +164,9 @@
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="nxpush.js" />
+    <Content Include="popups\addfriend.htm" />
     <Content Include="search.aspx" />
-    <Content Include="SearchUserResult.html" />
+    <Content Include="controls\SearchUserResult.html" />
     <Content Include="Services\ArticleFeed.svc" />
     <Content Include="Services\GeoServices.svc" />
     <Content Include="Services\Photos.svc" />
@@ -155,7 +190,6 @@
       <LastGenOutput>NexusAuditLog.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="InstantMessage.snk" />
     <None Include="Service References\AdminChannel\AdminChannel1.wsdl" />
     <None Include="Service References\AdminChannel\AdminChannel3.xsd">
       <SubType>Designer</SubType>
@@ -506,11 +540,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AdminChannel\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="uploads\avatars\large\" />
-    <Folder Include="uploads\avatars\medium\" />
-    <Folder Include="uploads\avatars\small\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

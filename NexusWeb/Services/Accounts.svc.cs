@@ -426,7 +426,5 @@ namespace NexusWeb.Services
 
 			db.SubmitChanges();
 		}
-
-		private static DataCacheFactory mAppFabricFactory;
 	}
 }

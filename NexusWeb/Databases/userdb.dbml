@@ -38,15 +38,6 @@
       <Association Name="User_LocationPrivacy" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Requests" Member="Requests">
-    <Type Name="Request">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="sender" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="recipient" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="requesttype" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
-      <Column Name="message" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.UserLocation" Member="UserLocations">
     <Type Name="UserLocation">
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -161,9 +152,11 @@
       <Association Name="User_LocationPrivacy" Member="LocationPrivacies" ThisKey="id" OtherKey="userid" Type="LocationPrivacy" />
       <Association Name="User_UserLocation" Member="UserLocations" ThisKey="id" OtherKey="userid" Type="UserLocation" />
       <Association Name="User_StatusUpdate" Member="StatusUpdates" ThisKey="id" OtherKey="Userid" Type="StatusUpdate" />
+      <Association Name="User_Album" Member="Albums" ThisKey="id" OtherKey="OwnerUserID" Type="Album" />
       <Association Name="User_Account" Member="Accounts" ThisKey="id" OtherKey="userid" Type="Account" />
       <Association Name="User_ArticleComment" Member="ArticleComments" ThisKey="id" OtherKey="UserId" Type="ArticleComment" />
-      <Association Name="User_Album" Member="Albums" ThisKey="id" OtherKey="OwnerUserID" Type="Album" />
+      <Association Name="User_Request" Member="SentRequests" Storage="_Request1s" ThisKey="id" OtherKey="SenderUserId" Type="Request" />
+      <Association Name="User_Request1" Member="Requests" ThisKey="id" OtherKey="RecipientUserId" Type="Request" />
     </Type>
   </Table>
   <Table Name="dbo.ArticleComments" Member="ArticleComments">
@@ -176,6 +169,17 @@
       <Column Name="MessageBody" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="User_ArticleComment" Member="User" ThisKey="UserId" OtherKey="id" Type="User" IsForeignKey="true" />
       <Association Name="StatusUpdate_ArticleComment" Member="StatusUpdate" ThisKey="ArticleId" OtherKey="Id" Type="StatusUpdate" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Requests" Member="Requests">
+    <Type Name="Request">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SenderUserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RecipientUserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RequestType" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="MessageBody" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Association Name="User_Request" Member="SenderUser" Storage="_User" ThisKey="SenderUserId" OtherKey="id" Type="User" IsForeignKey="true" />
+      <Association Name="User_Request1" Member="Recipient" Storage="_User1" ThisKey="RecipientUserId" OtherKey="id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GeoTagStatusMessage" Method="GeoTagStatusMessage">

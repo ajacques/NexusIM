@@ -256,6 +256,7 @@ table tr th
 {
 	background-color: White;
 	border: solid 1px #000000;
+	-moz-box-shadow: 0 5px 20px 0 rgba(128, 128, 128, 1);
 }
 
 .popuptitle
@@ -264,7 +265,7 @@ table tr th
 	font-weight: 700;
 	background-color: black;
 	color: white;
-	border: solid 1px #000000;
+	padding-left: 10px;
 }
 
 .popupcontent

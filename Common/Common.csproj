@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicXmlSettingsBinding.cs" />
+    <Compile Include="BlowfishMessageHandler.cs" />
     <Compile Include="Crypto\Blowfish.cs" />
     <Compile Include="Crypto\CRC32.cs" />
     <Compile Include="Crypto\CRC32Managed.cs" />

@@ -9,14 +9,12 @@
 			$("div#popuptitle").html(title);
 		}
 	});
-	$("input[custom*=custom]").detach();
-	$("div.popuptitle").corner("top")
-	$("div.popupinner").corner()
+	//$("input[custom*=custom]").detach();
 }
 
 function cancelPopup()
 {
-	$("div#popup").fadeOut("slow", function()
+	$("div#popup").fadeOut("normal", function()
 	{
 		$("div#popuptitle").html("");
 		$("div#popupcontent").html("");

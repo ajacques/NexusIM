@@ -8,10 +8,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using InstantMessage.Events;
+using System.Globalization;
 
 namespace InstantMessage.Protocols.Irc
 {
-	public class IRCProtocol : IMProtocol, IDisposable
+	public sealed class IRCProtocol : IMProtocol, IDisposable
 	{
 		public IRCProtocol()
 		{
@@ -27,13 +28,18 @@ namespace InstantMessage.Protocols.Irc
 		public void Dispose()
 		{
 			if (status != IMProtocolStatus.OFFLINE)
-			{
-				Debug.WriteLine("Dispose Requested... Cleanup resources");
-				triggerOnDisconnect(this, null);
-				status = IMProtocolStatus.OFFLINE;
-			}
+				throw new InvalidOperationException("Disconnect from the server before you call Dispose");
 
+			Debug.WriteLine("Dispose Requested... Cleaning-up resources");
+
+			if (mPendingHostLookup != null)
+				mPendingHostLookup.Dispose();
+
+			if (mTextStream != null)
+				mTextStream.Dispose();
 			mTextStream = null;
+			if (mWriter != null)
+				mWriter.Dispose();
 			mWriter = null;
 			client.Close();
 			client = null;
@@ -49,6 +55,9 @@ namespace InstantMessage.Protocols.Irc
 		public override void Disconnect()
 		{
 			sendData("SQUIT");
+
+			triggerOnDisconnect(this, null);
+			status = IMProtocolStatus.OFFLINE;
 
 			Dispose();
 		}
@@ -103,7 +112,7 @@ namespace InstantMessage.Protocols.Irc
 			for (int i = 0; i < numModes; i++)
 				userMask += username + " ";
 
-			sendData(String.Format("MODE {0} +{1} {2}", channel, modemask, userMask));
+			sendData(String.Format(CultureInfo.InvariantCulture, "MODE {0} +{1} {2}", channel, modemask, userMask));
 		}
 		public void RemoveIRCModeFromUser(string username, string channel, IrcUserModes mode)
 		{
@@ -178,7 +187,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 
 		// Nested Classes
-		private class HostMaskFindResult : IAsyncResult
+		private class HostMaskFindResult : IAsyncResult, IDisposable
 		{
 			public HostMaskFindResult(string channelName, IRCProtocol protocol, AsyncCallback callback, object userState)
 			{
@@ -187,6 +196,12 @@ namespace InstantMessage.Protocols.Irc
 				AsyncCallback = callback;
 				protocol.SendRawMessage(String.Format("WHO {0}", channelName));
 				mResetEvent = new ManualResetEvent(false);
+			}
+
+			public void Dispose()
+			{
+				if (mResetEvent != null)
+					mResetEvent.Dispose();
 			}
 
 			public void AppendResult(IrcUserMask mask)

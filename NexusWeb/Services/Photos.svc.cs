@@ -36,8 +36,6 @@ namespace NexusWeb.Services
 		public IEnumerable<AlbumDetails> GetUserAlbums(int userid)
 		{
 			throw new NotImplementedException();
-
-			db.Albums.Where(a => a.OwnerUserID == userid);
 		}
 
 		private userdbDataContext db;

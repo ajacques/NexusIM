@@ -2,12 +2,8 @@
 
 namespace InstantMessage.Internal
 {
-	internal class Endian
+	internal static class Endian
 	{
-		static Endian()
-		{
-			_LittleEndian = BitConverter.IsLittleEndian;
-		}
 		public static short SwapInt16(short v)
 		{
 			return (short)(((v & 0xff) << 8) | ((v >> 8) & 0xff));
@@ -40,16 +36,14 @@ namespace InstantMessage.Internal
 		public static bool IsBigEndian
 		{
 			get	{
-				return !_LittleEndian;
+				return !BitConverter.IsLittleEndian;
 			}
 		}
 		public static bool IsLittleEndian
 		{
 			get {
-				return _LittleEndian;
+				return BitConverter.IsLittleEndian;
 			}
 		}
-
-		private static readonly bool _LittleEndian;
 	}
 }

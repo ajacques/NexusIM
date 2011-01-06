@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Data.Services.Common;
 using System.Collections.Generic;
 using System.Linq;
+using NexusWeb.Databases;
 
 namespace NexusWeb.Services.DataContracts
 {
@@ -198,5 +199,58 @@ namespace NexusWeb.Services.DataContracts
 		public float? mAccuracy;
 		[DataMember(Name = "Altitude", Order = 4, IsRequired = false, EmitDefaultValue = false)]
 		public double? mAltitude;
+	}
+
+	[DataContract(Namespace = "")]
+	public enum RequestType
+	{
+		[EnumMember]
+		Location,
+		[EnumMember]
+		Friend
+	}
+
+	[DataContract(Namespace = "")]
+	public class RequestDetails
+	{
+		public RequestDetails(Request request)
+		{
+			Sender = request.SenderUserId;
+			Message = request.MessageBody;
+			Type = (RequestType)Enum.Parse(typeof(RequestType), request.RequestType, true);
+			SenderFullName = request.SenderUser.firstname + " " + request.SenderUser.lastname;
+			RequestId = request.Id;
+		}
+
+		[DataMember]
+		public int RequestId
+		{
+			get;
+			private set;
+		}
+		[DataMember]
+		public string SenderFullName
+		{
+			get;
+			private set;
+		}
+		[DataMember]
+		public int Sender
+		{
+			get;
+			private set;
+		}
+		[DataMember]
+		public string Message
+		{
+			get;
+			private set;
+		}
+		[DataMember]
+		public RequestType Type
+		{
+			get;
+			private set;
+		}
 	}
 }

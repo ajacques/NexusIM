@@ -45,8 +45,6 @@ namespace NexusWeb.Services
 				//if (context.Session["userid"] == null)
 				//	throw WCFExceptions.BadCredentials;
 
-				int userid = 1;
-
 				userdbDataContext db = new userdbDataContext();
 
 				return db.Users;
@@ -77,8 +75,6 @@ namespace NexusWeb.Services
 			HttpContext context = HttpContext.Current;
 			//if (context.Session["userid"] == null)
 			//	throw WCFExceptions.BadCredentials;
-
-			int userid = 1;//(int)context.Session["userid"];
 
 			userdbDataContext db = new userdbDataContext();
 
@@ -127,8 +123,6 @@ namespace NexusWeb.Services
 				HttpContext context = HttpContext.Current;
 				//if (context.Session["userid"] == null)
 				//	throw WCFExceptions.BadCredentials;
-
-				int userid = 1;
 
 				userdbDataContext db = new userdbDataContext();
 

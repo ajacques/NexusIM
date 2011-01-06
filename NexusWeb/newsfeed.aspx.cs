@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.UI;
 using NexusWeb.Databases;
+using System.Web.UI.WebControls;
 
 namespace NexusWeb.Pages
 {
@@ -13,9 +14,7 @@ namespace NexusWeb.Pages
 				Response.Redirect("login.aspx?redirect=newsfeed.aspx");
 
 			int userid = (int)Session["userid"];
-			userdbDataContext db = null;
-
-			db = new userdbDataContext();
+			userdbDataContext db = new userdbDataContext();
 			user = db.Users.Where(u => u.id == userid).First();
 
 			ver = user.FriendListVersion;

@@ -2,6 +2,7 @@
 /// <reference path="http://dev.nexus-im.com/Services/MessageFeed.svc/jsdebug" />
 /// <reference path="http://dev.nexus-im.com/locales/strings.en-US.js" />
 /// <reference path="http://code.jquery.com/jquery-1.4.1-vsdoc.js" />
+/// <reference path="http://dev.nexus-im.com/feed.js" />
 
 Type.registerNamespace("NewsFeed");
 
@@ -12,7 +13,6 @@ var cancelHoverBoxShow = false;
 var mapsetup = false;
 var mapobj = null;
 var userHoverDelay = 500;
-//var Self = null;
 var lastStreamRequest = null;
 var cancelStatusMsgBoxHide = false;
 var lastGeoLoc = null;
@@ -513,6 +513,66 @@ NewsFeed.postStatusMessage = function()
 	});
 }
 
+NewsFeed.AcceptRequest = function(rid)
+{
+	Message.AcceptRequest(rid, function()
+	{
+		$("#requestId" + rid).fadeOut("normal");
+	});
+}
+
+NewsFeed.OnRequestDownload = function(data)
+{
+	var requestList = $("ul#requestList");
+	$("#RequestNoneAlert").show();
+	for (var requestId in data)
+	{
+		var request = data[requestId];
+		var li = document.createElement("li");
+		var userLink = document.createElement("a");
+		var requestName = document.createElement("span");
+		var options = document.createElement("span");
+
+		li.setAttribute("id", "requestId" + request.RequestId);
+		userLink.setAttribute("href", "user.aspx?userid=" + request.Sender);
+		userLink.innerHTML = request.SenderFullName;
+		li.appendChild(userLink);
+		li.appendChild(requestName);
+		li.appendChild(document.createElement("br"));
+
+		if (request.Type == RequestType.Friend)
+		{
+			var msg = document.createElement("span");
+			var add = document.createElement("a");
+			var deny = document.createElement("a");
+			var block = document.createElement("a");
+
+			requestName.innerHTML = " - Friend Request";
+			msg.innerHTML = request.Message;
+			msg.setAttribute("style", "margin-left: 10px");
+			
+			add.innerHTML = "Accept";
+			add.setAttribute("href", "javascript:NewsFeed.AcceptRequest(" + request.RequestId + ");");
+			deny.innerHTML = "Deny";
+			block.innerHTML = "Block";
+
+			options.appendChild(add);
+			options.appendChild(document.createTextNode(" - "));
+			options.appendChild(deny);
+			options.appendChild(document.createTextNode(" - "));
+			options.appendChild(block);
+
+			li.appendChild(msg);
+			li.appendChild(document.createElement("br"));			
+		}
+
+		li.appendChild(options);
+
+		requestList.append(li);
+		$("#RequestNoneAlert").hide();
+	}
+}
+
 $("body").ready(function()
 {
 	NewsFeed.startStream();
@@ -520,4 +580,6 @@ $("body").ready(function()
 	if (Modernizr.geolocation)
 		$("span#GeoLoc").show();
 	window.setInterval("NewsFeed.UpdateTimestamps()", 2000);
+
+	MessageFeed.GetRequests("friend", NewsFeed.OnRequestDownload);
 });
