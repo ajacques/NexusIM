@@ -50,27 +50,7 @@ namespace NexusWeb.Services
 				mAppFabricFactory = new DataCacheFactory();
 
 			if (mDbToUsableStatusUpdate == null)
-			{
-				// HOLY! Look at this code! What does it do? Well, I shall show you
-				mDbToUsableStatusUpdate = (su) => new ClientStatusUpdate() // It's a massive lambda expression that converts the database code to the custom format
-				{
-					mArticleId = su.Id,
-					mUserId = su.Userid,
-					mUserPrefix = "nx",
-					mTimeStamp = su.Timestamp.AsUTC(),
-					mMessageBody = su.MessageBody,
-					mSourceType = ClientArticleSourceType.User,
-					mComments = GetComments(ac => ac.ArticleId == su.Id && ac.ArticleType == "status"),
-					// First we make sure there is a geotag, then we convert it to the proper format
-					mGeoTag = su.GeoTag != null ? new GeoLocation()
-					{
-						mLatitude = su.GeoTag.Lat.Value,
-						mLongitude = su.GeoTag.Long.Value,
-						mAccuracy = su.GeoTagAccuracy,
-						mAltitude = !su.GeoTag.Z.IsNull ? su.GeoTag.Z.Value : 0
-					} : null
-				};
-			}
+				SetupDelegate();
 		}
 
 		/// <summary>
@@ -211,15 +191,7 @@ namespace NexusWeb.Services
 			userdbDataContext db = new userdbDataContext();
 
 			// Add their friends
-			var friends = db.GetFriends(userid).Select(u => new UserDetails()
-			{
-				FirstName = u.firstname,
-				LastName = u.lastname,
-				Prefix = "nx",
-				UserId = u.id,
-				LocationAllowed = db.HasLocationViewPermission(u.id, userid)//,
-				//LocationId = db.Get
-			});
+			var friends = db.GetFriends(userid).Select(u => new UserDetails(u));
 
 			return friends;
 		}
@@ -267,7 +239,7 @@ namespace NexusWeb.Services
 				Trace.WriteLine(String.Format("User {0} attempted to send friend request to them self", userid, recipient));
 				throw new Exception();
 			}
-			if (db.AreFriends(userid, recipient))
+			if (db.AreFriends(userid, recipient).Value)
 			{
 				Trace.WriteLine(String.Format("User {0} attempted to send friend request to someone already friends with them ({1})", userid, recipient));
 				throw new Exception();
@@ -290,7 +262,15 @@ namespace NexusWeb.Services
 			if (request == null)
 				throw new Exception();
 
-			//db.Requests.DeleteOnSubmit(request);
+			if (request.RequestType == "friend")
+			{
+				Friend friend = new Friend();
+				friend.userid = userid;
+				friend.friendid = request.SenderUserId;
+				db.Friends.InsertOnSubmit(friend);
+			}
+
+			db.Requests.DeleteOnSubmit(request);
 		}
 
 		/// <summary>
@@ -305,7 +285,7 @@ namespace NexusWeb.Services
 
 			userdbDataContext db = new userdbDataContext();
 
-			if (!db.AreFriends(userid, profileid) && profileid != userid) // Verify that the both users are friends
+			if (!db.AreFriends(userid, profileid).Value && profileid != userid) // Verify that the both users are friends
 			{
 				// WCF can't properly serialize WebFaultExceptions so we must do it ourselves
 				WebOperationContext.Current.OutgoingResponse.StatusCode = HttpStatusCode.Forbidden;
@@ -478,9 +458,9 @@ namespace NexusWeb.Services
 				Trace.TraceError(String.Format("NexusWeb: Attempted WCF call from outside secure website boundaries (Method: AccountService.SetLocationShareState): {0}", HttpContext.Current.Request.UrlReferrer.AbsoluteUri));
 				throw WCFExceptions.CrossSiteViolation;
 			}
-
-			HttpSessionState session = HttpContext.Current.Session;
+HttpSessionState session = HttpContext.Current.Session;
 			HttpResponse response = HttpContext.Current.Response;
+			
 			if (session["userid"] == null)
 			{
 				response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -547,7 +527,39 @@ namespace NexusWeb.Services
 			return db.ArticleComments.Where(whereclause).Select(c => new ClientArticleComment() { mUserId = c.UserId, mTimeStamp = c.TimeStamp, mMessageBody = c.MessageBody });
 		}
 
-		internal static Func<StatusUpdate, ClientStatusUpdate> mDbToUsableStatusUpdate;
+		private static void SetupDelegate()
+		{
+			// HOLY! Look at this code! What does it do? Well, I shall show you
+			mDbToUsableStatusUpdate = (su) => new ClientStatusUpdate() // It's a massive lambda expression that converts the database code to the custom format
+			{
+				mArticleId = su.Id,
+				mUserId = su.Userid,
+				mUserPrefix = "nx",
+				mTimeStamp = su.Timestamp.AsUTC(),
+				mMessageBody = su.MessageBody,
+				//mSourceType = ClientArticleSourceType.User,
+				//mComments = GetComments(ac => ac.ArticleId == su.Id && ac.ArticleType == "status"),
+				// First we make sure there is a geotag, then we convert it to the proper format
+				mGeoTag = su.GeoTag != null ? new GeoLocation()
+				{
+					mLatitude = su.GeoTag.Lat.Value,
+					mLongitude = su.GeoTag.Long.Value,
+					mAccuracy = su.GeoTagAccuracy,
+					mAltitude = !su.GeoTag.Z.IsNull ? su.GeoTag.Z.Value : 0
+				} : null
+			};
+		}
+		internal static Func<StatusUpdate, ClientStatusUpdate> DbStatusUpdateDelegate
+		{
+			get	{
+				if (mDbToUsableStatusUpdate == null)
+					SetupDelegate();
+
+				return mDbToUsableStatusUpdate;
+			}
+		}
+
+		private static Func<StatusUpdate, ClientStatusUpdate> mDbToUsableStatusUpdate;
 		private static Dictionary<int, ArticlePollDelegate> mStatusUpdateCallbacks = new Dictionary<int, ArticlePollDelegate>();
 		private static DataCacheFactory mAppFabricFactory;
 		private static Encoding mEncoding = Encoding.Unicode;

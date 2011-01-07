@@ -115,6 +115,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
@@ -283,6 +284,7 @@
     <Compile Include="Services\GeoServices.svc.cs">
       <DependentUpon>GeoServices.svc</DependentUpon>
     </Compile>
+    <Compile Include="Services\NewsFeedServiceHostFactory.cs" />
     <Compile Include="Services\PhotoDataContracts.cs" />
     <Compile Include="Services\Photos.svc.cs">
       <DependentUpon>Photos.svc</DependentUpon>

@@ -69,6 +69,9 @@ namespace NexusWeb.Databases
     partial void InsertRequest(Request instance);
     partial void UpdateRequest(Request instance);
     partial void DeleteRequest(Request instance);
+    partial void InsertFriend(Friend instance);
+    partial void UpdateFriend(Friend instance);
+    partial void DeleteFriend(Friend instance);
     #endregion
 		
 		public userdbDataContext() : 
@@ -114,14 +117,6 @@ namespace NexusWeb.Databases
 			get
 			{
 				return this.GetTable<Device>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Friend> Friends
-		{
-			get
-			{
-				return this.GetTable<Friend>();
 			}
 		}
 		
@@ -221,6 +216,14 @@ namespace NexusWeb.Databases
 			}
 		}
 		
+		public System.Data.Linq.Table<Friend> Friends
+		{
+			get
+			{
+				return this.GetTable<Friend>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GeoTagStatusMessage")]
 		public int GeoTagStatusMessage([global::System.Data.Linq.Mapping.ParameterAttribute(Name="Id", DbType="Int")] System.Nullable<int> id, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lat, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lng)
 		{
@@ -233,6 +236,12 @@ namespace NexusWeb.Databases
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), id, lat, lng, alt);
 			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.AreFriends", IsComposable=true)]
+		public System.Nullable<bool> AreFriends([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> p1, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> p2)
+		{
+			return ((System.Nullable<bool>)(this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), p1, p2).ReturnValue));
 		}
 	}
 	
@@ -589,87 +598,6 @@ namespace NexusWeb.Databases
 			if ((this.PropertyChanged != null))
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Friends")]
-	public partial class Friend
-	{
-		
-		private int _id;
-		
-		private int _userid;
-		
-		private int _friendid;
-		
-		private string _displayname;
-		
-		public Friend()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this._id = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userid", DbType="Int NOT NULL")]
-		public int userid
-		{
-			get
-			{
-				return this._userid;
-			}
-			set
-			{
-				if ((this._userid != value))
-				{
-					this._userid = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_friendid", DbType="Int NOT NULL")]
-		public int friendid
-		{
-			get
-			{
-				return this._friendid;
-			}
-			set
-			{
-				if ((this._friendid != value))
-				{
-					this._friendid = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_displayname", DbType="VarChar(50)")]
-		public string displayname
-		{
-			get
-			{
-				return this._displayname;
-			}
-			set
-			{
-				if ((this._displayname != value))
-				{
-					this._displayname = value;
-				}
 			}
 		}
 	}
@@ -2642,6 +2570,10 @@ namespace NexusWeb.Databases
 		
 		private EntitySet<Request> _Requests;
 		
+		private EntitySet<Friend> _Friends;
+		
+		private EntitySet<Friend> _Friends1;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2692,6 +2624,8 @@ namespace NexusWeb.Databases
 			this._Accounts = new EntitySet<Account>(new Action<Account>(this.attach_Accounts), new Action<Account>(this.detach_Accounts));
 			this._Request1s = new EntitySet<Request>(new Action<Request>(this.attach_Request1s), new Action<Request>(this.detach_Request1s));
 			this._Requests = new EntitySet<Request>(new Action<Request>(this.attach_Requests), new Action<Request>(this.detach_Requests));
+			this._Friends = new EntitySet<Friend>(new Action<Friend>(this.attach_Friends), new Action<Friend>(this.detach_Friends));
+			this._Friends1 = new EntitySet<Friend>(new Action<Friend>(this.attach_Friends1), new Action<Friend>(this.detach_Friends1));
 			OnCreated();
 		}
 		
@@ -3139,6 +3073,32 @@ namespace NexusWeb.Databases
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Friend", Storage="_Friends", ThisKey="id", OtherKey="userid")]
+		public EntitySet<Friend> Friends
+		{
+			get
+			{
+				return this._Friends;
+			}
+			set
+			{
+				this._Friends.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Friend1", Storage="_Friends1", ThisKey="id", OtherKey="friendid")]
+		public EntitySet<Friend> Friends1
+		{
+			get
+			{
+				return this._Friends1;
+			}
+			set
+			{
+				this._Friends1.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -3253,6 +3213,30 @@ namespace NexusWeb.Databases
 		{
 			this.SendPropertyChanging();
 			entity.Recipient = null;
+		}
+		
+		private void attach_Friends(Friend entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Friends(Friend entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
+		private void attach_Friends1(Friend entity)
+		{
+			this.SendPropertyChanging();
+			entity.User1 = this;
+		}
+		
+		private void detach_Friends1(Friend entity)
+		{
+			this.SendPropertyChanging();
+			entity.User1 = null;
 		}
 	}
 	
@@ -3588,6 +3572,246 @@ namespace NexusWeb.Databases
 						this._RecipientUserId = default(int);
 					}
 					this.SendPropertyChanged("Recipient");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Friends")]
+	public partial class Friend : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _userid;
+		
+		private int _friendid;
+		
+		private string _displayname;
+		
+		private System.Nullable<System.DateTime> _Timestamp;
+		
+		private EntityRef<User> _User;
+		
+		private EntityRef<User> _User1;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnuseridChanging(int value);
+    partial void OnuseridChanged();
+    partial void OnfriendidChanging(int value);
+    partial void OnfriendidChanged();
+    partial void OndisplaynameChanging(string value);
+    partial void OndisplaynameChanged();
+    partial void OnTimestampChanging(System.Nullable<System.DateTime> value);
+    partial void OnTimestampChanged();
+    #endregion
+		
+		public Friend()
+		{
+			this._User = default(EntityRef<User>);
+			this._User1 = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userid", DbType="Int NOT NULL")]
+		public int userid
+		{
+			get
+			{
+				return this._userid;
+			}
+			set
+			{
+				if ((this._userid != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnuseridChanging(value);
+					this.SendPropertyChanging();
+					this._userid = value;
+					this.SendPropertyChanged("userid");
+					this.OnuseridChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_friendid", DbType="Int NOT NULL")]
+		public int friendid
+		{
+			get
+			{
+				return this._friendid;
+			}
+			set
+			{
+				if ((this._friendid != value))
+				{
+					if (this._User1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnfriendidChanging(value);
+					this.SendPropertyChanging();
+					this._friendid = value;
+					this.SendPropertyChanged("friendid");
+					this.OnfriendidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_displayname", DbType="VarChar(50)")]
+		public string displayname
+		{
+			get
+			{
+				return this._displayname;
+			}
+			set
+			{
+				if ((this._displayname != value))
+				{
+					this.OndisplaynameChanging(value);
+					this.SendPropertyChanging();
+					this._displayname = value;
+					this.SendPropertyChanged("displayname");
+					this.OndisplaynameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Timestamp", DbType="Date")]
+		public System.Nullable<System.DateTime> Timestamp
+		{
+			get
+			{
+				return this._Timestamp;
+			}
+			set
+			{
+				if ((this._Timestamp != value))
+				{
+					this.OnTimestampChanging(value);
+					this.SendPropertyChanging();
+					this._Timestamp = value;
+					this.SendPropertyChanged("Timestamp");
+					this.OnTimestampChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Friend", Storage="_User", ThisKey="userid", OtherKey="id", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Friends.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Friends.Add(this);
+						this._userid = value.id;
+					}
+					else
+					{
+						this._userid = default(int);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Friend1", Storage="_User1", ThisKey="friendid", OtherKey="id", IsForeignKey=true)]
+		public User User1
+		{
+			get
+			{
+				return this._User1.Entity;
+			}
+			set
+			{
+				User previousValue = this._User1.Entity;
+				if (((previousValue != value) 
+							|| (this._User1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User1.Entity = null;
+						previousValue.Friends1.Remove(this);
+					}
+					this._User1.Entity = value;
+					if ((value != null))
+					{
+						value.Friends1.Add(this);
+						this._friendid = value.id;
+					}
+					else
+					{
+						this._friendid = default(int);
+					}
+					this.SendPropertyChanged("User1");
 				}
 			}
 		}

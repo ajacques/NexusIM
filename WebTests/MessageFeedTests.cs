@@ -43,7 +43,7 @@ namespace WebTests
 			Stream stream = new MemoryStream();
 			TextWriter writer = new StreamWriter(stream);
 			HttpResponse response = new HttpResponse(writer);
-			HttpRequest request = new HttpRequest("unittesting", "http://im.adrensoftware.com/unittesting", "");
+			HttpRequest request = new HttpRequest("unittesting", "http://dev.nexus-im.com/unittesting", "");
 			HttpContext.Current = new HttpContext(request, response);
 
 			UnitTestSession session = new UnitTestSession();

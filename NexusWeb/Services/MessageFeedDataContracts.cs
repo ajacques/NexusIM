@@ -10,6 +10,7 @@ namespace NexusWeb.Services.DataContracts
 	[DataContract(Namespace="")]
 	public enum ClientArticleSourceType
 	{
+		[EnumMember]
 		User
 	}
 
@@ -145,6 +146,16 @@ namespace NexusWeb.Services.DataContracts
 	[DataContract(Namespace="")]
 	public class UserDetails
 	{
+		public UserDetails() {}
+		public UserDetails(User details)
+		{
+			UserId = details.id;
+			FirstName = details.firstname;
+			LastName = details.lastname;
+			DateOfBirth = details.DateOfBirth;
+			LocationAllowed = details.locationsharestate;
+		}
+
 		[DataMember(Order = 0)]
 		public string Prefix;
 		[DataMember(Order = 1)]

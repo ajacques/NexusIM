@@ -135,17 +135,6 @@ namespace NexusWeb.Databases
 
 			return friends;
 		}
-		/// <summary>
-		/// Checks to see if the specified users are currently friends with each other.
-		/// </summary>
-		/// <param name="userid">First user id to check</param>
-		/// <param name="friendid">Second user id to check</param>
-		/// <returns>True if the two users are currently friends.</returns>
-		public bool AreFriends(int userid, int friendid)
-		{
-			var friends = Friends.Where(f => f.userid == userid || f.friendid == userid);
-			return friends.Any(f => (f.userid == userid && f.friendid == friendid) || (f.userid == userid && f.friendid == friendid));
-		}
 		public DeviceType GetDeviceType(string shortname)
 		{
 			return (from dt in DeviceTypes
@@ -215,7 +204,7 @@ namespace NexusWeb.Databases
 				return true;
 
 			if (acl.PermitFriends)
-				return AreFriends(ownerid, userid);
+				return AreFriends(ownerid, userid).Value;
 
 			// Now check for explicit permission
 			if (UserAccessControls.Where(u => u.ControlId == aclid).Any(u => u.TargetUserId == userid && u.AccessPermitted))

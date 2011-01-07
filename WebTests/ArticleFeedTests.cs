@@ -65,33 +65,5 @@ namespace WebTests
 			mLocalSession = null; // Each Test should be completely isolated from each other. Prevent data bleedover
 			SessionStateUtility.RemoveHttpSessionStateFromContext(HttpContext.Current);
 		}
-
-		/// <summary>
-		/// Verifies that we are friends with all status updates that are returned.
-		/// </summary>
-		[TestMethod]
-		public void NotFriendsTest()
-		{
-			int userid = 1;
-			mLocalSession.Add("userid", userid);
-
-			DbArticleService service = new DbArticleService();
-
-			userdbDataContext db = new userdbDataContext();
-			IQueryable<int> friends = db.GetFriends(userid).Select(u => u.id);
-
-			var results = service.StatusUpdates.Any(cs => !friends.Contains(cs.Id));
-
-			Assert.IsFalse(results);
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(WebFaultException<string>))]
-		public void NotLoggedInTest()
-		{
-			DbArticleService service = new DbArticleService();
-
-			bool result = service.StatusUpdates.Any();
-		}
 	}
 }

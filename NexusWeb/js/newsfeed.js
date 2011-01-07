@@ -515,7 +515,7 @@ NewsFeed.postStatusMessage = function()
 
 NewsFeed.AcceptRequest = function(rid)
 {
-	Message.AcceptRequest(rid, function()
+	MessageFeed.AcceptRequest(rid, function()
 	{
 		$("#requestId" + rid).fadeOut("normal");
 	});
