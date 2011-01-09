@@ -19,6 +19,8 @@ using System.Data.Linq;
 using System.Web.SessionState;
 using System.Web.Script.Services;
 using System.Linq.Expressions;
+using System.Collections.Specialized;
+using System.Reflection;
 
 namespace NexusWeb.Services
 {
@@ -32,7 +34,6 @@ namespace NexusWeb.Services
 		public IEnumerable StatusUpdates()
 		{
 			Uri requestUri = HttpContext.Current.Request.Url;
-			Dictionary<string, string> expression = null;
 
 			HttpSessionState session = HttpContext.Current.Session;
 
@@ -41,33 +42,28 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			try	{
-				expression = requestUri.Query.Substring(1).Split('&').ToDictionary(s => s.Substring(0, s.IndexOf('=')), s => s.Substring(s.IndexOf('=') + 1)); // Break down the url query into each separate part
-			} catch (ArgumentOutOfRangeException) {
-				expression = new Dictionary<string, string>();
-			}
+			NameValueCollection urlParams = HttpUtility.ParseQueryString(requestUri.Query);
 
 			userdbDataContext db = new userdbDataContext();
 			IQueryable<StatusUpdate> query = db.StatusUpdates;
 
-			if (expression.ContainsKey("userid"))
+			if (urlParams["userid"] != null)
 			{
-				int value = Convert.ToInt32(expression["userid"]);
+				int value = Convert.ToInt32(urlParams["userid"]);
 				query = query.Where(su => su.Userid == value);
 			} else	{
 				query = query.Where(su => db.AreFriends(userid, su.Userid).Value);
 			}
-			query = FilterRequest<StatusUpdate>(query, expression);
+			query = FilterRequest<StatusUpdate>(query, urlParams);
 			
 			return query.Select(su => MessageFeed.DbStatusUpdateDelegate(su));
 		}
 
 		[WebInvoke(Method = "GET", UriTemplate = "users/*")]
 		[OperationContract]
-		public IEnumerable Users()
+		public IEnumerable<UserDetails> Users()
 		{
 			Uri requestUri = HttpContext.Current.Request.Url;
-			Dictionary<string, string> expression = null;
 
 			HttpSessionState session = HttpContext.Current.Session;
 
@@ -76,29 +72,27 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			try	{
-				expression = requestUri.Query.Substring(1).Split('&').ToDictionary(s => s.Substring(0, s.IndexOf('=' )), s => s.Substring(s.IndexOf('=') + 1)); // Break down the url query into each separate part
-			} catch (ArgumentOutOfRangeException) {
-				expression = new Dictionary<string, string>();
-			}
+			NameValueCollection urlParams = HttpUtility.ParseQueryString(requestUri.Query);
 
 			userdbDataContext db = new userdbDataContext();
 			IQueryable<User> query = db.Users;
 
-			if (expression.ContainsKey("fullname"))
+			string fullNameQuery = urlParams["fullname"];
+			if (fullNameQuery != null)
 			{
-				string predicate = expression["fullname"];
-				query = query.Where(u => StringPredicateToFunc(predicate)(u.firstname));
+				Expression<Func<User, bool>> whereQuery = StringPredicateToFunc<User>(u => u.firstname + " " + u.lastname, fullNameQuery);
+				query = query.Where(whereQuery);
 			}
 
-			query = FilterRequest<User>(query, expression);
+			query = FilterRequest<User>(query, urlParams); // Generic Filters for all types
 
-			return query.Select(u => new UserDetails(u));
+			IEnumerable<UserDetails> result = query.Select(u => new UserDetails(u));
+			return result;
 		}
 
-		private static IQueryable<T> FilterRequest<T>(IQueryable<T> source, Dictionary<string, string> urlParams)
+		private static IQueryable<T> FilterRequest<T>(IQueryable<T> source, NameValueCollection urlParams)
 		{
-			if (urlParams.ContainsKey("take"))
+			if (urlParams["take"] != null)
 			{
 				int value = Convert.ToInt32(urlParams["take"]);
 				source = source.Take(value);
@@ -106,16 +100,23 @@ namespace NexusWeb.Services
 
 			return source;
 		}
-
-		private static Predicate<string> StringPredicateToFunc(string predicate)
+		private static Expression<Func<T, bool>> StringPredicateToFunc<T>(Expression<Func<T, string>> selector, string query)
 		{
-			// (u.firstname + " " + u.lastname)
-			if (predicate.StartsWith("contains("))
+			ParameterExpression dbParam = Expression.Parameter(typeof(T)); // Row from the database to search from
+			if (query.StartsWith("contains("))
 			{
-				string part = predicate.Substring(9, predicate.Length - 11);
-				return (str) => str.Contains(part);
+				string part = query.Substring(10, query.Length - 12);
+				return Expression.Lambda<Func<T, bool>>(
+					Expression.Call(
+						Expression.Invoke(selector, dbParam), typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), Expression.Constant(part)
+					), dbParam
+				);
 			} else {
-				return (s) => s == predicate;
+				return Expression.Lambda<Func<T, bool>>( // Returns true if the input data specified by selector equals the query parameter
+					Expression.Equal(
+						Expression.Invoke(selector, dbParam), Expression.Constant(query)
+					), dbParam
+				);
 			}
 		}
 	}

@@ -68,7 +68,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
       <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
-      <Name>BaseWindowsProtocolLibrary</Name>
+      <Name>BaseProtocolLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

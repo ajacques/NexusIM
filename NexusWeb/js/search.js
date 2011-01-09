@@ -6,7 +6,7 @@
 
 Type.registerNamespace("Search");
 
-Search.SearchUrl = "http://dev.nexus-im.com/Services/ArticleFeed.svc/Users()?$filter=substringof('{0}',concat(firstname,concat(' ',lastname)))";
+Search.SearchUrl = "http://dev.nexus-im.com/Services/ArticleFeed.svc/Users?fullname=contains('{0}')";
 var userResultControl = document.createElement("li");
 var completedControl = false;
 var completedGet = false;
@@ -18,15 +18,25 @@ Search.BeginSearch = function()
 	$("#ResultPane").fadeIn('normal');
 	$("#Loading").fadeIn('normal');
 	$("#NoResults").hide();
-	var terms = $("#search").val();	
-	
-	MessageFeed.GetFriendsMatching(terms, function(data)
-	{
-		completedGet = true;
-		if (completedControl)
-			Search.OnSearchResults(data);
-		else
-			tempResults = data.d;
+	var terms = $("#search").val();
+
+	$.ajax({
+		url: Search.SearchUrl.format(terms);
+	});
+
+	$.ajax({
+		type: "GET",
+		url: Search.SearchUrl.format(terms),
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function(data)
+		{
+			completedGet = true;
+			if (completedControl)
+				Search.OnSearchResults(data.d);
+			else
+				tempResults = data.d;
+		}
 	});
 
 	window.history.pushState(terms, '', 'search.aspx?query=' + terms);
