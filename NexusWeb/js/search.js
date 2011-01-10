@@ -5,47 +5,81 @@
 /// <reference path="http://code.jquery.com/jquery-1.4.1-vsdoc.js" />
 
 Type.registerNamespace("Search");
-
-Search.SearchUrl = "http://dev.nexus-im.com/Services/ArticleFeed.svc/Users?fullname=contains('{0}')";
+Search.SearchUrl = "http://dev.nexus-im.com/Services/ArticleFeed.svc/users/?fullname=contains('{0}')";
 var userResultControl = document.createElement("li");
 var completedControl = false;
 var completedGet = false;
 var tempResults = null;
 var pendingUserRequestId = 0;
 
-Search.BeginSearch = function()
+Search.StripSlashes = function(date)
+{
+	return date.replace(/\//, "").replace(/\//, "");
+}
+
+Search.BeginSearch = function(isNew)
 {
 	$("#ResultPane").fadeIn('normal');
 	$("#Loading").fadeIn('normal');
 	$("#NoResults").hide();
-	var terms = $("#search").val();
+	var terms = escape($("#search").val());
 
-	$.ajax({
-		url: Search.SearchUrl.format(terms);
-	});
+	/*Sys.Net.WebServiceProxy.invoke("Services/ArticleFeed.svc", "users", true, { fullname: "contains=('" + terms + "')" }, function(data)
+	{
+		completedGet = true;
+		if (completedControl)
+			Search.OnSearchResults(data);
+		else
+			tempResults = data;
+	});*/
 
 	$.ajax({
 		type: "GET",
 		url: Search.SearchUrl.format(terms),
-		contentType: "application/json; charset=utf-8",
-		dataType: "json",
+		dataType: 'text',
+		beforeSend: function (xhr, settings)
+		{
+			xhr.setRequestHeader("Accept", "application/json");
+			return true;
+		},
 		success: function(data)
 		{
 			completedGet = true;
+
+			var result = Sys.Serialization.JavaScriptSerializer.deserialize(data);
+
 			if (completedControl)
-				Search.OnSearchResults(data.d);
+				Search.OnSearchResults(result);
 			else
-				tempResults = data.d;
+				tempResults = result;
 		}
 	});
 
+	/*var sRequest = new Sys.Net.WebRequest();
+	sRequest.set_url(Search.SearchUrl.format(terms));
+	sRequest.set_httpVerb("GET");
+	sRequest.get_headers()["Accept"] = "application/json";
+	sRequest.add_completed(function(executor, eventArgs)
+	{
+		completedGet = true;
+		if (completedControl)
+			Search.OnSearchResults(executor.get_responseData());
+		else
+			tempResults = executor.get_responseData();
+	});
+
+	sRequest.invoke();*/
+
 	window.history.pushState(terms, '', 'search.aspx?query=' + terms);
-	//window.location.hash = "query=" + 
 }
+
+var tttt = null;
+
 Search.OnSearchResults = function(results)
 {
 	$("#SearchResults").html("");
 	$("#Loading").hide();
+	tempResults = results;
 
 	var now = new Date();
 
@@ -60,6 +94,7 @@ Search.OnSearchResults = function(results)
 		var user = results[result];
 		var li = userResultControl.cloneNode(true);
 		$("#FullName", li).html(user.FirstName + " " + user.LastName).attr("href", "user.aspx?userid=" + user.UserId);
+
 		var difference = Math.floor((now.getTime() - user.DateOfBirth.getTime()) / 31536000000);
 		$("#UserImage", li).attr("src", "Services/MessageFeed.svc/GetUserImage?userid=" + user.UserId + "&size=64");
 
@@ -110,7 +145,6 @@ $("body").ready(function()
 {
 	var regex = new RegExp("[\\?&#]query=([^&#]*)");
 	var result = regex.exec(window.location.href);
-
 	$.ajax({
 		type: "GET",
 		url: "controls/SearchUserResult.html",
@@ -129,6 +163,6 @@ $("body").ready(function()
 	if (result != null)
 	{
 		$("#search").val(result[1]);
-		Search.BeginSearch();
+		Search.BeginSearch(false);
 	}
 });

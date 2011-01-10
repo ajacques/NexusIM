@@ -30,7 +30,7 @@
 </asp:Content>
 <asp:Content ContentPlaceHolderID="body" runat="server">
 	<h4>Parameters</h4>
-	<form onsubmit="Search.BeginSearch();return false">
+	<form onsubmit="Search.BeginSearch(true);return false">
 		<input id="search" type="text" style="margin: 5px;" />
 		<select>
 			<option>Any</option>

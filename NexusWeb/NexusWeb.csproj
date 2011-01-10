@@ -284,7 +284,6 @@
     <Compile Include="Services\GeoServices.svc.cs">
       <DependentUpon>GeoServices.svc</DependentUpon>
     </Compile>
-    <Compile Include="Services\NewsFeedServiceHostFactory.cs" />
     <Compile Include="Services\PhotoDataContracts.cs" />
     <Compile Include="Services\Photos.svc.cs">
       <DependentUpon>Photos.svc</DependentUpon>

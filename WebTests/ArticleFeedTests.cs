@@ -10,6 +10,7 @@ using System.Web.SessionState;
 using NexusWeb.Databases;
 using System.ServiceModel.Web;
 using System.Security;
+using System.Linq.Expressions;
 
 namespace WebTests
 {
@@ -30,8 +31,8 @@ namespace WebTests
 		private UnitTestSession mLocalSession;
 
 		/// <summary>
-		///Gets or sets the test context which provides
-		///information about and functionality for the current test run.
+		/// Gets or sets the test context which provides
+		/// information about and functionality for the current test run.
 		///</summary>
 		public TestContext TestContext
 		{
@@ -64,6 +65,24 @@ namespace WebTests
 		{
 			mLocalSession = null; // Each Test should be completely isolated from each other. Prevent data bleedover
 			SessionStateUtility.RemoveHttpSessionStateFromContext(HttpContext.Current);
+		}
+
+		[TestMethod]
+		public void SimpleStringExpressionTest()
+		{
+			string[] testdata = { "HTC", "Motorola", "Apple", "Samsung" };
+			Expression<Func<string, bool>> expression = ArticleFeed_Accessor.StringPredicateToFunc((string s) => s, "contains('sung')");
+			
+			string actual = testdata.First(expression.Compile());
+
+			Assert.AreEqual("Samsung", actual);
+		}
+
+		[TestMethod]
+		public void SimpleExpressionTest()
+		{
+			var accessor = new ArticleFeed_Accessor();
+			accessor.Users();
 		}
 	}
 }
