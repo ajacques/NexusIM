@@ -18,6 +18,7 @@ var cancelStatusMsgBoxHide = false;
 var lastGeoLoc = null;
 var lastGeoResolve = null;
 var waitingMsgBody = "";
+var lastId = null;
 
 NewsFeed.startStream = function ()
 {
@@ -94,7 +95,14 @@ NewsFeed.onArticlesDownload = function (content)
 		var obj = content[i];
 		var li = NewsFeed.handleAddArticleMessage(obj);
 		$(li).css("display", "none");
-		$("ul#feed").append(li);
+		var feed = $("ul#feed");
+		var updateCount = feed.children("li").length;
+		if (lastId == null || lastId > obj.ArticleId)
+			feed.append(li);
+		else {
+			alert(obj.ArticleId);
+		}
+		lastId = obj.ArticleId;
 		$(li).delay(500 + (i * 25)).fadeIn('normal');
 	}
 	NewsFeed.UpdateTimestamps();
@@ -149,6 +157,7 @@ NewsFeed.handleAddArticleMessage = function(obj)
 
 	commenthref.innerHTML = Strings.CommentText;
 
+	cmdtd.appendChild(document.createTextNode(" - "));
 	cmdtd.appendChild(commenthref);
 	cmdtable.appendChild(datetd);
 	cmdtable.appendChild(cmdtd);
@@ -218,7 +227,7 @@ NewsFeed.onUserLinkHover = function (articleid)
 		var ps = NewsFeed.getAbsolutePosition("img#MyDisplayImageByUpdatebox");
 		position = { y: 70, x: ps.x -= 520 };
 
-		friend = Friends["nx" + selfId];
+		friend = Self;
 	} else {
 		var li = $("li[aid=" + articleid + "]", $("ul#feed"));
 		friend = Friends[li.attr("fid")];
@@ -275,9 +284,20 @@ NewsFeed.ArticleLongPoll = function ()
 
 NewsFeed.downloadStatus = function ()
 {
-	MessageFeed.GetStatusUpdatesSince(new Date(1), NewsFeed.onArticlesDownload, function (data)
-	{
-		alert(data["_message"]);
+	$.ajax({
+		url: "Services/ArticleFeed.svc/updates/?take=10",
+		dataType: 'text',
+		type: 'GET',
+		beforeSend: function (xhr, settings)
+		{
+			xhr.setRequestHeader("Accept", "application/json");
+			return true;
+		},
+		success: function(data)
+		{
+			var result = Sys.Serialization.JavaScriptSerializer.deserialize(data);
+			NewsFeed.onArticlesDownload(result);
+		}
 	});
 }
 
@@ -317,7 +337,7 @@ NewsFeed.statusKeyPress = function(e)
 	else if (e.which) // Netscape/Firefox/Opera
 		keyCode = e.which;
 
-	if (keyCode = 64) // @
+	if (keyCode == 64) // @
 		atTypingName = true;
 
 	if (atTypingName) // When we submit this to the server, we will encode it as ${nx:1}
@@ -512,12 +532,30 @@ NewsFeed.postStatusMessage = function()
 		NewsFeed.UpdateTimestamps();
 	});
 }
-
 NewsFeed.AcceptRequest = function(rid)
 {
-	MessageFeed.AcceptRequest(rid, function()
+	MessageFeed.AcceptFriendRequest(rid, function(obj)
 	{
-		$("#requestId" + rid).fadeOut("normal");
+		var userid = $("#requestId" + rid).fadeOut("normal").attr("uid");
+
+		var key = obj["Prefix"] + obj["UserId"];
+		Friends[key] = obj;
+
+		$.ajax({
+			url: "Services/ArticleFeed.svc/updates/?userid=" + userid + "&take=10",
+			dataType: 'text',
+			type: 'GET',
+			beforeSend: function (xhr, settings)
+			{
+				xhr.setRequestHeader("Accept", "application/json");
+				return true;
+			},
+			success: function(data)
+			{
+				var result = Sys.Serialization.JavaScriptSerializer.deserialize(data);
+				NewsFeed.onArticlesDownload(result);
+			}
+		});
 	});
 }
 
@@ -547,6 +585,7 @@ NewsFeed.OnRequestDownload = function(data)
 			var deny = document.createElement("a");
 			var block = document.createElement("a");
 
+			li.setAttribute("uid", request.Sender);
 			requestName.innerHTML = " - Friend Request";
 			msg.innerHTML = request.Message;
 			msg.setAttribute("style", "margin-left: 10px");

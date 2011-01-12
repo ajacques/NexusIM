@@ -25,7 +25,7 @@
 	</ul>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="body" runat="server">
-	<div id="UserHoverCard" onmouseover="cancelHoverBoxHide = true;" onmouseout="cancelHoverBoxHide = false;NewsFeed.onUserLinkHoverOut();">
+	<div id="UserHoverCard" onmouseover="cancelHoverBoxHide = true;" onmouseout="cancelHoverBoxHide = false;NewsFeed.onUserLinkHoverOut();" style="display: none">
 		<div id="UserHoverCardContent" style="position: absolute"></div>
 	</div>
 	<div id="StatusUpdateContainer" onclick="cancelStatusMsgHide = true;" style="width: 540px; border-bottom: solid 1px #eeeeee; ">

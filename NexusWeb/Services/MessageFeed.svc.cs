@@ -20,6 +20,8 @@ using Microsoft.ApplicationServer.Caching;
 using NexusWeb.Databases;
 using NexusWeb.Properties;
 using NexusWeb.Services.DataContracts;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace NexusWeb.Services
 {
@@ -53,135 +55,6 @@ namespace NexusWeb.Services
 				SetupDelegate();
 		}
 
-		/// <summary>
-		/// Retrieves all of the status updates starting from the specified DateTime.
-		/// Returns instantly after getting the status updates
-		/// </summary>
-		/// <param name="messagesSince">Only show messages newer than this</param>
-		/// <returns>A list of all the requested status updates</returns>
-		[OperationContract]
-		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesSince(DateTime messagesSince)
-		{
-			int userid;
-			HandleWCFAuth(out userid);
-
-			int[] friends = GetCachedFriends(userid);
-
-			var statuses = GetStatusUpdates(su => (userid == su.Userid || friends.Contains(su.Userid)) && su.Timestamp > messagesSince);
-
-			statuses = statuses.Reverse();
-
-			return statuses;
-		}
-
-		[OperationContract]
-		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesBetween(DateTime startdate, DateTime enddate)
-		{
-			if (!CounterCSRF.IsValidFromSecureWCF())
-			{
-				Trace.TraceError(String.Format("NexusWeb: Attempted WCF call from outside secure website boundaries (Method: AccountService.SetLocationShareState): {0}", HttpContext.Current.Request.UrlReferrer.AbsoluteUri));
-				throw WCFExceptions.CrossSiteViolation;
-			}
-
-			HttpSessionState session = HttpContext.Current.Session;
-			HttpResponse response = HttpContext.Current.Response;
-			if (session["userid"] == null)
-			{
-				response.StatusCode = (int)HttpStatusCode.Forbidden;
-				response.Close();
-			}
-
-			int userid = (int)session["userid"];
-
-			int[] friends = GetCachedFriends(userid);
-
-			var statuses = GetStatusUpdates(su => (userid == su.Userid || friends.Contains(su.Userid)) && su.Timestamp > startdate && su.Timestamp < enddate);
-
-			statuses.Reverse();
-
-			return statuses;
-		}
-
-		[OperationContract]
-		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesSinceLongPoll(DateTime messagesSince)
-		{
-			// Same code as above, but this time we will wait for messages if there are none
-			int userid;
-			HandleWCFAuth(out userid);
-
-			int[] friends = GetCachedFriends(userid);
-
-			List<ClientStatusUpdate> statuses = GetStatusUpdates(su => (userid == su.Userid || friends.Contains(su.Userid)) && su.Timestamp > messagesSince).ToList();
-
-			userdbDataContext db = new userdbDataContext();
-
-			SqlDependency depends = new SqlDependency();
-
-			if (statuses.Count() >= 1)
-				return statuses.ToArray();
-
-			ManualResetEventSlim mutex = new ManualResetEventSlim();
-
-			mStatusUpdateCallbacks[userid] = new ArticlePollDelegate(delegate(ClientStatusUpdate su)
-			{
-				statuses.Add(su);
-				mutex.Set();
-			});
-
-			mutex.Wait(Settings.Default.LongPollTimeout);
-
-			mutex.Dispose();
-
-			mStatusUpdateCallbacks.Remove(userid);
-
-			return statuses;
-		}
-
-		[OperationContract]
-		public IEnumerable<ClientArticleUpdate> test(DateTime messagesSince)
-		{
-			// Same code as above, but this time we will wait for messages if there are none
-			int userid;
-			HandleWCFAuth(out userid);
-
-			int[] friends = GetCachedFriends(userid);
-
-			string conn = ConfigurationManager.ConnectionStrings["SqlDependencyConnectionString"].ConnectionString;
-
-			// Fix this. Setup the account permissions in the database to allow me to use the integrated security
-			userdbDataContext db = new userdbDataContext(conn);
-			SqlDependency.Start(conn);
-
-			ManualResetEventSlim statusWaitMutex = new ManualResetEventSlim();
-			var results = db.StatusUpdates.Where(su => (userid == su.Userid || friends.Contains(su.Userid)) && su.Timestamp > messagesSince).Select(mDbToUsableStatusUpdate);/*.AsCached("StatusUpdates", new CachedQueryOptions()
-			{
-				OnInvalidated = (sender, args) => statusWaitMutex.Set()
-			})*/
-
-			if (results.Count() == 0)
-				statusWaitMutex.Wait(Settings.Default.LongPollTimeout);
-
-			return results;
-		}
-
-		[OperationContract]
-		public IEnumerable<ClientArticleComment> GetArticleComments(string articleType, int articleId)
-		{
-			int userid;
-			HandleWCFAuth(out userid);
-
-			return GetComments(c => c.ArticleId == articleId && c.ArticleType == articleType);
-		}
-
-		[OperationContract]
-		public IEnumerable<ClientArticleUpdate> GetStatusUpdatesForUserPage(int targetid)
-		{
-			int userid;
-			HandleWCFAuth(out userid);
-
-			return GetStatusUpdates(su => su.Userid == targetid).OrderByDescending(su => su.mTimeStamp).Take(10);
-		}
-
 		[OperationContract]
 		public IEnumerable<UserDetails> GetFriends()
 		{
@@ -192,37 +65,6 @@ namespace NexusWeb.Services
 
 			// Add their friends
 			var friends = db.GetFriends(userid).Select(u => new UserDetails(u));
-
-			return friends;
-		}
-
-		[OperationContract]
-		[WebGet]
-		public IEnumerable<UserDetails> GetFriendSuggestions(string name)
-		{
-			int userid;
-			HandleWCFAuth(out userid);
-
-			userdbDataContext db = new userdbDataContext();
-
-			// Add their friends
-			var friends = from u in db.GetFriends(userid)
-						  where (u.firstname + " " + u.lastname).Contains(name)
-						  select new UserDetails() { Prefix = "nx", UserId = u.id };
-
-			return friends;
-		}
-
-		[OperationContract]
-		[WebGet]
-		public IEnumerable<UserDetails> GetFriendsMatching(string query)
-		{
-			userdbDataContext db = new userdbDataContext();
-
-			// Add their friends
-			var friends = from u in db.Users
-						  where (u.firstname + " " + u.lastname).ToUpper().Contains(query.ToUpper())
-						  select new UserDetails() { Prefix = "nx", UserId = u.id, FirstName = u.firstname, LastName = u.lastname, DateOfBirth = u.DateOfBirth };
 
 			return friends;
 		}
@@ -249,28 +91,27 @@ namespace NexusWeb.Services
 		}
 
 		[OperationContract]
-		public void AcceptRequest(int requestId)
+		public UserDetails AcceptFriendRequest(int requestId)
 		{
 			int userid;
 			HandleWCFAuth(out userid);
 
 			userdbDataContext db = new userdbDataContext();
 			var request = (from r in db.Requests
-						  where r.Id == requestId && r.RecipientUserId == userid
+						  where r.Id == requestId && r.RequestType == "friend" && r.RecipientUserId == userid
 						  select r).FirstOrDefault();
 
 			if (request == null)
 				throw new Exception();
 
-			if (request.RequestType == "friend")
-			{
-				Friend friend = new Friend();
-				friend.userid = userid;
-				friend.friendid = request.SenderUserId;
-				db.Friends.InsertOnSubmit(friend);
-			}
+			Friend friend = new Friend();
+			friend.userid = userid;
+			friend.friendid = request.SenderUserId;
+			db.Friends.InsertOnSubmit(friend);
 
 			db.Requests.DeleteOnSubmit(request);
+
+			return new UserDetails(db.GetUser(request.SenderUserId));
 		}
 
 		/// <summary>

@@ -85,7 +85,7 @@ namespace CloudTests.CoreServiceTests
 
 			int index = r.Next(0, cls.Count() - 1);
 
-			ContactLocationInfo info = cls[index];
+			ContactLocationInfo info = cls[0];
 
 			UserLocationData data = service.GetLocation(info.LocationId);
 

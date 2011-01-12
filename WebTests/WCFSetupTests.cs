@@ -47,12 +47,6 @@ namespace WebTests
 		}
 
 		[TestMethod]
-		public void SocialNetworksTest()
-		{
-			TestUri(new Uri(Settings.Default.NexusWebRootUri, "/Services/SocialNetworks.svc"));
-		}
-
-		[TestMethod]
 		public void PhotoServiceTest()
 		{
 			TestUri(new Uri(Settings.Default.NexusWebRootUri, "/Services/Photos.svc"));

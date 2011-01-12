@@ -71,11 +71,17 @@ namespace WebTests
 		public void SimpleStringExpressionTest()
 		{
 			string[] testdata = { "HTC", "Motorola", "Apple", "Samsung" };
-			Expression<Func<string, bool>> expression = ArticleFeed_Accessor.StringPredicateToFunc((string s) => s, "contains('sung')");
+			Func<string, bool> expression = ArticleFeed.StringPredicateToFunc((string s) => s, "contains('sung')").Compile();
 			
-			string actual = testdata.First(expression.Compile());
+			string actual = testdata.First(expression);
 
 			Assert.AreEqual("Samsung", actual);
+
+			expression = ArticleFeed.StringPredicateToFunc((string s) => s, "Apple").Compile();
+
+			actual = testdata.First(expression);
+
+			Assert.AreEqual("Apple", actual);
 		}
 
 		[TestMethod]

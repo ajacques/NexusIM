@@ -149,6 +149,7 @@ namespace NexusWeb.Services.DataContracts
 		public UserDetails() {}
 		public UserDetails(User details)
 		{
+			Prefix = "nx";
 			UserId = details.id;
 			FirstName = details.firstname;
 			LastName = details.lastname;

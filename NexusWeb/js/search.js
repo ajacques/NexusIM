@@ -24,17 +24,8 @@ Search.BeginSearch = function(isNew)
 	$("#NoResults").hide();
 	var terms = escape($("#search").val());
 
-	/*Sys.Net.WebServiceProxy.invoke("Services/ArticleFeed.svc", "users", true, { fullname: "contains=('" + terms + "')" }, function(data)
-	{
-		completedGet = true;
-		if (completedControl)
-			Search.OnSearchResults(data);
-		else
-			tempResults = data;
-	});*/
-
 	$.ajax({
-		type: "GET",
+		type: 'GET',
 		url: Search.SearchUrl.format(terms),
 		dataType: 'text',
 		beforeSend: function (xhr, settings)
@@ -46,7 +37,7 @@ Search.BeginSearch = function(isNew)
 		{
 			completedGet = true;
 
-			var result = Sys.Serialization.JavaScriptSerializer.deserialize(data);
+			var result = Sys.Serialization.JavaScriptSerializer.deserialize(data); // jQuery doesn't de-serialize the Date object properly
 
 			if (completedControl)
 				Search.OnSearchResults(result);
@@ -55,25 +46,8 @@ Search.BeginSearch = function(isNew)
 		}
 	});
 
-	/*var sRequest = new Sys.Net.WebRequest();
-	sRequest.set_url(Search.SearchUrl.format(terms));
-	sRequest.set_httpVerb("GET");
-	sRequest.get_headers()["Accept"] = "application/json";
-	sRequest.add_completed(function(executor, eventArgs)
-	{
-		completedGet = true;
-		if (completedControl)
-			Search.OnSearchResults(executor.get_responseData());
-		else
-			tempResults = executor.get_responseData();
-	});
-
-	sRequest.invoke();*/
-
 	window.history.pushState(terms, '', 'search.aspx?query=' + terms);
 }
-
-var tttt = null;
 
 Search.OnSearchResults = function(results)
 {
@@ -118,6 +92,7 @@ Search.OnSearchResults = function(results)
 
 		$("#SearchResults").append(li);
 	}
+	tempResults = null;
 }
 
 Search.SendFriendRequest = function()

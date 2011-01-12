@@ -21,12 +21,15 @@ using System.Web.Script.Services;
 using System.Linq.Expressions;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Data.SqlClient;
 
 namespace NexusWeb.Services
 {
 	[ServiceBehavior(IncludeExceptionDetailInFaults = true)]
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	[ServiceContract]
+	[ServiceKnownType(typeof(UserDetails))]
+	[ServiceKnownType(typeof(ClientStatusUpdate))]
 	public class ArticleFeed
 	{
 		[WebInvoke(Method = "GET", UriTemplate = "updates/*")]
@@ -37,9 +40,6 @@ namespace NexusWeb.Services
 
 			HttpSessionState session = HttpContext.Current.Session;
 
-			if (session["userid"] == null)
-				throw WCFExceptions.BadCredentials;
-
 			int userid = (int)session["userid"];
 
 			NameValueCollection urlParams = HttpUtility.ParseQueryString(requestUri.Query);
@@ -47,21 +47,51 @@ namespace NexusWeb.Services
 			userdbDataContext db = new userdbDataContext();
 			IQueryable<StatusUpdate> query = db.StatusUpdates;
 
+			if (urlParams["since"] != null)
+			{
+				string since;
+				try	{
+					since = urlParams["since"];
+				} catch (FormatException) {
+					throw new FaultException("Invalid format for url parameter 'since'. Acceptable values are id:{uint} and dt:{seconds}", new FaultCode("CLIENT", new FaultCode("URL")));
+				}
+
+				if (since.StartsWith("id:"))
+				{
+					int sinceId = Convert.ToInt32(since.Substring(3));
+
+					query = query.Where(su => su.Id > sinceId);
+				}
+			}
+
 			if (urlParams["userid"] != null)
 			{
 				int value = Convert.ToInt32(urlParams["userid"]);
-				query = query.Where(su => su.Userid == value);
+				query = query.Where(su => /*db.AreFriends(userid, value).Value &&*/ su.Userid == value);
 			} else	{
-				query = query.Where(su => db.AreFriends(userid, su.Userid).Value);
+				query = query.Where(su => db.AreFriends(userid, su.Userid).Value || su.Userid == userid);
 			}
 			query = FilterRequest<StatusUpdate>(query, urlParams);
 			
-			return query.Select(su => MessageFeed.DbStatusUpdateDelegate(su));
+			query = query.OrderByDescending(su => su.Id);
+
+			IEnumerable<object> result = query.Select(su => MessageFeed.DbStatusUpdateDelegate(su));
+
+			if (urlParams["delay"] != null && urlParams["delay"] == "ifnone")
+			{
+				if (!result.Any())
+				{
+					SqlDependency depends = new SqlDependency();
+					//depends.AddCommandDependency()
+				}
+			}
+
+			return result;
 		}
 
 		[WebInvoke(Method = "GET", UriTemplate = "users/*")]
 		[OperationContract]
-		public IEnumerable<UserDetails> Users()
+		public IEnumerable Users()
 		{
 			Uri requestUri = HttpContext.Current.Request.Url;
 
@@ -90,7 +120,7 @@ namespace NexusWeb.Services
 			return result;
 		}
 
-		private static IQueryable<T> FilterRequest<T>(IQueryable<T> source, NameValueCollection urlParams)
+		internal static IQueryable<T> FilterRequest<T>(IQueryable<T> source, NameValueCollection urlParams)
 		{
 			if (urlParams["take"] != null)
 			{
@@ -100,7 +130,7 @@ namespace NexusWeb.Services
 
 			return source;
 		}
-		private static Expression<Func<T, bool>> StringPredicateToFunc<T>(Expression<Func<T, string>> selector, string query)
+		internal static Expression<Func<T, bool>> StringPredicateToFunc<T>(Expression<Func<T, string>> selector, string query)
 		{
 			ParameterExpression dbParam = Expression.Parameter(typeof(T)); // Row from the database to search from
 			if (query.StartsWith("contains("))

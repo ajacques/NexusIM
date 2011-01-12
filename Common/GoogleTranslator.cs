@@ -10,7 +10,6 @@ namespace BaseWindowsProtocolLibrary.Translation
 {
 	public class GoogleTranslator : ITranslator
 	{
-		IWebProxy proxy = WebRequest.GetSystemWebProxy();
 		public GoogleTranslator() {}
 
 		public string Translate(string input, CultureInfo inputlang, CultureInfo outputlang)
@@ -24,7 +23,6 @@ namespace BaseWindowsProtocolLibrary.Translation
 			Uri uriDone = new Uri(uri);
 
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uriDone);
-			request.Proxy = proxy;
 
 			WebResponse response = request.GetResponse();
 			StreamReader reader = new StreamReader(response.GetResponseStream());

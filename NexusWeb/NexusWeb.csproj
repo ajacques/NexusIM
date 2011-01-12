@@ -223,6 +223,7 @@
     <Compile Include="BackgroundCode\BingMapsBTree.cs" />
     <Compile Include="BackgroundCode\CounterCSRF.cs" />
     <Compile Include="BackgroundCode\GoogleLatitudeOAuth.cs" />
+    <Compile Include="BackgroundCode\ServiceAuthorizationManager.cs" />
     <Compile Include="Databases\GeoData.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
