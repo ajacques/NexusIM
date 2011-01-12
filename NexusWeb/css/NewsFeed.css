@@ -68,6 +68,11 @@
 
 #statusupdate
 {
+	-webkit-transition-delay: 0s, 0s;
+	-webkit-transition-duration: 0.2s, 0.2s;
+	-webkit-transition-property: border, -moz-box-shadow;
+	-webkit-transition-timing-function: linear, linear;
+	-webkit-border-radius: 3px;
 	-moz-transition-delay: 0s, 0s;
 	-moz-transition-duration: 0.2s, 0.2s;
 	-moz-transition-property: border, -moz-box-shadow;
@@ -89,6 +94,7 @@
 
 #statusupdate:focus
 {
+	-webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.5);
 	-moz-box-shadow: 0 0 8px rgba(82, 168, 236, 0.5);
 	box-shadow: 0 0 20px rgba(82, 168, 236, 0.5);
 	border: 1px solid rgba(82, 168, 236, 0.75);	
@@ -131,8 +137,8 @@ tr.ArticlePostCommentTr textarea
 
 #MyDisplayImageByUpdatebox:hover
 {
-	-webkit-box-shadow: 0px 7px 15px rgba(127,127,127,0.5);
-	-moz-box-shadow: 0px 7px 15px rgba(0,127,0,1);
+	-webkit-box-shadow: 0px 7px 15px rgba(0,127,125, 1);
+	-moz-box-shadow: 0px 7px 15px rgba(0,127,125,1);
 	box-shadow: 0px 7px 15px rgba(0,127,125,1);
 }
 

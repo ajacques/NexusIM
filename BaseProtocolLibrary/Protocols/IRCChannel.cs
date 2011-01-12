@@ -88,20 +88,32 @@ namespace InstantMessage.Protocols.Irc
 		internal void TriggerOnKicked(string kicker, string reason)
 		{
 			mInChannel = false;
-			if (OnKickedFromChannel != null)
+			try {
+				if (OnKickedFromChannel != null)
 				OnKickedFromChannel(this, new IMChatRoomGenericEventArgs() { Username = kicker, Message = reason });
+			} catch (Exception e) {
+				Trace.TraceError(e.Message);
+			}
 		}
 		internal void TriggerOnUserJoin(string username)
 		{
-			if (OnUserJoin != null)
-				OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = username});
+			try {
+				if (OnUserJoin != null)
+					OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = username});
+			} catch (Exception e) {
+				Trace.TraceError(e.Message);
+			}
 		}
 		internal void TriggerOnPart(string reason)
 		{
 			mInChannel = false;
 
-			if (OnLeave != null)
-				OnLeave(this, new IMChatRoomGenericEventArgs() { Message = reason, UserRequested = UserRequestedPart });
+			try {
+				if (OnLeave != null)
+					OnLeave(this, new IMChatRoomGenericEventArgs() { Message = reason, UserRequested = UserRequestedPart });
+			} catch (Exception e) {
+				Trace.TraceError(e.Message);
+			}
 		}
 		internal void TriggerModeChange(IEnumerable<IrcUserModeChange> users)
 		{

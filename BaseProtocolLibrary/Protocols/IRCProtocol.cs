@@ -459,7 +459,9 @@ namespace InstantMessage.Protocols.Irc
 				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
 			} else {
 				int messageStartIndex = line.IndexOf(':', 5);
-				triggerOnMessageReceive(new IMMessageEventArgs(new IrcUserMask(this, parameters[0]), line.Substring(messageStartIndex + 1)));
+				try	{
+					triggerOnMessageReceive(new IMMessageEventArgs(new IrcUserMask(this, parameters[0]), line.Substring(messageStartIndex + 1)));
+				} catch (Exception) { } // Do not allow any bug in the client code to kill us
 			}
 		}
 

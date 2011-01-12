@@ -139,7 +139,7 @@ NewsFeed.handleAddArticleMessage = function(obj)
 	tr1.appendChild(imgtd);
 	var contactimg = document.createElement("img");
 
-	contactimg.setAttribute("src", "/Services/MessageFeed.svc/GetUserImage?userid=" + obj["UserId"] + "&size=32");
+	contactimg.setAttribute("src", "Services/MessageFeed.svc/GetUserImage?userid=" + obj["UserId"] + "&size=32");
 	imgtd.appendChild(contactimg);
 	imgtd.setAttribute("rowspan", "2");
 

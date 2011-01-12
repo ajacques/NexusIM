@@ -72,7 +72,7 @@ body
 
 #headerright
 {	
-	background: -webkit-gradient(linear, left, right, from(#BABABA), to(#000));
+	background: -webkit-gradient(linear, left top, right top, color-stop(0, #bababa), color-stop(1, #000000));
 	background: -moz-linear-gradient(left,  #BABABA, #000);
 	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#BABABA', endColorstr='#000000');
 }
@@ -80,7 +80,7 @@ body
 #headerleft
 {	
 	width: 25%;
-	background: -webkit-gradient(linear, right, left, from(#BABABA), to(#000));
+	background: -webkit-gradient(linear, right top, left top, color-stop(0, #bababa), color-stop(1, #000000));
 	background: -moz-linear-gradient(right,  #BABABA,  #000);
 	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#000000', endColorstr='##BABABA');
 }
