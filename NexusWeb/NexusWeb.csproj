@@ -246,7 +246,6 @@
     <Compile Include="BackgroundCode\FireEagle.cs" />
     <Compile Include="BackgroundCode\FireEagleOAuth.cs" />
     <Compile Include="BackgroundCode\Helpers.cs" />
-    <Compile Include="BackgroundCode\Json.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

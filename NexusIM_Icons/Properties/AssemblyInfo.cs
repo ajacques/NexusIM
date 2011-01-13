@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adren Software")]
 [assembly: AssemblyProduct("NexusIM_Icons")]
-[assembly: AssemblyCopyright("Copyright © Adam Jacques 2010")]
+[assembly: AssemblyCopyright("Copyright © Adam Jacques 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

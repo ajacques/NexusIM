@@ -87,7 +87,7 @@ namespace InstantMessage
 			ProtocolManager.onWindowOpen += new EventHandler(IMBuddy_windowOpen);
 			thisExe = Assembly.GetExecutingAssembly();
 			
-			frequentUsers.JumpListItems.CollectionChanged += new NotifyCollectionChangedEventHandler(JumpList_removeItem);
+			//frequentUsers.JumpListItems.CollectionChanged += new NotifyCollectionChangedEventHandler(JumpList_removeItem);
 
 			appJList.AddCustomCategories(frequentUsers);
 
@@ -234,8 +234,8 @@ namespace InstantMessage
 							IMSettings.SettingInterface.SetSettingList("taskbarusers", users);
 						}
 						try	{
-							IJumpListItem item = frequentUsers.JumpListItems.ElementAt(index);
-							users.Remove(users.Single(pt => pt.Contains("username:" + usersSort[index].mBuddy.Username)));
+							//IJumpListItem item = frequentUsers.JumpListItems.ElementAt(index);
+							//users.Remove(users.Single(pt => pt.Contains("username:" + usersSort[index].mBuddy.Username)));
 						} catch (Exception) {}
 						if (IMSettings.SettingInterface.AutoSave)
 							IMSettings.SettingInterface.Save();

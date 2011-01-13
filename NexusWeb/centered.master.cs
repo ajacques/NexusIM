@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using NexusWeb.Databases;
+using System.Globalization;
 
 namespace NexusWeb.Masters
 {
@@ -26,7 +27,7 @@ namespace NexusWeb.Masters
 							where u.id == userid
 							select new { u.firstname, u.lastname }).First();
 
-				MyDisplayImageByUpdatebox.ImageUrl = String.Format(MyDisplayImageByUpdatebox.ImageUrl, userid);
+				MyDisplayImageByUpdatebox.ImageUrl = String.Format(CultureInfo.InvariantCulture, MyDisplayImageByUpdatebox.ImageUrl, userid);
 				ProminantMyUsername.Text = user.firstname + " " + user.lastname;
 				ProminantMyUsername.NavigateUrl = String.Format(ProminantMyUsername.NavigateUrl, userid);
 			} else {

@@ -24,7 +24,7 @@
 			<tr>
 				<td id="headerleft" runat="server" clientidmode="Static"></td>
 				<td runat="server" id="headerright" clientidmode="Static">
-					<a href="" onmouseover="javascript:NewsFeed.onUserLinkHover(-1);" onmouseout="javascript:NewsFeed.onUserLinkHoverOut()">
+					<a href="">
 						<asp:Image runat="server" ID="MyDisplayImageByUpdatebox" ImageUrl="~/Services/MessageFeed.svc/GetUserImage?userid={0}&size=64" ClientIDMode="Static" CssClass="BackShadow" />
 					</a>
 					<span id="Span1" runat="server" style="color: White; top: -35px; font-family: verdana; font-size: 10pt; font-weight: 600; position: relative">

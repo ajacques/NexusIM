@@ -80,7 +80,7 @@ namespace NexusIM
 
 				if (FirstRunSetup.IsFirstRun)
 					FirstRunSetup.HandleFirstRun();
-				else if (FirstRunSetup.IsNetworkDeployed || IMSettings.GetCustomSetting("devicetoken", "") != "")
+				else if (FirstRunSetup.IsNetworkDeployed || !String.IsNullOrEmpty(IMSettings.GetCustomSetting("devicetoken", "")))
 					NexusCoreManager.LoginAsDevice();
 
 				Trace.WriteLine("Configuration file loaded and parsed.");

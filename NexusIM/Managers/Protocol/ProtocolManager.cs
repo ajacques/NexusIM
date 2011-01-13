@@ -144,12 +144,8 @@ namespace NexusIM.Managers
 		public override IMProtocol CreateCustomProtocol(string name)
 		{
 			// These are all protocols that the other platforms don't support yet
-			if (name == "aim")
-				return new IMAimProtocol();
-			else if (name == "msn")
+			if (name == "msn")
 				return new IMMSNProtocol();
-			else if (name == "irc")
-				return new IMIRCProtocol();
 			else if (name == "pnm")
 				return new IMPNMProtocol();
 			else if (name == "jabber")

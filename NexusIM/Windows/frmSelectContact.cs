@@ -26,7 +26,8 @@ namespace NexusIM.Windows
 
 		private void frmSelectContact_Load(object sender, EventArgs e)
 		{
-			AccountManager.MergeAllBuddyLists().ForEach(pt => contacts.AddBuddy(pt));
+			foreach (IMBuddy pt in AccountManager.MergeAllBuddyLists())
+				contacts.AddBuddy(pt);
 		}
 	}
 }

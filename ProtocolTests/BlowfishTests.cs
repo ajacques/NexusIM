@@ -156,6 +156,7 @@ namespace ProtocolTests
 			{
 				Assert.Fail("OnMessageReceived Event Handler was not tripped");
 			}
+			waitHandle.Dispose();
 		}
 
 		[TestMethod]

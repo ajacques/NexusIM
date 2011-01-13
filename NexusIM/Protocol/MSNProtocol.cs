@@ -2,6 +2,7 @@
 using System.Collections;
 using MSNPSharp;
 using NexusIM.Managers;
+using InstantMessage.Events;
 
 namespace InstantMessage
 {
@@ -125,7 +126,7 @@ namespace InstantMessage
 		{
 			if (e.SignedOffReason == SignedOffReason.OtherClient)
 			{
-				triggerOnDisconnect(this, new IMDisconnectEventArgs(IMDisconnectEventArgs.DisconnectReason.OtherClient));
+				triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.OtherClient));
 			}
 			status = IMProtocolStatus.OFFLINE;
 		}

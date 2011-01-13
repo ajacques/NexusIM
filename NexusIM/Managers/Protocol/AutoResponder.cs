@@ -35,14 +35,14 @@ namespace NexusIM
 		{
 			if (UserIdle.IsIdle)
 			{
-				if (!usershandled.Contains(e.Sender))
+				if (!usershandled.Contains(e.Sender as IMBuddy))
 				{
 					if (AccountManager.StatusMessage == "")
 						e.Sender.SendMessage("Auto Response: I'm currently Away from my Keyboard");
 					else
 						e.Sender.SendMessage("Auto Response: " + AccountManager.StatusMessage);
 
-					usershandled.Add(e.Sender);
+					usershandled.Add(e.Sender as IMBuddy);
 				}
 			}
 		}

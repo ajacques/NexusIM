@@ -15,17 +15,17 @@ namespace NexusWeb.Pages
 
 			int userid = (int)Session["userid"];
 			userdbDataContext db = new userdbDataContext();
-			user = db.Users.Where(u => u.id == userid).First();
+			dbUser = db.Users.Where(u => u.id == userid).First();
 
-			ver = user.FriendListVersion;
-			selfid = user.id;
+			ver = dbUser.FriendListVersion;
+			selfid = dbUser.id;
 
 			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/MessageFeed.svc"));
 			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/Accounts.svc"));
 			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/GeoServices.svc"));
 		}
 
-		protected User user;
+		protected User dbUser;
 		protected int ver;
 		protected int selfid;
 	}

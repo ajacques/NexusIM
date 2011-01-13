@@ -370,7 +370,7 @@ namespace InstantMessage
 			btnDoLogin.Enabled = false;
 			btnDoLogin.Text = "Connecting...";
 
-			IMProtocol protocol = IMProtocol.FromString(cmbProtocol.Text);
+			IMProtocol protocol = ProtocolManager.Instance.CreateCustomProtocol(cmbProtocol.Text);
 
 			protocol.Username = txtUsername.Text;
 			protocol.Password = txtPassword.Text;
@@ -569,7 +569,7 @@ namespace InstantMessage
 		{
 			if (!txtSearch.HintEnabled) // If it's in editing mode
 			{
-				List<IMBuddy> buddies = AccountManager.MergeAllBuddyLists(); // Get one big array with all buddies
+				IEnumerable<IMBuddy> buddies = AccountManager.MergeAllBuddyLists(); // Get one big array with all buddies
 
 				var buddyItems = from IMBuddy b in buddies where !b.IsInternalBuddy && !b.IsManaged select new { b.DisplayName, b };
 

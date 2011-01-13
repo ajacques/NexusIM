@@ -92,6 +92,11 @@
 	font-family: 'helvetica', 'Verdana', sans-serif;	
 }
 
+#statusupdate:hover
+{
+	box-shadow: 0 0 5px 0 rgba(82, 168, 236, 0.5);
+}
+
 #statusupdate:focus
 {
 	-webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.5);
@@ -138,8 +143,8 @@ tr.ArticlePostCommentTr textarea
 #MyDisplayImageByUpdatebox:hover
 {
 	-webkit-box-shadow: 0px 7px 15px rgba(0,127,125, 1);
-	-moz-box-shadow: 0px 7px 15px rgba(0,127,125,1);
-	box-shadow: 0px 7px 15px rgba(0,127,125,1);
+	/*-moz-box-shadow: 0px 7px 15px rgba(0,127,125,1);*/
+	box-shadow: 0px 7px 15px #C4C100;
 }
 
 #UserHoverCard

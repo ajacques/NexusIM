@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using InstantMessage;
+using InstantMessage.Protocols.Irc;
 
 namespace NexusIM.Managers
 {
@@ -77,7 +78,7 @@ namespace NexusIM.Managers
 				{
 					paccount.FirstOrDefault().p.JoinChatRoom(room);
 				} else {
-					IMProtocol account = new IMIRCProtocol();
+					IMProtocol account = new IRCProtocol();
 					account.Server = server;
 					account.EnableSaving = false;
 					account.Enabled = true;

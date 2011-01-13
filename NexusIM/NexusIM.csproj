@@ -13,21 +13,20 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <ManifestCertificateThumbprint>A774D538C63536740F4809017C7F02D86F7041F6</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>09BD8F98771CF7073B5CA17F1A7A66BD4DD66BCD</ManifestCertificateThumbprint>
     <ManifestKeyFile>NexusIM_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <TargetZone>Internet</TargetZone>
+    <TargetZone>Custom</TargetZone>
     <ApplicationIcon>
     </ApplicationIcon>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkProfile />
     <PublishUrl>ftp://adrensoftware.com/public_html/downloads/nexusim/</PublishUrl>
     <Install>true</Install>
@@ -74,51 +73,36 @@
     <StartupObject>NexusIM.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.WindowsAPICodePack, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WindowsAPICodePack\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Sensors, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WindowsAPICodePack\WindowsAPICodePack\Sensors\bin\Debug\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack.ExtendedLinguisticServices">
+      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAPICodePack.Sensors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\WindowsAPICodePack\WindowsAPICodePack\Shell\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="MSNPSharp, Version=2.5.5.957, Culture=neutral, PublicKeyToken=adaaf016a67b1373, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\MSNPSharp\MSNPSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OscarLib, Version=0.2.3449.27528, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OscarLib\src\Core\bin\Debug\OscarLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.ServiceModel">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.ServiceModel.Web">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Speech">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -127,9 +111,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\VistaBridge1.4\vistabridgelibrary\bin\Debug\VistaBridgeLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatClasses.cs" />
@@ -171,7 +153,6 @@
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
     <Compile Include="MiscFuncs.cs" />
     <Compile Include="Managers\User Interface\MUCManager.cs" />
-    <Compile Include="Protocol\AIMProtocol.cs" />
     <Compile Include="Protocol\CoreWrapperProtocol.cs" />
     <Compile Include="Protocol\IMDataStruct.cs" />
     <Compile Include="Protocol\MetaContact.cs" />
@@ -405,6 +386,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="NexusIM_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -595,7 +577,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

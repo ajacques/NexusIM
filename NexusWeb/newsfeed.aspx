@@ -47,9 +47,9 @@
 		var friendListVersion = <%= this.ver %>;
 		var selfId = <%= this.selfid %>;
 		var Self = new Object();
-		Self.FirstName = "<%= this.user.firstname %>";
-		Self.LastName = "<%= this.user.lastname %>";
-		Self.UserId = <%= this.user.id %>;
+		Self.FirstName = "<%= this.dbUser.firstname %>";
+		Self.LastName = "<%= this.dbUser.lastname %>";
+		Self.UserId = <%= this.dbUser.id %>;
 		var isTempLogin = false;
 	</script>
 	<ul id="feed" style="list-style-type: none">

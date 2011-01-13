@@ -30,7 +30,7 @@ namespace NexusWeb.Services
 	[ServiceContract]
 	[ServiceKnownType(typeof(UserDetails))]
 	[ServiceKnownType(typeof(ClientStatusUpdate))]
-	public class ArticleFeed
+	public sealed class ArticleFeed
 	{
 		[WebInvoke(Method = "GET", UriTemplate = "updates/*")]
 		[OperationContract]

@@ -229,12 +229,12 @@ namespace NexusIM.Managers
 			}
 			throw new Exception("Not found");
 		}
-		public static List<IMBuddy> MergeAllBuddyLists()
+		public static IEnumerable<IMBuddy> MergeAllBuddyLists()
 		{
 			// First, Take the contact list from each protocol
 			// next, we use the aggregate function on each contact list to concat or combine it with the next one
 			// this gives us all the contacts in all the protocols
-			return accounts.Select(p => p.ContactList).Aggregate((p, next) => p.Concat(next).ToList());
+			return accounts.SelectMany(p => p.ContactList);
 		}
 
 		// Event Callbacks

@@ -47,7 +47,7 @@ namespace System.Security.Cryptography
     ///   </item>
     /// </list>
     /// </remarks>
-    sealed class CRC32Managed : CRC32
+    public sealed class CRC32Managed : CRC32
     {
         #region Constants
 
