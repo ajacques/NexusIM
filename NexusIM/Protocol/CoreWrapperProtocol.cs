@@ -25,7 +25,7 @@ namespace NexusIM.Protocol
 			msg.Recipient = buddy.Username;
 			msg.ViaAccount = Guid;
 			msg.MessageContents = message;
-			NexusCoreManager.NexusCore.BeginSendSwarmMessage(msg, MessageOptions.SendToAccountMaster, new AsyncCallback(delegate(IAsyncResult e) { NexusCoreManager.NexusCore.EndSendSwarmMessage(e); }), null);
+			//NexusCoreManager.NexusCore.BeginSendSwarmMessage(msg, MessageOptions.SendToAccountMaster, new AsyncCallback(delegate(IAsyncResult e) { NexusCoreManager.NexusCore.EndSendSwarmMessage(e); }), null);
 		}
 	}
 }

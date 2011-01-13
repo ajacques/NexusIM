@@ -33,7 +33,7 @@ namespace NexusIM.Protocol
 			ProtocolReadyMessage message = new ProtocolReadyMessage();
 			message.ProtocolId = mGuid;
 
-			NexusCoreManager.SendSwarmMessage(message, MessageOptions.SendToActiveDevices);
+			NexusCoreManager.SendSwarmMessage(message);
 
 			mLoginWaitHandle = mInternalProtocol.LoginWaitHandle;
 			mInternalProtocol.BeginLogin();

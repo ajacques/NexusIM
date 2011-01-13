@@ -67,6 +67,20 @@ namespace NexusIM.Properties {
             }
         }
         
+        internal static System.Drawing.Icon app1 {
+            get {
+                object obj = ResourceManager.GetObject("app1", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon available_icon {
+            get {
+                object obj = ResourceManager.GetObject("available_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Away {
             get {
                 object obj = ResourceManager.GetObject("Away", resourceCulture);
@@ -74,10 +88,24 @@ namespace NexusIM.Properties {
             }
         }
         
+        internal static System.Drawing.Icon away_icon {
+            get {
+                object obj = ResourceManager.GetObject("away_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Busy {
             get {
                 object obj = ResourceManager.GetObject("Busy", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon busy_icon {
+            get {
+                object obj = ResourceManager.GetObject("busy_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -121,13 +149,6 @@ namespace NexusIM.Properties {
             }
         }
         
-        internal static System.Drawing.Icon Icon {
-            get {
-                object obj = ResourceManager.GetObject("Icon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap Idle {
             get {
                 object obj = ResourceManager.GetObject("Idle", resourceCulture);
@@ -135,10 +156,24 @@ namespace NexusIM.Properties {
             }
         }
         
+        internal static System.Drawing.Icon invisible_icon {
+            get {
+                object obj = ResourceManager.GetObject("invisible_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Offline {
             get {
                 object obj = ResourceManager.GetObject("Offline", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon offline_icon {
+            get {
+                object obj = ResourceManager.GetObject("offline_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -153,6 +188,13 @@ namespace NexusIM.Properties {
             get {
                 object obj = ResourceManager.GetObject("Point", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Icon point1 {
+            get {
+                object obj = ResourceManager.GetObject("point1", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

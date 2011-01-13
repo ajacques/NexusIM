@@ -5,7 +5,6 @@ using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using NexusIM.Managers;
-using NexusIM.NexusCore;
 
 namespace InstantMessage
 {

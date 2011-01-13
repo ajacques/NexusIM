@@ -1,0 +1,28 @@
+﻿<Window x:Class="NexusIMWPF.frmMain"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="frmMain" Height="400" Width="225" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded">
+    <Grid>
+        <ListView Margin="0,28,0,35" Name="listView1" />
+        <Menu Name="menu1" VerticalAlignment="Top">
+			<MenuItem Name="mnuView" Header="View">
+				<MenuItem Name="mnuCompactView" Header="Compact View" IsCheckable="True" />
+				<MenuItem Name="mnuAlwaysOntop" Header="Always Ontop" IsCheckable="True" />
+			</MenuItem>
+            <MenuItem Name="mnuAccounts" Header="Accounts">
+                <MenuItem Name="mnuEditAccount" Header="Edit Accounts" />
+                <MenuItem Name="mnuAddBuddy" Header="Add Buddy" IsEnabled="False" />
+                <MenuItem Name="mnuNewContactGroup" Header="New Contact Group" IsEnabled="False" />
+            </MenuItem>
+            <MenuItem Name="nmuTools" Header="Tools">
+                <MenuItem Name="mnuToolsOptions" Header="Options" />
+            </MenuItem>
+        </Menu>
+		<ComboBox Height="23" Margin="12,0,12,6" Name="comboBox1" VerticalAlignment="Bottom" Grid.Row="1">
+			<ComboBoxItem Name="Available" Content="Available" />
+			<ComboBoxItem Name="Away" Content="Away" />
+			<ComboBoxItem Name="Invisible" Content="Invisible" />
+			<ComboBoxItem Name="Sign_Out" Content="Sign Out" />
+		</ComboBox>
+	</Grid>
+</Window>

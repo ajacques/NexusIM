@@ -496,21 +496,6 @@
     <None Include="Service References\NexusCore\CoreService76.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\NexusCore\NexusIM.NexusCore.AccountInfo.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\NexusCore\NexusIM.NexusCore.ContactLocationInfo.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\NexusCore\NexusIM.NexusCore.ISwarmMessage.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\NexusCore\NexusIM.NexusCore.MyAccountInformation.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\NexusCore\NexusIM.NexusCore.UserLocationData.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Service References\NexusCore\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

@@ -1,0 +1,33 @@
+﻿using System.Collections.Specialized;
+using System.Deployment.Application;
+using System.Web;
+using NexusIM.Managers;
+using InstantMessage;
+using System.Linq;
+
+namespace NexusIM
+{
+	static class FirstRunSetup
+	{
+		public static void HandleFirstRun()
+		{
+			
+		}
+
+		public static bool IsNetworkDeployed
+		{
+			get {
+				return ApplicationDeployment.IsNetworkDeployed;
+			}
+		}
+
+		public static bool IsFirstRun
+		{
+			get {
+				if (!AccountManager.Accounts.Any())
+					return true;
+				return ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun;
+			}
+		}
+	}
+}

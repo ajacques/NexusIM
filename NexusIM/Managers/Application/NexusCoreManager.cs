@@ -24,52 +24,20 @@ namespace NexusIM.Managers
 	{
 		public static void Setup()
 		{
-			if (mCoreClient == null)
-				mCoreClient = new CoreServiceClient();
-
-			if (mCoreClient.State == CommunicationState.Closed)
-				mCoreClient.Open();
-
 			StartPushCallbackService();
 			AccountManager.onInternetStatusChange += new GenericEvent(AccountManager_onInternetStatusChange);
 		}
 
 		public static void LoginAsDevice()
 		{
-			if (String.IsNullOrEmpty(mDeviceToken))
-				mDeviceToken = IMSettings.GetCustomSetting("devicetoken", "");
-
-			if (!String.IsNullOrEmpty(mDeviceToken))
-			{
-				if (mCoreClient == null)
-					Setup();
-
-				Trace.WriteLine("NexusCoreManager: Starting Core session");
-
-				if (frmMain.Instance == null)
-					frmMain.onFormLoad += new GenericEvent(delegate() { frmMain.Instance.FormState = frmMainState.ConnectingToCore; });
-				else
-					frmMain.Instance.FormState = frmMainState.ConnectingToCore;
-
-				if (!AccountManager.IsConnectedToInternet())
-				{
-					Trace.WriteLine("NexusCoreManager: NLA reports device is not connected to the internet. Awaiting state change");
-					return;
-				}
-
-				mCoreClient.StartSession();
-				mCoreClient.BeginLoginWithToken(mDeviceToken, new AsyncCallback(LoginWithToken_Completed), null);
-			}
 		}
 		public static void RegisterAsMaster(int accountid)
 		{
-			mCoreClient.InsertSessionId(mSessionId);
-			mCoreClient.RegisterAsMasterAsync(accountid, accountid);
+			
 		}
-		public static void SendSwarmMessage(ISwarmMessage message, MessageOptions options)
+		public static void SendSwarmMessage(ISwarmMessage message)
 		{
-			mCoreClient.InsertSessionId(mSessionId);
-			mCoreClient.SendSwarmMessageAsync(message, options);
+			
 		}
 		private static void StartPushCallbackService()
 		{
@@ -80,58 +48,12 @@ namespace NexusIM.Managers
 
 		private static void LoginWithToken_Completed(IAsyncResult e)
 		{
-			mCoreClient.StartSession();
-			try	{
-				mCoreClient.EndLoginWithToken(e);
-			} catch (FaultException<AuthenticationException> ex) {
-				Trace.TraceError("NexusCoreManager: Failed to login with the given token", ex.GetBaseException().Message);
-			} catch (Exception ex) {
-				Trace.TraceError("NexusCoreManager: Failed to login due to unknown error: " + ex.GetBaseException().GetType().Name + " " + ex.GetBaseException().Message);
-				return;
-			}
-
-			Trace.WriteLine("NexusCoreManager: Connected to Core. Beginning subscriptions and setup");
-			mSessionId = mCoreClient.GetSessionId();
-			Trace.WriteLine("NexusCoreManager: Got session id: " + mSessionId);
-
-			if (onLogin != null)
-				onLogin(null, null);
-
-			mCoreClient.InsertSessionId(mSessionId);
-
-			try	{
-				mCoreClient.SwarmSubscribe();
-			} catch (Exception ex) {
-				Trace.TraceError("NexusCoreManager: SwarmSubscribe Exception of type (" + ex.GetBaseException().GetType().Name + "): " + ex.GetBaseException().Message);
-			}
-
-			mCoreClient.InsertSessionId(mSessionId);
-			mCoreClient.StartPushMessageStream(PushChannelType.GenericUdp, 2363);
-
-			mCoreClient.InsertSessionId(mSessionId);
+			
 
 			Trace.WriteLine("NexusCoreManager: Getting Accounts");
-			mCoreClient.BeginGetAccounts(new AsyncCallback(CoreClient_GetAccounts), null);
 		}
 		private static void CoreClient_GetAccounts(IAsyncResult e)
 		{
-			List<AccountInfo> accounts;
-			try	{
-				accounts = mCoreClient.EndGetAccounts(e);
-			} catch (FaultException<AuthenticationException> ex) {
-				Trace.TraceError("NexusCoreManager: Failed to login with the given token", ex.GetBaseException().Message);
-				return;
-			} catch (Exception ex) {
-				Trace.TraceError("NexusCoreManager: Failed to login due to unknown error: " + ex.GetBaseException().GetType().Name + " " + ex.GetBaseException().Message);
-				return;
-			}
-
-			if (mConnectMethod == ProtocolConnectMethod.Direct)
-				DoDirectConnect(accounts);
-			else if (mConnectMethod == ProtocolConnectMethod.CloudRouted)
-				DoCloudRouted(accounts);
-
-			AccountManager.TriggerNewLoginEvent();
 		}
 		private static void AccountManager_onInternetStatusChange()
 		{
@@ -149,9 +71,6 @@ namespace NexusIM.Managers
 		}
 		private static void DoCloudRouted(IEnumerable<AccountInfo> accounts)
 		{
-			mCoreClient.InsertSessionId(mSessionId);
-			mCoreClient.AllAccountCloudLogin();
-
 			foreach (var account in accounts)
 			{
 				IMProtocol protocol = new CoreWrapperProtocol(account);
@@ -177,15 +96,6 @@ namespace NexusIM.Managers
 		}
 
 		// Properties
-		public static CoreServiceClient NexusCore
-		{
-			get {
-				if (mCoreClient == null)
-					Setup();
-
-				return mCoreClient;
-			}
-		}
 		public static bool LoginState
 		{
 			get {
@@ -211,7 +121,6 @@ namespace NexusIM.Managers
 		private static NexusCoreManager mServiceHostedClass;
 		private static StreamReader mMsgStreamReader;
 		private static bool mLoginState;
-		private static CoreServiceClient mCoreClient;
 		private static string mDeviceToken;
 		private static string mSessionId;
 	}
