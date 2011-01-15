@@ -285,7 +285,6 @@ namespace InstantMessage
 				buddylist.Add(buddy);
 
 				buddy.Online = isOnline;
-				buddy.UpdateListItem();
 			}
 			blistChange = true;
 		}
@@ -316,9 +315,6 @@ namespace InstantMessage
 				if (!buddy.IsInternalBuddy)
 				{
 					buddy.Online = true;
-					if (!buddy.ContactItemVisible)
-						buddy.Populate();
-					buddy.UpdateListItem();
 				}
 			}
 		}

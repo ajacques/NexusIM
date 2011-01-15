@@ -572,16 +572,6 @@ namespace InstantMessage
 				IEnumerable<IMBuddy> buddies = AccountManager.MergeAllBuddyLists(); // Get one big array with all buddies
 
 				var buddyItems = from IMBuddy b in buddies where !b.IsInternalBuddy && !b.IsManaged select new { b.DisplayName, b };
-
-				foreach (var buddy in buddyItems)
-				{
-					if (buddy.DisplayName.Contains(txtSearch.Text))
-					{
-						buddy.b.ContactItemVisible = true;
-					} else {
-						buddy.b.ContactItemVisible = false;
-					}
-				}
 			}
 		}
 		protected override void WndProc(ref Message m)

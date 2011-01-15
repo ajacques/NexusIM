@@ -78,13 +78,13 @@ namespace NexusIMWPF
 					}
 				}
 
+				AccountManager.Start();
 				if (FirstRunSetup.IsFirstRun)
 				{
 					InitialSetupWindow window = new InitialSetupWindow();
 					window.Show();
 				} else {
-					frmMain window = new frmMain();
-					window.Show();
+					WindowSystem.OpenContactList();
 				}
 
 				Trace.WriteLine("Configuration file loaded and parsed.");

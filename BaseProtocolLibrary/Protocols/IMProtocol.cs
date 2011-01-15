@@ -13,55 +13,6 @@ using InstantMessage.Events;
 namespace InstantMessage
 {
 	/// <summary>
-	/// This class is a package class that transports data from the ProtocolLibrary to the UI
-	/// </summary>
-	[Obsolete("Use IMBuddy + IMProtocol Events", false)]
-	public class ContactListItem
-	{
-		public string DisplayText
-		{
-			get	{
-				return mDisplayText;
-			}
-			set	{
-				mDisplayText = value;
-			}
-		}
-		[Obsolete("Use the Buddy Property", false)]
-		public string StatusMessage
-		{
-			get	{
-				return mStatusText;
-			}
-			set	{
-				mStatusText = value;
-			}
-		}
-		public IMBuddyStatus Status
-		{
-			get	{
-				return mStatus;
-			}
-			set	{
-				mStatus = value;
-			}
-		}
-		public IMBuddy Buddy
-		{
-			get	{
-				return mBuddy;
-			}
-			set	{
-				mBuddy = value;
-			}
-		}
-		private string mDisplayText = "";
-		private string mStatusText = "";
-		private IMBuddy mBuddy;
-		private IMBuddyStatus mStatus;
-	}
-
-	/// <summary>
 	/// Used to identify what status to be reported to the protocol servers
 	/// </summary>
 	public enum IMStatus
@@ -549,6 +500,11 @@ namespace InstantMessage
 				mGuid = value;
 			}
 		}
+		public object Tag
+		{
+			get;
+			set;
+		}
 		
 		protected void NotifyPropertyChanged(string propertyName)
 		{
@@ -600,9 +556,6 @@ namespace InstantMessage
 		/// </summary>
 		protected void CleanupBuddyList()
 		{
-			foreach (IMBuddy buddy in buddylist)
-				buddy.ContactItemVisible = false;
-
 			buddylist.Clear();
 		}
 		[Obsolete("Use IMProtocol Events", false)]
@@ -629,7 +582,8 @@ namespace InstantMessage
 		}
 
 		// Events
-		public static event EventHandler onLogin;
+		public static event EventHandler AnyLoginCompleted;
+		public event EventHandler LoginCompleted;
 		public static event EventHandler<IMErrorEventArgs> onError;
 		public event EventHandler<IMDisconnectEventArgs> onDisconnect;
 		public static event EventHandler<IMFriendRequestEventArgs> onFriendRequest;
@@ -649,11 +603,15 @@ namespace InstantMessage
 		protected void triggerOnLogin(EventArgs e)
 		{
 			try	{
-				if (onLogin != null)
-					onLogin(this, e);
-			} catch (Exception ex) {
-				
-			}
+				if (IMProtocol.AnyLoginCompleted != null)
+					IMProtocol.AnyLoginCompleted(this, e);
+			} catch (Exception) {}
+
+			try
+			{
+				if (this.LoginCompleted != null)
+					this.LoginCompleted(this, e);
+			} catch (Exception) { }
 		}
 		protected void triggerOnError(IMErrorEventArgs e)
 		{
@@ -733,7 +691,7 @@ namespace InstantMessage
 		protected ObservableCollection<IMBuddy> buddylist = new ObservableCollection<IMBuddy>();
 		protected string mUsername;
 		protected string mPassword;
-		protected string protocolType;
+		protected string protocolType = "Default";
 		protected string mProtocolTypeShort;
 		protected bool mEnabled;
 		protected string mServer;

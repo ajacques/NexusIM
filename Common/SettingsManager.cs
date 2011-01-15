@@ -65,13 +65,6 @@ namespace InstantMessage
 			else
 				return defaultValue;
 		}
-		public static string GetAccountSetting(IMProtocol account, string setting, string defaultValue)
-		{
-			if (mSettingMgr != null)
-				return mSettingMgr.GetAccountSetting(account, setting, defaultValue);
-			else
-				return defaultValue;
-		}
 		/// <summary>
 		/// Assigns a value to custom setting in the user's configuration file
 		/// </summary>
@@ -81,16 +74,6 @@ namespace InstantMessage
 		{
 			if (mSettingMgr != null)
 				mSettingMgr.SetCustomSetting(setting, value);
-		}
-		public static void SetAccountSetting(IMProtocol account, string setting, string value, SettingAttributes attrib)
-		{
-				if (mSettingMgr != null)
-					mSettingMgr.SetAccountSetting(account, setting, value, attrib);
-		}
-		public static void SetAccountSetting(IMProtocol account, string setting, string value)
-		{
-			if (mSettingMgr != null)
-				mSettingMgr.SetAccountSetting(account, setting, value);
 		}
 		public static void SetContactSetting(IMBuddy buddy, string setting, string value)
 		{
@@ -110,11 +93,6 @@ namespace InstantMessage
 		{
 			if (mSettingMgr != null)
 				mSettingMgr.DeleteCustomSetting(setting);
-		}
-		public static void DeleteAccountSetting(IMProtocol account, string setting)
-		{
-			if (mSettingMgr != null)
-				mSettingMgr.DeleteAccountSetting(account, setting);
 		}
 		public static void DeleteContactSetting(IMBuddy buddy, string setting)
 		{

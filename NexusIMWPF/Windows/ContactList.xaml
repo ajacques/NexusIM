@@ -1,7 +1,7 @@
-﻿<Window x:Class="NexusIMWPF.frmMain"
+﻿<Window x:Class="NexusIM.Windows.ContactList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="frmMain" Height="400" Width="225" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded">
+    Title="NexusIM - Contact List" Height="400" Width="225" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right">
     <Grid>
         <ListView Margin="0,28,0,35" Name="listView1" />
         <Menu Name="menu1" VerticalAlignment="Top">
@@ -10,7 +10,7 @@
 				<MenuItem Name="mnuAlwaysOntop" Header="Always Ontop" IsCheckable="True" />
 			</MenuItem>
             <MenuItem Name="mnuAccounts" Header="Accounts">
-                <MenuItem Name="mnuEditAccount" Header="Edit Accounts" />
+                <MenuItem Name="mnuEditAccount" Header="Edit Accounts" Click="EditAccounts_Click" />
                 <MenuItem Name="mnuAddBuddy" Header="Add Buddy" IsEnabled="False" />
                 <MenuItem Name="mnuNewContactGroup" Header="New Contact Group" IsEnabled="False" />
             </MenuItem>

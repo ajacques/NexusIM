@@ -34,15 +34,14 @@ namespace NexusIM.Windows
 		{
 			App.Current.Shutdown();
 		}
-
-		private void AddAccount_Click(object sender, SelectionChangedEventArgs e)
+		private void SkipLogin_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			switch (addAccountCombo.SelectedIndex)
-			{
-				case 1: // Yahoo! IM
-					
-					break;
-			}
+			WindowSystem.OpenContactList();
+			
+			AccountsEdit accountEdit = new AccountsEdit();
+			accountEdit.Show();
+
+			this.Close();
 		}
 	}
 }

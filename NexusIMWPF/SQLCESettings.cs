@@ -6,6 +6,7 @@ using InstantMessage;
 using System.Data;
 using System.Data.SqlClient;
 using NexusIM.Managers;
+using System.ComponentModel;
 
 namespace NexusIM
 {
@@ -13,7 +14,6 @@ namespace NexusIM
 	{
 		public SQLCESettings(string connectionString)
 		{
-			mAccounts = new List<IMProtocol>();
 			mConnectionString = connectionString;
 		}
 
@@ -25,12 +25,61 @@ namespace NexusIM
 				IMProtocol protocol = InterfaceManager.CreateProtocol(account.AccountType);
 				protocol.Username = account.Username;
 				protocol.Password = account.Password;
-				Accounts.Add(protocol);
+				protocol.Tag = account.Id;
+				protocol.Enabled = account.Enabled;
+				foreach (AccountSetting setting in account.Settings)
+					protocol.ConfigurationSettings.Add(setting.Key, setting.Value);
+
+				AccountManager.AddNewAccount(protocol);
 			}
+			IsLoaded = true;
+			if (onFileLoad != null)
+				onFileLoad(this, null);
 		}
 		public void Save()
 		{
-			
+			UserProfile mDb = UserProfile.Create(mConnectionString);
+
+			IEnumerable<Account> toRemove = mDb.Accounts.Where(a => !AccountManager.Accounts.Any(p => p.Tag != null && ((int)p.Tag) == a.Id));
+			IEnumerable<IMProtocol> toAdd = AccountManager.Accounts.Where(a => a.Tag == null);
+			var toFix = from d in mDb.Accounts
+						   join a in AccountManager.Accounts on d.Id equals a.Tag
+						   where d.Username != a.Username && d.Password != d.Password
+						   select new {Db = d, Local = a };
+
+			mDb.Accounts.DeleteAllOnSubmit(toRemove);
+
+			foreach (IMProtocol protocol in toAdd)
+			{
+				Account acc = new Account();
+				acc.Username = protocol.Username;
+				acc.Password = protocol.Password;
+				acc.PropertyChanged += new PropertyChangedEventHandler(delegate(object sender, PropertyChangedEventArgs args)
+					{
+						if (args.PropertyName == "Id")
+							protocol.Tag = acc.Id;
+					});
+
+				mDb.Accounts.InsertOnSubmit(acc);
+
+				foreach (KeyValuePair<string, string> setting in protocol.ConfigurationSettings)
+				{
+					AccountSetting accSetting = new AccountSetting();
+					accSetting.Account = acc;
+					accSetting.Key = setting.Key;
+					accSetting.Value = setting.Value;
+
+					mDb.AccountSettings.InsertOnSubmit(accSetting);
+				}
+			}
+
+			foreach (var fix in toFix)
+			{
+				fix.Db.Username = fix.Local.Username;
+				fix.Db.Password = fix.Local.Password;
+			}
+
+			mDb.SubmitChanges();
 		}
 		public bool AutoSave
 		{
@@ -43,31 +92,12 @@ namespace NexusIM
 		}
 		public bool IsLoaded
 		{
-			get {
-				return true;
-			}
-		}
-		public List<IMProtocol> Accounts
-		{
-			get	{
-				return mAccounts;
-			}
-			set	{
-				mAccounts = value;
-			}
+			get;
+			private set;
 		}
 		public Dictionary<IMBuddy, Dictionary<string, string>> ContactSettings
 		{
 			get { throw new NotImplementedException(); }
-		}
-		public event EventHandler onFileLoad;
-		public void SetAccountSetting(IMProtocol account, string setting, string value)
-		{
-			throw new NotImplementedException();
-		}
-		public void SetAccountSetting(IMProtocol account, string setting, string value, SettingAttributes attrib)
-		{
-			throw new NotImplementedException();
 		}
 		public void SetContactSetting(IMBuddy buddy, string setting, string value)
 		{
@@ -85,10 +115,6 @@ namespace NexusIM
 		{
 			throw new NotImplementedException();
 		}
-		public void DeleteAccountSetting(IMProtocol account, string setting)
-		{
-			throw new NotImplementedException();
-		}
 		public void DeleteContactSetting(IMBuddy buddy, string setting)
 		{
 			throw new NotImplementedException();
@@ -102,10 +128,6 @@ namespace NexusIM
 			throw new NotImplementedException();
 		}
 		public void DeleteSettingList(string list)
-		{
-			throw new NotImplementedException();
-		}
-		public string GetAccountSetting(IMProtocol account, string setting, string defaultValue)
 		{
 			throw new NotImplementedException();
 		}
@@ -126,7 +148,8 @@ namespace NexusIM
 			throw new NotImplementedException();
 		}
 
+		public event EventHandler onFileLoad;
+
 		private string mConnectionString;
-		private List<IMProtocol> mAccounts;
 	}
 }

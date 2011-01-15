@@ -219,7 +219,6 @@ namespace InstantMessage
 		private void frmChatWindow_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			ProtocolManager.Instance.CloseBuddyWindow(Buddy);
-			mBuddy.WindowOpen = false;
 			mBuddy.ShowIsTypingMessage(false);
 		}
 		private void toolStripButton2_Click(object sender, System.EventArgs e)

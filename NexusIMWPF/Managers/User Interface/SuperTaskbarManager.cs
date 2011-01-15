@@ -282,7 +282,7 @@ namespace NexusIM.Managers
 
 			statusItems[IMStatus.OFFLINE].Title = "Sign off...";
 
-			if (AccountManager.Status == IMStatus.OFFLINE || AccountManager.Accounts.Count == 0) {
+			if (AccountManager.Status == IMStatus.OFFLINE || !AccountManager.Accounts.Any()) {
 				statusItems[IMStatus.OFFLINE].Title = "Sign in...";
 
 				if (icoOffline == null)

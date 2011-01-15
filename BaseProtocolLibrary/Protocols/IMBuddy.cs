@@ -19,8 +19,12 @@ namespace InstantMessage
 	/// Stores information about a single contact
 	/// </summary>
 	[Serializable]
-	public partial class IMBuddy : IComparable<IMBuddy>, IContact
+	public sealed partial class IMBuddy : IComparable<IMBuddy>, IContact, INotifyPropertyChanged
 	{
+		public IMBuddy()
+		{
+			mProtocol = new IMProtocol();
+		}
 		/// <summary>
 		/// Creates a new buddy
 		/// </summary>
@@ -33,15 +37,6 @@ namespace InstantMessage
 			mGuid = Guid.NewGuid();
 		}
 		/// <summary>
-		/// Opens the chat window for a buddy if it's not already open
-		/// </summary>
-		/// <param name="userinvoked">False if the window should be minimized after opening</param>
-		[Obsolete("Windows are handled by ProtocolManager", false)]
-		public void showWindow(bool userinvoked)
-		{
-			IMProtocol.CustomProtocolManager.OpenBuddyWindow(this, userinvoked);
-		}
-		/// <summary>
 		/// Sends a message to this user
 		/// </summary>
 		/// <param name="message">Message contents</param>
@@ -50,38 +45,20 @@ namespace InstantMessage
 			mProtocol.SendMessage(mUsername, message);
 		}
 		/// <summary>
-		/// Used to create the ListViewItem then insert it into the frmMain Contact List
-		/// </summary>
-		public void Populate()
-		{
-			if (IMProtocol.CustomProtocolManager != null)
-				IMProtocol.CustomProtocolManager.AddContactListItem(this);
-		}
-		/// <summary>
-		/// Updates the ListViewItem
-		/// </summary>
-		public void UpdateListItem()
-		{
-			if (IMProtocol.CustomProtocolManager != null)
-				IMProtocol.CustomProtocolManager.UpdateContactListItem(this);
-		}
-		/// <summary>
 		/// Used by the IMProtocol class to show a message that the user received from this buddy
 		/// </summary>
 		/// <param name="messages">What message to display</param>
-		public void ShowRecvMessage(string message)
+		internal void InvokeReceiveMessage(string message)
 		{
 			if (onReceiveMessage != null)
 				onReceiveMessage(this, new IMMessageEventArgs(this, message));
-			if (IMProtocol.CustomProtocolManager != null)
-				IMProtocol.CustomProtocolManager.ShowReceivedMessage(this, message);
 		}
-		public void ShowIsTypingMessage(bool isTyping)
+		internal void ShowIsTypingMessage(bool isTyping)
 		{
 			//if (!windowOpen && Convert.ToBoolean(Settings.GetCustomSetting("psychicchat", "False")))
 				//showWindow(false);
 		}
-		public void Buzz()
+		internal void ReceiveBuzz()
 		{
 			//if (!windowOpen)
 				//showWindow(false);
@@ -105,12 +82,6 @@ namespace InstantMessage
 				mAvatar = value;
 			}
 		}
-		public ContactListItem ContactItem
-		{
-			get	{
-				return mBListItem;
-			}
-		}
 		/// <summary>
 		/// Gets the protocol this buddy is associated with
 		/// </summary>
@@ -118,36 +89,6 @@ namespace InstantMessage
 		{
 			get	{
 				return mProtocol;
-			}
-		}
-		/// <summary>
-		/// True if the Contact Item (displayed on the contact list) is currently being displayed
-		/// </summary>
-		public bool ContactItemVisible
-		{
-			get	{
-				return mBlistItemVisible;
-			}
-			set	{
-				mBlistItemVisible = value;
-				if (mBlistItemVisible)
-					UpdateListItem();
-				else {
-					if (IMProtocol.CustomProtocolManager != null)
-						IMProtocol.CustomProtocolManager.RemoveContactListItem(this);
-				}
-			}
-		}
-		/// <summary>
-		/// True if the ListViewItem is not managed by this class. Used mostly for contact grouping
-		/// </summary>
-		public bool IsManaged
-		{
-			get	{
-				return mIsManaged;
-			}
-			set	{
-				mIsManaged = value;
 			}
 		}
 		/// <summary>
@@ -159,35 +100,7 @@ namespace InstantMessage
 				return isOnline;
 			}
 			set {
-				if (value)
-				{
-					if (onSignIn != null)
-						onSignIn(this, new EventArgs());
-				} else {
-					if (onSignOut != null)
-						onSignOut(this, new EventArgs());
-				}
 				isOnline = value;
-				UpdateListItem();
-			}
-		}
-		/// <summary>
-		/// True if a chat window for this buddy is currently open
-		/// </summary>
-		[Obsolete("Windows are handled by ProtocolManager")]
-		public bool WindowOpen
-		{
-			get {
-				return windowOpen;
-			}
-			set {
-				if (!value)
-				{
-				} else {
-					if (onWindowOpen != null)
-						onWindowOpen(this, null);
-				}
-				windowOpen = value;
 			}
 		}
 		public string DisplayName
@@ -197,6 +110,13 @@ namespace InstantMessage
 					return mNickname;
 				else
 					return mUsername;
+			}
+			internal set {
+				if (value != mNickname)
+				{
+					mNickname = value;
+					NotifyPropertyChanged("Nickname");
+				}
 			}
 		}
 		/// <summary>
@@ -214,25 +134,13 @@ namespace InstantMessage
 		/// <summary>
 		/// True if this buddy is an internal-use only buddy. Used by the protocol class
 		/// </summary>
-		public bool IsInternalBuddy
+		internal bool IsInternalBuddy
 		{
 			get {
 				return mIsInternalUsage;
 			}
 			set {
 				mIsInternalUsage = value;
-			}
-		}
-		/// <summary>
-		/// True if this buddy can accept messages
-		/// </summary>
-		public bool AcceptsMessages
-		{
-			get {
-				return mAcceptsMessages;
-			}
-			set {
-				mAcceptsMessages = value;
 			}
 		}
 		/// <summary>
@@ -266,7 +174,6 @@ namespace InstantMessage
 			}
 			set	{
 				mNickname = value;
-				UpdateListItem();
 			}
 		}
 		public Dictionary<string, string> Options
@@ -284,16 +191,17 @@ namespace InstantMessage
 				return mUsername;
 			}
 			set	{
-				mUsername = value;
-				UpdateListItem();
+				if (value != mUsername)
+				{
+					mUsername = value;
+
+					NotifyPropertyChanged("Username");
+				}				
 			}
 		}
 		public DateTime LocalTime
 		{
 			get	{
-				if (mProtocol.GetType().Name == "IMJabberProtocol")
-				{
-				}
 				return DateTime.Now;
 			}
 		}
@@ -305,7 +213,6 @@ namespace InstantMessage
 			set {
 				mStatusMessage = value;
 				mStatusChange = DateTime.Now;
-				UpdateListItem();
 			}
 		}
 		/// <summary>
@@ -323,10 +230,6 @@ namespace InstantMessage
 				return mGroup;
 			}
 			set {
-				if (value != mGroup)
-				{
-					UpdateListItem();
-				}
 				mGroup = value;
 			}
 		}
@@ -348,7 +251,6 @@ namespace InstantMessage
 				mStatus = value;
 				if (mProtocol.ProtocolStatus == IMProtocolStatus.ONLINE)
 					mStatusChange = DateTime.Now;
-				UpdateListItem();
 
 				if (onGlobalBuddyStatusChange != null)
 					onGlobalBuddyStatusChange(this, null);
@@ -386,43 +288,42 @@ namespace InstantMessage
 			return (from p in source.ContactList where p.Username == username select new { p }).FirstOrDefault().p;
 		}
 
+		private void NotifyPropertyChanged(string property)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(property));
+		}
+
 		// Events
 		/// <summary>
 		/// Subscribe to this event to receive updates whenever any buddy has a status change.
 		/// </summary>
 		public static event EventHandler onGlobalBuddyStatusChange;
-		[Obsolete("Use onStatusChange instead", false)]
-		public event EventHandler onSignIn;
-		[Obsolete("Use onStatusChange instead", false)]
 		public event EventHandler onSignOut;
 		public event EventHandler onStatusChange;
 		public event EventHandler onWindowOpen;
+		public event PropertyChangedEventHandler PropertyChanged;
 		public event EventHandler<IMMessageEventArgs> onReceiveMessage;
 		
 		// Variables
 		internal UserVisibilityStatus mVisibilityStatus;
-		protected string mUsername = "";
-		protected string mNickname = "";
-		protected BuddyAvatar mAvatar;
-		protected IMProtocol mProtocol = null;
-		protected ContactListItem mBListItem = null;
-		protected bool windowOpen = false; // Is the window currently open
-		protected bool isOnline = false;
-		protected bool mBlistItemVisible = false;
-		protected bool mIsManaged = false;
-		protected bool mIsMobileContact = false;
-		protected bool mIsInternalUsage = false;
-		protected bool mAcceptsMessages = true;
-		protected bool mIsOnBuddyList = true;
-		protected Guid mGuid;
-		protected IMBuddyStatus mStatus = IMBuddyStatus.Offline;
-		protected string mStatusMessage = "";
-		protected DateTime mStatusChange;
-		protected string mGroup = "";
-		protected string mSMSnumber = "";
-		protected int itemSortIndex = 0;
-		protected int mMessageLength = -1;
-		protected string buddyImageKey = "";
-		protected Dictionary<string, string> data = new Dictionary<string, string>();
+		private string mUsername = "";
+		private string mNickname = "";
+		private BuddyAvatar mAvatar;
+		private IMProtocol mProtocol = null;
+		private bool isOnline = false;
+		private bool mBlistItemVisible = false;
+		private bool mIsMobileContact = false;
+		private bool mIsInternalUsage = false;
+		private bool mIsOnBuddyList = true;
+		private Guid mGuid;
+		private IMBuddyStatus mStatus = IMBuddyStatus.Offline;
+		private string mStatusMessage = "";
+		private DateTime mStatusChange;
+		private string mGroup = "";
+		private string mSMSnumber = "";
+		private int mMessageLength = -1;
+		private string buddyImageKey = "";
+		private Dictionary<string, string> data = new Dictionary<string, string>();
 	}
 }

@@ -5,8 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.NetworkInformation;
 using InstantMessage;
-using Microsoft.WindowsAPICodePack.Net;
 using InstantMessage.Events;
+using Microsoft.WindowsAPICodePack.Net;
 
 namespace NexusIM.Managers
 {
@@ -43,24 +43,44 @@ namespace NexusIM.Managers
 		}
 		private int statusId;
 	}
+	class NewAccountEventArgs : EventArgs
+	{
+		public NewAccountEventArgs(IMProtocol protocol)
+		{
+			Account = protocol;
+		}
+		public IMProtocol Account
+		{
+			get;
+			private set;
+		}
+	}
 	/// <summary>
 	/// Controls the status and all registered protocols
 	/// </summary>
-	static class AccountManager
+	internal static class AccountManager
 	{
 		public static void Setup()
 		{
-			IMProtocol.onLogin += new EventHandler(Protocol_OnLogin);
+			IMProtocol.AnyLoginCompleted += new EventHandler(Protocol_OnLogin);
 			IMProtocol.onError += new EventHandler<IMErrorEventArgs>(Protocol_OnError);
 			UserIdle.onUserIdle += new EventHandler(UserIdle_onChange);
 
 			NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
-		
-			IMSettings.SettingInterface.Accounts = accounts;
 
 			Trace.WriteLine("AccountManager loaded and ready");
 		}
 
+		public static void AddNewAccount(IMProtocol protocol)
+		{
+			if (accounts.Contains(protocol))
+				throw new ArgumentException("This protocol has already been added");
+
+			accounts.Add(protocol);
+
+			if (OnNewAccount != null)
+				OnNewAccount(null, new NewAccountEventArgs(protocol));
+		}
 		/// <summary>
 		/// Begins an instant messaging session
 		/// </summary>
@@ -85,49 +105,19 @@ namespace NexusIM.Managers
 		}
 		public static void TriggerNewLoginEvent()
 		{
-			List<IMProtocol> protocols = accounts.Where(p => p.Enabled && p.ProtocolStatus == IMProtocolStatus.OFFLINE).ToList();
+			IEnumerable<IMProtocol> protocols = accounts.Where(p => p.Enabled && p.ProtocolStatus == IMProtocolStatus.OFFLINE);
 
-			if (protocols.Count == 0)
+			if (!protocols.Any())
 				return;
 
-			string distinctp = protocols.Select(p => p.ShortProtocol).Distinct().ToList().Aggregate((s, p) => s + ", " + p); // Creates a debug string that controls all the unique protocol types (ex. yahoo, aim, jabber)
+			string distinctp = protocols.Select(p => p.ShortProtocol).Distinct().OrderBy(s => s).Aggregate((s, p) => s + ", " + p); // Creates a debug string that controls all the unique protocol types (ex. yahoo, aim, jabber)
 
-			Trace.WriteLine("Connecting to " + protocols.Count + " enabled account(s) (out of " + accounts.Count + ") (" + distinctp + ")");
+			Trace.WriteLine("Connecting to " + protocols.Count() + " enabled account(s) (out of " + accounts.Count + ") (" + distinctp + ")");
 
-			protocols.ForEach(p => p.BeginLogin()); // For all the accounts that are enabled, login
+			foreach (var protocol in protocols)
+				protocol.BeginLogin(); // For all the accounts that are enabled, login
 		}
 
-		/// <summary>
-		/// Triggers a login on all enabled accounts
-		/// </summary>
-		[Obsolete("Use Start() instead", false)]
-		public static void ConnectAll()
-		{
-			if (Status == IMStatus.OFFLINE)
-				mGeneralStatus = IMStatus.AVAILABLE;
-
-			IEnumerator myEnum = accounts.GetEnumerator();
-			while (myEnum.MoveNext())
-			{
-				IMProtocol obj = (IMProtocol)(myEnum.Current);
-				if (obj.Enabled)
-				{
-					try	{
-						if (obj.ProtocolStatus != IMProtocolStatus.ONLINE)
-							obj.BeginLogin();
-						connectingAccs.Add(obj);
-					} catch (Exception e) {}
-				}
-			}
-			if (onStatusChange != null)
-				onStatusChange(null, new StatusUpdateEventArgs(lastSid));
-		}
-		[Obsolete("Use Start() instead", false)]
-		public static void ReconnectAll()
-		{
-			DisconnectAll();
-			ConnectAll();
-		}
 		/// <summary>
 		/// Triggers a disconnect on all connected accounts
 		/// </summary>
@@ -138,45 +128,6 @@ namespace NexusIM.Managers
 			if (onStatusChange != null)
 				onStatusChange(null, null);
 			mGeneralStatus = IMStatus.OFFLINE;
-		}
-		/// <summary>
-		/// Changes the status of all accounts
-		/// </summary>
-		/// <param name="status"></param>
-		[Obsolete("Use Status instead", false)]
-		public static void SetStatusAll(IMStatus status)
-		{
-			foreach (IMProtocol obj in accounts)
-			{
-				obj.Status = status;
-			}
-
-			if (onStatusChange != null)
-				onStatusChange(null, new StatusUpdateEventArgs(lastSid));
-
-			mGeneralStatus = status;
-		}
-		[Obsolete("Use Status instead", false)]
-		public static int SetStatus(IMStatus status)
-		{
-			mGeneralStatus = status;
-
-			lastSid++;
-
-			SetStatusAll(mGeneralStatus);
-
-			return lastSid;
-		}
-		[Obsolete("Use StatusMessage instead", false)]
-		public static void SetStatusMessageAll(string message)
-		{
-			statusmessage = "";
-
-			var protocols = from IMProtocol p in accounts where p.Enabled == true && p.ProtocolStatus == IMProtocolStatus.ONLINE select new { p };
-			foreach (var protocol in protocols)
-			{
-				protocol.p.SetStatusMessage(message);
-			}
 		}
 		/// <summary>
 		/// Searches all protocols for a requested buddy
@@ -290,7 +241,7 @@ namespace NexusIM.Managers
 				return statusmessage;
 			}
 			set {
-				SetStatusMessageAll(value);
+				throw new NotImplementedException();
 			}
 		}
 		/// <summary>
@@ -313,6 +264,7 @@ namespace NexusIM.Managers
 		public static event EventHandler<GlobalErrorEventArgs> onGlobalError;
 		public static event EventHandler<IMErrorEventArgs> onProtocolError;
 		public static event EventHandler onAllFinishConnecting;
+		public static event EventHandler<NewAccountEventArgs> OnNewAccount;
 
 		public static bool IsConnectedToInternet()
 		{
@@ -322,12 +274,13 @@ namespace NexusIM.Managers
 		/// <summary>
 		/// Returns a list of protocols currently setup by the user
 		/// </summary>
-		public static List<IMProtocol> Accounts
+		public static IEnumerable<IMProtocol> Accounts
 		{
 			get {
 				return accounts;
 			}
 		}
+		
 		private static IMStatus mGeneralStatus = IMStatus.AVAILABLE;
 		private static IMProtocolStatus mProtocolStatus = IMProtocolStatus.OFFLINE;
 		private static List<IMProtocol> accounts = new List<IMProtocol>();
@@ -335,8 +288,7 @@ namespace NexusIM.Managers
 		private static Dictionary<IMProtocol, int> accErrorCount = new Dictionary<IMProtocol, int>();
 		private static Dictionary<IMErrorEventArgs.ErrorReason, IMProtocol> accErrorReason = new Dictionary<IMErrorEventArgs.ErrorReason, IMProtocol>();
 		private static List<IMProtocol> connectingAccs = new List<IMProtocol>();
-		private static bool wasConnectedToWeb;
-		private static string statusmessage = "";
+		private static string statusmessage;
 		private static int lastSid = 0;
 		private static bool mStarted = false;
 	}

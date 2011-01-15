@@ -1,0 +1,72 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:InstantMessage="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
+	xmlns:nexus="clr-namespace:NexusIM.Converters" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+	mc:Ignorable="d"
+	x:Class="NexusIM.Controls.SetupAccountItem"
+	x:Name="UserControl"
+	Height="60" d:DesignWidth="400" UseLayoutRounding="True">
+	<UserControl.Resources>
+		<nexus:IntToBoolConverter x:Key="IntToBoolConverter"/>
+		<Storyboard x:Key="EditFadeIn">
+			<ThicknessAnimation Storyboard.TargetName="ProtocolLabel" Storyboard.TargetProperty="(FrameworkElement.Margin)" Duration="0:0:0.3" To="175,10,0,0">
+				<ThicknessAnimation.EasingFunction>
+					<SineEase EasingMode="EaseOut" />
+				</ThicknessAnimation.EasingFunction>
+			</ThicknessAnimation>
+			<DoubleAnimation Storyboard.TargetName="UsernameLabel" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0.1" To="0" />
+			<DoubleAnimation Storyboard.TargetName="UsernameText" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.1" Duration="0:0:0.3" To="1" />
+			<DoubleAnimation Storyboard.TargetName="PasswordHint" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.1" Duration="0:0:0.3" To="1" />
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="UsernameText">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimation Storyboard.TargetName="PasswordText" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.1" Duration="0:0:0.3" To="1" />
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="PasswordText">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+		<LinearGradientBrush x:Key="SelectGradient" EndPoint="0.52,1.2" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+			<GradientStop Color="Transparent"/>
+			<GradientStop Color="#7B3399FF" Offset="1"/>
+		</LinearGradientBrush>
+	</UserControl.Resources>
+	<UserControl.Triggers>
+		<EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button">
+			<BeginStoryboard Storyboard="{StaticResource EditFadeIn}"/>
+		</EventTrigger>
+	</UserControl.Triggers>
+	<UserControl.DataContext>
+		<InstantMessage:IMProtocol Enabled="true" Username="Test Username" />
+	</UserControl.DataContext>
+	<Grid x:Name="LayoutRoot">
+		<TextBlock x:Name="ProtocolLabel" HorizontalAlignment="Left" Margin="40,28,0,0" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Protocol, Mode=OneWay}" />
+		<CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding Enabled}" />
+		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" Margin="33,8,0,0" TextWrapping="Wrap" Text="{Binding Username, Mode=OneWay}" VerticalAlignment="Top" />
+		<TextBox x:Name="UsernameText" HorizontalAlignment="Left" Margin="39,5,0,0" Text="{Binding Username}" VerticalAlignment="Top" IsReadOnly="{Binding Enabled, Mode=OneWay}" Opacity="0" Width="130"/>
+		<PasswordBox x:Name="PasswordText" HorizontalAlignment="Left" Margin="39,0,0,8" VerticalAlignment="Bottom" Opacity="0" Width="130">
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="GotFocus">
+					<ei:ChangePropertyAction TargetName="PasswordHint" PropertyName="Visibility">
+						<ei:ChangePropertyAction.Value>
+							<Visibility>Collapsed</Visibility>
+						</ei:ChangePropertyAction.Value>
+					</ei:ChangePropertyAction>
+				</i:EventTrigger>
+				<i:EventTrigger EventName="LostFocus">
+					<ei:ChangePropertyAction TargetName="PasswordHint" PropertyName="Visibility" IsEnabled="{Binding Password, Converter={StaticResource IntToBoolConverter}, ElementName=PasswordText, Mode=OneWay}">
+						<ei:ChangePropertyAction.Value>
+							<Visibility>Visible</Visibility>
+						</ei:ChangePropertyAction.Value>
+					</ei:ChangePropertyAction>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</PasswordBox>
+		<Button x:Name="button" Content="Edit" HorizontalAlignment="Right" VerticalAlignment="Center" Width="40" Margin="0,0,15,0" />
+		<TextBlock x:Name="PasswordHint" Text="Password" Margin="45,34,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" IsHitTestVisible="False" Opacity="0" />
+	</Grid>
+</UserControl>

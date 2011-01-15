@@ -34,7 +34,6 @@ namespace InstantMessage
 		/// <summary>
 		/// Loads all settings and accounts from the settings file.
 		/// </summary>
-		/// <exception cref="System.Xml.XmlException">Thrown if there is a parse error with the file.</exception>
 		void Load();
 		void Save();
 
@@ -47,38 +46,22 @@ namespace InstantMessage
 		{
 			get;
 		}
-		List<IMProtocol> Accounts
-		{
-			get;
-			set;
-		}
 		Dictionary<IMBuddy, Dictionary<string, string>> ContactSettings
 		{
 			get;
 		}
 		event EventHandler onFileLoad;
 
-		void SetAccountSetting(IMProtocol account, string setting, string value);
-		/// <summary>
-		/// Sets a configuration variable for a specific account
-		/// </summary>
-		/// <param name="account">The account this setting pertains to</param>
-		/// <param name="setting">The name of the setting</param>
-		/// <param name="value">The value of the specified setting</param>
-		/// <param name="attrib">Any attributes to apply to use while saving this setting</param>
-		void SetAccountSetting(IMProtocol account, string setting, string value, SettingAttributes attrib);
 		void SetContactSetting(IMBuddy buddy, string setting, string value);
 		void SetContactSetting(string username, IMProtocol protocol, string setting, string value);
 		void SetCustomSetting(string setting, string value);
 		void SetSettingList(string name, List<string> list);
 
-		void DeleteAccountSetting(IMProtocol account, string setting);
 		void DeleteContactSetting(IMBuddy buddy, string setting);
 		void DeleteContactSetting(string username,IMProtocol protocol, string setting);
 		void DeleteCustomSetting(string setting);
 		void DeleteSettingList(string list);
 
-		string GetAccountSetting(IMProtocol account, string setting, string defaultValue);
 		string GetContactSetting(string userName, IMProtocol protocol, string setting, string defaultValue);
 		string GetContactSetting(IMBuddy buddy, string setting, string defaultValue);
 		string GetCustomSetting(string setting, string defaultValue);

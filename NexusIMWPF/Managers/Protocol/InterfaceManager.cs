@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using InstantMessage;
+using System.Collections.Specialized;
+using NexusIM.Controls;
+using NexusIM.Windows;
+using System.Threading;
+using System.Windows.Threading;
+
+namespace NexusIM.Managers
+{
+	static class InterfaceManager
+	{
+		/// <summary>
+		/// Registers this class the platform handling class
+		/// Must be run before any Protocols are Created
+		/// </summary>
+		public static void Setup()
+		{
+			AccountManager.OnNewAccount += new EventHandler<NewAccountEventArgs>(AccountManager_OnNewAccount);
+		}
+		public static void Shutdown()
+		{
+			AccountManager.OnNewAccount -= new EventHandler<NewAccountEventArgs>(AccountManager_OnNewAccount);
+		}
+		public static IMProtocol CreateProtocol(string shortName)
+		{
+			IMProtocol protocol;
+
+			switch (shortName)
+			{
+				case "yahoo":
+					protocol = new IMYahooProtocol();
+					break;
+				default:
+					throw new ArgumentException();
+			}
+
+			return protocol;
+		}
+		internal static void OpenBuddyWindow(IMBuddy iMBuddy, bool p)
+		{
+			throw new NotImplementedException();
+		}
+		private static void AccountManager_OnNewAccount(object sender, NewAccountEventArgs e)
+		{
+			e.Account.ContactList.CollectionChanged += new NotifyCollectionChangedEventHandler(IMProtocol_ContactListChanged);
+		}
+		private static void IMProtocol_ContactListChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			foreach (IContact contact in e.NewItems)
+			{				
+				WindowSystem.ContactList.Dispatcher.BeginInvoke(new ThreadStart(() =>
+					{
+						ContactListItem item = new ContactListItem();
+						item.DataContext = contact;
+						WindowSystem.ContactList.listView1.Items.Add(item);
+					}), DispatcherPriority.Input);
+			}
+		}
+
+		public static event EventHandler onWindowOpen;
+	}
+}

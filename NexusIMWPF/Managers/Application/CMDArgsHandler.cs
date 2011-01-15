@@ -84,7 +84,7 @@ namespace NexusIM.Managers
 
 					/* Do something here */
 
-					AccountManager.Accounts.Add(account);
+					AccountManager.AddNewAccount(account);
 				}
 			} else {
 				/* Do something here */

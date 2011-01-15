@@ -67,6 +67,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Drawing" />
+    <Reference Include="Microsoft.Expression.Effects" />
     <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -109,6 +110,14 @@
     </Compile>
     <Compile Include="CEConnectionPool.cs" />
     <Compile Include="ChatClasses.cs" />
+    <Compile Include="Controls\ContactListItem.xaml.cs">
+      <DependentUpon>ContactListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />
+    <Compile Include="Converters\IntToBoolConverter.cs" />
+    <Compile Include="Controls\SetupAccountItem.xaml.cs">
+      <DependentUpon>SetupAccountItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Extensions.cs" />
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
@@ -116,27 +125,31 @@
     <Compile Include="Managers\Application\IPCHandler.cs" />
     <Compile Include="Managers\Application\RestartManager.cs" />
     <Compile Include="Managers\Protocol\AutoResponder.cs" />
-    <Compile Include="Managers\Protocol\ProtocolManager.cs" />
+    <Compile Include="Managers\Protocol\InterfaceManager.cs" />
     <Compile Include="Managers\SafeUrlTester.cs" />
     <Compile Include="Managers\User Interface\ErrorManager.cs" />
     <Compile Include="Managers\User Interface\MUCManager.cs" />
     <Compile Include="Managers\User Interface\SensorManager.cs" />
     <Compile Include="Managers\User Interface\SpeechManager.cs" />
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
+    <Compile Include="Managers\WindowSystem.cs" />
     <Compile Include="MiscFuncs.cs" />
     <Compile Include="SQLCESettings.cs" />
-    <Compile Include="UserData.cs">
-      <DependentUpon>UserData.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="UserData.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UserData.dbml</DependentUpon>
+    <Compile Include="UserProfile.cs">
+      <DependentUpon>UserProfile.dbml</DependentUpon>
     </Compile>
     <Compile Include="UserIdle.cs" />
+    <Compile Include="UserProfile.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserProfile.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Win32.cs" />
-    <Compile Include="Windows\frmMain.xaml.cs">
-      <DependentUpon>frmMain.xaml</DependentUpon>
+    <Compile Include="Windows\AccountsEdit.xaml.cs">
+      <DependentUpon>AccountsEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ContactList.xaml.cs">
+      <DependentUpon>ContactList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
@@ -161,8 +174,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="UserData.dbml.layout">
-      <DependentUpon>UserData.dbml</DependentUpon>
+    <None Include="UserProfile.dbml.layout">
+      <DependentUpon>UserProfile.dbml</DependentUpon>
     </None>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -170,14 +183,26 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="UserData.dbml">
+    <None Include="UserProfile.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>UserData.designer.cs</LastGenOutput>
+      <LastGenOutput>UserProfile.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Windows\frmMain.xaml">
+    <Page Include="Controls\ContactListItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SetupAccountItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\AccountsEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ContactList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -204,7 +229,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\" />
     <Folder Include="Protocol\" />
   </ItemGroup>
   <ItemGroup>

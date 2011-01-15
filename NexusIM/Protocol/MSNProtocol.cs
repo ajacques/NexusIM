@@ -57,7 +57,6 @@ namespace InstantMessage
 		public override void RemoveFriend(string uname, string group)
 		{
 			IMBuddy buddy = IMBuddy.FromUsername(uname, this);
-			buddy.ContactItemVisible = false;
 			buddylist.Remove(buddy);
 			messenger.ContactService.RemoveContact(messenger.ContactList.GetContact(uname));
 		}
@@ -82,7 +81,7 @@ namespace InstantMessage
 		private void OIMService_OIMReceived(object sender, OIMReceivedEventArgs e)
 		{
 			IMBuddy buddy = IMBuddy.FromUsername(e.Email, this);
-			buddy.ShowRecvMessage(e.Message);
+			buddy.InvokeReceiveMessage(e.Message);
 		}
 		private void Nameserver_SignedIn(object sender, EventArgs e)
 		{

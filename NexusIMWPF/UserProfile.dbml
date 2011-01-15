@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="UserProfile" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="Accounts">
+    <Type Name="Account">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccountType" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="NVarChar(32) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(32)" CanBeNull="true" />
+      <Column Name="Enabled" Type="System.Boolean" DbType="tinyint" CanBeNull="false" />
+      <Association Name="Account_AccountSetting" Member="Settings" ThisKey="Id" OtherKey="AccountId" Type="AccountSetting" />
+    </Type>
+  </Table>
+  <Table Name="AccountSettings">
+    <Type Name="AccountSetting">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Key" Type="System.String" DbType="nvarchar(20)" CanBeNull="false" />
+      <Column Name="Value" Type="System.String" DbType="nvarchar(500)" CanBeNull="false" />
+      <Association Name="Account_AccountSetting" Member="Account" ThisKey="AccountId" OtherKey="Id" Type="Account" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

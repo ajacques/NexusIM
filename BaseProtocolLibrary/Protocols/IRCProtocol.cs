@@ -131,7 +131,7 @@ namespace InstantMessage.Protocols.Irc
 			return mChannels.FirstOrDefault(chan => chan.Name == channelName);
 		}
 
-		internal void SendRawMessage(string message)
+		public void SendRawMessage(string message)
 		{
 			sendData(message);
 		}

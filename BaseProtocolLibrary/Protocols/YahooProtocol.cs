@@ -327,7 +327,6 @@ namespace InstantMessage
 			var buddies = from IMBuddy b in buddylist where b.Username == name select new { b };
 			foreach (var budd in buddies)
 			{
-				budd.b.ContactItemVisible = false;
 				buddylist.Remove(budd.b);
 			}
 
@@ -335,7 +334,6 @@ namespace InstantMessage
 			buddy.StatusMessage = "Add request pending";
 			buddy.Status = IMBuddyStatus.Offline;
 			buddy.Group = group;
-			buddy.Populate();
 			buddylist.Add(buddy);
 
 			if (!addbuddygroups.ContainsKey(name))
@@ -355,7 +353,6 @@ namespace InstantMessage
 
 			sendPacket(packet);
 
-			buddy.ContactItemVisible = false;
 			buddylist.Remove(buddy);
 
 			if (false)
@@ -502,7 +499,6 @@ namespace InstantMessage
 
 				if (buddy.Count() > 0)
 				{
-					buddy.First().b.showWindow(true);
 				} else {
 					IMBuddy nbuddy = new IMBuddy(this, user);
 					if (CustomProtocolManager != null)
@@ -746,7 +742,7 @@ namespace InstantMessage
 			IMBuddy buddy = IMBuddy.FromUsername("+" + packet.Parameter["4"], this);
 			var item = (from CarrierInfo i in mCarriers let y = packet.Parameter["68"] where i.carrierid == y select new { i.maxchars, i.humanname }).FirstOrDefault();
 			buddy.MaxMessageLength = item.maxchars;
-			buddy.ShowRecvMessage(packet.Parameter["68"]);
+			buddy.InvokeReceiveMessage(packet.Parameter["68"]);
 			if (!buddy.Options.ContainsKey("smscarrier"))
 			{
 				buddy.Options.Add("smscarrier", item.humanname);
@@ -786,7 +782,6 @@ namespace InstantMessage
 				} else if (parameters[i] == "7") {
 					buddy = new IMBuddy(this, parameters[i + 1]);
 					buddy.Group = currentgroup;
-					buddy.Populate();
 					buddy.mVisibilityStatus = UserVisibilityStatus.Online;
 					buddylist.Add(buddy);
 				} else if (parameters[i] == "317") {
@@ -842,7 +837,6 @@ namespace InstantMessage
 					buddy = IMBuddy.FromUsername(packet.Parameter["7"], this);
 					buddy.Online = true;
 					buddy.Status = IMBuddyStatus.Available;
-					buddy.UpdateListItem();
 					HandleStatusData(buddy, packet);
 					triggerContactStatusChange(new IMFriendEventArgs(buddy));
 				}
@@ -878,7 +872,7 @@ namespace InstantMessage
 				buddy.IsOnBuddyList = false;
 			}
 			if (packet.Parameter["14"] == "<ding>")
-				buddy.Buzz();
+				buddy.ReceiveBuzz();
 			else {
 				// Apply some transforms to the text first
 				string newmsg = packet.Parameter["14"];
@@ -887,7 +881,7 @@ namespace InstantMessage
 				ChatMessageBuilder builder = new ChatMessageBuilder();
 
 				// Use weird, messed up way to support yahoo UTF-8 messages
-				buddy.ShowRecvMessage(newmsg);
+				buddy.InvokeReceiveMessage(newmsg);
 				buddy.ShowIsTypingMessage(false);
 				triggerOnMessageReceive(new IMMessageEventArgs(buddy, newmsg));
 			}
@@ -930,7 +924,6 @@ namespace InstantMessage
 			{
 				IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter["4"], this);
 				buddy.Avatar = BuddyAvatar.FromUrl(packet.Parameter["20"], packet.Parameter["192"]);
-				buddy.UpdateListItem();
 			}
 		}
 		/// <summary>
@@ -1282,7 +1275,6 @@ namespace InstantMessage
 						{
 							buddy = new IMBuddy(this, elem.Attribute("yi").Value);
 							buddy.Group = "Address Book";
-							buddy.Populate();
 							buddylist.Add(buddy);
 						}
 						if (elem.Attribute("mo") != null)
@@ -1290,7 +1282,6 @@ namespace InstantMessage
 							buddy = new IMBuddy(this, elem.Attribute("mo").Value);
 							buddy.Group = "Mobile";
 							buddy.IsMobileContact = true;
-							buddy.Populate();
 							buddylist.Add(buddy);
 						}
 					}
@@ -1327,7 +1318,6 @@ namespace InstantMessage
 							buddy.MaxMessageLength = 145;
 						}
 					}
-					buddy.UpdateListItem();
 					//buddylist.Add(buddy);
 				}
 			}
