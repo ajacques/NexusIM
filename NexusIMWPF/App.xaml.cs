@@ -43,8 +43,9 @@ namespace NexusIMWPF
 				InterfaceManager.Setup();
 				IPCHandler.Setup();
 
-				string configdir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NexusIM");
-				string configuri = Path.Combine(configdir, "config.xml");
+				//string configdir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NexusIM");
+				//string configuri = Path.Combine(configdir, "config.xml");
+				string configuri = "..\\..\\UserData.sdf";
 
 				Trace.WriteLine("Configuration File: " + configuri);
 

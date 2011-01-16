@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="107d580f-2352-4971-879c-51ead3fdff79" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://core.nexus-im.com/Services/CoreService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="CoreService2.xsd" MetadataType="Schema" ID="d1c21d69-cede-4a00-aeb7-c79c41479df2" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd4" />
+    <MetadataFile FileName="CoreService4.xsd" MetadataType="Schema" ID="cc3a2f30-c972-4aa4-9229-908e4b696608" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd3" />
+    <MetadataFile FileName="CoreService1.xsd" MetadataType="Schema" ID="a14c7fcc-b944-459b-aa0d-ff16eff41ef9" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd0" />
+    <MetadataFile FileName="CoreService7.xsd" MetadataType="Schema" ID="abc30920-1e51-46ca-923b-605da8c50c43" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd1" />
+    <MetadataFile FileName="CoreService1.wsdl" MetadataType="Wsdl" ID="5e498433-3d63-4a59-ab56-1426f8579d52" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?wsdl" />
+    <MetadataFile FileName="CoreService.disco" MetadataType="Disco" ID="aec4cadd-9abf-4e9c-872c-ae63036b509d" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?disco" />
+    <MetadataFile FileName="CoreService3.xsd" MetadataType="Schema" ID="c322f9a9-52e7-4fcc-92a1-6c7d26537b97" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd2" />
+    <MetadataFile FileName="CoreService2.wsdl" MetadataType="Wsdl" ID="a2f882fc-fe5d-4d4a-9025-57e0779c9290" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="CoreService6.xsd" MetadataType="Schema" ID="707bdb35-ffb9-4eba-b15b-30259d4013cd" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd6" />
+    <MetadataFile FileName="CoreService.xsd" MetadataType="Schema" ID="19ec68e1-b119-48dc-9cdc-0f10a4cde577" SourceId="1" SourceUrl="http://core.nexus-im.com/Services/CoreService.svc?xsd=xsd5" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

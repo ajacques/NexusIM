@@ -84,6 +84,7 @@
     <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Interactivity" />
@@ -126,6 +127,7 @@
     <Compile Include="Managers\Application\RestartManager.cs" />
     <Compile Include="Managers\Protocol\AutoResponder.cs" />
     <Compile Include="Managers\Protocol\InterfaceManager.cs" />
+    <Compile Include="Managers\Protocol\NexusCoreManager.cs" />
     <Compile Include="Managers\SafeUrlTester.cs" />
     <Compile Include="Managers\User Interface\ErrorManager.cs" />
     <Compile Include="Managers\User Interface\MUCManager.cs" />
@@ -134,6 +136,11 @@
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
     <Compile Include="Managers\WindowSystem.cs" />
     <Compile Include="MiscFuncs.cs" />
+    <Compile Include="Service References\NexusCore\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="SQLCESettings.cs" />
     <Compile Include="UserProfile.cs">
       <DependentUpon>UserProfile.dbml</DependentUpon>
@@ -174,10 +181,47 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Service References\NexusCore\CoreService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService1.wsdl" />
+    <None Include="Service References\NexusCore\CoreService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService2.wsdl" />
+    <None Include="Service References\NexusCore\CoreService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService4.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService6.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\CoreService7.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\NexusCore\NexusIM.NexusCore.AccountInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\NexusCore\NexusIM.NexusCore.ContactLocationInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\NexusCore\NexusIM.NexusCore.MyAccountInformation.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\NexusCore\NexusIM.NexusCore.UserLocationData.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="UserProfile.dbml.layout">
       <DependentUpon>UserProfile.dbml</DependentUpon>
     </None>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -265,12 +309,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Service References\NexusCore\CoreService.disco" />
+    <None Include="Service References\NexusCore\configuration91.svcinfo" />
+    <None Include="Service References\NexusCore\configuration.svcinfo" />
+    <None Include="Service References\NexusCore\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="UserData.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\NexusCore\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

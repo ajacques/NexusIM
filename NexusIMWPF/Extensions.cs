@@ -8,6 +8,7 @@ using NexusIM.Managers;
 
 namespace InstantMessage
 {
+	public delegate void GenericEvent();
 	public static class SettingExtensions
 	{
 		public static void FixContactSettings(this BasicXmlSettingsBinding setting)

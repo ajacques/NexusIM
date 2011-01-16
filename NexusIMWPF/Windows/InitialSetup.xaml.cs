@@ -28,7 +28,7 @@ namespace NexusIM.Windows
 
 		private void LoginButton_Click(object sender, RoutedEventArgs e)
 		{
-			
+			NexusCoreManager.Login(UsernameBox.Text, PasswordBox.Password);
 		}
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
 		{
