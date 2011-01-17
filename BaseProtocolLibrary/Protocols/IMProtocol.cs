@@ -34,19 +34,16 @@ namespace InstantMessage
 		/// <summary>
 		/// This account is currently online and connected
 		/// </summary>
-		ONLINE,
+		Online,
 		/// <summary>
 		/// This account is currently connecting to the server
 		/// </summary>
-		CONNECTING,
-		/// <summary>
-		/// This account is has encountered an error and is no-longer connected
-		/// </summary>
-		ERROR,
+		Connecting,
 		/// <summary>
 		/// This account is not connected
 		/// </summary>
-		OFFLINE
+		Offline,
+		ERROR
 	}
 
 	/// <summary>
@@ -87,7 +84,7 @@ namespace InstantMessage
 	{
 		public IMProtocol()
 		{
-			status = IMProtocolStatus.OFFLINE;
+			status = IMProtocolStatus.Offline;
 			mStatus = IMStatus.OFFLINE;
 			mEnabled = false;
 		}
@@ -96,7 +93,7 @@ namespace InstantMessage
 		/// </summary>
 		public virtual void BeginLogin()
 		{
-			status = IMProtocolStatus.CONNECTING;
+			status = IMProtocolStatus.Connecting;
 		}
 		/// <summary>
 		/// Waits for the login process to complete, then continues

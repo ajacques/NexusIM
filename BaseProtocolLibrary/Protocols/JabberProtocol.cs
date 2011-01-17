@@ -90,7 +90,7 @@ namespace InstantMessage
 			jc.Connect();
 			jc.Login();
 			mEnabled = true;
-			status = IMProtocolStatus.CONNECTING;
+			status = IMProtocolStatus.Connecting;
 		}
 		public override void Disconnect()
 		{
@@ -118,7 +118,7 @@ namespace InstantMessage
 				xStatus.InnerText = "";
 				presence.AppendChild(xStatus);
 				jc.Write(presence);
-			} else if (newstatus == IMStatus.IDLE && status == IMProtocolStatus.ONLINE) {
+			} else if (newstatus == IMStatus.IDLE && status == IMProtocolStatus.Online) {
 				XmlDocument doc = new XmlDocument();
 				XmlElement presence = doc.CreateElement("presence");
 				XmlElement xStatus = doc.CreateElement("newstatus");
@@ -247,7 +247,7 @@ namespace InstantMessage
 			buddy.IsInternalBuddy = true;
 			buddylist.Add(buddy);
 			mConnected = true;
-			status = IMProtocolStatus.ONLINE;
+			status = IMProtocolStatus.Online;
 			mLoginWaitHandle.Set();
 		}
 		private void onClientError(object sender, System.Exception e)

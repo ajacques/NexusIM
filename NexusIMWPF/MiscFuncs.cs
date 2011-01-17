@@ -116,7 +116,7 @@ namespace NexusIM
 
 		public static void buddy_SignIn(object sender, IMFriendEventArgs e)
 		{
-			if (e.Buddy.Protocol.ProtocolStatus == IMProtocolStatus.ONLINE)
+			if (e.Buddy.Protocol.ProtocolStatus == IMProtocolStatus.Online)
 				ShowNotification(e.Buddy.Username + " has signed on");
 		}
 		public static void protocol_NewMail(object sender, IMEmailEventArgs e)

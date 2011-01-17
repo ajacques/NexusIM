@@ -16,11 +16,18 @@ namespace NexusIM.Windows
 	/// <summary>
 	/// Interaction logic for frmMain.xaml
 	/// </summary>
-	public partial class ContactList : Window
+	public partial class ContactListWindow : Window
 	{
-		public ContactList()
+		public ContactListWindow()
 		{
 			InitializeComponent();
+		}
+
+		public ListView ContactList
+		{
+			get	{
+				return listView1;
+			}
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)

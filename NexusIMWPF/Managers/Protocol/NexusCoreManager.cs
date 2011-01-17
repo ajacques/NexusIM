@@ -17,6 +17,37 @@ namespace NexusIM.Managers
 		CloudRouted
 	}
 
+	enum NexusCoreState
+	{
+		Offline,
+		LoggingIn,
+		Synchronizing,
+		Online
+	}
+
+	class NexusCoreStateEventArgs : EventArgs
+	{
+		internal NexusCoreStateEventArgs(NexusCoreState newState)
+		{
+			PreviousState = mLastState;
+			CurrentState = newState;
+
+			mLastState = newState;
+		}
+		public NexusCoreState PreviousState
+		{
+			get;
+			private set;
+		}
+		public NexusCoreState CurrentState
+		{
+			get;
+			private set;
+		}
+
+		private static NexusCoreState mLastState;
+	}
+
 	static class NexusCoreManager
 	{
 		public static void Setup()
@@ -28,6 +59,9 @@ namespace NexusIM.Managers
 			if (mClient == null)
 				Setup();
 
+			if (OnStateChange != null)
+				OnStateChange(null, new NexusCoreStateEventArgs(NexusCoreState.LoggingIn));
+
 			mClient.BeginLogin(username, password, new AsyncCallback(CoreService_OnLogin), null);
 		}
 
@@ -35,6 +69,10 @@ namespace NexusIM.Managers
 		private static void CoreService_OnLogin(IAsyncResult result)
 		{
 			mClient.EndLogin(result);
+
+			if (OnStateChange != null)
+				OnStateChange(null, new NexusCoreStateEventArgs(NexusCoreState.Synchronizing));
+
 			mClient.BeginGetAccounts(new AsyncCallback(CoreService_OnGetAccounts), null);
 		}
 		private static void CoreService_OnGetAccounts(IAsyncResult result)
@@ -43,11 +81,25 @@ namespace NexusIM.Managers
 
 			foreach (AccountInfo account in accounts)
 			{
+				IMProtocol protocol;
+				try	{
+					protocol = InterfaceManager.CreateProtocol(account.ProtocolType);
+				} catch (Exception) {
+					Debug.WriteLine("NexusCoreManager: Protocol of type " + account.ProtocolType + " not supported at this time.");
+					break;
+				}
+				protocol.Username = account.Username;
+				protocol.Password = account.Password;
+				protocol.Enabled = account.Enabled;
 
+				AccountManager.AddNewAccount(protocol);
 			}
+
+			if (OnStateChange != null)
+				OnStateChange(null, new NexusCoreStateEventArgs(NexusCoreState.Online));
 		}
 
-		public static event EventHandler onLogin;
+		public static event EventHandler<NexusCoreStateEventArgs> OnStateChange;
 
 		// Variables
 		private static StreamReader mMsgStreamReader;

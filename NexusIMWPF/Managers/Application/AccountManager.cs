@@ -78,6 +78,11 @@ namespace NexusIM.Managers
 
 			accounts.Add(protocol);
 
+			if (protocol.Enabled && protocol.ProtocolStatus == IMProtocolStatus.Offline)
+			{
+				protocol.BeginLogin();
+			}
+
 			if (OnNewAccount != null)
 				OnNewAccount(null, new NewAccountEventArgs(protocol));
 		}
@@ -97,7 +102,7 @@ namespace NexusIM.Managers
 
 			if (IsConnectedToInternet()) // Don't bother trying if we aren't connected
 			{
-				mProtocolStatus = IMProtocolStatus.CONNECTING;
+				mProtocolStatus = IMProtocolStatus.Connecting;
 
 				TriggerNewLoginEvent();
 			} else
@@ -105,7 +110,7 @@ namespace NexusIM.Managers
 		}
 		public static void TriggerNewLoginEvent()
 		{
-			IEnumerable<IMProtocol> protocols = accounts.Where(p => p.Enabled && p.ProtocolStatus == IMProtocolStatus.OFFLINE);
+			IEnumerable<IMProtocol> protocols = accounts.Where(p => p.Enabled && p.ProtocolStatus == IMProtocolStatus.Offline);
 
 			if (!protocols.Any())
 				return;
@@ -123,7 +128,7 @@ namespace NexusIM.Managers
 		/// </summary>
 		public static void DisconnectAll()
 		{
-			accounts.Where(p => p.ProtocolStatus == IMProtocolStatus.ONLINE).Where(p => p.Enabled).ToList().ForEach(p => p.Disconnect());
+			accounts.Where(p => p.ProtocolStatus == IMProtocolStatus.Online).Where(p => p.Enabled).ToList().ForEach(p => p.Disconnect());
 
 			if (onStatusChange != null)
 				onStatusChange(null, null);
@@ -255,7 +260,7 @@ namespace NexusIM.Managers
 			set	{
 				mGeneralStatus = value;
 
-				accounts.Where(p => p.ProtocolStatus == IMProtocolStatus.ONLINE).Where(p => p.Status != IMStatus.OFFLINE).ToList().ForEach(p => p.Status = mGeneralStatus);
+				accounts.Where(p => p.ProtocolStatus == IMProtocolStatus.Online).Where(p => p.Status != IMStatus.OFFLINE).ToList().ForEach(p => p.Status = mGeneralStatus);
 			}
 		}
 
@@ -282,7 +287,7 @@ namespace NexusIM.Managers
 		}
 		
 		private static IMStatus mGeneralStatus = IMStatus.AVAILABLE;
-		private static IMProtocolStatus mProtocolStatus = IMProtocolStatus.OFFLINE;
+		private static IMProtocolStatus mProtocolStatus = IMProtocolStatus.Offline;
 		private static List<IMProtocol> accounts = new List<IMProtocol>();
 		private static List<IMProtocol> accountsInError = new List<IMProtocol>();
 		private static Dictionary<IMProtocol, int> accErrorCount = new Dictionary<IMProtocol, int>();

@@ -249,7 +249,7 @@ namespace InstantMessage
 			}
 			set {
 				mStatus = value;
-				if (mProtocol.ProtocolStatus == IMProtocolStatus.ONLINE)
+				if (mProtocol.ProtocolStatus == IMProtocolStatus.Online)
 					mStatusChange = DateTime.Now;
 
 				if (onGlobalBuddyStatusChange != null)

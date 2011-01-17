@@ -85,7 +85,7 @@ namespace NexusIMWPF
 					InitialSetupWindow window = new InitialSetupWindow();
 					window.Show();
 				} else {
-					WindowSystem.OpenContactList();
+					WindowSystem.OpenContactListWindow();
 				}
 
 				Trace.WriteLine("Configuration file loaded and parsed.");

@@ -7,7 +7,8 @@
 	x:Class="NexusIM.Windows.AccountsEdit"
 	x:Name="Window"
 	Title="NexusIM - Accounts"
-	Width="540" Height="380" WindowStartupLocation="CenterScreen">
+	Width="540" Height="380" WindowStartupLocation="CenterScreen"
+	x:ClassModifier="internal" x:FieldModifier="private">
 	<Grid x:Name="LayoutRoot">
 		<ScrollViewer Margin="23,28,52,99" Background="#3EFFFFFF" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="AccountsListBox" VerticalAlignment="Top">

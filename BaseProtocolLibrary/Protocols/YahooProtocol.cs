@@ -32,10 +32,10 @@ namespace InstantMessage
 		}
 		public override void BeginLogin()
 		{
-			if (status != IMProtocolStatus.OFFLINE && status != IMProtocolStatus.ERROR)
+			if (status != IMProtocolStatus.Offline && status != IMProtocolStatus.ERROR)
 				return;
 
-			status = IMProtocolStatus.CONNECTING;
+			status = IMProtocolStatus.Connecting;
 			base.BeginLogin();
 			mLoginWaitHandle.Reset();
 
@@ -50,7 +50,7 @@ namespace InstantMessage
 		{
 			CleanupBuddyList();
 
-			if (status == IMProtocolStatus.ONLINE) // Check to see if we were even connected.
+			if (status == IMProtocolStatus.Online) // Check to see if we were even connected.
 			{
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_pager_logoff;
@@ -60,13 +60,13 @@ namespace InstantMessage
 					sendPacket(packet);
 
 				mStatus = IMStatus.OFFLINE;
-				status = IMProtocolStatus.OFFLINE;
+				status = IMProtocolStatus.Offline;
 				mConnected = false;
 				
 				try {
 					socket.Close();
 				} catch (Exception) {}
-			} else if (status == IMProtocolStatus.CONNECTING) {
+			} else if (status == IMProtocolStatus.Connecting) {
 
 			}
 		}
@@ -162,7 +162,7 @@ namespace InstantMessage
 		}
 		public override void ChangeStatus(IMStatus newstatus)
 		{
-			if (newstatus == mStatus || !mEnabled || status != IMProtocolStatus.ONLINE)
+			if (newstatus == mStatus || !mEnabled || status != IMProtocolStatus.Online)
 				return;
 
 			if (IsOnlineStatus(newstatus) && !IsOnlineStatus(mStatus))
@@ -196,7 +196,7 @@ namespace InstantMessage
 				sendPacket(p1);
 			}
 
-			if (newstatus == IMStatus.AVAILABLE && status == IMProtocolStatus.ONLINE)
+			if (newstatus == IMStatus.AVAILABLE && status == IMProtocolStatus.Online)
 			{
 				if (!(mIsIdle && mStatus == IMStatus.INVISIBLE))
 				{
@@ -231,7 +231,7 @@ namespace InstantMessage
 				p1.AddParameter("97", "1");
 
 				sendPacket(p1);
-			} else if (newstatus == IMStatus.IDLE && status == IMProtocolStatus.ONLINE) {
+			} else if (newstatus == IMStatus.IDLE && status == IMProtocolStatus.Online) {
 				if (mStatus != IMStatus.INVISIBLE)
 				{
 					YPacket p1 = new YPacket();
@@ -681,9 +681,9 @@ namespace InstantMessage
 				}
 			}
 
-			if (status == IMProtocolStatus.CONNECTING)
+			if (status == IMProtocolStatus.Connecting)
 			{
-				status = IMProtocolStatus.ONLINE;
+				status = IMProtocolStatus.Online;
 				triggerOnLogin(null);
 				mLoginWaitHandle.Set();
 			}
@@ -757,7 +757,7 @@ namespace InstantMessage
 					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.OtherClient));
 				else
 					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.Unknown));
-				status = IMProtocolStatus.OFFLINE;
+				status = IMProtocolStatus.Offline;
 				CleanupBuddyList();
 				Disconnect();
 			} else {
@@ -769,7 +769,7 @@ namespace InstantMessage
 		}
 		private void HandleListv15Packet(ref string[] parameters)
 		{
-			status = IMProtocolStatus.CONNECTING; // Make sure we are still in a connecting state to prevent triggering the notification
+			status = IMProtocolStatus.Connecting; // Make sure we are still in a connecting state to prevent triggering the notification
 
 			string currentgroup = "";
 			IMBuddy buddy = null;
@@ -811,7 +811,7 @@ namespace InstantMessage
 			{
 				if (parameters[i] == "241")
 				{
-					status = IMProtocolStatus.CONNECTING;
+					status = IMProtocolStatus.Connecting;
 				} else if (parameters[i] == "7") {
 					starttracking = true;
 					if (pkt != null)

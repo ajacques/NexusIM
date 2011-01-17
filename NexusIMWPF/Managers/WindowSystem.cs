@@ -8,17 +8,17 @@ namespace NexusIM.Managers
 {
 	static class WindowSystem
 	{
-		public static void OpenContactList()
+		public static void OpenContactListWindow()
 		{
-			if (ContactList == null)
+			if (ContactListWindow == null)
 			{
-				ContactList listWindow = new ContactList();
+				ContactListWindow listWindow = new ContactListWindow();
 				listWindow.Show();
-				ContactList = listWindow;
+				ContactListWindow = listWindow;
 			}
 		}
 
-		public static ContactList ContactList
+		public static ContactListWindow ContactListWindow
 		{
 			get;
 			private set;

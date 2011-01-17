@@ -2,10 +2,11 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
 	xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
 	xmlns:c="clr-namespace:NexusIM.Converters"
+	xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d"
 	x:Class="NexusIM.Windows.InitialSetupWindow"
 	x:Name="Window"
 	Title="NexusIM Initial Setup"
@@ -20,7 +21,7 @@
 				<EasingThicknessKeyFrame KeyTime="0" Value="10,8,10,0" />
 				<EasingThicknessKeyFrame KeyTime="0:0:0.3" Value="63,8,0,0" />
 			</ThicknessAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginHeader" Storyboard.TargetProperty="(FrameworkElement.Opacity)">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginHeader" Storyboard.TargetProperty="(UIElement.Opacity)">
 				<EasingDoubleKeyFrame KeyTime="0" Value="0" />
 				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1" />
 			</DoubleAnimationUsingKeyFrames>
@@ -28,42 +29,49 @@
 				<EasingThicknessKeyFrame KeyTime="0" Value="-50,0,50,0" />
 				<EasingThicknessKeyFrame KeyTime="0:0:0.4" Value="0" />
 			</ThicknessAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginGroupGrid" Storyboard.TargetProperty="(FrameworkElement.Opacity)">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="LoginGroupGrid" Storyboard.TargetProperty="(UIElement.Opacity)">
 				<EasingDoubleKeyFrame KeyTime="0" Value="0" />
 				<EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="1" />
 			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="SkipBox" Storyboard.TargetProperty="(FrameworkElement.Opacity)">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetName="SkipBox" Storyboard.TargetProperty="(UIElement.Opacity)">
 				<EasingDoubleKeyFrame KeyTime="0:0:0.7" Value="0" />
 				<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="1" />
 			</DoubleAnimationUsingKeyFrames>
 		</Storyboard>
 		<Storyboard x:Key="BeginLogin">
-			<DoubleAnimation Storyboard.TargetName="SkipBox" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.4" From="1" To="0" />
+			<DoubleAnimation Storyboard.TargetName="SkipBox" Storyboard.TargetProperty="(UIElement.Opacity)" Duration="0:0:0.4" From="1" To="0" />
 			<ThicknessAnimation Storyboard.TargetName="LoginGroupGrid" Storyboard.TargetProperty="(FrameworkElement.Margin)" BeginTime="0:0:0.3" Duration="0:0:0.2" To="-100,0,100,0" />
-			<DoubleAnimation Storyboard.TargetName="LoginGroupGrid" Storyboard.TargetProperty="(FrameworkElement.Opacity)" BeginTime="0:0:0.3" Duration="0:0:0.2" To="0" />			
+			<DoubleAnimation Storyboard.TargetName="LoginGroupGrid" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.3" Duration="0:0:0.2" To="0" />			
 			<ThicknessAnimation Storyboard.TargetName="LoginHeader" Storyboard.TargetProperty="(FrameworkElement.Margin)" BeginTime="0:0:0.3" Duration="0:0:0.2" To="-100,8,100,0" />
-			<DoubleAnimation Storyboard.TargetName="LoginHeader" Storyboard.TargetProperty="(FrameworkElement.Opacity)" BeginTime="0:0:0.3" Duration="0:0:0.1" To="0" />
+			<DoubleAnimation Storyboard.TargetName="LoginHeader" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.3" Duration="0:0:0.1" To="0" />
 			<ThicknessAnimation Storyboard.TargetName="LoginStateStep1" Storyboard.TargetProperty="(FrameworkElement.Margin)" BeginTime="0:0:0.5" Duration="0:0:0.2" From="132,150,0,0" />
-			<DoubleAnimation Storyboard.TargetName="LoginStateStep1" Storyboard.TargetProperty="(FrameworkElement.Opacity)" BeginTime="0:0:0.5" Duration="0:0:0.2" To="1" />
-			<DoubleAnimation Storyboard.TargetName="LoginStateStep2" Storyboard.TargetProperty="(FrameworkElement.Opacity)" BeginTime="0:0:0.5" Duration="0:0:0.2" To="1" />
-			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoginStateStep1" Storyboard.TargetProperty="(TextBlock.Text)" BeginTime="0:0:0.5" Duration="0:0:3">
-				<DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="Logging in." />
-				<DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="Logging in ." />
-				<DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="Logging in  ." />
+			<DoubleAnimation Storyboard.TargetName="LoginStateStep1" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.5" Duration="0:0:0.2" To="1" />
+		</Storyboard>
+		<Storyboard x:Key="Step2AnimIn">
+			<ThicknessAnimation Storyboard.TargetName="LoginStateStep2" Storyboard.TargetProperty="(FrameworkElement.Margin)" BeginTime="0" Duration="0:0:0.2" From="132,230,0,0" />
+			<DoubleAnimation Storyboard.TargetName="LoginStateStep2" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0" Duration="0:0:0.2" To="1" />
+		</Storyboard>
+		<Storyboard x:Key="Step1TextAnim">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LoginStateStep1" Storyboard.TargetProperty="(TextBlock.Text)" BeginTime="0:0:0.5" Duration="0:0:1.4" RepeatBehavior="Forever">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="Logging in." />
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="Logging in ." />
+				<DiscreteObjectKeyFrame KeyTime="0:0:1" Value="Logging in  ." />
 			</ObjectAnimationUsingKeyFrames>
 		</Storyboard>
 		<Style x:Key="PlaceholderStyle" TargetType="{x:Type TextBox}">
 			<Setter Property="Foreground" Value="#CCCCCC" />
 		</Style>
 		<c:IntToBoolConverter x:Key="LengthConverter" />
+		<System:Boolean x:Key="LoginEnabled">True</System:Boolean>
 	</Window.Resources>
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
-			<BeginStoryboard x:Name="BackgroundFade_BeginStoryboard" Storyboard="{StaticResource BackgroundFade}"/>
+			<BeginStoryboard Storyboard="{StaticResource BackgroundFade}"/>
 			<BeginStoryboard Storyboard="{StaticResource LoginSlideIn}" />
 		</EventTrigger>
 		<EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button">
-			<BeginStoryboard x:Name="BeginLogin_BeginStoryboard" Storyboard="{StaticResource BeginLogin}"/>
+			<BeginStoryboard Storyboard="{StaticResource BeginLogin}" />
+			<BeginStoryboard Storyboard="{StaticResource Step1TextAnim}" />
 		</EventTrigger>
 	</Window.Triggers>
 	<Window.Background>
@@ -75,7 +83,7 @@
 	<Grid x:Name="LayoutRoot">
 		<Label x:Name="LoginHeader" Content="Sign in to your NexusIM account" HorizontalAlignment="Left" Margin="63,8,0,0" VerticalAlignment="Top" FontSize="18"/>
 		<Grid x:Name="LoginGroupGrid">			
-			<TextBox x:Name="UsernameBox" Width="200" Height="25" Margin="121,61,153,0" VerticalAlignment="Top">
+			<TextBox x:Name="UsernameBox" Width="200" Height="25" Margin="121,61,153,0" VerticalAlignment="Top" IsEnabled="{DynamicResource LoginEnabled}">
 				<i:Interaction.Triggers>
 					<i:EventTrigger EventName="GotFocus">
 						<ei:ChangePropertyAction TargetName="UsernameHint" PropertyName="Visibility" >
@@ -101,7 +109,7 @@
 				</i:Interaction.Triggers>
 			</TextBox>
 			<TextBlock x:Name="UsernameHint" HorizontalAlignment="Left" Margin="126,65,0,0" Text="jsmith@nexus-im.com" VerticalAlignment="Top" IsHitTestVisible="False" Foreground="#FF7E7E7E" />
-			<PasswordBox x:Name="PasswordBox" Width="200" Height="25" Margin="121,100,153,0" VerticalAlignment="Top">
+			<PasswordBox x:Name="PasswordBox" Width="200" Height="25" Margin="121,100,153,0" VerticalAlignment="Top" IsEnabled="{DynamicResource LoginEnabled}">
 				<i:Interaction.Triggers>
 					<i:EventTrigger EventName="GotFocus">
 						<ei:ChangePropertyAction TargetName="PasswordHint" PropertyName="Visibility" >
@@ -129,7 +137,7 @@
 			<TextBlock x:Name="PasswordHint" HorizontalAlignment="Left" Margin="126,105,0,0" Text="Password" VerticalAlignment="Top" IsHitTestVisible="False" Foreground="#FF7E7E7E"  />
 			<TextBlock Margin="121,129,0,0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125"><Hyperlink TextDecorations="None"><Run Text="Forgot your password?"/></Hyperlink></TextBlock>
 			<TextBlock Text="Sign in as:" Height="16" Margin="123,153,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="56"/>
-			<ComboBox Margin="183,151,0,0" SelectedIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120">
+			<ComboBox Margin="183,151,0,0" SelectedIndex="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" IsEnabled="{DynamicResource LoginEnabled}">
 				<Grid>
 					<Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
 					<ListBoxItem Content="Available" Margin="18,0,0,0"/>
@@ -143,18 +151,28 @@
 					<ListBoxItem Content="Invisible" Margin="18,0,0,0"/>
 				</Grid>
 			</ComboBox>
-			<CheckBox Content="Remember my username and password" Margin="121,181,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-			<CheckBox Content="Sign me in automatically" Margin="121,201,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
-			<Button x:Name="button" Content="Sign in" HorizontalAlignment="Left" Margin="122,0,0,66" VerticalAlignment="Bottom" Width="75" Click="LoginButton_Click" IsDefault="True" />
+			<CheckBox Content="Remember my username and password" Margin="121,181,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{DynamicResource LoginEnabled}" />
+			<CheckBox Content="Sign me in automatically" Margin="121,201,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{DynamicResource LoginEnabled}" />
+			<Button x:Name="button" Content="Sign in" HorizontalAlignment="Left" Margin="122,0,0,66" VerticalAlignment="Bottom" Width="75" Click="LoginButton_Click" IsDefault="True" IsEnabled="{DynamicResource LoginEnabled}">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<ei:ChangePropertyAction TargetObject="{DynamicResource LoginEnabled}" >
+							<ei:ChangePropertyAction.Value>
+								<System:Boolean>False</System:Boolean>
+							</ei:ChangePropertyAction.Value>
+						</ei:ChangePropertyAction>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
 			<Button Content="Cancel" Margin="211,0,188,66" VerticalAlignment="Bottom" Click="CancelButton_Click" IsCancel="True" />
-			<TextBlock Margin="121,250,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left"><Run Text="Don't have one yet? " /><Hyperlink TextDecorations="None"><Run Text="Sign up"/></Hyperlink></TextBlock>
+			<TextBlock Margin="121,250,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left"><Run Text="Don't have one yet? " /><Run Text=" "/><Hyperlink TextDecorations="None" Click="SignUpLink_Click"><Run Text="Sign up"/></Hyperlink></TextBlock>
 		</Grid>
 		<Grid x:Name="SkipBox" Opacity="0">
 			<Rectangle Height="40" Margin="144,0,-6,-7" VerticalAlignment="Bottom" Stroke="#FF8B8B8B" RadiusX="5" RadiusY="5"/>
 			<TextBlock Text="Sign up later, I just want to add my accounts" Margin="150,0,87,9" VerticalAlignment="Bottom" />
-			<Button Content="Next" HorizontalAlignment="Right" Margin="0,0,8,6" VerticalAlignment="Bottom" Width="75" Click="SkipLogin_Click"/>
+			<Button Content="Next" HorizontalAlignment="Right" Margin="0,0,8,6" VerticalAlignment="Bottom" Width="75" Click="SkipLogin_Click" IsEnabled="{DynamicResource LoginEnabled}" />
 		</Grid>
 		<TextBlock x:Name="LoginStateStep1" Text="Logging in" Margin="132,140,0,0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Opacity="0" />
-		<TextBlock x:Name="LoginStateStep2" Text="Synchronising Settings" Margin="132,197,0,0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Opacity="0" />
+		<TextBlock x:Name="LoginStateStep2" Text="Synchronizing Settings" Margin="132,197,0,0" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Left" Opacity="0" />
 	</Grid>
 </Window>

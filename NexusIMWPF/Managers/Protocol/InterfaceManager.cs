@@ -55,11 +55,11 @@ namespace NexusIM.Managers
 		{
 			foreach (IContact contact in e.NewItems)
 			{				
-				WindowSystem.ContactList.Dispatcher.BeginInvoke(new ThreadStart(() =>
+				WindowSystem.ContactListWindow.Dispatcher.BeginInvoke(new ThreadStart(() =>
 					{
 						ContactListItem item = new ContactListItem();
 						item.DataContext = contact;
-						WindowSystem.ContactList.listView1.Items.Add(item);
+						WindowSystem.ContactListWindow.ContactList.Items.Add(item);
 					}), DispatcherPriority.Input);
 			}
 		}

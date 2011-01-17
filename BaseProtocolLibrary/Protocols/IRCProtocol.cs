@@ -27,7 +27,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public void Dispose()
 		{
-			if (status != IMProtocolStatus.OFFLINE)
+			if (status != IMProtocolStatus.Offline)
 				throw new InvalidOperationException("Disconnect from the server before you call Dispose");
 
 			Debug.WriteLine("Dispose Requested... Cleaning-up resources");
@@ -57,7 +57,7 @@ namespace InstantMessage.Protocols.Irc
 			sendData("SQUIT");
 
 			triggerOnDisconnect(this, null);
-			status = IMProtocolStatus.OFFLINE;
+			status = IMProtocolStatus.Offline;
 
 			Dispose();
 		}
@@ -273,7 +273,7 @@ namespace InstantMessage.Protocols.Irc
 
 				NotifyPropertyChanged("Nickname");
 
-				if (status == IMProtocolStatus.ONLINE)
+				if (status == IMProtocolStatus.Online)
 					sendData("NICK " + mNickname);
 			}
 		}
@@ -527,7 +527,7 @@ namespace InstantMessage.Protocols.Irc
 				sendData("NICK " + mNickname);
 			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, Environment.MachineName, mServer, mRealName));
 
-			status = IMProtocolStatus.ONLINE;
+			status = IMProtocolStatus.Online;
 
 			LoginWaitHandle.Set();
 			triggerOnLogin(null);

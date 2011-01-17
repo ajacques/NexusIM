@@ -18,7 +18,7 @@ namespace NexusIM.Windows
 	/// <summary>
 	/// Interaction logic for AccountsEdit.xaml
 	/// </summary>
-	public partial class AccountsEdit : Window
+	partial class AccountsEdit : Window
 	{
 		public AccountsEdit()
 		{
