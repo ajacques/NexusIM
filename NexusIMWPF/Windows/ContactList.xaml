@@ -1,24 +1,25 @@
 ﻿<Window x:Class="NexusIM.Windows.ContactListWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:nx="clr-namespace:NexusIM.Controls"
     Title="NexusIM - Contact List" Height="400" Width="225" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right">
     <Grid>
         <ListView Margin="0,28,0,35" Name="listView1" />
-        <Menu Name="menu1" VerticalAlignment="Top">
-			<MenuItem Name="mnuView" Header="View">
-				<MenuItem Name="mnuCompactView" Header="Compact View" IsCheckable="True" />
-				<MenuItem Name="mnuAlwaysOntop" Header="Always Ontop" IsCheckable="True" />
+        <Menu VerticalAlignment="Top">
+			<MenuItem Header="View">
+				<MenuItem Header="Compact View" IsCheckable="True" />
+				<MenuItem Header="Always Ontop" IsCheckable="True" />
 			</MenuItem>
-            <MenuItem Name="mnuAccounts" Header="Accounts">
-                <MenuItem Name="mnuEditAccount" Header="Edit Accounts" Click="EditAccounts_Click" />
-                <MenuItem Name="mnuAddBuddy" Header="Add Buddy" IsEnabled="False" />
-                <MenuItem Name="mnuNewContactGroup" Header="New Contact Group" IsEnabled="False" />
+            <MenuItem Header="Accounts">
+                <MenuItem Header="Edit Accounts" Click="EditAccounts_Click" />
+                <MenuItem Header="Add Buddy" IsEnabled="False" />
+                <MenuItem Header="New Contact Group" IsEnabled="False" />
             </MenuItem>
-            <MenuItem Name="nmuTools" Header="Tools">
-                <MenuItem Name="mnuToolsOptions" Header="Options" />
+            <MenuItem Header="Tools">
+                <MenuItem Header="Options" />
             </MenuItem>
         </Menu>
-		<ComboBox Height="23" Margin="12,0,12,6" Name="comboBox1" VerticalAlignment="Bottom" Grid.Row="1">
+		<ComboBox Height="23" Margin="12,0,12,6" VerticalAlignment="Bottom" Grid.Row="1">
 			<ComboBoxItem Name="Available" Content="Available" />
 			<ComboBoxItem Name="Away" Content="Away" />
 			<ComboBoxItem Name="Invisible" Content="Invisible" />

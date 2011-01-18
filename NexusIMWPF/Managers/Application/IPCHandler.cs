@@ -41,10 +41,7 @@ namespace NexusIM.Managers
 					string input = "";
 
 					// Merge all command line arguments into one string
-					Environment.GetCommandLineArgs().ToList().GetRange(1, Environment.GetCommandLineArgs().Length - 1).ForEach(delegate(string s)
-					{
-						input += s + " ";
-					});
+					Environment.GetCommandLineArgs().ToList().GetRange(1, Environment.GetCommandLineArgs().Length - 1).Aggregate((l, r) => l + " " + r);
 
 					input = input.TrimEnd(new char[] { ' ' });
 					StreamWriter writer = new StreamWriter(pipeClient);

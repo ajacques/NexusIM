@@ -13,5 +13,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=|DataDirectory|\UserData.sdf</Value>
     </Setting>
+    <Setting Name="LogServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">5.64.115.83</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

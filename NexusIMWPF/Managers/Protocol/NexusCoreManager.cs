@@ -63,6 +63,8 @@ namespace NexusIM.Managers
 				OnStateChange(null, new NexusCoreStateEventArgs(NexusCoreState.LoggingIn));
 
 			mClient.BeginLogin(username, password, new AsyncCallback(CoreService_OnLogin), null);
+			mUsername = username;
+			mPassword = password;
 		}
 
 		// Callbacks
@@ -74,6 +76,11 @@ namespace NexusIM.Managers
 				OnStateChange(null, new NexusCoreStateEventArgs(NexusCoreState.Synchronizing));
 
 			mClient.BeginGetAccounts(new AsyncCallback(CoreService_OnGetAccounts), null);
+
+			IMSettings.SetCustomSetting("nxcoreusername", mUsername);
+			IMSettings.SetCustomSetting("nxcorepassword", mPassword);
+
+			mPassword = null;
 		}
 		private static void CoreService_OnGetAccounts(IAsyncResult result)
 		{
@@ -84,10 +91,14 @@ namespace NexusIM.Managers
 				IMProtocol protocol;
 				try	{
 					protocol = InterfaceManager.CreateProtocol(account.ProtocolType);
-				} catch (Exception) {
+				} catch (ArgumentException) {
 					Debug.WriteLine("NexusCoreManager: Protocol of type " + account.ProtocolType + " not supported at this time.");
-					break;
+					continue;
 				}
+
+				if (protocol == null)
+					continue;
+
 				protocol.Username = account.Username;
 				protocol.Password = account.Password;
 				protocol.Enabled = account.Enabled;
@@ -102,7 +113,8 @@ namespace NexusIM.Managers
 		public static event EventHandler<NexusCoreStateEventArgs> OnStateChange;
 
 		// Variables
-		private static StreamReader mMsgStreamReader;
 		private static CoreServiceClient mClient;
+		private static string mUsername;
+		private static string mPassword;
 	}
 }

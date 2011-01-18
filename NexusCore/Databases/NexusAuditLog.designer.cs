@@ -106,7 +106,7 @@ namespace NexusCore.Databases
 		
 		private bool _Succeded;
 		
-		private int _IPAddress;
+		private string _IPAddress;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -126,7 +126,7 @@ namespace NexusCore.Databases
     partial void OnUserIdChanged();
     partial void OnSuccededChanging(bool value);
     partial void OnSuccededChanged();
-    partial void OnIPAddressChanging(int value);
+    partial void OnIPAddressChanging(string value);
     partial void OnIPAddressChanged();
     #endregion
 		
@@ -275,8 +275,8 @@ namespace NexusCore.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IPAddress", DbType="Int NOT NULL")]
-		public int IPAddress
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IPAddress", DbType="VARCHAR(50) NOT NULL", CanBeNull=false)]
+		public string IPAddress
 		{
 			get
 			{

@@ -27,7 +27,7 @@ namespace NexusIM
 				protocol.Password = account.Password;
 				protocol.Tag = account.Id;
 				protocol.Enabled = account.Enabled;
-				foreach (AccountSetting setting in account.Settings)
+				foreach (AccountSetting setting in account.AccountSettings)
 					protocol.ConfigurationSettings.Add(setting.Key, setting.Value);
 
 				AccountManager.AddNewAccount(protocol);
@@ -95,6 +95,7 @@ namespace NexusIM
 			get;
 			private set;
 		}
+
 		public Dictionary<IMBuddy, Dictionary<string, string>> ContactSettings
 		{
 			get { throw new NotImplementedException(); }
@@ -109,7 +110,17 @@ namespace NexusIM
 		}
 		public void SetCustomSetting(string setting, string value)
 		{
-			throw new NotImplementedException();
+			UserProfile profile = UserProfile.Create(mConnectionString);
+			Setting config = profile.Settings.FirstOrDefault(s => s.Key == setting);
+			if (config == null)
+			{
+				config = new Setting();
+				config.Key = setting;
+				profile.Settings.InsertOnSubmit(config);
+			}
+
+			config.Value = value;
+			profile.SubmitChanges();
 		}
 		public void SetSettingList(string name, List<string> list)
 		{

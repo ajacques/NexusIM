@@ -20,12 +20,12 @@
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
     <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.20901.0</ExpressionBlendVersion>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
+    <PublishUrl>http://dev.nexus-im.com/appdeploy/</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -33,10 +33,15 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>deploy.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <TrustUrlParameters>true</TrustUrlParameters>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,10 +74,19 @@
     <TargetZone>Internet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>9BF9B2E0E124846FD780854753B8577F6AD0AB06</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>NexusIMWPF_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Drawing" />
@@ -88,7 +102,6 @@
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
@@ -97,10 +110,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Speech" />
-    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -172,6 +184,9 @@
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SysTrayPeekWindow.xaml.cs">
+      <DependentUpon>SysTrayPeekWindow.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -192,6 +207,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="NexusIMWPF_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Service References\NexusCore\CoreService.xsd">
       <SubType>Designer</SubType>
@@ -266,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\SysTrayPeekWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -328,7 +348,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
-    <Content Include="UserData.sdf">
+    <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -340,6 +360,168 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\NexusCore\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="de\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="de\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="es\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="es\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="fr\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="fr\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="it\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="it\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="ja\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="ja\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="ko\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="ko\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="zh-Hans\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="zh-Hans\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="zh-Hant\Microsoft.Expression.Interactions.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
+    <PublishFile Include="zh-Hant\System.Windows.Interactivity.resources">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

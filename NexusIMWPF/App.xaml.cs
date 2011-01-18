@@ -13,6 +13,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using NexusIM;
 using System.Threading;
 using NexusIM.Windows;
+using NexusIM.Properties;
 
 namespace NexusIMWPF
 {
@@ -21,6 +22,11 @@ namespace NexusIMWPF
 	/// </summary>
 	public partial class App : Application
 	{
+		public App()
+		{
+			WindowSystem.RegisterApp(this);
+		}
+
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
@@ -49,35 +55,13 @@ namespace NexusIMWPF
 
 				Trace.WriteLine("Configuration File: " + configuri);
 
-				IMSettings.SettingInterface = new SQLCESettings("Data Source=\"..\\..\\UserData.sdf\";Persist Security Info=False;");
+				IMSettings.SettingInterface = new SQLCESettings("Data Source=\"|DataDirectory|\\UserData.sdf\";Persist Security Info=False;");
 
 				AccountManager.Setup();
 				ErrorManager.Setup();
 
 				// Attempt to load the configuration file
-				try	{
-					IMSettings.Load();
-				} catch (System.Xml.XmlException x) { // Thrown by parser errors
-					Trace.TraceWarning("Configuration Parse Error: " + x.Message);
-					if (false || Win32.IsWinVistaAndUp())
-					{
-						TaskDialog tdialog = new TaskDialog();
-						tdialog.Icon = TaskDialogStandardIcon.Warning;
-						tdialog.Caption = NexusIM.Properties.Resources.ConfigFileParseErrorTitle;
-						tdialog.InstructionText = NexusIM.Properties.Resources.ConfigFileParseError.Replace("{messagedata}", x.Message);
-						tdialog.Show();
-					} else {
-						MessageBoxResult result = MessageBox.Show(NexusIM.Properties.Resources.ConfigFileParseError.Replace("{messagedata}", x.Message), NexusIM.Properties.Resources.ConfigFileParseErrorTitle, MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
-
-						if (result == MessageBoxResult.OK)
-						{
-							File.Copy(configuri, configuri + ".bak", true);
-						} else if (result == MessageBoxResult.Cancel) {
-							mlock.ReleaseMutex();
-							return;
-						}
-					}
-				}
+				IMSettings.Load();
 
 				AccountManager.Start();
 				if (FirstRunSetup.IsFirstRun)
@@ -86,6 +70,7 @@ namespace NexusIMWPF
 					window.Show();
 				} else {
 					WindowSystem.OpenContactListWindow();
+					WindowSystem.ShowSysTrayIcon();
 				}
 
 				Trace.WriteLine("Configuration file loaded and parsed.");
@@ -112,7 +97,7 @@ namespace NexusIMWPF
 			try
 			{ // Try to create a connection to my hamachi computer logging program
 				TcpClient client = new TcpClient();
-				client.Connect("5.64.115.83", 6536);
+				client.Connect(Settings.Default.LogServer, 6536);
 				Trace.Listeners.Add(new TextWriterTraceListener(client.GetStream(), "Network Logger"));
 			} catch (SocketException) { }
 

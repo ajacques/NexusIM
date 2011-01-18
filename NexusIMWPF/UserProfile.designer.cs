@@ -35,6 +35,9 @@ namespace NexusIM
     partial void InsertAccountSetting(AccountSetting instance);
     partial void UpdateAccountSetting(AccountSetting instance);
     partial void DeleteAccountSetting(AccountSetting instance);
+    partial void InsertSetting(Setting instance);
+    partial void UpdateSetting(Setting instance);
+    partial void DeleteSetting(Setting instance);
     #endregion
 		
 		public UserProfile(string connection) : 
@@ -76,6 +79,14 @@ namespace NexusIM
 				return this.GetTable<AccountSetting>();
 			}
 		}
+		
+		public System.Data.Linq.Table<Setting> Settings
+		{
+			get
+			{
+				return this.GetTable<Setting>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="Accounts")]
@@ -94,7 +105,7 @@ namespace NexusIM
 		
 		private bool _Enabled;
 		
-		private EntitySet<AccountSetting> _Settings;
+		private EntitySet<AccountSetting> _AccountSettings;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -114,7 +125,7 @@ namespace NexusIM
 		
 		public Account()
 		{
-			this._Settings = new EntitySet<AccountSetting>(new Action<AccountSetting>(this.attach_Settings), new Action<AccountSetting>(this.detach_Settings));
+			this._AccountSettings = new EntitySet<AccountSetting>(new Action<AccountSetting>(this.attach_AccountSettings), new Action<AccountSetting>(this.detach_AccountSettings));
 			OnCreated();
 		}
 		
@@ -198,7 +209,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Enabled", DbType="tinyint")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Enabled", DbType="TinyInt NOT NULL")]
 		public bool Enabled
 		{
 			get
@@ -218,16 +229,16 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_AccountSetting", Storage="_Settings", ThisKey="Id", OtherKey="AccountId")]
-		public EntitySet<AccountSetting> Settings
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_AccountSetting", Storage="_AccountSettings", ThisKey="Id", OtherKey="AccountId")]
+		public EntitySet<AccountSetting> AccountSettings
 		{
 			get
 			{
-				return this._Settings;
+				return this._AccountSettings;
 			}
 			set
 			{
-				this._Settings.Assign(value);
+				this._AccountSettings.Assign(value);
 			}
 		}
 		
@@ -251,13 +262,13 @@ namespace NexusIM
 			}
 		}
 		
-		private void attach_Settings(AccountSetting entity)
+		private void attach_AccountSettings(AccountSetting entity)
 		{
 			this.SendPropertyChanging();
 			entity.Account = this;
 		}
 		
-		private void detach_Settings(AccountSetting entity)
+		private void detach_AccountSettings(AccountSetting entity)
 		{
 			this.SendPropertyChanging();
 			entity.Account = null;
@@ -344,7 +355,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Key", DbType="nvarchar(20)", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Key", DbType="NVarChar(20) NOT NULL", CanBeNull=false)]
 		public string Key
 		{
 			get
@@ -364,7 +375,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", DbType="nvarchar(500)", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", DbType="NVarChar(500) NOT NULL", CanBeNull=false)]
 		public string Value
 		{
 			get
@@ -384,7 +395,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_AccountSetting", Storage="_Account", ThisKey="AccountId", OtherKey="Id", IsForeignKey=true)]
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_AccountSetting", Storage="_Account", ThisKey="AccountId", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true)]
 		public Account Account
 		{
 			get
@@ -401,12 +412,12 @@ namespace NexusIM
 					if ((previousValue != null))
 					{
 						this._Account.Entity = null;
-						previousValue.Settings.Remove(this);
+						previousValue.AccountSettings.Remove(this);
 					}
 					this._Account.Entity = value;
 					if ((value != null))
 					{
-						value.Settings.Add(this);
+						value.AccountSettings.Add(this);
 						this._AccountId = value.Id;
 					}
 					else
@@ -414,6 +425,92 @@ namespace NexusIM
 						this._AccountId = default(int);
 					}
 					this.SendPropertyChanged("Account");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="Settings")]
+	public partial class Setting : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _Key;
+		
+		private string _Value;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnKeyChanging(string value);
+    partial void OnKeyChanged();
+    partial void OnValueChanging(string value);
+    partial void OnValueChanged();
+    #endregion
+		
+		public Setting()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Key", DbType="NVarChar(12) NOT NULL", CanBeNull=false, IsPrimaryKey=true)]
+		public string Key
+		{
+			get
+			{
+				return this._Key;
+			}
+			set
+			{
+				if ((this._Key != value))
+				{
+					this.OnKeyChanging(value);
+					this.SendPropertyChanging();
+					this._Key = value;
+					this.SendPropertyChanged("Key");
+					this.OnKeyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Value", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+		public string Value
+		{
+			get
+			{
+				return this._Value;
+			}
+			set
+			{
+				if ((this._Value != value))
+				{
+					this.OnValueChanging(value);
+					this.SendPropertyChanging();
+					this._Value = value;
+					this.SendPropertyChanged("Value");
+					this.OnValueChanged();
 				}
 			}
 		}

@@ -1,0 +1,14 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="NexusIM.Windows.SysTrayPeekWindow"
+	x:Name="Window"
+	Title="NexusIM - Peek"
+	Width="250" Height="70" ResizeMode="NoResize" WindowStyle="None" Focusable="False" ShowInTaskbar="False" Topmost="True" IsHitTestVisible="False" IsTabStop="False" UseLayoutRounding="True">
+	<Grid x:Name="LayoutRoot">
+		<TextBlock Text="Online" Foreground="Green" HorizontalAlignment="Right" Height="15" VerticalAlignment="Bottom" Margin="0,0,3,3" />
+		<Image HorizontalAlignment="Left" Width="16" Height="16" Margin="4,0,0,3" VerticalAlignment="Bottom" Source="/NexusIMWPF;component/Resources/available_icon.ico" />
+		<TextBlock HorizontalAlignment="Left" Margin="20,0,0,4" TextWrapping="Wrap" Text="Available" VerticalAlignment="Bottom"/>
+	</Grid>
+</Window>

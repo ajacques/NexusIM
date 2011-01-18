@@ -519,7 +519,6 @@
       <LastGenOutput>userdb.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="testappliance\manifestgenerate.aspx" />
     <Content Include="Web.sitemap" />
     <Content Include="config\mydevices.aspx" />
     <Content Include="config\popups\editaccount.aspx" />

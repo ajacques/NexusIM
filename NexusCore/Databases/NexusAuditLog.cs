@@ -10,7 +10,8 @@ namespace NexusCore.Databases
 			LoginAttempt attempt = new LoginAttempt();
 			attempt.Site = "nexuscore";
 			attempt.Succeded = success;
-			attempt.IPAddress = IPAddressToInt(ipAddress).Value;
+			attempt.IPAddress = HttpContext.Current.Request.UserHostName;
+			//attempt.IPAddress = IPAddressToInt(ipAddress).Value;
 			attempt.TimeStamp = DateTime.UtcNow;
 			attempt.UserId = userId;
 
@@ -22,7 +23,8 @@ namespace NexusCore.Databases
 			LoginAttempt attempt = new LoginAttempt();
 			attempt.Site = "nexuscore";
 			attempt.Succeded = true;
-			attempt.IPAddress = IPAddressToInt(HttpContext.Current.Request.UserHostName).Value;
+			attempt.IPAddress = HttpContext.Current.Request.UserHostName;
+			//attempt.IPAddress = IPAddressToInt(HttpContext.Current.Request.UserHostName).Value;
 			attempt.TimeStamp = DateTime.UtcNow;
 			attempt.UserId = userId;
 
@@ -34,7 +36,8 @@ namespace NexusCore.Databases
 			LoginAttempt attempt = new LoginAttempt();
 			attempt.Site = "nexuscore";
 			attempt.Succeded = false;
-			attempt.IPAddress = IPAddressToInt(HttpContext.Current.Request.UserHostName).Value;
+			attempt.IPAddress = HttpContext.Current.Request.UserHostName;
+			//attempt.IPAddress = IPAddressToInt(HttpContext.Current.Request.UserHostName).Value;
 			attempt.TimeStamp = DateTime.UtcNow;
 			attempt.UserName = username;
 			attempt.Password = password;

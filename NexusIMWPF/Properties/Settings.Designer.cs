@@ -41,5 +41,17 @@ namespace NexusIM.Properties {
                 return ((string)(this["UserProfile"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5.64.115.83")]
+        public string LogServer {
+            get {
+                return ((string)(this["LogServer"]));
+            }
+            set {
+                this["LogServer"] = value;
+            }
+        }
     }
 }

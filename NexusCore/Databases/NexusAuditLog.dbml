@@ -9,7 +9,7 @@
       <Column Name="Password" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="UserId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Succeded" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IPAddress" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IPAddress" Type="System.String" DbType="VARCHAR(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Function Name="dbo.IntToIPAddress" Method="IntToIPAddress" IsComposable="true">
