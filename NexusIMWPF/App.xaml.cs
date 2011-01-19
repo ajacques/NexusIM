@@ -55,7 +55,7 @@ namespace NexusIMWPF
 
 				Trace.WriteLine("Configuration File: " + configuri);
 
-				IMSettings.SettingInterface = new SQLCESettings("Data Source=\"|DataDirectory|\\UserData.sdf\";Persist Security Info=False;");
+				IMSettings.SettingInterface = new SQLCESettings("Data Source=\"|DataDirectory|\\UserProfile.sdf\";Persist Security Info=False;");
 
 				AccountManager.Setup();
 				ErrorManager.Setup();
@@ -64,6 +64,7 @@ namespace NexusIMWPF
 				IMSettings.Load();
 
 				AccountManager.Start();
+				WindowSystem.OpenDummyWindow();
 				if (FirstRunSetup.IsFirstRun)
 				{
 					InitialSetupWindow window = new InitialSetupWindow();

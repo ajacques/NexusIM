@@ -181,6 +181,7 @@
     <Compile Include="Windows\ContactList.xaml.cs">
       <DependentUpon>ContactList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\DummyWindow.cs" />
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
     </Compile>
@@ -329,6 +330,7 @@
     <Resource Include="Resources\sound.png" />
     <Resource Include="Resources\text_bold.png" />
     <Resource Include="Resources\text_letter_omega.png" />
+    <Resource Include="Resources\yahoo.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">

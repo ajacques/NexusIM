@@ -39,8 +39,6 @@ namespace WebTests
 				testContextInstance = value;
 			}
 		}
-
-		[TestMethod]
 		public void AntiCSRF()
 		{
 			Stream stream = new MemoryStream();

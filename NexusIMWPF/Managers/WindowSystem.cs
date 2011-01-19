@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Drawing;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
+using System.Windows.Threading;
+using InstantMessage;
 using NexusIM.Windows;
 using NexusIMWPF;
-using InstantMessage;
-using System.Windows.Threading;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Reflection;
-using System.IO;
-using System.Diagnostics;
 
 namespace NexusIM.Managers
 {
@@ -27,7 +23,14 @@ namespace NexusIM.Managers
 				}), DispatcherPriority.Normal);				
 			}
 		}
+		public static void OpenDummyWindow()
+		{
+			if (DummyWindow != null)
+				throw new InvalidOperationException();
 
+			DummyWindow = new DummyWindow();
+			//Application.Dispatcher.BeginInvoke(new ThreadStart(() => DummyWindow.Show() ), DispatcherPriority.Background);
+		}
 		public static void ShowSysTrayIcon()
 		{
 			if (SysTrayIcon != null)
@@ -40,7 +43,6 @@ namespace NexusIM.Managers
 			SysTrayIcon.Icon = new Icon(s);
 			SysTrayIcon.Visible = true;
 		}
-
 		public static void RegisterApp(App app)
 		{
 			if (Application != null)
@@ -60,6 +62,11 @@ namespace NexusIM.Managers
 			private set;
 		}
 		public static NotifyIcon SysTrayIcon
+		{
+			get;
+			private set;
+		}
+		public static DummyWindow DummyWindow
 		{
 			get;
 			private set;

@@ -40,7 +40,7 @@ namespace NexusIM
 		{
 			UserProfile mDb = UserProfile.Create(mConnectionString);
 
-			IEnumerable<Account> toRemove = mDb.Accounts.Where(a => !AccountManager.Accounts.Any(p => p.Tag != null && ((int)p.Tag) == a.Id));
+			IEnumerable<Account> toRemove = mDb.Accounts.Where(a => !AccountManager.Accounts.Select(p => (int)p.Tag).Contains(a.Id));
 			IEnumerable<IMProtocol> toAdd = AccountManager.Accounts.Where(a => a.Tag == null);
 			var toFix = from d in mDb.Accounts
 						   join a in AccountManager.Accounts on d.Id equals a.Tag

@@ -61,6 +61,7 @@ namespace NexusIM.Windows
 		}
 		private void SkipLogin_Click(object sender, RoutedEventArgs e)
 		{
+			WindowSystem.ShowSysTrayIcon();
 			WindowSystem.OpenContactListWindow();
 			
 			AccountsEdit accountEdit = new AccountsEdit();
