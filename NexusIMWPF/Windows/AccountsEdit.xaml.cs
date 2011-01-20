@@ -54,5 +54,11 @@ namespace NexusIM.Windows
 		{
 			IMSettings.SaveAccounts();
 		}
+
+		private void AccountItem_Click(object sender, MouseButtonEventArgs e)
+		{
+			SetupAccountItem item = sender as SetupAccountItem;
+			item.Select();
+		}
 	}
 }

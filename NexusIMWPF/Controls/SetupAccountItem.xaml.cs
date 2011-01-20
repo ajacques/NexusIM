@@ -47,6 +47,12 @@ namespace NexusIM.Controls
 			AnimFadeIn.Begin();
 		}
 
+		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+		{
+			return new PointHitTestResult(this, hitTestParameters.HitPoint);
+			return base.HitTestCore(hitTestParameters);
+		}
+
 		public void Reverse(Storyboard storyboard)
 		{
 			foreach (var timeline in storyboard.Children)

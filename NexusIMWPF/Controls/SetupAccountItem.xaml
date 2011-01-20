@@ -15,11 +15,6 @@
 			<DoubleAnimation Storyboard.TargetName="PasswordBox" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.2" To="1" />
 		</Storyboard>
 	</UserControl.Resources>
-	<UserControl.Triggers>
-		<EventTrigger RoutedEvent="ButtonBase.Click" SourceName="editButton">
-			<BeginStoryboard Storyboard="{StaticResource EditFadeIn}"/>
-		</EventTrigger>
-	</UserControl.Triggers>
 	<UserControl.DataContext>
 		<im:IMProtocol Enabled="true" Username="Test Username" Password="Test" />
 	</UserControl.DataContext>
@@ -28,7 +23,7 @@
 		<Image HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33,0,0,0" Source="/NexusIMWPF;component/Resources/yahoo.png" Stretch="Fill" Width="26" Height="18" />
 		<CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding Enabled, Mode=TwoWay}" />
 		<TextBlock HorizontalAlignment="Left" Margin="64,8,0,0" TextWrapping="Wrap" Text="{Binding Username, Mode=OneWay}" VerticalAlignment="Top" />
-		<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" Margin="70,5,0,0" Text="{Binding Username}" VerticalAlignment="Top" IsReadOnly="{Binding Enabled, Mode=OneWay}" Opacity="0" Width="130" CaretBrush="Black" />
-		<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="70,0,0,8" VerticalAlignment="Bottom" Opacity="0" Width="130" />
+		<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Text="{Binding Username}" Opacity="0" Width="130" CaretBrush="Black" IsHitTestVisible="False" />
+		<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="70,0,0,8" VerticalAlignment="Bottom" Opacity="0" Width="130" IsHitTestVisible="False" />
 	</Grid>
 </UserControl>
