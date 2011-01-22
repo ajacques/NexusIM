@@ -6,24 +6,38 @@ namespace InstantMessage.Protocols.Irc
 {
 	public class IRCModeChangeEventArgs : EventArgs
 	{
-		public IEnumerable<IrcUserModeChange> UserModes
+		public IEnumerable<IRCUserModeChange> UserModes
 		{
 			get;
 			internal set;
 		}
-		public IGrouping<string, IrcUserModes> ChannelModes
+		public IGrouping<string, IRCUserModes> ChannelModes
 		{
 			get;
 			internal set;
 		}
 	}
-	public class IrcUserMask : IContact
+	public class ChatRoomJoinFailedEventArgs : EventArgs
 	{
-		public IrcUserMask(IRCProtocol protocol)
+		public IRCJoinFailedReason Reason
+		{
+			get;
+			internal set;
+		}
+		public string Message
+		{
+			get;
+			internal set;
+		}
+	}
+
+	public class IRCUserMask : IContact
+	{
+		public IRCUserMask(IRCProtocol protocol)
 		{
 			Protocol = protocol;
 		}
-		public IrcUserMask(IRCProtocol protocol, string input)
+		public IRCUserMask(IRCProtocol protocol, string input)
 		{
 			Protocol = protocol;
 			if (!input.Contains('!'))
@@ -73,10 +87,10 @@ namespace InstantMessage.Protocols.Irc
 			private set;
 		}
 	}
-	public struct IrcUserModeChange
+	public struct IRCUserModeChange
 	{
-		public IrcUserMask UserMask;
-		public IrcUserModes Mode;
+		public IRCUserMask UserMask;
+		public IRCUserModes Mode;
 		public bool IsAdd;
 	}
 }

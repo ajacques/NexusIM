@@ -12,13 +12,14 @@ using System.Windows.Shapes;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using System.Diagnostics;
 
 namespace NexusIM.Windows
 {
 	/// <summary>
 	/// Interaction logic for AccountsEdit.xaml
 	/// </summary>
-	partial class AccountsEdit : Window
+	sealed partial class AccountsEdit : Window
 	{
 		public AccountsEdit()
 		{
@@ -43,10 +44,10 @@ namespace NexusIM.Windows
 
 			SetupAccountItem item = new SetupAccountItem();
 			item.DataContext = protocol;
-
-			AccountManager.AddNewAccount(protocol);
+			item.Margin = (Thickness)FindResource("ItemMargin");
 
 			AccountsListBox.Children.Add(item);
+			DeselectAllExcept(AccountsListBox.Children, item);
 			item.Select();
 		}
 
@@ -59,6 +60,30 @@ namespace NexusIM.Windows
 		{
 			SetupAccountItem item = sender as SetupAccountItem;
 			item.Select();
+		}
+
+		private void DeselectAllExcept(UIElementCollection source, SetupAccountItem exception)
+		{
+			foreach (SetupAccountItem item in AccountsListBox.Children)
+			{
+				if (item.Selected && item != exception)
+					item.Deselect();
+			}
+		}
+
+		protected override void OnMouseUp(MouseButtonEventArgs e)
+		{
+			base.OnMouseUp(e);
+
+			if (e.Source is SetupAccountItem)
+			{
+				SetupAccountItem acc = e.Source as SetupAccountItem;
+				acc.Select();
+				DeselectAllExcept(AccountsListBox.Children, acc);
+
+			} else {
+				DeselectAllExcept(AccountsListBox.Children, null);
+			}
 		}
 	}
 }

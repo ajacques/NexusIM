@@ -65,7 +65,7 @@ namespace NexusIM.Managers
 			// This is to find out whether or not we are going to have problems with jumplists being disabled later.
 			try {
 				appJList.Refresh();
-			} catch (DirectoryNotFoundException e) { // Reported when jump lists are disabled
+			} catch (DirectoryNotFoundException) { // Reported when jump lists are disabled
 				Trace.WriteLine("JumpLists are disabled. Unloading all data");
 				Shutdown();
 				return;

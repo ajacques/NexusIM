@@ -16,12 +16,13 @@
   <Spelling Locale="en-US" />
   <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
   <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
-  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
   <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
  </ProjectOptions>
  <Targets>
   <AssemblyReferenceDirectories>
+   <Directory>$(ProjectDir)/../../../../../../Program Files (x86)/Microsoft SQL Server Compact Edition/v3.5/Desktop/</Directory>
    <Directory>$(ProjectDir)/../../../../../../Program Files (x86)/Reference Assemblies/Microsoft/Framework/.NETFramework/v3.5/Profile/Client/</Directory>
    <Directory>$(ProjectDir)/../../../../../../Program Files (x86)/Reference Assemblies/Microsoft/Framework/.NETFramework/v4.0/</Directory>
    <Directory>$(ProjectDir)/../../../../../../Windows/assembly/GAC_MSIL/Microsoft.ApplicationServer.Caching.Client/1.0.0.0__31bf3856ad364e35/</Directory>
@@ -34,6 +35,7 @@
   <Target Name="$(ProjectDir)/NexusCore/bin/NexusCore.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/NexusIM/bin/Debug/NexusIM.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/NexusIM_Icons/bin/Debug/NexusIM_Icons.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/NexusIMWPF/bin/Debug/NexusIMWPF.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/NexusWeb/bin/NexusWeb.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/ProtocolTests/bin/Debug/ProtocolTests.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/PushTests/bin/Debug/PushTests.dll" Analyze="True" AnalyzeAllChildren="True" />

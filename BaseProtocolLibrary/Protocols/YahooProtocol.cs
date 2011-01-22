@@ -101,41 +101,6 @@ namespace InstantMessage
 
 			sendPacket(pkt);
 		}
-		public override void SendMessage(IMBuddy buddy, string message, bool usesms)
-		{
-			YPacket pkt = new YPacket();
-
-			string newmessage = message;
-
-			if (message.Length > 800)
-			{
-				newmessage = message.Substring(0, 800);
-				SendMessage(buddy, message.Substring(801), usesms);
-			}
-
-			if (usesms || buddy.IsMobileContact)
-			{
-				pkt.Service = YahooServices.ymsg_sms_message;
-				pkt.Session = session;
-				pkt.AddParameter("1", mUsername);
-				pkt.AddParameter("5", buddy.SMSNumber.Replace("+", ""));
-				pkt.AddParameter("14", message);
-				pkt.AddParameter("68", buddy.Options["smscarrier"]);
-			} else {
-				pkt.Service = YahooServices.ymsg_message;
-				pkt.Session = session;
-				pkt.AddParameter("1", mUsername);
-				pkt.AddParameter("5", buddy.Username);
-				pkt.AddParameter("97", "1");
-				pkt.AddParameter("63", ";0");
-				pkt.AddParameter("64", "0");
-				pkt.AddParameter("206", "0");
-				pkt.AddParameter("14", message);
-				pkt.AddParameter("450", "0");
-			}
-
-			sendPacket(pkt);
-		}
 		public override void IsTyping(string uname, bool isTyping)
 		{
 			YPacket packet = new YPacket();
@@ -501,8 +466,6 @@ namespace InstantMessage
 				{
 				} else {
 					IMBuddy nbuddy = new IMBuddy(this, user);
-					if (CustomProtocolManager != null)
-						CustomProtocolManager.OpenBuddyWindow(nbuddy, true);
 				}
 			}
 		}

@@ -8,7 +8,7 @@
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ContactListItem"
 	x:Name="UserControl"
-	d:DesignWidth="200" Height="20" UseLayoutRounding="True" x:FieldModifier="private">
+	d:DesignWidth="200" Height="20" UseLayoutRounding="True" x:FieldModifier="private" x:ClassModifier="internal">
 	<UserControl.Resources>
 		<c:IMBuddyStatusToSmallIconConverter x:Key="StatusConverter" />
 	</UserControl.Resources>

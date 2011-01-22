@@ -9,10 +9,13 @@
 	Title="NexusIM - Accounts"
 	Width="540" Height="380" WindowStartupLocation="CenterScreen"
 	x:ClassModifier="internal" x:FieldModifier="private">
+	<Window.Resources>
+		<Thickness x:Key="ItemMargin" Bottom="10" />
+	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
 		<ScrollViewer Margin="23,28,52,99" Background="#3EFFFFFF" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="AccountsListBox" VerticalAlignment="Top">
-				<nexus:SetupAccountItem Margin="0,0,0,10" MouseLeftButtonUp="AccountItem_Click" />
+				<nexus:SetupAccountItem Margin="{DynamicResource ItemMargin}" />
 			</StackPanel>
 		</ScrollViewer>
 		<Button Content="Accept" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="AcceptButton_Click" />

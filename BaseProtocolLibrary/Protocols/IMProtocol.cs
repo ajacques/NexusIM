@@ -9,6 +9,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.ComponentModel;
 using InstantMessage.Events;
+using InstantMessage.Protocols;
 
 namespace InstantMessage
 {
@@ -142,15 +143,6 @@ namespace InstantMessage
 			triggerOnSendMessage(args);
 			if (args.Handled)
 				throw new Exception("SendMessage Handled()");
-		}
-		public virtual void SendMessage(IMBuddy buddy, string message)
-		{
-			SendMessage(buddy, message, false);
-		}
-		[Obsolete("Use SendMessage(string, string) or SendMessage(IMBuddy, string) instead. Alternate addresses are handled internally by the protocol", false)]
-		public virtual void SendMessage(IMBuddy buddy, string message, bool usesms)
-		{
-			SendMessage(buddy.Username, message);
 		}
 		public virtual void SendMessageToRoom(string roomName, string message) {}
 		/// <summary>
@@ -525,17 +517,7 @@ namespace InstantMessage
 		[Obsolete("", false)]
 		public static IMProtocol FromString(string name)
 		{
-			var protocol = from t in Assembly.GetCallingAssembly().GetTypes()
-						   let attribs = t.GetCustomAttributes(typeof(IMNetworkAttribute), true)
-						   where attribs != null && attribs.Length > 0
-						   select t;
-
-
-			name = name.ToLower();
-			if (CustomProtocolManager != null)
-				return CustomProtocolManager.CreateCustomProtocol(name);
-			else
-				return null;
+			return null;
 		}
 		[Obsolete("", false)]
 		public static string FromProtocolString(string protocol)
@@ -554,16 +536,6 @@ namespace InstantMessage
 		protected void CleanupBuddyList()
 		{
 			buddylist.Clear();
-		}
-		[Obsolete("Use IMProtocol Events", false)]
-		public static IProtocolManager CustomProtocolManager
-		{
-			get {
-				return mCustomManager;
-			}
-			set {
-				mCustomManager = value;
-			}
 		}
 		public ManualResetEvent LoginWaitHandle
 		{
@@ -708,18 +680,10 @@ namespace InstantMessage
 		protected bool mIsIdle;
 		protected Guid mGuid;
 		protected string mAvatar;
-		protected static IProtocolManager mCustomManager;
 		protected IMProtocolStatus status;
 		protected Exception mLoginException;
 	}
-
-	/// <summary>
-	/// Represents an object that can be messages ie a contact or a chat room
-	/// </summary>
-	public interface IMessagable
-	{
-		void SendMessage(string message);
-	}
+		
 	public interface IContact : IMessagable
 	{
 		void SendMessage(string message);

@@ -26,55 +26,34 @@ namespace NexusIM.Controls
 
 		public void Select()
 		{
-			Storyboard AnimFadeIn = FindResource("EditFadeIn") as Storyboard;
-			if (mAnimReversed)
-			{
-				Reverse(AnimFadeIn);
-				mAnimReversed = false;
-			}
+			Storyboard AnimFade = FindResource("EditFadeIn") as Storyboard;
 
-			AnimFadeIn.Begin();
+			AnimFade.Begin();
+			Selected = true;
 		}
 		public void Deselect()
 		{
-			Storyboard AnimFadeIn = FindResource("EditFadeIn") as Storyboard;
-			if (mAnimReversed)
-			{
-				Reverse(AnimFadeIn);
-				mAnimReversed = true;
-			}
+			Storyboard AnimFade = FindResource("EditFadeOut") as Storyboard;
 
-			AnimFadeIn.Begin();
+			AnimFade.Begin();
+			Selected = false;
 		}
 
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
-			return base.HitTestCore(hitTestParameters);
 		}
 
-		public void Reverse(Storyboard storyboard)
+
+		public bool Selected
 		{
-			foreach (var timeline in storyboard.Children)
-			{
-				if (timeline is ObjectAnimationUsingKeyFrames)
-				{
-					ObjectAnimationUsingKeyFrames objAnim = timeline as ObjectAnimationUsingKeyFrames;
-					ObjectKeyFrame frame0 = objAnim.KeyFrames[0];
-					ObjectKeyFrame frame1 = objAnim.KeyFrames[1];
-
-					KeyTime temp = frame0.KeyTime;
-					frame0.KeyTime = frame1.KeyTime;
-					frame1.KeyTime = temp;
-				} else if (timeline is DoubleAnimation) {
-					DoubleAnimation anim = timeline as DoubleAnimation;
-					double? temp = anim.From;
-					anim.From = anim.To;
-					anim.To = temp;
-				}
-			}
+			get;
+			private set;
 		}
 
-		private bool mAnimReversed;
+		private void CancelButton_Click(object sender, System.Windows.RoutedEventArgs e)
+		{
+			// TODO: Add event handler implementation here.
+		}
 	}
 }

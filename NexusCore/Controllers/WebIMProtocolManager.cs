@@ -35,7 +35,6 @@ namespace NexusCore.Controllers
 				return;
 
 			mInstance = new WebIMProtocolManager();
-			IMProtocol.CustomProtocolManager = mInstance;
 		}
 		public static StorageItem SetupAccount(AccountInfo accountInfo)
 		{

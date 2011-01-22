@@ -41,11 +41,11 @@ namespace InstantMessage.Protocols.Irc
 			if (OnJoin != null)
 				OnJoin(this, null);
 		}
-		public void ApplyUserMode(string username, IrcUserModes modes)
+		public void ApplyUserMode(string username, IRCUserModes modes)
 		{
 			mProtocol.ApplyIRCModeToUser(username, mChannelName, modes);
 		}
-		public void RemoveUserMode(string username, IrcUserModes modes)
+		public void RemoveUserMode(string username, IRCUserModes modes)
 		{
 			mProtocol.RemoveIRCModeFromUser(username, mChannelName, modes);
 		}
@@ -65,7 +65,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			mProtocol.BeginFindByHostMask(mChannelName, callback, userState);
 		}
-		public IEnumerable<IrcUserMask> EndFindByHostMask(IAsyncResult result)
+		public IEnumerable<IRCUserMask> EndFindByHostMask(IAsyncResult result)
 		{
 			return mProtocol.EndFindByHostMask(result);
 		}
@@ -74,7 +74,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			try {
 				if (OnMessageReceived != null)
-					OnMessageReceived(this, new IMMessageEventArgs(new IrcUserMask(mProtocol, sender), message));
+					OnMessageReceived(this, new IMMessageEventArgs(new IRCUserMask(mProtocol, sender), message));
 			} catch (Exception e) {
 				Trace.TraceError(e.Message);
 			}
@@ -115,7 +115,7 @@ namespace InstantMessage.Protocols.Irc
 				Trace.TraceError(e.Message);
 			}
 		}
-		internal void TriggerModeChange(IEnumerable<IrcUserModeChange> users)
+		internal void TriggerModeChange(IEnumerable<IRCUserModeChange> users)
 		{
 			if (OnModeChange != null)
 				OnModeChange(this, new IRCModeChangeEventArgs() { UserModes = users });
@@ -156,7 +156,7 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler OnJoin;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
 		public event EventHandler<IRCModeChangeEventArgs> OnModeChange;
-		public event EventHandler<IMChatRoomGenericEventArgs> OnLeave;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnLeave;		
 
 		//Variables
 		private bool mInChannel;

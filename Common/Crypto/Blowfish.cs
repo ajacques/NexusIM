@@ -33,7 +33,7 @@ namespace System.Security.Cryptography
 	/// <summary>
 	/// Class that provides blowfish encryption.
 	/// </summary>
-	public class Blowfish
+	internal class Blowfish
 	{
 		const int	N = 16;
 		const int	KEYBYTES = 8;
@@ -442,7 +442,7 @@ namespace System.Security.Cryptography
 		}
 	}
 
-	public class BlowfishStream : Stream
+	internal class BlowfishStream : Stream
 	{
 		class CBState : IAsyncResult
 		{

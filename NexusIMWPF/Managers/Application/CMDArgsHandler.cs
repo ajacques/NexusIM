@@ -42,7 +42,7 @@ namespace NexusIM.Managers
 				try	{
 					IMStatus newstatus = (IMStatus)Enum.Parse(typeof(IMStatus), keyvalues["status"], true);
 					AccountManager.Status = newstatus;
-				} catch (ArgumentException e) {
+				} catch (ArgumentException) {
 					return;
 				}
 			}

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 
-namespace InstantMessage
+namespace System.Text.RegularExpressions
 {
 	/// <summary>
 	/// Represents a wildcard running on the

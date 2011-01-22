@@ -12,13 +12,12 @@ using System.Globalization;
 
 namespace InstantMessage.Protocols.Irc
 {
-	public sealed class IRCProtocol : IMProtocol, IDisposable
+	public sealed class IRCProtocol : IMProtocol, IDisposable, IHasMUCRooms<IRCChannel>
 	{
 		public IRCProtocol()
 		{
 			protocolType = "IRC";
 			mProtocolTypeShort = "irc";
-			supportsMUC = true;
 			needPassword = false;
 		}
 		public IRCProtocol(string hostname, int port) : this()
@@ -81,7 +80,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			mPendingHostLookup = new HostMaskFindResult(channelName, this, callback, userState);
 		}
-		public IEnumerable<IrcUserMask> EndFindByHostMask(IAsyncResult result)
+		public IEnumerable<IRCUserMask> EndFindByHostMask(IAsyncResult result)
 		{
 			if (!(result is HostMaskFindResult))
 				throw new ArgumentException("The result parameter must be of type IRCProtocol.HostMaskFindresult");
@@ -103,7 +102,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			sendData(String.Format("OPER {0} {1}", username, password));
 		}
-		public void ApplyIRCModeToUser(string username, string channel, IrcUserModes mode)
+		public void ApplyIRCModeToUser(string username, string channel, IRCUserModes mode)
 		{
 			int numModes;
 			string modemask = UserModeToString(mode, out numModes);
@@ -114,7 +113,7 @@ namespace InstantMessage.Protocols.Irc
 
 			sendData(String.Format(CultureInfo.InvariantCulture, "MODE {0} +{1} {2}", channel, modemask, userMask));
 		}
-		public void RemoveIRCModeFromUser(string username, string channel, IrcUserModes mode)
+		public void RemoveIRCModeFromUser(string username, string channel, IRCUserModes mode)
 		{
 			int numModes;
 			string modemask = UserModeToString(mode, out numModes);
@@ -135,31 +134,31 @@ namespace InstantMessage.Protocols.Irc
 		{
 			sendData(message);
 		}
-		private string UserModeToString(IrcUserModes modes, out int numModes)
+		private string UserModeToString(IRCUserModes modes, out int numModes)
 		{
 			int modeCount = 0;
 			StringBuilder builder = new StringBuilder();
-			if (modes.HasFlag(IrcUserModes.Protected))
+			if (modes.HasFlag(IRCUserModes.Protected))
 			{
 				builder.Append("a");
 				modeCount++;
 			}
-			if (modes.HasFlag(IrcUserModes.Banned))
+			if (modes.HasFlag(IRCUserModes.Banned))
 			{
 				builder.Append("b");
 				modeCount++;
 			}
-			if (modes.HasFlag(IrcUserModes.Invisible))
+			if (modes.HasFlag(IRCUserModes.Invisible))
 			{
 				builder.Append("i");
 				modeCount++;
 			}
-			if (modes.HasFlag(IrcUserModes.Operator))
+			if (modes.HasFlag(IRCUserModes.Operator))
 			{
 				builder.Append("o");
 				modeCount++;
 			}
-			if (modes.HasFlag(IrcUserModes.Voice))
+			if (modes.HasFlag(IRCUserModes.Voice))
 			{
 				builder.Append("v");
 				modeCount++;
@@ -169,20 +168,20 @@ namespace InstantMessage.Protocols.Irc
 
 			return builder.ToString();
 		}
-		private IrcUserModes CharToUserMode(char mode)
+		private IRCUserModes CharToUserMode(char mode)
 		{
 			switch (mode)
 			{
 				case 'a':
-					return IrcUserModes.Protected;
+					return IRCUserModes.Protected;
 				case 'b':
-					return IrcUserModes.Banned;
+					return IRCUserModes.Banned;
 				case 'i':
-					return IrcUserModes.Invisible;
+					return IRCUserModes.Invisible;
 				case 'o':
-					return IrcUserModes.Operator;
+					return IRCUserModes.Operator;
 				default:
-					return IrcUserModes.Unknown;
+					return IRCUserModes.Unknown;
 			}
 		}
 
@@ -192,7 +191,7 @@ namespace InstantMessage.Protocols.Irc
 			public HostMaskFindResult(string channelName, IRCProtocol protocol, AsyncCallback callback, object userState)
 			{
 				AsyncState = userState;
-				mResults = new List<IrcUserMask>();
+				mResults = new List<IRCUserMask>();
 				AsyncCallback = callback;
 				protocol.SendRawMessage(String.Format("WHO {0}", channelName));
 				mResetEvent = new ManualResetEvent(false);
@@ -204,7 +203,7 @@ namespace InstantMessage.Protocols.Irc
 					mResetEvent.Dispose();
 			}
 
-			public void AppendResult(IrcUserMask mask)
+			public void AppendResult(IRCUserMask mask)
 			{
 				mResults.Add(mask);
 			}
@@ -215,7 +214,7 @@ namespace InstantMessage.Protocols.Irc
 				if (AsyncCallback != null)
 					AsyncCallback(this);
 			}
-			public IEnumerable<IrcUserMask> Results
+			public IEnumerable<IRCUserMask> Results
 			{
 				get	{
 					return mResults;
@@ -250,7 +249,7 @@ namespace InstantMessage.Protocols.Irc
 
 			private string mMask;
 			private ManualResetEvent mResetEvent;
-			private IList<IrcUserMask> mResults;
+			private IList<IRCUserMask> mResults;
 		}
 
 		// Properties
@@ -269,12 +268,15 @@ namespace InstantMessage.Protocols.Irc
 				return mNickname;
 			}
 			set	{
-				mNickname = value;
+				if (mNickname != value)
+				{
+					mNickname = value;
 
-				NotifyPropertyChanged("Nickname");
+					NotifyPropertyChanged("Nickname");
 
-				if (status == IMProtocolStatus.Online)
-					sendData("NICK " + mNickname);
+					if (status == IMProtocolStatus.Online)
+						sendData("NICK " + mNickname);
+				}
 			}
 		}
 		public IEnumerable<IRCChannel> Channels
@@ -311,6 +313,12 @@ namespace InstantMessage.Protocols.Irc
 							if (mPendingHostLookup != null)
 								mPendingHostLookup.Trigger();
 							break;
+						case 473: // Invite only
+							HandleJoinFailedPacket(IRCJoinFailedReason.InviteOnly, parameters.Skip(3).ToArray(), line.Substring(line.IndexOf(':', 1)));
+							break;
+						case 474: // Banned
+							HandleJoinFailedPacket(IRCJoinFailedReason.Banned, parameters.Skip(3).ToArray(), line.Substring(line.IndexOf(':', 1)));
+							break;
 					}
 				} else {
 					switch (parameters[1].ToUpper())
@@ -340,6 +348,18 @@ namespace InstantMessage.Protocols.Irc
 				}
 			}
 		}
+		private void HandleJoinFailedPacket(IRCJoinFailedReason reason, string[] line, string message)
+		{
+			string channelName = line[0];
+			IRCChannel channel = FindChannelByName(channelName);
+
+			try	{
+				if (OnChannelJoinFailed != null)
+					OnChannelJoinFailed(channel, new ChatRoomJoinFailedEventArgs() { Message = message, Reason = reason });
+			} catch (Exception e) {
+				Trace.WriteLine(e);
+			}
+		}
 		private void HandleWhoReply(string[] line)
 		{
 			//{channelName} {username} {hostname} {server} {nickname} {flags} :{hopcount} {realname}
@@ -347,7 +367,7 @@ namespace InstantMessage.Protocols.Irc
 
 			if (mPendingHostLookup != null)
 			{
-				IrcUserMask mask = new IrcUserMask(this);
+				IRCUserMask mask = new IRCUserMask(this);
 				mask.Hostname = line[2];
 				mask.Nickname = line[4];
 				mask.Username = line[1];
@@ -356,7 +376,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void HandlePartPacket(string line, string[] parameters)
 		{
-			IrcUserMask mask = new IrcUserMask(this, parameters[0]);
+			IRCUserMask mask = new IRCUserMask(this, parameters[0]);
 
 			if (mask.Nickname == mNickname)
 			{
@@ -380,7 +400,7 @@ namespace InstantMessage.Protocols.Irc
 			bool isApply = false;
 
 			string[] people = parameters.Skip(4).ToArray();
-			List<IrcUserModeChange> modeChanges = new List<IrcUserModeChange>();
+			List<IRCUserModeChange> modeChanges = new List<IRCUserModeChange>();
 			int i = 0;
 
 			foreach (char mode in modes)
@@ -393,8 +413,8 @@ namespace InstantMessage.Protocols.Irc
 					if (i > people.Length - 1)
 					{
 					} else {
-						IrcUserModeChange change = new IrcUserModeChange();
-						change.UserMask = new IrcUserMask(this, people[i]);
+						IRCUserModeChange change = new IRCUserModeChange();
+						change.UserMask = new IRCUserMask(this, people[i]);
 						change.Mode = CharToUserMode(mode);
 						change.IsAdd = isApply;
 						modeChanges.Add(change);
@@ -460,7 +480,7 @@ namespace InstantMessage.Protocols.Irc
 			} else {
 				int messageStartIndex = line.IndexOf(':', 5);
 				try	{
-					triggerOnMessageReceive(new IMMessageEventArgs(new IrcUserMask(this, parameters[0]), line.Substring(messageStartIndex + 1)));
+					triggerOnMessageReceive(new IMMessageEventArgs(new IRCUserMask(this, parameters[0]), line.Substring(messageStartIndex + 1)));
 				} catch (Exception) { } // Do not allow any bug in the client code to kill us
 			}
 		}
@@ -472,6 +492,10 @@ namespace InstantMessage.Protocols.Irc
 			try	{
 				bytesRead = mTextStream.EndRead(args);
 			} catch (SocketException e)	{
+				Dispose();
+				triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				return;
+			} catch (IOException e)	{
 				Dispose();
 				triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
 				return;
@@ -547,6 +571,7 @@ namespace InstantMessage.Protocols.Irc
 
 		// Events
 		public event EventHandler OnForceJoinChannel;
+		public event EventHandler<ChatRoomJoinFailedEventArgs> OnChannelJoinFailed;
 
 		// Variables
 		private HostMaskFindResult mPendingHostLookup;

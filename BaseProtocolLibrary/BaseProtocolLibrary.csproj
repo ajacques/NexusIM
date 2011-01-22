@@ -83,12 +83,14 @@
     <Compile Include="Protocols\GoogleVoiceClient.cs" />
     <Compile Include="Protocols\GoogleVoiceProtocol.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
+    <Compile Include="Protocols\Interfaces\IMessagable.cs" />
     <Compile Include="Protocols\IRCChannel.cs" />
-    <Compile Include="Protocols\IrcEnums.cs" />
+    <Compile Include="Protocols\IRCEnums.cs" />
     <Compile Include="Protocols\IRCProtocol.cs" />
-    <Compile Include="Protocols\IrcSupportClasses.cs" />
+    <Compile Include="Protocols\IRCSupportClasses.cs" />
     <Compile Include="Protocols\JabberClient.cs" />
     <Compile Include="Protocols\JabberProtocol.cs" />
+    <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
     <Compile Include="Protocols\SocialNetworks\ISocialNetwork.cs" />
     <Compile Include="Protocols\SocialNetworks\XboxLiveProtocol.cs" />
     <Compile Include="Structures\BuddyAvatar.cs" />
@@ -135,7 +137,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
