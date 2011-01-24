@@ -4,13 +4,14 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
-	xmlns:nx="clr-namespace:NexusIM.Converters" 
-	xmlns:System="clr-namespace:System;assembly=mscorlib" x:Name="UserControl"
+	xmlns:nx="clr-namespace:NexusIM"
+	xmlns:nxc="clr-namespace:NexusIM.Converters" 
+	x:Name="UserControl"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.SetupAccountItem"	
 	Height="50" d:DesignWidth="400" UseLayoutRounding="True">
 	<UserControl.Resources>
-		<nx:IntToBoolConverter x:Key="IntToBoolConverter"/>
+		<nxc:IntToBoolConverter x:Key="IntToBoolConverter"/>
 		<Storyboard x:Key="EditFadeIn">
 			<DoubleAnimation Storyboard.TargetName="UserControl" Storyboard.TargetProperty="(FrameworkElement.Height)" Duration="0:0:0.2" To="75" />
 			<DoubleAnimation Storyboard.TargetName="UsernameBox" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.05" Duration="0:0:0.2" To="1" />
@@ -38,7 +39,7 @@
 			<DoubleAnimation Storyboard.TargetName="SaveButton" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0" Duration="0:0:0.2" From="1" />
 			<ColorAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Duration="0:0:0.2" From="#AAD8E1FF" />
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BehindGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
-				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="{x:Static Visibility.Collapsed}"/>
 			</ObjectAnimationUsingKeyFrames>
 		</Storyboard>
 	</UserControl.Resources>
@@ -48,19 +49,23 @@
 		</EventTrigger>
 	</UserControl.Triggers>
 	<UserControl.DataContext>
-		<im:IMProtocol Enabled="true" Username="Test Username" Password="Test" />
+		<nx:IMProtocolExtraData Enabled="True">
+			<nx:IMProtocolExtraData.Protocol>
+				<im:IMProtocol Enabled="true" Username="Test Username" Password="Test" />
+			</nx:IMProtocolExtraData.Protocol>
+		</nx:IMProtocolExtraData>		
 	</UserControl.DataContext>
 	<Grid x:Name="LayoutRoot">
 		<Border x:Name="Background" BorderBrush="#FF686868" BorderThickness="1" CornerRadius="5" Background="Transparent" />
 		<Image HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33,0,0,0" Source="/NexusIMWPF;component/Resources/yahoo.png" Stretch="Fill" Width="26" Height="18" />
 		<CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding Enabled, Mode=TwoWay}" />
-		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap" Text="{Binding Username, Mode=OneWay}" />
+		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap" Text="{Binding Protocol.Username, Mode=OneWay}" />
 		<Grid x:Name="BehindGrid" Visibility="Collapsed">
-			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Text="{Binding Username, Mode=OneWay}" Opacity="0" Width="130" />
+			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Text="{Binding Protocol.Username, Mode=OneWay}" Opacity="0" Width="130" />
 			<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,31,0,0" Opacity="0" Width="130" />
 			<CheckBox x:Name="AutoConnectCheckbox" Content="Connect on startup" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,2" Opacity="0" />
 			<Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Opacity="0" Click="CancelButton_Click" />
-			<Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0" Opacity="0" />
+			<Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0" Opacity="0" Click="SaveButton_Click" />
 		</Grid>
 	</Grid>
 </UserControl>

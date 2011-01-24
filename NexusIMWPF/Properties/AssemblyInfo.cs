@@ -8,11 +8,11 @@ using System;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NexusIMWPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("NexusIM")]
+[assembly: AssemblyDescription("Connect to all your favorite IM and social networks all in one place.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adren Software")]
-[assembly: AssemblyProduct("NexusIMWPF")]
+[assembly: AssemblyProduct("NexusIM")]
 [assembly: AssemblyCopyright("Copyright © Adam Jacques 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

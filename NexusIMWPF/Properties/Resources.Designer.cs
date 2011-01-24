@@ -60,16 +60,9 @@ namespace NexusIM.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap app {
+        internal static System.Drawing.Icon app {
             get {
                 object obj = ResourceManager.GetObject("app", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Icon app1 {
-            get {
-                object obj = ResourceManager.GetObject("app1", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -109,29 +102,6 @@ namespace NexusIM.Properties {
             }
         }
         
-        /// <summary>
-        ///   Looks up a localized string similar to The configuration file contains a Xml structure error and cannot be loaded.
-        ///Reason:
-        ///   &quot;{messagedata}&quot;
-        ///	
-        ///Press OK to skip loading and make a backup of the settings.
-        ///Press Cancel to manually edit the file to remove the error..
-        /// </summary>
-        internal static string ConfigFileParseError {
-            get {
-                return ResourceManager.GetString("ConfigFileParseError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to NexusIM Configuration Error.
-        /// </summary>
-        internal static string ConfigFileParseErrorTitle {
-            get {
-                return ResourceManager.GetString("ConfigFileParseErrorTitle", resourceCulture);
-            }
-        }
-        
         internal static System.Drawing.Bitmap emoticon_smile {
             get {
                 object obj = ResourceManager.GetObject("emoticon_smile", resourceCulture);
@@ -141,7 +111,7 @@ namespace NexusIM.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to Are  you sure you want to exit this program?
-        ///You will not be disconnected from all your accounts..
+        ///You will be disconnected from all your accounts..
         /// </summary>
         internal static string ExitProgramMessage {
             get {
@@ -184,16 +154,9 @@ namespace NexusIM.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap Point {
+        internal static System.Drawing.Icon point {
             get {
-                object obj = ResourceManager.GetObject("Point", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Icon point1 {
-            get {
-                object obj = ResourceManager.GetObject("point1", resourceCulture);
+                object obj = ResourceManager.GetObject("point", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

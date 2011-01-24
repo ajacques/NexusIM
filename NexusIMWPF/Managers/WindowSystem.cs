@@ -1,12 +1,15 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
 using System.Windows.Threading;
 using InstantMessage;
 using NexusIM.Windows;
 using NexusIMWPF;
+using Hardcodet.Wpf.TaskbarNotification;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Drawing;
+using System.Reflection;
 
 namespace NexusIM.Managers
 {
@@ -36,12 +39,11 @@ namespace NexusIM.Managers
 			if (SysTrayIcon != null)
 				return;
 
-			SysTrayIcon = new NotifyIcon();
+			SysTrayIcon = new TaskbarIcon();
 
-			Stream s = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources/nexusim.ico")).Stream;
+			Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("NexusIM.Resources.nexusim.ico");
 
-			SysTrayIcon.Icon = new Icon(s);
-			SysTrayIcon.Visible = true;
+			SysTrayIcon.Icon = new Icon(stream);
 		}
 		public static void RegisterApp(App app)
 		{
@@ -61,7 +63,7 @@ namespace NexusIM.Managers
 			get;
 			private set;
 		}
-		public static NotifyIcon SysTrayIcon
+		public static TaskbarIcon SysTrayIcon
 		{
 			get;
 			private set;

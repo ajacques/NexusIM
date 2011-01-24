@@ -327,7 +327,12 @@ namespace InstantMessage
 				return mUsername;
 			}
 			set {
-				mUsername = value;
+				if (mUsername != value)
+				{
+					mUsername = value;
+
+					NotifyPropertyChanged("Username");
+				}
 			}
 		}
 		/// <summary>
@@ -428,6 +433,7 @@ namespace InstantMessage
 		/// <summary>
 		/// True if this account's password will be saved to the user's config file
 		/// </summary>
+		[Obsolete("This library should not be involved in configuration saving", false)]
 		public bool SavePassword
 		{
 			get {

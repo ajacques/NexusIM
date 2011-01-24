@@ -7,6 +7,7 @@ using InstantMessage;
 
 namespace NexusIM
 {
+	internal delegate void GenericEvent();
 	static class TimezoneFuncs
 	{
 		public static string ConvertToLocal(string input)

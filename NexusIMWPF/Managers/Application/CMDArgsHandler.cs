@@ -49,7 +49,7 @@ namespace NexusIM.Managers
 
 			if (mutators.Contains("sendmessage") && keyvalues.ContainsKey("username"))
 			{
-				var buddies = from IMBuddy b in AccountManager.MergeAllBuddyLists()
+				/*var buddies = from IMBuddy b in null
 							  where b.Username == keyvalues["username"]
 							  select new { b };
 
@@ -57,7 +57,7 @@ namespace NexusIM.Managers
 				if (buddies.Count() == 1)
 				{
 					InterfaceManager.OpenBuddyWindow(buddies.First().b, mutators.Contains("jumplist"));
-				}
+				}*/
 			}
 		}
 

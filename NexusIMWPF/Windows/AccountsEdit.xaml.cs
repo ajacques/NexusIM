@@ -24,10 +24,18 @@ namespace NexusIM.Windows
 		public AccountsEdit()
 		{
 			this.InitializeComponent();
-			
-			// Insert code required on object creation below this point.
+		}
+	
+		private void DeselectAllExcept(UIElementCollection source, SetupAccountItem exception)
+		{
+			foreach (SetupAccountItem item in AccountsListBox.Children)
+			{
+				if (item.Selected && item != exception)
+					item.Deselect();
+			}
 		}
 
+		// Event Handlers
 		private void AddAccount_Select(object sender, SelectionChangedEventArgs e)
 		{
 			ComboBox addAccount = sender as ComboBox;
@@ -43,34 +51,32 @@ namespace NexusIM.Windows
 			}
 
 			SetupAccountItem item = new SetupAccountItem();
-			item.DataContext = protocol;
+
+			item.DataContext = new IMProtocolExtraData() { Protocol = protocol, Enabled = true };
 			item.Margin = (Thickness)FindResource("ItemMargin");
 
 			AccountsListBox.Children.Add(item);
 			DeselectAllExcept(AccountsListBox.Children, item);
 			item.Select();
 		}
-
 		private void AcceptButton_Click(object sender, RoutedEventArgs e)
 		{
 			IMSettings.SaveAccounts();
 		}
-
 		private void AccountItem_Click(object sender, MouseButtonEventArgs e)
 		{
 			SetupAccountItem item = sender as SetupAccountItem;
 			item.Select();
 		}
-
-		private void DeselectAllExcept(UIElementCollection source, SetupAccountItem exception)
+		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			foreach (SetupAccountItem item in AccountsListBox.Children)
+			foreach (IMProtocolExtraData protocol in AccountManager.Accounts)
 			{
-				if (item.Selected && item != exception)
-					item.Deselect();
+				SetupAccountItem accItem = new SetupAccountItem();
+				accItem.DataContext = protocol;
+				AccountsListBox.Children.Add(accItem);
 			}
 		}
-
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);
@@ -84,6 +90,6 @@ namespace NexusIM.Windows
 			} else {
 				DeselectAllExcept(AccountsListBox.Children, null);
 			}
-		}
+		}	
 	}
 }
