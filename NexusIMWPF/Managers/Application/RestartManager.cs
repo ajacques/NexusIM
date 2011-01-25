@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Xml;
-using NexusIM.Managers;
+using NexusIM;
 
-namespace InstantMessage
+namespace NexusIM.Managers
 {
 	static class RestartManager
 	{

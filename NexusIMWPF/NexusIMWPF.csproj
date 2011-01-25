@@ -139,6 +139,7 @@
     <Compile Include="Controls\ContactListItem.xaml.cs">
       <DependentUpon>ContactListItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SysTrayContextMenu.cs" />
     <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Controls\SetupAccountItem.xaml.cs">

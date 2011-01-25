@@ -13,6 +13,7 @@ using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
 using System.Diagnostics;
+using System.Threading;
 
 namespace NexusIM.Windows
 {
@@ -61,7 +62,7 @@ namespace NexusIM.Windows
 		}
 		private void AcceptButton_Click(object sender, RoutedEventArgs e)
 		{
-			IMSettings.SaveAccounts();
+			ThreadPool.QueueUserWorkItem(new WaitCallback((obj) => IMSettings.SaveAccounts() ));
 		}
 		private void AccountItem_Click(object sender, MouseButtonEventArgs e)
 		{

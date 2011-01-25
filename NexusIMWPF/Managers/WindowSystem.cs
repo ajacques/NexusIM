@@ -1,15 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Threading;
 using System.Windows.Threading;
-using InstantMessage;
+using Hardcodet.Wpf.TaskbarNotification;
+using NexusIM.Controls;
+using NexusIM.Properties;
 using NexusIM.Windows;
 using NexusIMWPF;
-using Hardcodet.Wpf.TaskbarNotification;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Drawing;
-using System.Reflection;
 
 namespace NexusIM.Managers
 {
@@ -19,17 +14,23 @@ namespace NexusIM.Managers
 		{
 			if (ContactListWindow == null)
 			{
-				Application.Dispatcher.BeginInvoke(new GenericEvent(() => {
+				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
 					ContactListWindow listWindow = new ContactListWindow();
 					listWindow.Show();
 					ContactListWindow = listWindow;
-				}), DispatcherPriority.Normal);				
+				}), DispatcherPriority.Normal);
+			} else {
+				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
+					ContactListWindow.Activate();
+				}), DispatcherPriority.Normal);
 			}
 		}
 		public static void OpenDummyWindow()
 		{
 			if (DummyWindow != null)
-				throw new InvalidOperationException();
+				throw new InvalidOperationException("Cannot open another dummy window");
 
 			DummyWindow = new DummyWindow();
 			//Application.Dispatcher.BeginInvoke(new ThreadStart(() => DummyWindow.Show() ), DispatcherPriority.Background);
@@ -40,10 +41,8 @@ namespace NexusIM.Managers
 				return;
 
 			SysTrayIcon = new TaskbarIcon();
-
-			Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("NexusIM.Resources.nexusim.ico");
-
-			SysTrayIcon.Icon = new Icon(stream);
+			SysTrayIcon.Icon = Resources.app;
+			SysTrayIcon.ContextMenu = new SysTrayContextMenu();
 		}
 		public static void RegisterApp(App app)
 		{

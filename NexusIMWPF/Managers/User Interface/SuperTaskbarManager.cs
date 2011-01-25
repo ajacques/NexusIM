@@ -82,7 +82,7 @@ namespace NexusIM.Managers
 			statusIcons = new Dictionary<IMBuddyStatus, IconReference>();
 			pointIcon = new IconReference(icondll, -107);
 
-			AccountManager.onStatusChange += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
+			AccountManager.StatusChanged += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
 			thisExe = Assembly.GetExecutingAssembly();
 			
 			//frequentUsers.JumpListItems.CollectionChanged += new NotifyCollectionChangedEventHandler(JumpList_removeItem);
@@ -126,7 +126,7 @@ namespace NexusIM.Managers
 				return;
 
 			Trace.WriteLine("Unloading SuperTaskbarManager data.");
-			AccountManager.onStatusChange -= new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
+			AccountManager.StatusChanged -= new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
 			InterfaceManager.onWindowOpen -= new EventHandler(IMBuddy_windowOpen);
 
 			// Change all the frequent user icons to say they are offline. Change this to an unknown icon?

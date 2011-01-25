@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace InstantMessage
+namespace NexusIM
 {
-	static class Win32
+	internal static class Win32
 	{
 		/// <summary>
 		/// Flashes the window taskbar button to get the user's attention
@@ -94,7 +94,7 @@ namespace InstantMessage
 		}
 		public static bool IsWin7AndUp()
 		{
-			return ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major > 6);
+			return ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 7);
 		}
 	}
 }

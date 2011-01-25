@@ -63,7 +63,6 @@ namespace NexusIMWPF
 				// Attempt to load the configuration file
 				IMSettings.Load();
 
-				AccountManager.Start();
 				WindowSystem.OpenDummyWindow();
 				if (FirstRunSetup.IsFirstRun)
 				{
