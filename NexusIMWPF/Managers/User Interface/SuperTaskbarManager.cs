@@ -225,18 +225,17 @@ namespace NexusIM.Managers
 					foreach (int index in e.OldItems)
 					{
 						
-						List<string> users = IMSettings.SettingInterface.GetSettingList("taskbarusers");
+						List<string> users = null; //IMSettings.SettingInterface.GetSettingList("taskbarusers");
 						if (users == null)
 						{
 							users = new List<string>();
-							IMSettings.SettingInterface.SetSettingList("taskbarusers", users);
+							//IMSettings.SetSettingList("taskbarusers", users);
 						}
 						try	{
 							//IJumpListItem item = frequentUsers.JumpListItems.ElementAt(index);
 							//users.Remove(users.Single(pt => pt.Contains("username:" + usersSort[index].mBuddy.Username)));
 						} catch (Exception) {}
-						if (IMSettings.SettingInterface.AutoSave)
-							IMSettings.SettingInterface.Save();
+						IMSettings.Save();
 						usersSort.RemoveAt(index);
 					}
 				}
@@ -336,15 +335,15 @@ namespace NexusIM.Managers
 					frequentUsers.AddJumpListItems(item);
 					appJList.Refresh();
 
-					List<string> users = IMSettings.SettingInterface.GetSettingList("taskbarusers");
+					List<string> users = null; //IMSettings.SettingInterface.GetSettingList("taskbarusers");
 					if (users == null)
 					{
 						users = new List<string>();
-						IMSettings.SettingInterface.SetSettingList("taskbarusers", users);
+						//IMSettings.SettingInterface.SetSettingList("taskbarusers", users);
 					}
 					users.Add("username:" + buddy.Username + ";protocol:" + buddy.Protocol.ShortProtocol + ";account:" + buddy.Protocol.Username + ";temp:" + buddy.DisplayName + ";count:1");
-					if (IMSettings.SettingInterface.AutoSave)
-						IMSettings.SettingInterface.Save();
+					//if (IMSettings.SettingInterface.AutoSave)
+						//IMSettings.SettingInterface.Save();
 				} else {
 					usersSort.Add(new userJListData(buddy));
 				}
@@ -370,7 +369,7 @@ namespace NexusIM.Managers
 
 		private static void loadFrequentUsers()
 		{
-			List<string> users = IMSettings.SettingInterface.GetSettingList("taskbarusers");
+			List<string> users = null; //IMSettings.SettingInterface.GetSettingList("taskbarusers");
 
 			if (users == null)
 				return;
@@ -404,7 +403,7 @@ namespace NexusIM.Managers
 				templist.Add(genstring);
 			});
 
-			IMSettings.SettingInterface.SetSettingList("taskbarusers", templist);
+			//IMSettings.SettingInterface.SetSettingList("taskbarusers", templist);
 		}
 
 		private static bool mAttemptedSetup = false;

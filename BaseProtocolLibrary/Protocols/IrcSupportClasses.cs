@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InstantMessage.Protocols.Irc;
 
-namespace InstantMessage.Protocols.Irc
+namespace InstantMessage.Events
 {
 	public class IRCModeChangeEventArgs : EventArgs
 	{
@@ -30,7 +31,9 @@ namespace InstantMessage.Protocols.Irc
 			internal set;
 		}
 	}
-
+}
+namespace InstantMessage.Protocols.Irc
+{
 	public class IRCUserMask : IContact
 	{
 		public IRCUserMask(IRCProtocol protocol)

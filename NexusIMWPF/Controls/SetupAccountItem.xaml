@@ -8,6 +8,7 @@
 	xmlns:nxc="clr-namespace:NexusIM.Converters" 
 	x:Name="UserControl"
 	mc:Ignorable="d"
+	x:FieldModifier="private"
 	x:Class="NexusIM.Controls.SetupAccountItem"	
 	Height="50" d:DesignWidth="400" UseLayoutRounding="True">
 	<UserControl.Resources>
@@ -64,8 +65,8 @@
 			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Text="{Binding Protocol.Username, Mode=OneWay}" Opacity="0" Width="130" />
 			<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,31,0,0" Opacity="0" Width="130" />
 			<CheckBox x:Name="AutoConnectCheckbox" Content="Connect on startup" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,2" Opacity="0" />
-			<Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Opacity="0" Click="CancelButton_Click" />
 			<Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0" Opacity="0" Click="SaveButton_Click" />
+			<Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Opacity="0" Click="CancelButton_Click" />
 		</Grid>
 	</Grid>
 </UserControl>

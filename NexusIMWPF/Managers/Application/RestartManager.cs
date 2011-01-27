@@ -13,7 +13,7 @@ namespace NexusIM.Managers
 		{
 			if (!Win32.IsWinVistaAndUp()) // Vista and up
 				return;
-			
+
 			ApplicationRecovery.OnApplicationCrash += new ApplicationRecovery.ApplicationCrashHandler(BeginRestart);
 			ApplicationRecovery.RegisterForRestart();
 		}

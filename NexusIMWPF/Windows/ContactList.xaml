@@ -1,30 +1,40 @@
-﻿<Window x:Class="NexusIM.Windows.ContactListWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:nx="clr-namespace:NexusIM.Controls"
-    Title="NexusIM - Contact List" Height="400" Width="225" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right"
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:nxc="clr-namespace:NexusIM.Controls"
+	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
+	x:Class="NexusIM.Windows.ContactListWindow"
+	Title="NexusIM - Contact List" Height="400" Width="225" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right"
 	Icon="/NexusIMWPF;component/Resources/nexusim.ico">
-    <Grid>
-        <ListView Margin="0,28,0,35" Name="listView1" />
-        <Menu VerticalAlignment="Top">
+	<Grid>
+		<ScrollViewer Margin="0,22,0,35" VerticalScrollBarVisibility="Auto">
+			<StackPanel x:Name="ContactListControl">
+				<nxc:ContactListItem MouseDoubleClick="ContactListItem_MouseDoubleClick">
+					<nxc:ContactListItem.DataContext>
+						<im:IMBuddy Status="Available" Username="Penguin" StatusMessage="YEAH	" />
+					</nxc:ContactListItem.DataContext>
+				</nxc:ContactListItem>
+			</StackPanel>
+		</ScrollViewer>
+		<Menu VerticalAlignment="Top">
 			<MenuItem Header="View">
-				<MenuItem Header="Compact View" IsCheckable="True" />
 				<MenuItem Header="Always Ontop" IsCheckable="True" />
 			</MenuItem>
-            <MenuItem Header="Accounts">
-                <MenuItem Header="Edit Accounts" Click="EditAccounts_Click" />
-                <MenuItem Header="Add Buddy" IsEnabled="False" />
-                <MenuItem Header="New Contact Group" IsEnabled="False" />
-            </MenuItem>
-            <MenuItem Header="Tools">
-                <MenuItem Header="Options" />
-            </MenuItem>
-        </Menu>
+			<MenuItem Header="Accounts">
+				<MenuItem Header="Edit Accounts" Click="EditAccounts_Click" />
+				<MenuItem Header="New Contact Group" IsEnabled="False" />
+			</MenuItem>
+			<MenuItem Header="Contacts">
+				<MenuItem Header="Add Contact" />
+				<MenuItem Header="Manage Groups" />
+				<MenuItem Header="Compact View" IsCheckable="True" />
+			</MenuItem>
+		</Menu>
 		<ComboBox Height="23" Margin="12,0,12,6" VerticalAlignment="Bottom" Grid.Row="1">
-			<ComboBoxItem Name="Available" Content="Available" />
-			<ComboBoxItem Name="Away" Content="Away" />
-			<ComboBoxItem Name="Invisible" Content="Invisible" />
-			<ComboBoxItem Name="Sign_Out" Content="Sign Out" />
+			<ComboBoxItem x:Name="Available" Content="Available" />
+			<ComboBoxItem x:Name="Away" Content="Away" />
+			<ComboBoxItem x:Name="Invisible" Content="Invisible" />
+			<ComboBoxItem x:Name="Sign_Out" Content="Sign Out" />
 		</ComboBox>
 	</Grid>
 </Window>

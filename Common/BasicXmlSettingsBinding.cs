@@ -9,6 +9,33 @@ using System.Security.Cryptography;
 
 namespace InstantMessage
 {
+	[Serializable]
+	public partial class HashMismatchException : Exception
+	{
+		public HashMismatchException() {}
+		public HashMismatchException(string data) : base(data) {}
+		public HashMismatchException(string message, Exception innerException) : base (message, innerException) {}
+		public HashMismatchException(string data, string hash)
+		{
+			mData = data;
+			mHash = hash;
+		}
+		
+		public string Contents
+		{
+			get {
+				return mData;
+			}
+		}
+		public string Hash
+		{
+			get {
+				return mHash;
+			}
+		}
+		private string mData = "";
+		private string mHash = "";
+	}
 	internal class SettingDataStruct
 	{
 		public SettingDataStruct() {}
@@ -27,7 +54,7 @@ namespace InstantMessage
 		public bool isBad = false; // Is this bad data?
 	}
 	// This is the new style for settings.. provides abstraction
-	public class BasicXmlSettingsBinding : ISettings
+	/*public class BasicXmlSettingsBinding : ISettings
 	{
 		public BasicXmlSettingsBinding(string mXmlSavePath)
 		{
@@ -274,7 +301,7 @@ namespace InstantMessage
 					else {
 						string buddyname = s.GetAttribute("username") + "-" + s.GetAttribute("account") + "-" + s.GetAttribute("protocol");
 						contactBackupSettings.Add(buddyname, cdict);
-					}*/
+					}
 				}
 			}
 		}
@@ -470,7 +497,7 @@ namespace InstantMessage
 
 				if (mAutoSave)
 					Save();
-			}*/
+			}
 		}
 		public void SetCustomSetting(string setting, string value)
 		{
@@ -520,7 +547,7 @@ namespace InstantMessage
 			if (buddy.Count() >= 1)
 			{
 				contactSettings[buddy.First().b].Remove(setting);
-			}*/
+			}
 		}
 		public void DeleteCustomSetting(string setting)
 		{
@@ -579,7 +606,7 @@ namespace InstantMessage
 			if (buddy.Count() >= 1 && contactSettings[buddy.First().b].ContainsKey(setting))
 				return contactSettings[buddy.First().b][setting];
 			else
-				return defaultValue;*/
+				return defaultValue;
 		}
 		public string GetContactSetting(IMBuddy buddy, string setting, string defaultValue)
 		{
@@ -630,5 +657,5 @@ namespace InstantMessage
 		private string xmlpath = "";
 		private bool mAutoSave = true;
 		private bool mLoaded;
-	}
+	}*/
 }

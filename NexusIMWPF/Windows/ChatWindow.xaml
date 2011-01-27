@@ -1,0 +1,50 @@
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
+	xmlns:nxc="clr-namespace:NexusIM.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="NexusIM.Windows.ChatWindow"
+	x:Name="Window" x:FieldModifier="internal" UseLayoutRounding="True"
+	Title="{Binding Username}"
+	Width="450" Height="300">
+	<Window.Resources>
+		<Color x:Key="AvailableColor">#00C1FF99</Color>
+		<Color x:Key="BusyColor">#FFFFC9C9</Color>
+		<Color x:Key="AwayColor">#FFFFED99</Color>
+		<Color x:Key="OfflineColor">#FFDEDEDE</Color>
+	</Window.Resources>
+	<Window.DataContext>
+		<im:IMBuddy Username="Penguin" />
+	</Window.DataContext>
+	<Grid x:Name="LayoutRoot">
+		<Grid.Background>
+			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+				<GradientStop Color="{DynamicResource AvailableColor}" Offset="0"/>
+				<GradientStop Color="#FFFFFFFF" Offset="0.5"/>
+				<GradientStop Color="{DynamicResource AvailableColor}" Offset="1"/>
+			</LinearGradientBrush>
+		</Grid.Background>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="50px"/>
+		</Grid.RowDefinitions>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="75"/>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Source="yahoo.png" Grid.Column="0" />
+			<RichTextBox Grid.Column="1" IsReadOnly="True" VerticalAlignment="Bottom" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+				<FlowDocument>
+					<Paragraph>
+						<nxc:ChatMessageInline Username="Username" />
+					</Paragraph>
+				</FlowDocument>				
+			</RichTextBox>
+		</Grid>
+		<Grid Grid.Row="2">
+			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown" />
+		</Grid>
+	</Grid>
+</Window>

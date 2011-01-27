@@ -39,6 +39,7 @@ namespace NexusIMWPF
 			Trace.WriteLine("Operating System: " + Environment.OSVersion.ToString());
 			Trace.WriteLine("Working Directory: " + Environment.CurrentDirectory);
 			Trace.WriteLine("CLR Version: " + Environment.Version.ToString());
+			Trace.WriteLine("OS Is64Bit: " + Environment.Is64BitOperatingSystem + " (Current Process Is64Bit: " + Environment.Is64BitProcess);
 
 			// Single instance Lock
 			Mutex mlock = new Mutex(true, "Local\\NexusIM");
@@ -49,13 +50,11 @@ namespace NexusIMWPF
 				InterfaceManager.Setup();
 				IPCHandler.Setup();
 
-				//string configdir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NexusIM");
-				//string configuri = Path.Combine(configdir, "config.xml");
-				string configuri = "..\\..\\UserData.sdf";
+				string configuri = Path.Combine(Environment.CurrentDirectory, "UserData.sdf");
 
 				Trace.WriteLine("Configuration File: " + configuri);
 
-				IMSettings.SettingInterface = new SQLCESettings("Data Source=\"|DataDirectory|\\UserProfile.sdf\";Persist Security Info=False;");
+				IMSettings.Setup(new SQLCESettings("Data Source=\"|DataDirectory|\\UserProfile.sdf\";Persist Security Info=False;"));
 
 				AccountManager.Setup();
 				ErrorManager.Setup();
@@ -94,15 +93,21 @@ namespace NexusIMWPF
 		[Conditional("DEBUG")]
 		private static void SetupTraceListeners()
 		{
-			try
-			{ // Try to create a connection to my hamachi computer logging program
-				TcpClient client = new TcpClient();
-				client.Connect(Settings.Default.LogServer, 6536);
-				Trace.Listeners.Add(new TextWriterTraceListener(client.GetStream(), "Network Logger"));
-			} catch (SocketException) { }
-
+			try	{ // Try to create a connection to my hamachi computer logging program
+				Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
+			} catch (SocketException) {
+				try	{
+					Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
+				} catch (SocketException) { }
+			}
+			
 			Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate, FileAccess.Write);
 			Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
+		}
+
+		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+		{
+			Debug.WriteLine(e.Exception.ToString());
 		}
 	}
 }

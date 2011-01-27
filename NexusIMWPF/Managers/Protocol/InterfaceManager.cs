@@ -59,7 +59,7 @@ namespace NexusIM.Managers
 					{
 						ContactListItem item = new ContactListItem();
 						item.DataContext = contact;
-						WindowSystem.ContactListWindow.ContactList.Items.Add(item);
+						WindowSystem.ContactListWindow.ContactList.Add(item);
 					}), DispatcherPriority.Input);
 			}
 		}

@@ -77,8 +77,8 @@ namespace NexusIM.Managers
 
 			mClient.BeginGetAccounts(new AsyncCallback(CoreService_OnGetAccounts), null);
 
-			IMSettings.SetCustomSetting("nxcoreusername", mUsername);
-			IMSettings.SetCustomSetting("nxcorepassword", mPassword);
+			IMSettings.Settings.Add("nxcoreusername", mUsername);
+			IMSettings.Settings.Add("nxcorepassword", mPassword);
 
 			mPassword = null;
 		}

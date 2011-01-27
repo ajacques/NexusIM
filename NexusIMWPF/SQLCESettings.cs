@@ -7,10 +7,11 @@ using System.Data;
 using System.Data.SqlClient;
 using NexusIM.Managers;
 using System.ComponentModel;
+using System.Data.Linq;
 
 namespace NexusIM
 {
-	class SQLCESettings : ISettings
+	public class SQLCESettings : ISettings
 	{
 		public SQLCESettings(string connectionString)
 		{
@@ -34,9 +35,6 @@ namespace NexusIM
 				extraData.Enabled = account.Enabled;
 				AccountManager.AddNewAccount(extraData);
 			}
-			IsLoaded = true;
-			if (onFileLoad != null)
-				onFileLoad(this, null);
 		}
 		public void Save()
 		{
@@ -122,86 +120,416 @@ namespace NexusIM
 
 			mDb.SubmitChanges();
 		}
-		public bool AutoSave
+
+		// Nested Classes
+		private class SqlDictionary : IDictionary<string, string>
+		{
+			public SqlDictionary(string connectionString)
+			{
+				mConnectionString = connectionString;
+			}
+
+			#region IDictionary<string,string> Members
+
+			public void Add(string key, string value)
+			{
+				UserProfile db = UserProfile.Create(mConnectionString);
+				Setting setting = new Setting();
+				setting.Key = key;
+				setting.Value = value;
+
+				db.Settings.InsertOnSubmit(setting);
+				db.SubmitChanges();
+				db.Dispose();
+			}
+			public bool ContainsKey(string key)
+			{
+				UserProfile db = UserProfile.Create(mConnectionString);
+
+				return db.Settings.Any(s => s.Key == key);
+			}
+			public ICollection<string> Keys
+			{
+				get {
+					UserProfile db = UserProfile.Create(mConnectionString);
+
+					return db.Settings.Select(s => s.Key).ToList();
+				}
+			}
+			public bool Remove(string key)
+			{
+				UserProfile db = UserProfile.Create(mConnectionString);
+				Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
+
+				if (setting == null)
+					return false;
+
+				db.Settings.DeleteOnSubmit(setting);
+				db.SubmitChanges();
+
+				return true;
+			}
+			public bool TryGetValue(string key, out string value)
+			{
+				UserProfile db = UserProfile.Create(mConnectionString);
+				Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
+
+				value = null;
+				if (setting == null)
+					return false;
+
+				value = setting.Value;
+				return true;
+			}
+			public ICollection<string> Values
+			{
+				get {
+					UserProfile db = UserProfile.Create(mConnectionString);
+
+					return db.Settings.Select(s => s.Value).ToList();
+				}
+			}
+			public string this[string key]
+			{
+				get	{
+					UserProfile db = UserProfile.Create(mConnectionString);
+
+					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
+
+					if (setting == null)
+						return null;
+
+					return setting.Value;
+				}
+				set	{
+					UserProfile db = UserProfile.Create(mConnectionString);
+
+					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
+
+					if (setting == null)
+						Add(key, value);
+					else {
+						setting.Value = value;
+						db.SubmitChanges();
+					}
+				}
+			}
+
+			#endregion
+
+			#region ICollection<KeyValuePair<string,string>> Members
+
+			public void Add(KeyValuePair<string, string> item)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void Clear()
+			{
+				throw new NotImplementedException();
+			}
+
+			public bool Contains(KeyValuePair<string, string> item)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int Count
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public bool IsReadOnly
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public bool Remove(KeyValuePair<string, string> item)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+
+			#region IEnumerable<KeyValuePair<string,string>> Members
+
+			public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+
+			#region IEnumerable Members
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+
+			private string mConnectionString;
+		}
+		private class SqlProtocolDictionary : IDictionary<IMProtocol, IDictionary<string, string>>
+		{
+			public SqlProtocolDictionary(string connectionString)
+			{
+				mConnectionString = connectionString;
+			}
+
+			// Nested Classes
+			private class SqlAccountSettingDictionary : IDictionary<string, string>
+			{
+				public SqlAccountSettingDictionary(DataContext context, EntitySet<AccountSetting> source)
+				{
+					mSource = source;
+					mContext = context;
+				}
+
+				#region IDictionary<string,string> Members
+
+				public void Add(string key, string value)
+				{
+					AccountSetting setting = new AccountSetting();
+					setting.Key = key;
+					setting.Value = value;
+
+					mSource.Add(setting);
+					mContext.SubmitChanges();
+				}
+				public bool ContainsKey(string key)
+				{
+					return mSource.Any(ps => ps.Key == key);
+				}
+				public ICollection<string> Keys
+				{
+					get {
+						return mSource.Select(ps => ps.Key).ToList();
+					}
+				}
+				public bool Remove(string key)
+				{
+					throw new NotImplementedException();
+				}
+				public bool TryGetValue(string key, out string value)
+				{
+					throw new NotImplementedException();
+				}
+				public ICollection<string> Values
+				{
+					get { throw new NotImplementedException(); }
+				}
+				public string this[string key]
+				{
+					get	{
+						AccountSetting setting = mSource.FirstOrDefault(ps => ps.Key == key);
+						if (setting == null)
+							return null;
+
+						return setting.Value;
+					}
+					set	{
+						AccountSetting setting = mSource.FirstOrDefault(ps => ps.Key == key);
+
+						if (setting == null)
+						{
+							setting = new AccountSetting();
+							setting.Key = key;
+							mSource.Add(setting);
+						}
+
+						setting.Value = value;
+						mContext.SubmitChanges();
+					}
+				}
+
+				#endregion
+
+				#region ICollection<KeyValuePair<string,string>> Members
+
+				public void Add(KeyValuePair<string, string> item)
+				{
+					throw new NotImplementedException();
+				}
+
+				public void Clear()
+				{
+					throw new NotImplementedException();
+				}
+
+				public bool Contains(KeyValuePair<string, string> item)
+				{
+					throw new NotImplementedException();
+				}
+
+				public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+				{
+					throw new NotImplementedException();
+				}
+
+				public int Count
+				{
+					get { throw new NotImplementedException(); }
+				}
+
+				public bool IsReadOnly
+				{
+					get { throw new NotImplementedException(); }
+				}
+
+				public bool Remove(KeyValuePair<string, string> item)
+				{
+					throw new NotImplementedException();
+				}
+
+				#endregion
+
+				#region IEnumerable<KeyValuePair<string,string>> Members
+
+				public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+				{
+					throw new NotImplementedException();
+				}
+
+				#endregion
+
+				#region IEnumerable Members
+
+				System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+				{
+					throw new NotImplementedException();
+				}
+
+				#endregion
+
+				private DataContext mContext;
+				private EntitySet<AccountSetting> mSource;
+			}
+
+			#region IDictionary<IMProtocol,IDictionary<string,string>> Members
+
+			public void Add(IMProtocol key, IDictionary<string, string> value)
+			{
+				throw new NotImplementedException();
+			}
+			public bool ContainsKey(IMProtocol key)
+			{
+				throw new NotImplementedException();
+			}
+			public ICollection<IMProtocol> Keys
+			{
+				get { throw new NotImplementedException(); }
+			}
+			public bool Remove(IMProtocol key)
+			{
+				throw new NotImplementedException();
+			}
+			public bool TryGetValue(IMProtocol key, out IDictionary<string, string> value)
+			{
+				throw new NotImplementedException();
+			}
+			public ICollection<IDictionary<string, string>> Values
+			{
+				get { throw new NotImplementedException(); }
+			}
+			public IDictionary<string, string> this[IMProtocol key]
+			{
+				get	{
+					UserProfile db = UserProfile.Create(mConnectionString);
+					Account setting = db.Accounts.FirstOrDefault(ps => ps.Username == key.Username && ps.AccountType == key.ShortProtocol);
+
+					if (setting == null)
+						return null;
+					
+					return new SqlAccountSettingDictionary(db, setting.AccountSettings);
+				}
+				set	{
+					throw new NotSupportedException();
+				}
+			}
+
+			#endregion
+
+			#region ICollection<KeyValuePair<IMProtocol,IDictionary<string,string>>> Members
+
+			public void Add(KeyValuePair<IMProtocol, IDictionary<string, string>> item)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void Clear()
+			{
+				throw new NotImplementedException();
+			}
+
+			public bool Contains(KeyValuePair<IMProtocol, IDictionary<string, string>> item)
+			{
+				throw new NotImplementedException();
+			}
+
+			public void CopyTo(KeyValuePair<IMProtocol, IDictionary<string, string>>[] array, int arrayIndex)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int Count
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public bool IsReadOnly
+			{
+				get { throw new NotImplementedException(); }
+			}
+
+			public bool Remove(KeyValuePair<IMProtocol, IDictionary<string, string>> item)
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+
+			#region IEnumerable<KeyValuePair<IMProtocol,IDictionary<string,string>>> Members
+
+			public IEnumerator<KeyValuePair<IMProtocol, IDictionary<string, string>>> GetEnumerator()
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+
+			#region IEnumerable Members
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				throw new NotImplementedException();
+			}
+
+			#endregion
+
+			private string mConnectionString;
+		}
+
+		public IDictionary<string, string> Settings
 		{
 			get	{
-				throw new NotImplementedException();
-			}
-			set	{
-				throw new NotImplementedException();
+				return new SqlDictionary(mConnectionString);
 			}
 		}
-		public bool IsLoaded
+		public IDictionary<IMProtocol, IDictionary<string, string>> ProtocolSettings
 		{
-			get;
-			private set;
-		}
-
-		public Dictionary<IMBuddy, Dictionary<string, string>> ContactSettings
-		{
-			get { throw new NotImplementedException(); }
-		}
-		public void SetContactSetting(IMBuddy buddy, string setting, string value)
-		{
-			throw new NotImplementedException();
-		}
-		public void SetContactSetting(string username, IMProtocol protocol, string setting, string value)
-		{
-			throw new NotImplementedException();
-		}
-		public void SetCustomSetting(string setting, string value)
-		{
-			UserProfile profile = UserProfile.Create(mConnectionString);
-			Setting config = profile.Settings.FirstOrDefault(s => s.Key == setting);
-			if (config == null)
-			{
-				config = new Setting();
-				config.Key = setting;
-				profile.Settings.InsertOnSubmit(config);
+			get	{
+				return new SqlProtocolDictionary(mConnectionString);
 			}
-
-			config.Value = value;
-			profile.SubmitChanges();
 		}
-		public void SetSettingList(string name, List<string> list)
-		{
-			throw new NotImplementedException();
-		}
-		public void DeleteContactSetting(IMBuddy buddy, string setting)
-		{
-			throw new NotImplementedException();
-		}
-		public void DeleteContactSetting(string username, IMProtocol protocol, string setting)
-		{
-			throw new NotImplementedException();
-		}
-		public void DeleteCustomSetting(string setting)
-		{
-			throw new NotImplementedException();
-		}
-		public void DeleteSettingList(string list)
-		{
-			throw new NotImplementedException();
-		}
-		public string GetContactSetting(string userName, IMProtocol protocol, string setting, string defaultValue)
-		{
-			throw new NotImplementedException();
-		}
-		public string GetContactSetting(IMBuddy buddy, string setting, string defaultValue)
-		{
-			throw new NotImplementedException();
-		}
-		public string GetCustomSetting(string setting, string defaultValue)
-		{
-			throw new NotImplementedException();
-		}
-		public List<string> GetSettingList(string list)
-		{
-			throw new NotImplementedException();
-		}
-
-		public event EventHandler onFileLoad;
-
+		
+		// Variables
 		private string mConnectionString;
 	}
 }

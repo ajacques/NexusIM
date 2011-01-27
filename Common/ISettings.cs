@@ -37,34 +37,13 @@ namespace InstantMessage
 		void Load();
 		void Save();
 
-		bool AutoSave
-		{
-			get;
-			set;
-		}
-		bool IsLoaded
+		IDictionary<string, string> Settings
 		{
 			get;
 		}
-		Dictionary<IMBuddy, Dictionary<string, string>> ContactSettings
+		IDictionary<IMProtocol, IDictionary<string, string>> ProtocolSettings
 		{
 			get;
 		}
-		event EventHandler onFileLoad;
-
-		void SetContactSetting(IMBuddy buddy, string setting, string value);
-		void SetContactSetting(string username, IMProtocol protocol, string setting, string value);
-		void SetCustomSetting(string setting, string value);
-		void SetSettingList(string name, List<string> list);
-
-		void DeleteContactSetting(IMBuddy buddy, string setting);
-		void DeleteContactSetting(string username,IMProtocol protocol, string setting);
-		void DeleteCustomSetting(string setting);
-		void DeleteSettingList(string list);
-
-		string GetContactSetting(string userName, IMProtocol protocol, string setting, string defaultValue);
-		string GetContactSetting(IMBuddy buddy, string setting, string defaultValue);
-		string GetCustomSetting(string setting, string defaultValue);
-		List<string> GetSettingList(string list);
 	}
 }

@@ -338,6 +338,9 @@ namespace InstantMessage.Protocols.Irc
 						case "MODE":
 							HandleModeChangePacket(line, parameters);
 							break;
+						case "NOTICE":
+							HandleNotice(line.Substring(line.IndexOf(':', 1) + 1));
+							break;
 					}
 				}
 			} else {
@@ -346,6 +349,15 @@ namespace InstantMessage.Protocols.Irc
 					string destination = line.Substring(line.IndexOf(":") + 1);
 					HandlePingPacket(destination);
 				}
+			}
+		}
+		private void HandleNotice(string message)
+		{
+			try	{
+				if (OnNoticeReceive != null)
+					OnNoticeReceive(this, new IMChatRoomGenericEventArgs() { Message = message });
+			} catch (Exception e) {
+
 			}
 		}
 		private void HandleJoinFailedPacket(IRCJoinFailedReason reason, string[] line, string message)
@@ -572,6 +584,7 @@ namespace InstantMessage.Protocols.Irc
 		// Events
 		public event EventHandler OnForceJoinChannel;
 		public event EventHandler<ChatRoomJoinFailedEventArgs> OnChannelJoinFailed;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 
 		// Variables
 		private HostMaskFindResult mPendingHostLookup;

@@ -29,7 +29,7 @@ namespace NexusIM.Windows
 	
 		private void DeselectAllExcept(UIElementCollection source, SetupAccountItem exception)
 		{
-			foreach (SetupAccountItem item in AccountsListBox.Children)
+			foreach (SetupAccountItem item in source)
 			{
 				if (item.Selected && item != exception)
 					item.Deselect();
@@ -62,7 +62,7 @@ namespace NexusIM.Windows
 		}
 		private void AcceptButton_Click(object sender, RoutedEventArgs e)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback((obj) => IMSettings.SaveAccounts() ));
+			ThreadPool.QueueUserWorkItem(new WaitCallback((obj) => IMSettings.Save() ));
 		}
 		private void AccountItem_Click(object sender, MouseButtonEventArgs e)
 		{
@@ -87,7 +87,6 @@ namespace NexusIM.Windows
 				SetupAccountItem acc = e.Source as SetupAccountItem;
 				acc.Select();
 				DeselectAllExcept(AccountsListBox.Children, acc);
-
 			} else {
 				DeselectAllExcept(AccountsListBox.Children, null);
 			}

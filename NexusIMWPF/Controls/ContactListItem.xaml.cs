@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Controls
 {
@@ -21,6 +12,27 @@ namespace NexusIM.Controls
 		public ContactListItem()
 		{
 			this.InitializeComponent();
+		}
+
+		public void Select()
+		{
+			Storyboard AnimFade = FindResource("SelectAnimation") as Storyboard;
+
+			AnimFade.Begin();
+			Selected = true;
+		}
+		public void Deselect()
+		{
+			Storyboard AnimFade = FindResource("DeselectAnimation") as Storyboard;
+
+			AnimFade.Begin();
+			Selected = false;
+		}
+
+		public bool Selected
+		{
+			get;
+			private set;
 		}
 	}
 }

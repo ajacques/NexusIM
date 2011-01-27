@@ -5,6 +5,7 @@ using NexusIM.Controls;
 using NexusIM.Properties;
 using NexusIM.Windows;
 using NexusIMWPF;
+using InstantMessage;
 
 namespace NexusIM.Managers
 {
@@ -34,6 +35,15 @@ namespace NexusIM.Managers
 
 			DummyWindow = new DummyWindow();
 			//Application.Dispatcher.BeginInvoke(new ThreadStart(() => DummyWindow.Show() ), DispatcherPriority.Background);
+		}
+		public static void OpenContactWindow(IContact contact)
+		{
+			Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
+					ChatWindow window = new ChatWindow();
+					window.DataContext = contact;
+					window.Show();
+				}));
 		}
 		public static void ShowSysTrayIcon()
 		{

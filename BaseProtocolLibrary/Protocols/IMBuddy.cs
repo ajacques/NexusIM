@@ -210,8 +210,13 @@ namespace InstantMessage
 				return mStatusMessage;
 			}
 			set {
-				mStatusMessage = value;
-				mStatusChange = DateTime.Now;
+				if (mStatusMessage != value)
+				{
+					mStatusMessage = value;
+					mStatusChange = DateTime.Now;
+
+					NotifyPropertyChanged("StatusMessage");
+				}				
 			}
 		}
 		/// <summary>
@@ -250,6 +255,7 @@ namespace InstantMessage
 				mStatus = value;
 				if (mProtocol.ProtocolStatus == IMProtocolStatus.Online)
 					mStatusChange = DateTime.Now;
+				NotifyPropertyChanged("Status");
 
 				if (onGlobalBuddyStatusChange != null)
 					onGlobalBuddyStatusChange(this, null);

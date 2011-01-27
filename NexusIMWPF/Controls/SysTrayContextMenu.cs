@@ -15,6 +15,7 @@ namespace NexusIM.Controls
 			SetupMenuItems();
 
 			AccountManager.StatusChanged += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
+			AccountManager_onStatusChange(null, null);
 		}		
 
 		private void SetupMenuItems()
@@ -47,7 +48,7 @@ namespace NexusIM.Controls
 			AvailabilityGroupItem.Items.Add(BusyStatusItem);
 
 			InvisibleStatusItem = new MenuItem();
-			BusyStatusItem.Header = "Invisible";
+			InvisibleStatusItem.Header = "Invisible";
 			AvailabilityGroupItem.Items.Add(InvisibleStatusItem);
 
 			AvailabilityGroupItem.Items.Add(new Separator());
@@ -115,6 +116,9 @@ namespace NexusIM.Controls
 			{
 				AvailabilityGroupItem.IsEnabled = false;
 				SignOutItem.Header = "Sign In";
+			} else {
+				AvailabilityGroupItem.IsEnabled = true;
+				SignOutItem.Header = string.Format("Sign Out ({0} accounts)", onlineCount);
 			}
 		}
 	}

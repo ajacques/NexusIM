@@ -59,7 +59,8 @@ namespace NexusIM.Managers
 		public static bool IsIdle
 		{
 			get {
-				return UserIdleTime() / 1000 > (Convert.ToInt32(IMSettings.GetCustomSetting("timetoidle", "5")) * 60);
+				int time = Convert.ToInt32(IMSettings.Settings["timetoidle"]);
+				return UserIdleTime() / 1000 > (time * 60);
 			}
 		}
 
