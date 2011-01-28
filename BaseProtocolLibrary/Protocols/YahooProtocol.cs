@@ -18,6 +18,7 @@ using InstantMessage.Events;
 
 namespace InstantMessage
 {
+	[IMNetwork("yahoo")]
 	public partial class IMYahooProtocol : IMProtocol
 	{
 		public IMYahooProtocol()

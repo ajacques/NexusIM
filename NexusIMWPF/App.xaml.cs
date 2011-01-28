@@ -36,16 +36,17 @@ namespace NexusIMWPF
 			
 			// Log some random information for debugging
 			Trace.WriteLine("Username: " + Environment.UserDomainName + "\\" + Environment.UserName);
+			Trace.WriteLine("Process ID: " + Process.GetCurrentProcess().Id);
 			Trace.WriteLine("Operating System: " + Environment.OSVersion.ToString());
 			Trace.WriteLine("Working Directory: " + Environment.CurrentDirectory);
 			Trace.WriteLine("CLR Version: " + Environment.Version.ToString());
-			Trace.WriteLine("OS Is64Bit: " + Environment.Is64BitOperatingSystem + " (Current Process Is64Bit: " + Environment.Is64BitProcess);
+			Trace.WriteLine(string.Format("OS Is64Bit: {0} (Current Process Is64Bit: {1})", Environment.Is64BitOperatingSystem, Environment.Is64BitProcess));
 
 			// Single instance Lock
 			Mutex mlock = new Mutex(true, "Local\\NexusIM");
 			if (mlock.WaitOne(0, false))
 			{
-				Trace.WriteLine("Mutex Locked");
+				Trace.WriteLine("Mutex Locked and Loaded");
 
 				InterfaceManager.Setup();
 				IPCHandler.Setup();
@@ -59,8 +60,9 @@ namespace NexusIMWPF
 				AccountManager.Setup();
 				ErrorManager.Setup();
 
-				// Attempt to load the configuration file
-				IMSettings.Load();
+				foreach (IMProtocol protocol in IMSettings.Accounts)
+					AccountManager.AddNewAccount(protocol);
+				Trace.WriteLine(String.Format("{0} Accounts Loaded", AccountManager.Accounts.Count()));
 
 				WindowSystem.OpenDummyWindow();
 				if (FirstRunSetup.IsFirstRun)

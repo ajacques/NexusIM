@@ -36,7 +36,6 @@ namespace NexusIM.Managers
 		}
 		public static void Shutdown()
 		{
-			mShutdownRequested = true;
 			mSuspendEvent.Reset();
 		}
 		public static void SuspendTimer()
@@ -94,6 +93,5 @@ namespace NexusIM.Managers
 		private static int idlestatus = 1; // 1 is here; -1 is away
 		private static Thread idlecheck;
 		private static ManualResetEvent mSuspendEvent;
-		private static bool mShutdownRequested;
 	}
 }

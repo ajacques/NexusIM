@@ -31,12 +31,10 @@ namespace InstantMessage
 	/// </remarks>
 	public interface ISettings
 	{
-		/// <summary>
-		/// Loads all settings and accounts from the settings file.
-		/// </summary>
-		void Load();
-		void Save();
-
+		IList<IMProtocol> Accounts
+		{
+			get;
+		}
 		IDictionary<string, string> Settings
 		{
 			get;

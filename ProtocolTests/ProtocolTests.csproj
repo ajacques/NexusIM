@@ -39,6 +39,8 @@
     <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL" />
+    <Reference Include="jabber-net, Version=2.1.0.710, Culture=neutral, PublicKeyToken=924c5b18328d6f09, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -46,6 +48,8 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -54,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlowfishTests.cs" />
+    <Compile Include="IMProtocolTests.cs" />
+    <Compile Include="SQLCEProtocolListTests.cs" />
     <Compile Include="SQLCEProtocolSettingTests.cs" />
     <Compile Include="SQLCEProtocolTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

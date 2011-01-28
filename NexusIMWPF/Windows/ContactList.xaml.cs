@@ -34,6 +34,15 @@ namespace NexusIM.Windows
 					item.Deselect();
 			}
 		}
+		internal void AddContact(IContact item)
+		{
+			Dispatcher.BeginInvoke(new GenericEvent(() => {
+				ContactListItem cl = new ContactListItem();
+				cl.DataContext = item;
+				cl.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
+				ContactList.Add(cl);
+			}));
+		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -49,7 +58,7 @@ namespace NexusIM.Windows
 		{
 			ContactListItem item = sender as ContactListItem;
 			IMBuddy contact = item.DataContext as IMBuddy;
-
+			
 			WindowSystem.OpenContactWindow(contact);
 		}
 		protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -60,6 +69,7 @@ namespace NexusIM.Windows
 			{
 				ContactListItem acc = e.Source as ContactListItem;
 				acc.Select();
+
 				DeselectAllExcept(ContactListControl.Children, acc);
 			} else {
 				DeselectAllExcept(ContactListControl.Children, null);

@@ -62,7 +62,7 @@ namespace NexusIM.Windows
 		}
 		private void AcceptButton_Click(object sender, RoutedEventArgs e)
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback((obj) => IMSettings.Save() ));
+			this.Close();
 		}
 		private void AccountItem_Click(object sender, MouseButtonEventArgs e)
 		{

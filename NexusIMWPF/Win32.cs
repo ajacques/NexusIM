@@ -5,6 +5,13 @@ namespace NexusIM
 {
 	internal static class Win32
 	{
+		public static bool IsInRdpSession
+		{
+			get	{
+				return GetSystemMetrics(4096) == 1 || GetSystemMetrics(8193) == 1;
+			}
+		}
+
 		/// <summary>
 		/// Flashes the window taskbar button to get the user's attention
 		/// </summary>

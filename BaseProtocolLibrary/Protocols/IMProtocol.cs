@@ -81,6 +81,7 @@ namespace InstantMessage
 	/// <summary>
 	/// Stores information and handles communication for specific IM networks
 	/// </summary>
+	[IMNetwork("default")]
 	public class IMProtocol : INotifyPropertyChanged
 	{
 		public IMProtocol()
@@ -349,7 +350,12 @@ namespace InstantMessage
 				return mPassword;
 			}
 			set {
-				mPassword = value;
+				if (mPassword != value)
+				{
+					mPassword = value;
+
+					NotifyPropertyChanged("Password");
+				}
 				/*string input = value;
 
 				if (input.Length % 16 != 0)
@@ -473,19 +479,6 @@ namespace InstantMessage
 				return needPassword;
 			}
 		}
-		/// <summary>
-		/// True if this protocol will be saved to the user's config file
-		/// </summary>
-		[Obsolete("Shouldn't be handled by the generic library", false)]
-		public bool EnableSaving
-		{
-			get {
-				return enableSaving;
-			}
-			set {
-				enableSaving = value;
-			}
-		}
 		public Guid Guid
 		{
 			get {
@@ -520,9 +513,17 @@ namespace InstantMessage
 		/// </summary>
 		/// <param name="name">The protocol type string</param>
 		/// <returns>Your fancy new IMProtocol</returns>
-		[Obsolete("", false)]
 		public static IMProtocol FromString(string name)
 		{
+			foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				foreach (Type type in assembly.GetTypes())
+				{
+					IMNetworkAttribute attrib = type.GetCustomAttributes(typeof(IMNetworkAttribute), true).FirstOrDefault() as IMNetworkAttribute;
+					if (attrib != null && attrib.ShortName == name)
+						return Activator.CreateInstance(type) as IMProtocol;
+				}
+			}
 			return null;
 		}
 		[Obsolete("", false)]
@@ -670,7 +671,7 @@ namespace InstantMessage
 		protected string mUsername;
 		protected string mPassword;
 		protected string protocolType = "Default";
-		protected string mProtocolTypeShort;
+		protected string mProtocolTypeShort = "default";
 		protected bool mEnabled;
 		protected string mServer;
 		protected bool blistChange;

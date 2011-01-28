@@ -54,13 +54,8 @@ namespace NexusIM.Managers
 		private static void IMProtocol_ContactListChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			foreach (IContact contact in e.NewItems)
-			{				
-				WindowSystem.ContactListWindow.Dispatcher.BeginInvoke(new ThreadStart(() =>
-					{
-						ContactListItem item = new ContactListItem();
-						item.DataContext = contact;
-						WindowSystem.ContactListWindow.ContactList.Add(item);
-					}), DispatcherPriority.Input);
+			{
+				WindowSystem.ContactListWindow.AddContact(contact);
 			}
 		}
 

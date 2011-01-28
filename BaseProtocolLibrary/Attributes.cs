@@ -19,7 +19,13 @@ namespace InstantMessage
 	{
 		public IMNetworkAttribute(string shortname)
 		{
+			ShortName = shortname;
+		}
 
+		public string ShortName
+		{
+			get;
+			private set;
 		}
 	}
 }

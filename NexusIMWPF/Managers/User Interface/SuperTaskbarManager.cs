@@ -235,7 +235,6 @@ namespace NexusIM.Managers
 							//IJumpListItem item = frequentUsers.JumpListItems.ElementAt(index);
 							//users.Remove(users.Single(pt => pt.Contains("username:" + usersSort[index].mBuddy.Username)));
 						} catch (Exception) {}
-						IMSettings.Save();
 						usersSort.RemoveAt(index);
 					}
 				}

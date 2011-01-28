@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using InstantMessage;
 
 namespace NexusIM.Windows
 {
@@ -24,13 +17,23 @@ namespace NexusIM.Windows
 			// Insert code required on object creation below this point.
 		}
 
+		private IMBuddy Contact
+		{
+			get {
+				return DataContext as IMBuddy;
+			}
+		}
+
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter)
 			{
 				e.Handled = true;
 
-				
+				string message = MessageBody.Text;
+				MessageBody.Text = String.Empty;
+
+				Contact.SendMessage(message);
 			}
 		}
 	}

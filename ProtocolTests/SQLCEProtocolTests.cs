@@ -11,7 +11,7 @@ namespace ProtocolTests
 {
 	[TestClass]
 	[DeploymentItem("UserProfile.sdf")]
-	public class SQLCEProtocolTests
+	public class SQLCEProtocolSettingRootListTests
 	{
 		[TestMethod]
 		public void ContainsProtocolTest()
@@ -56,7 +56,6 @@ namespace ProtocolTests
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(NotSupportedException))]
 		public void CountTest()
 		{
 			SQLCESettings setting = new SQLCESettings(Settings.Default.UserProfileTest);
@@ -75,7 +74,7 @@ namespace ProtocolTests
 		public void ReadOnlyTest()
 		{
 			SQLCESettings setting = new SQLCESettings(Settings.Default.UserProfileTest);
-			Assert.IsFalse(setting.ProtocolSettings.IsReadOnly);
+			Assert.IsTrue(setting.ProtocolSettings.IsReadOnly);
 		}
 
 		[TestMethod]

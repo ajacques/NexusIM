@@ -11,7 +11,7 @@
 			<StackPanel x:Name="ContactListControl">
 				<nxc:ContactListItem MouseDoubleClick="ContactListItem_MouseDoubleClick">
 					<nxc:ContactListItem.DataContext>
-						<im:IMBuddy Status="Available" Username="Penguin" StatusMessage="YEAH	" />
+						<im:IMBuddy Status="Available" StatusMessage="YEAH" Username="Penguin" />
 					</nxc:ContactListItem.DataContext>
 				</nxc:ContactListItem>
 			</StackPanel>
@@ -21,7 +21,7 @@
 				<MenuItem Header="Always Ontop" IsCheckable="True" />
 			</MenuItem>
 			<MenuItem Header="Accounts">
-				<MenuItem Header="Edit Accounts" Click="EditAccounts_Click" />
+				<MenuItem Click="EditAccounts_Click" Header="Edit Accounts" />
 				<MenuItem Header="New Contact Group" IsEnabled="False" />
 			</MenuItem>
 			<MenuItem Header="Contacts">
@@ -30,7 +30,7 @@
 				<MenuItem Header="Compact View" IsCheckable="True" />
 			</MenuItem>
 		</Menu>
-		<ComboBox Height="23" Margin="12,0,12,6" VerticalAlignment="Bottom" Grid.Row="1">
+		<ComboBox Grid.Row="1" Height="23" Margin="12,0,12,6" VerticalAlignment="Bottom">
 			<ComboBoxItem x:Name="Available" Content="Available" />
 			<ComboBoxItem x:Name="Away" Content="Away" />
 			<ComboBoxItem x:Name="Invisible" Content="Invisible" />

@@ -11,17 +11,13 @@ namespace InstantMessage
 		{
 			mSettingMgr = controller;
 		}
-		public static void Load()
+
+		public static IList<IMProtocol> Accounts
 		{
-			if (mSettingMgr != null)
-				mSettingMgr.Load();
+			get	{
+				return mSettingMgr.Accounts;
+			}
 		}
-		public static void Save()
-		{
-			if (mSettingMgr != null)
-				mSettingMgr.Save();
-		}
-		
 		public static IDictionary<string, string> Settings
 		{
 			get	{
