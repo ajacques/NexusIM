@@ -1000,10 +1000,10 @@ namespace InstantMessage
 				return;
 			}
 
-			mConfig.TriggeredAdd(this, "authtoken1", authtoken);
-			mConfig.TriggeredAdd(this, "authtoken2", authtoken2);
-			mConfig.TriggeredAdd(this, "authcrumb", crumb);
-			mConfig.TriggeredAdd(this, "tokenexpires", DateTime.UtcNow.AddSeconds(validfor).ToUnixEpoch().ToString());
+			mConfig["authtoken1"] = authtoken;
+			mConfig["authtoken2"] = authtoken2;
+			mConfig["authcrumb"] = crumb;
+			mConfig["tokenexpires"] = DateTime.UtcNow.AddSeconds(validfor).ToUnixEpoch().ToString();
 
 			FinishAuth();
 		}
@@ -1022,7 +1022,7 @@ namespace InstantMessage
 				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
 
 				if (savepassword)
-					mConfig.TriggeredAdd(this, "token", token);
+					mConfig.Add("token", token);
 			} else if (result == 1212) { // Invalid Credentials
 				Trace.WriteLine("Yahoo: OnGetYToken got Invalid credentials Error. Handling");
 				triggerBadCredentialsError();

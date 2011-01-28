@@ -73,11 +73,11 @@ namespace NexusCore.Controllers
 		/// <param name="protocol">Protocol to monitor for configuration changes</param>
 		public static void Register(IMProtocol protocol)
 		{
-			protocol.ConfigurationSettings.DictionaryChanged += new EventHandler<DictionaryChangedEventArgs<string, string>>(ConfigSetting_Changed);
+			
 		}
 		public static void Unregister(IMProtocol protocol)
 		{
-			protocol.ConfigurationSettings.DictionaryChanged -= new EventHandler<DictionaryChangedEventArgs<string, string>>(ConfigSetting_Changed);
+			
 		}
 		private static void ConfigSetting_Changed(object sender, DictionaryChangedEventArgs<string, string> args)
 		{

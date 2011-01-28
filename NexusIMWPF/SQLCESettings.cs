@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using InstantMessage;
-using System.Data;
-using System.Data.SqlClient;
-using NexusIM.Managers;
 using System.ComponentModel;
 using System.Data.Linq;
+using System.Linq;
+using InstantMessage;
+using NexusIM.Managers;
 
 namespace NexusIM
 {
@@ -26,8 +23,7 @@ namespace NexusIM
 				IMProtocol protocol = InterfaceManager.CreateProtocol(account.AccountType);
 				protocol.Username = account.Username;
 				protocol.Password = account.Password;
-				foreach (AccountSetting setting in account.AccountSettings)
-					protocol.ConfigurationSettings.Add(setting.Key, setting.Value);
+				protocol.ConfigurationSettings = ProtocolSettings[protocol];
 
 				IMProtocolExtraData extraData = new IMProtocolExtraData();
 				extraData.DatabaseId = account.Id;
@@ -223,32 +219,32 @@ namespace NexusIM
 			{
 				throw new NotImplementedException();
 			}
-
 			public void Clear()
 			{
 				throw new NotImplementedException();
 			}
-
 			public bool Contains(KeyValuePair<string, string> item)
 			{
 				throw new NotImplementedException();
 			}
-
 			public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
 			{
 				throw new NotImplementedException();
 			}
-
 			public int Count
 			{
-				get { throw new NotImplementedException(); }
-			}
+				get {
+					UserProfile db = UserProfile.Create(mConnectionString);
 
+					return db.Settings.Count();
+				}
+			}
 			public bool IsReadOnly
 			{
-				get { throw new NotImplementedException(); }
+				get {
+					return false;
+				}
 			}
-
 			public bool Remove(KeyValuePair<string, string> item)
 			{
 				throw new NotImplementedException();
@@ -260,7 +256,9 @@ namespace NexusIM
 
 			public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 			{
-				throw new NotImplementedException();
+				UserProfile db = UserProfile.Create(mConnectionString);
+
+				return db.Settings.Select(s => new KeyValuePair<string, string>(s.Key, s.Value)).GetEnumerator();
 			}
 
 			#endregion
@@ -269,7 +267,7 @@ namespace NexusIM
 
 			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 			{
-				throw new NotImplementedException();
+				return this.GetEnumerator();
 			}
 
 			#endregion
@@ -323,7 +321,9 @@ namespace NexusIM
 				}
 				public ICollection<string> Values
 				{
-					get { throw new NotImplementedException(); }
+					get {
+						return mSource.Select(ps => ps.Value).ToList();
+					}
 				}
 				public string this[string key]
 				{
@@ -357,17 +357,14 @@ namespace NexusIM
 				{
 					throw new NotImplementedException();
 				}
-
 				public void Clear()
 				{
 					throw new NotImplementedException();
 				}
-
 				public bool Contains(KeyValuePair<string, string> item)
 				{
 					throw new NotImplementedException();
 				}
-
 				public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
 				{
 					throw new NotImplementedException();
@@ -375,14 +372,16 @@ namespace NexusIM
 
 				public int Count
 				{
-					get { throw new NotImplementedException(); }
+					get {
+						return mSource.Count;
+					}
 				}
-
 				public bool IsReadOnly
 				{
-					get { throw new NotImplementedException(); }
+					get {
+						return false;
+					}
 				}
-
 				public bool Remove(KeyValuePair<string, string> item)
 				{
 					throw new NotImplementedException();
@@ -416,15 +415,18 @@ namespace NexusIM
 
 			public void Add(IMProtocol key, IDictionary<string, string> value)
 			{
-				throw new NotImplementedException();
+				throw new NotSupportedException();
 			}
 			public bool ContainsKey(IMProtocol key)
 			{
-				throw new NotImplementedException();
+				UserProfile db = UserProfile.Create(mConnectionString);
+				return db.Accounts.Any(s => s.Username == key.Username && s.AccountType == key.ShortProtocol);
 			}
 			public ICollection<IMProtocol> Keys
 			{
-				get { throw new NotImplementedException(); }
+				get {
+					throw new NotSupportedException();
+				}
 			}
 			public bool Remove(IMProtocol key)
 			{
@@ -432,11 +434,20 @@ namespace NexusIM
 			}
 			public bool TryGetValue(IMProtocol key, out IDictionary<string, string> value)
 			{
-				throw new NotImplementedException();
+				if (ContainsKey(key))
+				{
+					value = this[key];
+					return true;
+				} else {
+					value = null;
+					return false;
+				}
 			}
 			public ICollection<IDictionary<string, string>> Values
 			{
-				get { throw new NotImplementedException(); }
+				get {
+					throw new NotSupportedException();
+				}
 			}
 			public IDictionary<string, string> this[IMProtocol key]
 			{

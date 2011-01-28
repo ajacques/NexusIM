@@ -549,10 +549,13 @@ namespace InstantMessage
 				return mLoginWaitHandle;
 			}
 		}
-		public ObservableDictionary<string, string> ConfigurationSettings
+		public IDictionary<string, string> ConfigurationSettings
 		{
 			get {
 				return mConfig;
+			}
+			set {
+				mConfig = value;
 			}
 		}
 
@@ -661,7 +664,7 @@ namespace InstantMessage
 		}
 
 		// Variables
-		protected ObservableDictionary<string, string> mConfig = new ObservableDictionary<string, string>();
+		protected IDictionary<string, string> mConfig = new ObservableDictionary<string, string>();
 		protected ManualResetEvent mLoginWaitHandle;
 		protected ObservableCollection<IMBuddy> buddylist = new ObservableCollection<IMBuddy>();
 		protected string mUsername;
