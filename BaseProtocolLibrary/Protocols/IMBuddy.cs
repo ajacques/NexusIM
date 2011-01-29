@@ -195,6 +195,7 @@ namespace InstantMessage
 					mUsername = value;
 
 					NotifyPropertyChanged("Username");
+					NotifyPropertyChanged("DisplayName");
 				}				
 			}
 		}

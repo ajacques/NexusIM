@@ -7,19 +7,26 @@
 	x:Class="NexusIM.Windows.ChatWindow"
 	x:Name="Window" x:FieldModifier="internal" UseLayoutRounding="True"
 	Title="{Binding Username}"
-	Width="450" Height="300">
+	Loaded="Window_Loaded"
+	Width="600" Height="500" MinWidth="150" MinHeight="100">
 	<Window.Resources>
-		<Color x:Key="AvailableColor">#00C1FF99</Color>
-		<Color x:Key="BusyColor">#FFFFC9C9</Color>
-		<Color x:Key="AwayColor">#FFFFED99</Color>
-		<Color x:Key="OfflineColor">#FFDEDEDE</Color>
+		<Color x:Key="AvailableColor">#90C1FF99</Color>
+		<Color x:Key="BusyColor">#00FFC9C9</Color>
+		<Color x:Key="AwayColor">#00FFED99</Color>
+		<Color x:Key="OfflineColor">#00DEDEDE</Color>
+		<Storyboard x:Key="UserOfflineWarningFade">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="UserOfflineWarning" Storyboard.TargetProperty="(FrameworkElement.Visibility)">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimation Storyboard.TargetName="UserOfflineWarning" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.3" From="0" To="1" />
+		</Storyboard>
 	</Window.Resources>
 	<Window.DataContext>
-		<im:IMBuddy Username="Penguin" />
+		<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars?" />
 	</Window.DataContext>
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
-			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+			<LinearGradientBrush EndPoint="0.8,1" StartPoint="0.4,0">
 				<GradientStop Color="{DynamicResource AvailableColor}" Offset="0"/>
 				<GradientStop Color="#FFFFFFFF" Offset="0.5"/>
 				<GradientStop Color="{DynamicResource AvailableColor}" Offset="1"/>
@@ -27,23 +34,50 @@
 		</Grid.Background>
 		<Grid.RowDefinitions>
 			<RowDefinition />
-			<RowDefinition Height="50px"/>
+			<RowDefinition Height="50"/>
 		</Grid.RowDefinitions>
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="75"/>
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Source="yahoo.png" Grid.Column="0" />
-			<RichTextBox Grid.Column="1" IsReadOnly="True" VerticalAlignment="Bottom" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
-				<FlowDocument>
-					<Paragraph>
-						<nxc:ChatMessageInline Username="Username" />
-					</Paragraph>
-				</FlowDocument>				
-			</RichTextBox>
+			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Source="/NexusIMWPF;component/Resources/yahoo.png" Grid.Column="0" />
+			<Grid Grid.Column="1" VerticalAlignment="Bottom" MaxHeight="170">
+				<RichTextBox Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+					<FlowDocument>
+						<Paragraph x:Name="ChatHistoryBox">
+						</Paragraph>
+					</FlowDocument>
+				</RichTextBox>
+			</Grid>
+			<Grid Grid.Column="1" Margin="4,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="{Binding Username}" />
+				<TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" TextWrapping="NoWrap" Text="{Binding Status, StringFormat=({0})}" Foreground="#FF838383" />
+				<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" TextWrapping="NoWrap" Text="{Binding StatusMessage}" TextTrimming="CharacterEllipsis" Foreground="Black" />
+			</Grid>
+			<Grid x:Name="UserOfflineWarning" Grid.Column="1" Margin="8,40,8,0" VerticalAlignment="Top" Visibility="Collapsed">
+				<Rectangle RadiusX="3" RadiusY="3" Fill="#FFF3F7FC" Stroke="#FFDEDEDE" />
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="5" VerticalAlignment="Top" FontSize="11">
+					<Run Foreground="#FF626262" Text="{Binding DisplayName, Mode=OneWay}" />
+					<Run Text="appears to be offline and will receive any messages you said after signing in." />
+				</TextBlock>
+			</Grid>
 		</Grid>
 		<Grid Grid.Row="2">
+			<Grid.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Offset="0"/>
+					<GradientStop Color="#FF8396FF" Offset="1"/>
+				</LinearGradientBrush>
+			</Grid.Background>
 			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown" />
 		</Grid>
 	</Grid>

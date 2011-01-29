@@ -13,10 +13,26 @@ namespace NexusIM
 		public SocketTraceListener(string hostname, int port)
 		{
 			mSocket = new TcpClient();
-			mSocket.Connect(hostname, port);
+			mSocket.BeginConnect(hostname, port, new AsyncCallback(OnConnect), null);
 
-			mWriter = new StreamWriter(mSocket.GetStream());
+			mWriter = new StringWriter();
 		}
+
+		private void OnConnect(IAsyncResult e)
+		{
+			try	{
+				mSocket.EndConnect(e);
+			} catch (SocketException) {
+				Trace.Listeners.Remove(this);
+				return;
+			}
+
+			StreamWriter newWriter = new StreamWriter(mSocket.GetStream());
+			newWriter.Write(mWriter.ToString());
+			mWriter.Dispose();
+			mWriter = newWriter;
+		}
+
 		public override void Write(string message)
 		{
 			try	{
@@ -38,6 +54,6 @@ namespace NexusIM
 		}
 
 		private TcpClient mSocket;
-		private StreamWriter mWriter;
+		private TextWriter mWriter;
 	}
 }

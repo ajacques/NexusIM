@@ -2,6 +2,10 @@
 using System.Windows;
 using System.Windows.Input;
 using InstantMessage;
+using NexusIM.Controls;
+using InstantMessage.Events;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Windows
 {
@@ -13,7 +17,7 @@ namespace NexusIM.Windows
 		public ChatWindow()
 		{
 			this.InitializeComponent();
-			
+			this.DataContextChanged += new DependencyPropertyChangedEventHandler(OnDataContextChanged);
 			// Insert code required on object creation below this point.
 		}
 
@@ -24,6 +28,20 @@ namespace NexusIM.Windows
 			}
 		}
 
+		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			Contact.onReceiveMessage += new EventHandler<IMMessageEventArgs>(OnReceiveMessage);
+		}
+		private void OnReceiveMessage(object sender, IMMessageEventArgs e)
+		{
+			Dispatcher.BeginInvoke(new GenericEvent(() => {
+				ChatMessageInline inline = new ChatMessageInline();
+				inline.Username = e.Sender.Username;
+				inline.UsernameColor = Color.FromRgb(0, 0, 255);
+				inline.MessageBody = e.Message;
+				ChatHistoryBox.Inlines.Add(inline);
+			}));
+		}
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter)
@@ -34,6 +52,19 @@ namespace NexusIM.Windows
 				MessageBody.Text = String.Empty;
 
 				Contact.SendMessage(message);
+
+				ChatMessageInline inline = new ChatMessageInline();
+				inline.Username = "Me";
+				inline.MessageBody = message;
+				ChatHistoryBox.Inlines.Add(inline);
+			}
+		}
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			if (Contact.Status == IMBuddyStatus.Offline)
+			{
+				Storyboard fadeIn = FindResource("UserOfflineWarningFade") as Storyboard;
+				fadeIn.Begin();
 			}
 		}
 	}

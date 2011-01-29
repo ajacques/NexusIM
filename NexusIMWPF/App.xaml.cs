@@ -14,6 +14,7 @@ using NexusIM;
 using System.Threading;
 using NexusIM.Windows;
 using NexusIM.Properties;
+using System.Windows.Threading;
 
 namespace NexusIMWPF
 {
@@ -55,10 +56,9 @@ namespace NexusIMWPF
 
 				Trace.WriteLine("Configuration File: " + configuri);
 
-				IMSettings.Setup(new SQLCESettings("Data Source=\"|DataDirectory|\\UserProfile.sdf\";Persist Security Info=False;"));
+				IMSettings.Setup(new SQLCESettings("Data Source=\"UserProfile.sdf\";Persist Security Info=False;"));
 
 				AccountManager.Setup();
-				ErrorManager.Setup();
 
 				foreach (IMProtocol protocol in IMSettings.Accounts)
 					AccountManager.AddNewAccount(protocol);
@@ -95,19 +95,14 @@ namespace NexusIMWPF
 		[Conditional("DEBUG")]
 		private static void SetupTraceListeners()
 		{
-			try	{ // Try to create a connection to my hamachi computer logging program
-				Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
-			} catch (SocketException) {
-				try	{
-					Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
-				} catch (SocketException) { }
-			}
+			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
+			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
 			
 			Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate, FileAccess.Write);
 			Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
 		}
 
-		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			Debug.WriteLine(e.Exception.ToString());
 		}
