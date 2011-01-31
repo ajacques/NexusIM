@@ -18,7 +18,7 @@ namespace InstantMessage
 	/// Stores information about a single contact
 	/// </summary>
 	[Serializable]
-	public sealed partial class IMBuddy : IComparable<IMBuddy>, IContact, INotifyPropertyChanged
+	public sealed partial class IMBuddy : IComparable<IMBuddy>, IContact, INotifyPropertyChanged, IHasPresence
 	{
 		public IMBuddy()
 		{
@@ -115,6 +115,7 @@ namespace InstantMessage
 				{
 					mNickname = value;
 					NotifyPropertyChanged("Nickname");
+					NotifyPropertyChanged("DisplayName");
 				}
 			}
 		}
@@ -175,7 +176,7 @@ namespace InstantMessage
 				mNickname = value;
 			}
 		}
-		public Dictionary<string, string> Options
+		public IDictionary<string, string> Options
 		{
 			get {
 				return data;

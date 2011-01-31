@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows;
 
 namespace NexusIM.Controls
 {
@@ -33,6 +34,11 @@ namespace NexusIM.Controls
 		{
 			get;
 			private set;
+		}
+
+		private void LayoutRoot_DragOver(object sender, DragEventArgs e)
+		{
+			e.Effects = DragDropEffects.Link;
 		}
 	}
 }

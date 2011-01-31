@@ -18,7 +18,6 @@ namespace NexusIM.Windows
 		{
 			this.InitializeComponent();
 			this.DataContextChanged += new DependencyPropertyChangedEventHandler(OnDataContextChanged);
-			// Insert code required on object creation below this point.
 		}
 
 		private IMBuddy Contact
@@ -62,10 +61,10 @@ namespace NexusIM.Windows
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			if (Contact.Status == IMBuddyStatus.Offline)
-			{
-				Storyboard fadeIn = FindResource("UserOfflineWarningFade") as Storyboard;
-				fadeIn.Begin();
-			}
+				UserOfflineWarning.Visibility = Visibility.Visible;
+
+			if (Contact.Protocol.Status == IMStatus.OFFLINE)
+				SelfInvisibleWarning.Visibility = Visibility.Visible;
 		}
 	}
 }

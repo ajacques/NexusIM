@@ -84,7 +84,7 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			internal set;
 		}
-		public IRCProtocol Protocol
+		public IMProtocol Protocol
 		{
 			get;
 			private set;

@@ -19,7 +19,7 @@ using InstantMessage.Events;
 namespace InstantMessage
 {
 	[IMNetwork("yahoo")]
-	public partial class IMYahooProtocol : IMProtocol
+	public sealed partial class IMYahooProtocol : IMProtocol
 	{
 		public IMYahooProtocol()
 		{
@@ -962,7 +962,7 @@ namespace InstantMessage
 			if (String.IsNullOrEmpty(token))
 			{
 				Trace.WriteLine("Yahoo: Token invalid, requesting new token");
-				HttpWebRequest rqst = (HttpWebRequest)WebRequest.Create(generateUrl("https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login=" + Username + "&passwd=" + Password));
+				HttpWebRequest rqst = (HttpWebRequest)WebRequest.Create(string.Format("https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}", Username, Password));
 
 				receiveHttpData(rqst, new EventHandler<PacketEventArgs>(OnGetYToken));
 			} else {
@@ -979,9 +979,13 @@ namespace InstantMessage
 				return addition;
 		}
 
-		private void OnGetYCookies(object sender, PacketEventArgs e)
+		private void OnGetYCookies(IAsyncResult e)
 		{
-			string streamBuf = e.PacketData;
+			HttpWebRequest request = e.AsyncState as HttpWebRequest;
+			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
+			Stream stream = response.GetResponseStream();
+			StreamReader reader = new StreamReader(stream);
+			string streamBuf = reader.ReadToEnd();
 			int validfor = 0;
 
 			// Parsing
@@ -1061,7 +1065,7 @@ namespace InstantMessage
 				Trace.WriteLineIf(epoch < expires, "Yahoo: Saved Auth2 tokens invalid... Requesting");
 
 				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(generateUrl("https://login.yahoo.com/config/pwtoken_login?src=ymsgr&token=" + token));
-				receiveHttpData(request, new EventHandler<PacketEventArgs>(OnGetYCookies));
+				request.BeginGetResponse(new AsyncCallback(OnGetYCookies), request);
 			} else {
 				Trace.WriteLine("Yahoo: All Authentication tokens are ready.");
 				FinishAuth();
@@ -1100,9 +1104,9 @@ namespace InstantMessage
 		private void beginAuthenticate()
 		{
 			logincookies.Clear(); // Just in-case this is the second time we are signing in
-			ServicePointManager.Expect100Continue = false; // Yahoo doesn't like these
 
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlstartaddr + "http://vcs.msg.yahoo.com/capacity");
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://vcs.msg.yahoo.com/capacity");
+			request.ServicePoint.Expect100Continue = false; // Yahoo doesn't like these
 
 			try	{
 				request.BeginGetResponse(new AsyncCallback(OnGetYIPAddress), request);

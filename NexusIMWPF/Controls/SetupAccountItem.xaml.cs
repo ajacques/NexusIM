@@ -6,6 +6,8 @@ using System.Windows.Data;
 using InstantMessage;
 using NexusIM.Managers;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System;
 
 namespace NexusIM.Controls
 {
@@ -59,7 +61,8 @@ namespace NexusIM.Controls
 			foreach (BindingExpression exp in expressions)
 				exp.UpdateTarget();
 
-			PasswordBox.Password = extraData.Protocol.Password;
+			PasswordBox.Password = String.Empty;
+			Debug.WriteLine("User canceled saving new account");
 		}
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -68,7 +71,12 @@ namespace NexusIM.Controls
 			extraData.Protocol.Password = PasswordBox.Password;
 
 			if (!extraData.IsReady)
+			{
 				AccountManager.AddNewAccount(extraData);
+				IMSettings.Accounts.Add(extraData.Protocol);
+				Debug.WriteLine("User is saving new account of type" + extraData.Protocol.Protocol + ". Registering with IMSetttings and AccountManager.");
+			} else
+				Debug.WriteLine("User is saving account of type " + extraData.Protocol.Protocol);
 
 			Deselect();
 		}

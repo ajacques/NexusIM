@@ -696,7 +696,10 @@ namespace InstantMessage
 		
 	public interface IContact : IMessagable
 	{
-		void SendMessage(string message);
+		IMProtocol Protocol
+		{
+			get;
+		}
 
 		string Username
 		{

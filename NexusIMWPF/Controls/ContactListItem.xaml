@@ -8,7 +8,7 @@
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ContactListItem"
 	x:Name="UserControl"
-	d:DesignWidth="200" Height="20" UseLayoutRounding="True" x:FieldModifier="private" x:ClassModifier="internal">
+	d:DesignWidth="200" Height="20" UseLayoutRounding="True" x:FieldModifier="private" x:ClassModifier="public">
 	<UserControl.Resources>
 		<c:IMBuddyStatusToSmallIconConverter x:Key="StatusConverter" />
 		<Storyboard x:Key="SelectAnimation">
@@ -24,7 +24,7 @@
 	<UserControl.DataContext>
 		<im:IMBuddy Username="Test Username" Status="Available" StatusMessage="Test Message" />
 	</UserControl.DataContext>
-	<Grid x:Name="LayoutRoot">
+	<Grid x:Name="LayoutRoot" DragOver="LayoutRoot_DragOver">
 		<Rectangle x:Name="Background" Fill="Transparent" RadiusX="2" RadiusY="2" />
 		<Image Source="{Binding Status, Converter={StaticResource StatusConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="16" Width="16" Margin="4,0,0,0" />
 		<Grid x:Name="grid" Margin="21,2,0,0" Height="Auto" VerticalAlignment="Top">
@@ -34,6 +34,7 @@
 			</Grid.ColumnDefinitions>
 			<TextBlock x:Name="UsernameLabel" Text="{Binding Username}" VerticalAlignment="Center" Grid.Column="0" />
 			<TextBlock x:Name="StatusMessageLabel" Text="{Binding StatusMessage}" VerticalAlignment="Center" Grid.Column="1" Margin="5,0,0,0" Foreground="#EF7D7D7D" TextTrimming="CharacterEllipsis" />
-		</Grid>		
+		</Grid>
+		<Image HorizontalAlignment="Right" Margin="0,0,-1,-2" Source="/NexusIMWPF;component/Resources/link.png" Stretch="Fill" VerticalAlignment="Bottom" Width="8" Height="8" />		
 	</Grid>
 </UserControl>

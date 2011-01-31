@@ -137,6 +137,9 @@
     <Compile Include="CEConnectionPool.cs" />
     <Compile Include="ChatClasses.cs" />
     <Compile Include="Controls\ChatMessageInline.cs" />
+    <Compile Include="Controls\ContactListGroup.xaml.cs">
+      <DependentUpon>ContactListGroup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ContactListItem.xaml.cs">
       <DependentUpon>ContactListItem.xaml</DependentUpon>
     </Compile>
@@ -146,11 +149,13 @@
     <Compile Include="Controls\SetupAccountItem.xaml.cs">
       <DependentUpon>SetupAccountItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\StatusConverter.cs" />
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
     <Compile Include="Managers\Application\IPCHandler.cs" />
     <Compile Include="Managers\Application\RestartManager.cs" />
+    <Compile Include="Managers\MessageLogger.cs" />
     <Compile Include="Managers\Protocol\AutoResponder.cs" />
     <Compile Include="Managers\Protocol\InterfaceManager.cs" />
     <Compile Include="Managers\Protocol\NexusCoreManager.cs" />
@@ -182,6 +187,9 @@
     <Compile Include="Win32.cs" />
     <Compile Include="Windows\AccountsEdit.xaml.cs">
       <DependentUpon>AccountsEdit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\AddContactWindow.xaml.cs">
+      <DependentUpon>AddContactWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
@@ -271,6 +279,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ContactListGroup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ContactListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -280,6 +292,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\AccountsEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\AddContactWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -318,168 +334,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <PublishFile Include="de\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="de\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="es\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="es\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="fr\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="fr\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="it\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="it\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="ja\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="ja\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="ko\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="ko\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="zh-Hans\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="zh-Hans\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="zh-Hant\Microsoft.Expression.Interactions.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-    <PublishFile Include="zh-Hant\System.Windows.Interactivity.resources">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Satellite</FileType>
-    </PublishFile>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\app.ico" />
     <Resource Include="Resources\available_icon.ico" />
     <Resource Include="Resources\away_icon.ico" />
@@ -492,6 +346,7 @@
     <Resource Include="Resources\exclamation.png" />
     <Resource Include="Resources\idle_orb.png" />
     <Resource Include="Resources\invisible_icon.ico" />
+    <Resource Include="Resources\link.png" />
     <Resource Include="Resources\nexusim.ico" />
     <Resource Include="Resources\offline_icon.ico" />
     <Resource Include="Resources\offline_orb.png" />
@@ -502,6 +357,7 @@
     <Resource Include="Resources\text_bold.png" />
     <Resource Include="Resources\text_letter_omega.png" />
     <Resource Include="Resources\yahoo.png" />
+    <Resource Include="Windows\cataduck.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
@@ -527,9 +383,6 @@
     <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

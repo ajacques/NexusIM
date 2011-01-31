@@ -6,6 +6,8 @@ using NexusIM.Controls;
 using System.Windows.Input;
 using InstantMessage;
 using NexusIM.Managers;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace NexusIM.Windows
 {
@@ -17,6 +19,8 @@ namespace NexusIM.Windows
 		public ContactListWindow()
 		{
 			InitializeComponent();
+
+			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);
 		}
 
 		public IList ContactList
@@ -44,6 +48,28 @@ namespace NexusIM.Windows
 			}));
 		}
 
+		private void HandleStatusChange()
+		{
+			int selectedIndex = -1;
+			switch (AccountManager.Status)
+			{
+				case IMStatus.AVAILABLE:
+					selectedIndex = 0;
+					break;
+				case IMStatus.AWAY:
+					selectedIndex = 1;
+					break;
+				case IMStatus.BUSY:
+					selectedIndex = 2;
+					break;
+				case IMStatus.INVISIBLE:
+					selectedIndex = 3;
+					break;
+			}
+
+			StatusComboBox.SelectedIndex = selectedIndex;
+		}
+
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			Left = SystemParameters.PrimaryScreenWidth - (double)GetValue(WidthProperty);
@@ -60,6 +86,15 @@ namespace NexusIM.Windows
 			IMBuddy contact = item.DataContext as IMBuddy;
 			
 			WindowSystem.OpenContactWindow(contact);
+		}
+		private void AccountManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			switch (e.PropertyName)
+			{
+				case "Status":
+					HandleStatusChange();
+					break;
+			}
 		}
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{

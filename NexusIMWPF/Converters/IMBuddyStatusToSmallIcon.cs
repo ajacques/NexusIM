@@ -20,6 +20,12 @@ namespace NexusIM.Converters
 				case IMBuddyStatus.Available:
 					source = new Uri("/NexusIMWPF;component/Resources/available_icon.ico", UriKind.Relative);
 					break;
+				case IMBuddyStatus.Away:
+					source = new Uri("/NexusIMWPF;component/Resources/away_icon.ico", UriKind.Relative);
+					break;
+				case IMBuddyStatus.Busy:
+					source = new Uri("/NexusIMWPF;component/Resources/busy_icon.ico", UriKind.Relative);
+					break;
 				default:
 					source = new Uri("/NexusIMWPF;component/Resources/offline_icon.ico", UriKind.Relative);
 					break;

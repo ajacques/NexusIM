@@ -13,7 +13,13 @@
 		<Thickness x:Key="ItemMargin" Bottom="10" />
 	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
-		<ScrollViewer Margin="23,28,52,99" Background="#3EFFFFFF" VerticalScrollBarVisibility="Auto">
+		<Grid.Background>
+			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+				<GradientStop Color="#FFC4DBFF" Offset="1"/>
+				<GradientStop/>
+			</LinearGradientBrush>
+		</Grid.Background>
+		<ScrollViewer Margin="23,28,52,99" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="AccountsListBox" VerticalAlignment="Top">
 				<nexus:SetupAccountItem Margin="{DynamicResource ItemMargin}" />
 			</StackPanel>

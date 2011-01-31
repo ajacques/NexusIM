@@ -5,6 +5,10 @@ namespace InstantMessage
 {
 	public class BuddyAvatar
 	{
+		public BuddyAvatar()
+		{
+
+		}
 		public static BuddyAvatar FromUrl(string url, string key)
 		{
 			BuddyAvatar retVal = new BuddyAvatar();

@@ -51,6 +51,8 @@ namespace NexusIM.Windows
 					return;
 			}
 
+			Trace.WriteLine("User is adding new account of type " + protocol.Protocol);
+
 			SetupAccountItem item = new SetupAccountItem();
 
 			item.DataContext = new IMProtocolExtraData() { Protocol = protocol, Enabled = true };

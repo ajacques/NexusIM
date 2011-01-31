@@ -83,6 +83,7 @@
     <Compile Include="Protocols\GoogleVoiceClient.cs" />
     <Compile Include="Protocols\GoogleVoiceProtocol.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
+    <Compile Include="Protocols\Interfaces\IHasPresence.cs" />
     <Compile Include="Protocols\Interfaces\IMessagable.cs" />
     <Compile Include="Protocols\IRCChannel.cs" />
     <Compile Include="Protocols\IRCEnums.cs" />
@@ -137,7 +138,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

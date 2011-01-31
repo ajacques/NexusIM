@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.NetworkInformation;
 using InstantMessage;
-using InstantMessage.Events;
 using Microsoft.WindowsAPICodePack.Net;
 
 namespace NexusIM.Managers
@@ -91,6 +89,13 @@ namespace NexusIM.Managers
 		
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;
 		public static event EventHandler<NewAccountEventArgs> OnNewAccount;
+		public static event PropertyChangedEventHandler PropertyChanged;
+
+		private static void NotifyPropertyChanged(string propertyName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(null, new PropertyChangedEventArgs(propertyName));
+		}
 
 		public static bool IsConnectedToInternet()
 		{
@@ -137,6 +142,7 @@ namespace NexusIM.Managers
 						account.Protocol.Status = mGeneralStatus;
 					}
 
+					NotifyPropertyChanged("Status");
 					if (StatusChanged != null)
 						StatusChanged(null, new StatusUpdateEventArgs() { OldStatus = oldStatus, NewStatus = value });
 				}

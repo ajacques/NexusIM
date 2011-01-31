@@ -22,11 +22,15 @@
 		</Storyboard>
 	</Window.Resources>
 	<Window.DataContext>
-		<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars?" />
+		<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars? This is a really, really long message that goes off the screen. It will marquee through.">
+			<im:IMBuddy.Avatar>
+				<im:BuddyAvatar />
+			</im:IMBuddy.Avatar>
+		</im:IMBuddy>
 	</Window.DataContext>
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
-			<LinearGradientBrush EndPoint="0.8,1" StartPoint="0.4,0">
+			<LinearGradientBrush EndPoint="0.9,1" StartPoint="0.2,0" SpreadMethod="Repeat">
 				<GradientStop Color="{DynamicResource AvailableColor}" Offset="0"/>
 				<GradientStop Color="#FFFFFFFF" Offset="0.5"/>
 				<GradientStop Color="{DynamicResource AvailableColor}" Offset="1"/>
@@ -38,11 +42,11 @@
 		</Grid.RowDefinitions>
 		<Grid>
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="75"/>
+				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Source="/NexusIMWPF;component/Resources/yahoo.png" Grid.Column="0" />
-			<Grid Grid.Column="1" VerticalAlignment="Bottom" MaxHeight="170">
+			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Source="cataduck.jpg" Stretch="UniformToFill" />
+			<Grid Grid.Column="1" Margin="0,50,0,0">
 				<RichTextBox Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
 					<FlowDocument>
 						<Paragraph x:Name="ChatHistoryBox">
@@ -59,17 +63,28 @@
 					<RowDefinition />
 					<RowDefinition />
 				</Grid.RowDefinitions>
-				<TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" HorizontalAlignment="Left" TextWrapping="NoWrap" Text="{Binding Username}" />
+				<TextBlock Grid.Column="0" Grid.Row="0" FontSize="19" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" Text="{Binding Username}" />
 				<TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" TextWrapping="NoWrap" Text="{Binding Status, StringFormat=({0})}" Foreground="#FF838383" />
-				<TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" TextWrapping="NoWrap" Text="{Binding StatusMessage}" TextTrimming="CharacterEllipsis" Foreground="Black" />
+				<TextBlock x:Name="StatusMessageBlock" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" TextWrapping="NoWrap" Text="{Binding StatusMessage}" TextTrimming="CharacterEllipsis" Foreground="Black" />
 			</Grid>
-			<Grid x:Name="UserOfflineWarning" Grid.Column="1" Margin="8,40,8,0" VerticalAlignment="Top" Visibility="Collapsed">
-				<Rectangle RadiusX="3" RadiusY="3" Fill="#FFF3F7FC" Stroke="#FFDEDEDE" />
-				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="5" VerticalAlignment="Top" FontSize="11">
-					<Run Foreground="#FF626262" Text="{Binding DisplayName, Mode=OneWay}" />
-					<Run Text="appears to be offline and will receive any messages you said after signing in." />
-				</TextBlock>
-			</Grid>
+			<StackPanel Grid.Column="1" Margin="8,48,8,0">
+				<Grid x:Name="UserOfflineWarning" VerticalAlignment="Top" Margin="5,2,5,0" Visibility="Collapsed">
+					<Rectangle RadiusX="3" RadiusY="3" Fill="#FFF3F7FC" Stroke="#FFDEDEDE" />
+					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="5" VerticalAlignment="Top" FontSize="12">
+						<Run Foreground="#FF969696" Text="{Binding DisplayName, Mode=OneWay}" />
+						<Run Text="appears to be offline and will receive any messages you say after signing in." /><LineBreak />
+						<Run Text="Send email" /><Run Text=" ("/><Hyperlink TextDecorations="None"><Run Text="adam@robertjacques.com" /></Hyperlink><Run Text=")"/></TextBlock>
+				</Grid>
+				<Grid x:Name="SelfInvisibleWarning" VerticalAlignment="Top" Margin="5,2,5,0" Visibility="Collapsed">
+					<Rectangle RadiusX="3" RadiusY="3" Fill="#FFFFFFD1" Stroke="#FFDEDEDE" />
+					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="5" VerticalAlignment="Top" FontSize="12">
+						<Run Text="You currently appear offline to this user." /><LineBreak />
+						<Hyperlink TextDecorations="None"><Run Text="Appear online" /></Hyperlink>
+						<Run Text="|" />
+						<Hyperlink TextDecorations="None"><Run Text="Appear online to everyone" /></Hyperlink>
+					</TextBlock>
+				</Grid>
+			</StackPanel>
 		</Grid>
 		<Grid Grid.Row="2">
 			<Grid.Background>
