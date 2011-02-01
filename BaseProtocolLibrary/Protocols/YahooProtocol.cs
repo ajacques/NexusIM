@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
-using System.Diagnostics;
 using InstantMessage.Events;
 
 namespace InstantMessage
@@ -148,7 +146,7 @@ namespace InstantMessage
 				sendPacket(p1);
 			}
 
-			YPacket packet = generateStatusPacket(mStatus, mStatusMessage);
+			YPacket packet = generateStatusPacket(newStatus, mStatusMessage);
 
 			sendPacket(packet);
 		}
@@ -385,6 +383,7 @@ namespace InstantMessage
 			}
 
 			returnMe.AddParameter("19", statusMessage == null ? "" : statusMessage);
+			returnMe.AddParameter("97", "1");
 
 			return returnMe;
 		}
@@ -1167,13 +1166,9 @@ namespace InstantMessage
 		private void onYAddressBookDownload()
 		{
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlstartaddr + mAddressBookUrl);
-#if !PocketPC
 			request.CookieContainer = new CookieContainer();
 			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("Y", logincookies["Y"], "/", ".yahoo.com"));
 			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("T", logincookies["T"], "/", ".yahoo.com"));
-#else
-			request.Headers.Add("Cookie: Y=" + logincookies["Y"] + "; T=" + logincookies["T"]);
-#endif
 			request.BeginGetResponse(new AsyncCallback(OnAfterYAddressBookDl), request);
 		}
 

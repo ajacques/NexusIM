@@ -3,19 +3,25 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
+	xmlns:im="clr-namespace:InstantMessage"
 	xmlns:c="clr-namespace:NexusIM.Converters"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ContactListGroup"
 	x:Name="UserControl"
-	d:DesignWidth="200" Height="20" UseLayoutRounding="True" x:FieldModifier="private" x:ClassModifier="public">
+	d:DesignWidth="200" d:DesignHeight="20" UseLayoutRounding="True" x:FieldModifier="private" x:ClassModifier="public">
 	<UserControl.Resources>
-		<Storyboard x:Key="Storyboard1">
+		<Storyboard x:Key="AnimIn">
 			<DoubleAnimation Storyboard.TargetName="ExpandoArrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Duration="0:0:0.2" To="90" />
 		</Storyboard>
+		<Storyboard x:Key="AnimOut">
+			<DoubleAnimation Storyboard.TargetName="ExpandoArrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Duration="0:0:0.2" To="0" />
+		</Storyboard>
 	</UserControl.Resources>
+	<UserControl.DataContext>
+		<im:GroupOfContacts GroupName="Test Group" />
+	</UserControl.DataContext>
 	<Grid x:Name="LayoutRoot">
-		<Path x:Name="ExpandoArrow" Data="M 0,0 0,10 10,5 0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="0.5,0.5" Fill="#FFB6FF51" >
+		<Path x:Name="ExpandoArrow" Data="M 0,0 0,10 10,5 0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="0.5,0.5" Fill="#FF6C7C91" >
 			<Path.RenderTransform>
 				<TransformGroup>
 					<ScaleTransform/>
@@ -25,6 +31,6 @@
 				</TransformGroup>
 			</Path.RenderTransform>
 		</Path>
-		<TextBlock Margin="25,0,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Center" HorizontalAlignment="Left" />
+		<TextBlock Margin="25,0,0,0" TextWrapping="Wrap" Text="{Binding GroupName}" VerticalAlignment="Center" HorizontalAlignment="Left" />
 	</Grid>
 </UserControl>

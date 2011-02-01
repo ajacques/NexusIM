@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using InstantMessage;
 using Microsoft.WindowsAPICodePack.Net;
+using System.Reflection;
 
 namespace NexusIM.Managers
 {
@@ -130,6 +131,10 @@ namespace NexusIM.Managers
 				{
 					IMStatus oldStatus = mGeneralStatus;
 					mGeneralStatus = value;
+#if DEBUG
+					StackTrace trace = new StackTrace();
+					Debug.WriteLine(String.Format("AccountManager: Status Change ({0} to {1}) requested by {2}.{3}", oldStatus, value, trace.GetFrame(1).GetMethod().DeclaringType.FullName, trace.GetFrame(1).GetMethod().Name));
+#endif
 
 					foreach (IMProtocolExtraData account in accounts)
 					{

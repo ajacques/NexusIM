@@ -152,7 +152,6 @@
     <Compile Include="Controls\SetupAccountItem.xaml.cs">
       <DependentUpon>SetupAccountItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\StatusConverter.cs" />
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
@@ -170,6 +169,7 @@
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
     <Compile Include="Managers\WindowSystem.cs" />
     <Compile Include="MiscFuncs.cs" />
+    <Compile Include="Protocol\GroupOfContacts.cs" />
     <Compile Include="Protocol\IMProtocolExtraData.cs" />
     <Compile Include="Service References\NexusCore\Reference.cs">
       <AutoGen>True</AutoGen>

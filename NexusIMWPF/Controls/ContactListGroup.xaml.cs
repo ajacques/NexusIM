@@ -10,25 +10,52 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Controls
 {
 	/// <summary>
 	/// Interaction logic for ContactListGroup.xaml
 	/// </summary>
-	public partial class ContactListGroup : UserControl
+	public partial class ContactListGroup : UserControl, INotifyPropertyChanged
 	{
 		public ContactListGroup()
 		{
 			this.InitializeComponent();
 
-			Contacts = new List<ContactListItem>();
 		}
 
-		public List<ContactListItem> Contacts
+		private void NotifyPropertyChanged(string propertyName)
 		{
-			get;
-			set;
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+
+		public bool IsExpanded
+		{
+			get	{
+				return mIsExpanded;
+			}
+			set	{
+				if (mIsExpanded != value)
+				{
+					Storyboard animStory;
+					if (value)
+						animStory = FindResource("AnimIn") as Storyboard;
+					else
+						animStory = FindResource("AnimOut") as Storyboard;
+					animStory.Begin();
+
+					mIsExpanded = value;
+
+					NotifyPropertyChanged("IsExpanded");
+				}
+			}
+		}
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private bool mIsExpanded;
 	}
 }

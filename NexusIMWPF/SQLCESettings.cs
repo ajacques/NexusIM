@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Data.Linq;
 using System.Linq;
 using InstantMessage;
-using NexusIM.Managers;
 
 namespace NexusIM
 {
@@ -13,6 +12,9 @@ namespace NexusIM
 		public SQLCESettings(string connectionString)
 		{
 			mConnectionString = connectionString;
+			mAccountList = new LazyWeak<SqlAccountList>(() => new SqlAccountList(connectionString));
+			mGenericSettings = new LazyWeak<SqlDictionary>(() => new SqlDictionary(connectionString));
+			mProtocolSettings = new LazyWeak<SqlProtocolDictionary>(() => new SqlProtocolDictionary(connectionString));
 		}
 
 		// Nested Classes
@@ -611,23 +613,26 @@ namespace NexusIM
 		public IList<IMProtocol> Accounts
 		{
 			get	{
-				return new SqlAccountList(mConnectionString);
+				return mAccountList.Value;
 			}
 		}
 		public IDictionary<string, string> Settings
 		{
 			get	{
-				return new SqlDictionary(mConnectionString);
+				return mGenericSettings.Value;
 			}
 		}
 		public IDictionary<IMProtocol, IDictionary<string, string>> ProtocolSettings
 		{
 			get	{
-				return new SqlProtocolDictionary(mConnectionString);
+				return mProtocolSettings.Value;
 			}
 		}
 		
 		// Variables
 		private string mConnectionString;
+		private LazyWeak<SqlAccountList> mAccountList;
+		private LazyWeak<SqlDictionary> mGenericSettings;
+		private LazyWeak<SqlProtocolDictionary> mProtocolSettings;
 	}
 }

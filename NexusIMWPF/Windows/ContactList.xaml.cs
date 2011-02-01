@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections;
-using System.Windows;
-using System.Windows.Controls;
-using NexusIM.Controls;
-using System.Windows.Input;
-using InstantMessage;
-using NexusIM.Managers;
-using System.Diagnostics;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using InstantMessage;
+using NexusIM.Controls;
+using NexusIM.Managers;
 
 namespace NexusIM.Windows
 {
@@ -52,11 +51,7 @@ namespace NexusIM.Windows
 
 		private void HandleStatusChange()
 		{
-			if (mIgnoreThisStatusChange)
-			{
-				mIgnoreThisStatusChange = false;
-				return;
-			}
+			
 
 			int selectedIndex = -1;
 			switch (AccountManager.Status)
@@ -75,7 +70,7 @@ namespace NexusIM.Windows
 					break;
 			}
 
-			mIgnoreThisStatusChange = true;
+			
 			Dispatcher.BeginInvoke(new GenericEvent(() => StatusComboBox.SelectedIndex = selectedIndex));
 		}
 
@@ -101,7 +96,13 @@ namespace NexusIM.Windows
 			switch (e.PropertyName)
 			{
 				case "Status":
+					if (mIgnoreThisStatusChange)
+					{
+						mIgnoreThisStatusChange = false;
+						break;
+					}
 					HandleStatusChange();
+					mIgnoreThisStatusChange = true;
 					break;
 			}
 		}

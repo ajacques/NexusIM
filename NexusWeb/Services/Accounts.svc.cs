@@ -14,6 +14,7 @@ using NexusWeb.AdminChannel;
 using NexusWeb.Databases;
 using System.Runtime.Serialization;
 using System.IO;
+using System.Net.Mail;
 
 namespace NexusWeb.Services
 {
@@ -184,6 +185,15 @@ namespace NexusWeb.Services
 			
 			db.Users.InsertOnSubmit(userRow);
 			db.SubmitChanges();
+
+			SmtpClient smtpClient = new SmtpClient();
+			smtpClient.PickupDirectoryLocation = "e:\\inetpub\\smtp";
+			MailMessage message = new MailMessage();
+			//message.Sender = "account@nexus-im.com";
+			message.To.Add(new MailAddress(email));
+			message.Subject = "NexusIM Account Confirmation";
+			message.Body = "CHAHA";
+			//smtpClient.Send(message);
 
 			session.Add("userid", userRow.id);
 			session.Add("username", userRow.username);

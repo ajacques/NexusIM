@@ -28,21 +28,6 @@ namespace NexusIM.Managers
 		{
 			AccountManager.OnNewAccount -= new EventHandler<NewAccountEventArgs>(AccountManager_OnNewAccount);
 		}
-		public static IMProtocol CreateProtocol(string shortName)
-		{
-			IMProtocol protocol;
-
-			switch (shortName)
-			{
-				case "yahoo":
-					protocol = new IMYahooProtocol();
-					break;
-				default:
-					throw new ArgumentException();
-			}
-
-			return protocol;
-		}
 		internal static void OpenBuddyWindow(IMBuddy iMBuddy, bool p)
 		{
 			throw new NotImplementedException();
