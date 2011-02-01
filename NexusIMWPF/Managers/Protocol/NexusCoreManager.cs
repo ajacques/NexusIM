@@ -90,7 +90,7 @@ namespace NexusIM.Managers
 			{
 				IMProtocol protocol;
 				try	{
-					protocol = InterfaceManager.CreateProtocol(account.ProtocolType);
+					protocol = IMProtocol.FromString(account.ProtocolType);
 				} catch (ArgumentException) {
 					Debug.WriteLine("NexusCoreManager: Protocol of type " + account.ProtocolType + " not supported at this time.");
 					continue;

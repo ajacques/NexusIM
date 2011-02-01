@@ -12,31 +12,28 @@
 		<converters:StatusConverter x:Key="StatusConverter"/>
 	</Window.Resources>
 	<Grid>
-		<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="35,25,0,0" HorizontalAlignment="Left" Width="100" SelectedIndex="0">
+		<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="35,25,0,0" HorizontalAlignment="Left" Width="100" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
 			<Grid>
-				<Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Available" Margin="18,0,0,0" />
+				<nxc:StatusOrb HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" />
+				<!--Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" /-->
+				<ListBoxItem Content="Available" Margin="18,0,0,0" Foreground="Black" />
 			</Grid>
 			<Grid>
 				<Image Source="/NexusIMWPF;component/Resources/away_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Away" Margin="18,0,0,0"/>
+				<ListBoxItem Content="Away" Margin="18,0,0,0" Foreground="Black" />
 			</Grid>
 			<Grid>
 				<Image Source="/NexusIMWPF;component/Resources/busy_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Busy" Margin="18,0,0,0"/>
+				<ListBoxItem Content="Busy" Margin="18,0,0,0" Foreground="Black" />
 			</Grid>			
 			<Grid>
 				<Image Source="/NexusIMWPF;component/Resources/invisible_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Invisible" Margin="18,0,0,0"/>
+				<ListBoxItem Content="Invisible" Margin="18,0,0,0" Foreground="Black" />
 			</Grid>
 		</ComboBox>
 		<ScrollViewer Margin="0,57,0,0" VerticalScrollBarVisibility="Auto">			
 			<StackPanel x:Name="ContactListControl">
-				<nxc:ContactListGroup>
-					<nxc:ContactListGroup.Contacts>
-						<nxc:ContactListItem />
-					</nxc:ContactListGroup.Contacts>
-				</nxc:ContactListGroup>
+				<nxc:ContactListGroup />
 				<nxc:ContactListItem MouseDoubleClick="ContactListItem_MouseDoubleClick">
 					<nxc:ContactListItem.DataContext>
 						<im:IMBuddy Status="Available" StatusMessage="YEAH" Username="Penguin" />

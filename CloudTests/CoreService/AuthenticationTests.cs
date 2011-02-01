@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CloudTests.NexusCore;
+using NexusCore.Services;
+using System.Web.SessionState;
+using System.Web;
+using System.Web.Hosting;
+using System.IO;
 
 namespace CloudTests.CoreServiceTests
 {
@@ -36,21 +38,10 @@ namespace CloudTests.CoreServiceTests
 			}
 		}
 
-		[TestInitialize]
-		public void TestInitialize()
-		{
-			db = new NexusCoreDataContext();
-		}
-
-		[TestCleanup]
-		public void TestCleanup()
-		{
-			db.Dispose();
-		}
-
 		[TestMethod]
 		public void TokenLogin()
 		{
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var testtoken = from a in db.AuthTokens
 							where a.userid == 1
 							select a;
@@ -59,41 +50,57 @@ namespace CloudTests.CoreServiceTests
 
 			string token = testtoken.First().token;
 
-			CoreServiceClient service = new CoreServiceClient();
+			UnitTestSession session = new UnitTestSession();
 
-			service.LoginWithToken(token);
+			CoreService service = new CoreService();
+			SessionStateUtility.AddHttpSessionStateToContext(HttpContext.Current, session);
+
+			service.Login(token);
 
 			service.Logout();
-			service.Close();
 		}
 
 		[TestMethod]
 		public void BadTokenLogin()
 		{
-			CoreServiceClient service = new CoreServiceClient();
-			using (new OperationContextScope(service.InnerChannel))
-			{
-				try	{
-					service.LoginWithToken("");
-				} catch (FaultException e) {
-				} finally {
-					service.Close();
-				}
-			}
+			UnitTestSession session = new UnitTestSession();
+
+			CoreService service = new CoreService();
+			SessionStateUtility.AddHttpSessionStateToContext(HttpContext.Current, session);
+			service.Login("");
 		}
 
 		[TestMethod]
 		public void NormalLogin()
 		{
-			CoreServiceClient service = new CoreServiceClient();
-			using (new OperationContextScope(service.InnerChannel))
-			{
-				try	{
-					service.Login("test", "test");
-				} finally {
-					service.Close();
-				}
-			}
+			UnitTestSession session = new UnitTestSession();
+			CoreService service = new CoreService();
+			StringWriter writer = new StringWriter();
+			HttpRequest request = new HttpRequest("CoreService.svc", "http://core.nexus-im.com/Services/CoreService.svc", "");
+			HttpResponse response = new HttpResponse(writer);
+			UnitTestChannel channel = new UnitTestChannel();
+			channel.State = CommunicationState.Opened;
+
+			OperationContext.Current = new OperationContext(channel);
+
+			HttpContext.Current = new HttpContext(request, response);
+			
+			SessionStateUtility.AddHttpSessionStateToContext(HttpContext.Current, session);
+			service.Login("test", "test");
+		}
+
+		[TestMethod]
+		public void CertificateTest()
+		{
+			UnitTestSession session = new UnitTestSession();
+			CoreService service = new CoreService();
+			StringWriter writer = new StringWriter();
+			HttpRequest request = new HttpRequest("CoreService.svc", "http://core.nexus-im.com/Services/CoreService.svc", "");
+			HttpResponse response = new HttpResponse(writer);
+			HttpContext.Current = new HttpContext(request, response);
+			SessionStateUtility.AddHttpSessionStateToContext(HttpContext.Current, session);
+
+			
 		}
 	}
 }

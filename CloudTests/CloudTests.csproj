@@ -87,6 +87,8 @@
     <Compile Include="CoreService\AuthenticationTests.cs" />
     <Compile Include="CoreService\CloudHostedTests.cs" />
     <Compile Include="CoreService\Locations.cs" />
+    <Compile Include="UnitTestChannel.cs" />
+    <Compile Include="UnitTestSession.cs" />
     <Compile Include="NexusCore.cs">
       <DependentUpon>NexusCore.dbml</DependentUpon>
     </Compile>
@@ -118,9 +120,9 @@
       <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
       <Name>BaseProtocolLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NexusWeb\NexusWeb.csproj">
-      <Project>{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}</Project>
-      <Name>NexusWeb</Name>
+    <ProjectReference Include="..\NexusCore\NexusCore.csproj">
+      <Project>{A42A82EB-0CEF-4A38-A187-676005434BD6}</Project>
+      <Name>NexusCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -31,13 +31,6 @@ namespace InstantMessage
 		{
 			return;
 		}
-		public override void ChangeStatus(IMStatus newstatus)
-		{
-			if (IsOnlineStatus(newstatus) && !IsOnlineStatus(mStatus) && mEnabled)
-				BeginLogin();
-			else if (!IsOnlineStatus(newstatus) && IsOnlineStatus(mStatus))
-				Disconnect();
-		}
 		public override void SendMessage(string friendName, string message)
 		{
 			

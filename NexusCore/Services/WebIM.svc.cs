@@ -91,7 +91,7 @@ namespace NexusCore.Services
 			{
 				if (!account.IsPrepared)
 				{
-					PreconfiguredLogin(account.Db, IMStatus.AVAILABLE);
+					PreconfiguredLogin(account.Db, IMStatus.Available);
 				} else {
 					account.Memory.PushContext = context;
 					account.Memory.PushContext.PushNewContacts(account.Memory.Protocol.ContactList, account.Db);

@@ -12,9 +12,6 @@ namespace NexusCore.Services
 		[OperationContract]
 		void Login(string username, string password);
 
-		[OperationContract]
-		string CookieLogin(string username, string password);
-
 		/// <summary>
 		/// Logs into a user's account using an authentication token.
 		/// </summary>

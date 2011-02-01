@@ -90,12 +90,11 @@ namespace NexusIM.Managers
 			appJList.AddCustomCategories(frequentUsers);
 
 			// Generate status points
-			statusItems.Add(IMStatus.AVAILABLE, createStatusItem("Available", "available"));
-			statusItems.Add(IMStatus.BUSY, createStatusItem("Busy", "busy"));
-			statusItems.Add(IMStatus.AWAY, createStatusItem("Away", "away"));
-			statusItems.Add(IMStatus.INVISIBLE, createStatusItem("Appear offline", "invisible"));
+			statusItems.Add(IMStatus.Available, createStatusItem("Available", "available"));
+			statusItems.Add(IMStatus.Busy, createStatusItem("Busy", "busy"));
+			statusItems.Add(IMStatus.Away, createStatusItem("Away", "away"));
+			statusItems.Add(IMStatus.Invisible, createStatusItem("Appear offline", "invisible"));
 			appJList.AddUserTasks(new JumpListSeparator());
-			statusItems.Add(IMStatus.OFFLINE, createStatusItem("Sign off...", "offline"));
 
 			statusIcons.Clear();
 			statusIcons.Add(IMBuddyStatus.Available, new IconReference(icondll, 102));
@@ -278,34 +277,30 @@ namespace NexusIM.Managers
 				link.Value.IconReference = new IconReference();
 			}
 
-			statusItems[IMStatus.OFFLINE].Title = "Sign off...";
-
-			if (AccountManager.Status == IMStatus.OFFLINE || !AccountManager.Accounts.Any()) {
-				statusItems[IMStatus.OFFLINE].Title = "Sign in...";
-
+			if (!AccountManager.Accounts.Any()) {
 				if (icoOffline == null)
 					icoOffline = new Icon(thisExe.GetManifestResourceStream("NexusIM.Resources.offline_icon.ico"));
 				TaskbarManager.Instance.SetOverlayIcon(icoOffline, "Offline");
-			} else if (AccountManager.Status == IMStatus.AVAILABLE) {
+			} else if (AccountManager.Status == IMStatus.Available) {
 				if (icoAvailable == null)
 					icoAvailable = new Icon(thisExe.GetManifestResourceStream("NexusIM.Resources.available_icon.ico"));
 				TaskbarManager.Instance.SetOverlayIcon(icoAvailable, "Available");
-				statusItems[IMStatus.AVAILABLE].IconReference = pointIcon;
-			} else if (AccountManager.Status == IMStatus.AWAY) {
+				statusItems[IMStatus.Available].IconReference = pointIcon;
+			} else if (AccountManager.Status == IMStatus.Away) {
 				if (icoAway == null)
 					icoAway = new Icon(thisExe.GetManifestResourceStream("NexusIM.Resources.away_icon.ico"));
 				TaskbarManager.Instance.SetOverlayIcon(icoAway, "Away");
-				statusItems[IMStatus.AWAY].IconReference = pointIcon;
-			} else if (AccountManager.Status == IMStatus.BUSY) {
+				statusItems[IMStatus.Away].IconReference = pointIcon;
+			} else if (AccountManager.Status == IMStatus.Busy) {
 				if (icoBusy == null)
 					icoBusy = new Icon(thisExe.GetManifestResourceStream("NexusIM.Resources.busy_icon.ico"));
 				TaskbarManager.Instance.SetOverlayIcon(icoBusy, "Busy");
-				statusItems[IMStatus.BUSY].IconReference = pointIcon;
-			} else if (AccountManager.Status == IMStatus.INVISIBLE)	{
+				statusItems[IMStatus.Busy].IconReference = pointIcon;
+			} else if (AccountManager.Status == IMStatus.Invisible)	{
 				if (icoInvisible == null)
 					icoInvisible = new Icon(thisExe.GetManifestResourceStream("NexusIM.Resources.invisible_icon.ico"));
 				TaskbarManager.Instance.SetOverlayIcon(icoInvisible, "Invisible");
-				statusItems[IMStatus.INVISIBLE].IconReference = pointIcon;
+				statusItems[IMStatus.Invisible].IconReference = pointIcon;
 			}
 
 			appJList.Refresh();

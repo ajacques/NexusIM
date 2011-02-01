@@ -80,7 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clientaccesspolicy.xml" />
-    <None Include="AllClasses.cd" />
     <None Include="Databases\GeoData.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>GeoData.designer.cs</LastGenOutput>
@@ -106,7 +105,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Services\WebIM.svc" />
-    <None Include="Services.cd" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ClusterDistributor.cs" />
@@ -224,7 +222,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -27,7 +27,7 @@ namespace NexusCore.Controllers
 	/// <summary>
 	/// Endpoint for all communication with the BaseProtocolLibrary. Allows for standardized management of accounts
 	/// </summary>
-	class WebIMProtocolManager : IProtocolManager
+	class WebIMProtocolManager
 	{
 		static WebIMProtocolManager()
 		{
@@ -95,32 +95,6 @@ namespace NexusCore.Controllers
 		public static StorageItem FindItem(Guid protocolid)
 		{
 			return mRotation.Where(p => p.Protocol.Guid == protocolid).FirstOrDefault();
-		}
-
-		public override void AddContactListItem(IMBuddy item)
-		{
-			StorageItem bin = FindItem(item.Protocol);
-			BuddyData data = new BuddyData(item.Guid, item.Nickname, item.StatusMessage, item.Status);
-
-			bin.mContacts.Add(data);
-			bin.mNewContacts.Add(data);
-		}
-		public override void UpdateContactListItem(IMBuddy item)
-		{
-			StorageItem bin = FindItem(item.Protocol);
-			BuddyData data = bin.mContacts.Where(bd => bd.mGuid == item.Guid).FirstOrDefault();
-
-			if (!bin.mNewContacts.Contains(data))
-				bin.mNewContacts.Add(data);
-		}
-		public override void RemoveContactListItem(IMBuddy buddy)
-		{
-			
-		}
-		public override void ShowReceivedMessage(IMBuddy buddy, string message)
-		{
-			StorageItem bin = FindItem(buddy.Protocol);
-			bin.mMessages.Add(new MessageData(buddy.Protocol.Guid, buddy.Username, message));
 		}
 
 		public static List<StorageItem> StorageBin

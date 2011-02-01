@@ -18,13 +18,11 @@ namespace InstantMessage
 	/// </summary>
 	public enum IMStatus
 	{
-		AVAILABLE,
-		AWAY,
-		BUSY,
-		IDLE,
-		INVISIBLE,
-		OFFLINE,
-		OnThePhone
+		Available,
+		Away,
+		Busy,
+		Idle,
+		Invisible
 	}
 
 	/// <summary>
@@ -43,8 +41,7 @@ namespace InstantMessage
 		/// <summary>
 		/// This account is not connected
 		/// </summary>
-		Offline,
-		ERROR
+		Offline
 	}
 
 	/// <summary>
@@ -87,7 +84,6 @@ namespace InstantMessage
 		public IMProtocol()
 		{
 			status = IMProtocolStatus.Offline;
-			mStatus = IMStatus.OFFLINE;
 			mEnabled = false;
 		}
 		/// <summary>
@@ -146,44 +142,7 @@ namespace InstantMessage
 				throw new Exception("SendMessage Handled()");
 		}
 		public virtual void SendMessageToRoom(string roomName, string message) {}
-		/// <summary>
-		/// Changes the users status to reflect their current status
-		/// </summary>
-		/// <param name="status">What status to switch to</param>
-		[Obsolete("This is totally broken. Avoid at all costs!!!!!!", false)]
-		public virtual void ChangeStatus(IMStatus newstatus)
-		{
-			if (!mEnabled)
-				return; // If it's not even enabled
-
-			if (newstatus == mStatus)
-				return;
-
-			if (IsOnlineStatus(newstatus) && !IsOnlineStatus(mStatus))
-				BeginLogin();
-			else if (!IsOnlineStatus(newstatus) && IsOnlineStatus(mStatus))
-				Disconnect();
-
-			if (IsOnlineStatus(newstatus))
-				mEnabled = true;
-			else
-				mEnabled = false;
-
-			mStatus = newstatus;
-		}
-		public virtual void UpdateStatus()
-		{
-			if (!mEnabled)
-				return;
-
-			if (mNewStatus == mStatus)
-				return;
-
-			if (IsOnlineStatus(mNewStatus) && !IsOnlineStatus(mStatus))
-				BeginLogin();
-			else if (!IsOnlineStatus(mNewStatus) && IsOnlineStatus(mStatus))
-				Disconnect();
-		}
+		protected virtual void OnStatusChange(IMStatus oldStatus, IMStatus newStatus) {}
 		/// <summary>
 		/// Sends a notification to a contact that the user is currently a typing a message to them
 		/// </summary>
@@ -252,30 +211,6 @@ namespace InstantMessage
 		{
 			return base.GetHashCode() + mUsername.GetHashCode() + mProtocolTypeShort.GetHashCode();
 		}
-		/// <summary>
-		/// Checks to see if the requested status would cause the current protocol to login to the server
-		/// </summary>
-		/// <param name="status">What status to test</param>
-		/// <returns>True if the requested server is an online status</returns>
-		public virtual bool IsOnlineStatus(IMStatus status)
-		{
-			if (status == IMStatus.OFFLINE)
-				return false;
-			else
-				return true;
-		}
-		/// <summary>
-		/// Checks to see if the requested status would cause the current protocol to show up as online to other people
-		/// </summary>
-		/// <param name="status">What status to test</param>
-		/// <returns>True if the requested server is a non-invisible/offline status</returns>
-		public virtual bool IsOnlineStatusToOthers(IMStatus status)
-		{
-			if (status == IMStatus.OFFLINE)
-				return false;
-			else
-				return true;
-		}
 		public ObservableCollection<IMBuddy> ContactList
 		{
 			get {
@@ -303,9 +238,12 @@ namespace InstantMessage
 				return mStatus;
 			}
 			set {
-				mNewStatus = value;
-
-				UpdateStatus();
+				if (mStatus != value)
+				{
+					if (ProtocolStatus == IMProtocolStatus.Online)
+						OnStatusChange(mStatus, value);
+					mStatus = value;
+				}				
 			}
 		}
 		

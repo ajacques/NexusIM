@@ -33,7 +33,7 @@ namespace InstantMessage
 		}
 		public override void BeginLogin()
 		{
-			if (status != IMProtocolStatus.Offline && status != IMProtocolStatus.ERROR)
+			if (status != IMProtocolStatus.Offline)
 				return;
 
 			status = IMProtocolStatus.Connecting;
@@ -60,7 +60,6 @@ namespace InstantMessage
 				if (authenticated)
 					sendPacket(packet);
 
-				mStatus = IMStatus.OFFLINE;
 				status = IMProtocolStatus.Offline;
 				mConnected = false;
 				
@@ -126,120 +125,10 @@ namespace InstantMessage
 		{
 			return "scs.msg.yahoo.com";
 		}
-		public override void ChangeStatus(IMStatus newstatus)
+		protected override void OnStatusChange(IMStatus oldStatus, IMStatus newStatus)
 		{
-			if (newstatus == mStatus || !mEnabled || status != IMProtocolStatus.Online)
-				return;
-
-			if (IsOnlineStatus(newstatus) && !IsOnlineStatus(mStatus))
-			{
-				mStatus = newstatus;
-				BeginLogin();
-				return;
-			} else if (!IsOnlineStatus(newstatus) && IsOnlineStatus(mStatus)) {
-				Disconnect();
-			}
-
-			if (IsOnlineStatus(newstatus))
-				mEnabled = true;
-			else
-				mEnabled = false;
-
-			if (IsOnlineStatusToOthers(mStatus) && newstatus == IMStatus.INVISIBLE)
-			{
-				YPacket p1 = new YPacket();
-				p1.Service = YahooServices.ymsg_visibility_toggle;
-				p1.Session = session;
-				p1.AddParameter("13", "2");
-
-				sendPacket(p1);
-			} else if (!IsOnlineStatusToOthers(mStatus) && newstatus != IMStatus.INVISIBLE) {
-				YPacket p1 = new YPacket();
-				p1.Service = YahooServices.ymsg_visibility_toggle;
-				p1.Session = session;
-				p1.AddParameter("13", "1");
-
-				sendPacket(p1);
-			}
-
-			if (newstatus == IMStatus.AVAILABLE && status == IMProtocolStatus.Online)
-			{
-				if (!(mIsIdle && mStatus == IMStatus.INVISIBLE))
-				{
-					YPacket p1 = new YPacket();
-					p1.Service = YahooServices.ymsg_status_update;
-					p1.Session = session;
-					p1.AddParameter("10", "0");
-					p1.AddParameter("19", String.Empty);
-					p1.AddParameter("97", "1");
-
-					sendPacket(p1);
-				} else {
-					mIsIdle = false;
-				}
-			} else if (newstatus == IMStatus.BUSY) {
-				YPacket p1 = new YPacket();
-				p1.Service = YahooServices.ymsg_status_update;
-				p1.Session = session;
-				p1.AddParameter("10", "2");
-				p1.AddParameter("19", "");
-				p1.AddParameter("97", "1");
-
-				sendPacket(p1);
-			}
-			else if (newstatus == IMStatus.AWAY)
-			{
-				YPacket p1 = new YPacket();
-				p1.Service = YahooServices.ymsg_status_update;
-				p1.Session = session;
-				p1.AddParameter("10", "1");
-				p1.AddParameter("19", "");
-				p1.AddParameter("97", "1");
-
-				sendPacket(p1);
-			} else if (newstatus == IMStatus.IDLE && status == IMProtocolStatus.Online) {
-				if (mStatus != IMStatus.INVISIBLE)
-				{
-					YPacket p1 = new YPacket();
-					p1.Service = YahooServices.ymsg_status_update;
-					p1.AddParameter("10", "999");
-					p1.AddParameter("19", "");
-					p1.AddParameter("97", "1");
-					p1.AddParameter("47", "2");
-
-					sendPacket(p1);
-				} else {
-					mIsIdle = true;
-				}
-			}
-
-			mStatus = newstatus;
-		}
-		public override void UpdateStatus()
-		{
-			// Step 1. Check to see if there's a new status
-			if (mNewStatus == mStatus)
-				return; // Nope it's the same
-
-			// Step 2. Check to see if it's enabled
-			if (!mEnabled)
-			{
-				mStatus = mNewStatus;
-				return; // It's not enabled
-			}
-
-			if (mNewStatus == IMStatus.OFFLINE) // If we want to be disconnected
-			{
-				Disconnect();
-				return;
-			} else if (mStatus == IMStatus.OFFLINE) { // Connect
-				mStatus = mNewStatus;
-				BeginLogin();
-				return;
-			}
-
 			// Visibility Changes
-			if (IsOnlineStatusToOthers(mStatus) && mNewStatus == IMStatus.INVISIBLE)
+			if (oldStatus != IMStatus.Invisible && newStatus == IMStatus.Invisible) // Going invisible
 			{
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
@@ -250,7 +139,7 @@ namespace InstantMessage
 
 				foreach (var b in buddylist)
 					b.mVisibilityStatus = UserVisibilityStatus.Offline; // Access the variable directly to prevent the class from telling us to switch stuff
-			} else if (!IsOnlineStatusToOthers(mStatus) && mNewStatus != IMStatus.INVISIBLE) {
+			} else if (oldStatus == IMStatus.Invisible && newStatus != IMStatus.Invisible) {
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
 				p1.Session = session;
@@ -262,13 +151,6 @@ namespace InstantMessage
 			YPacket packet = generateStatusPacket(mStatus, mStatusMessage);
 
 			sendPacket(packet);
-		}
-		public override bool IsOnlineStatusToOthers(IMStatus status)
-		{
-			if (status == IMStatus.INVISIBLE || status == IMStatus.OFFLINE)
-				return false;
-			else
-				return true;
 		}
 		public override void AddFriend(string name, string nickname, string group, string introMsg)
 		{
@@ -488,24 +370,21 @@ namespace InstantMessage
 
 			switch (status)
 			{
-				case IMStatus.AVAILABLE:
+				case IMStatus.Available:
 					returnMe.AddParameter("10", "99");
 					break;
-				case IMStatus.AWAY:
+				case IMStatus.Away:
 					returnMe.AddParameter("10", "1");
 					break;
-				case IMStatus.IDLE:
+				case IMStatus.Idle:
 					returnMe.AddParameter("10", "99");
 					break;
-				case IMStatus.BUSY:
+				case IMStatus.Busy:
 					returnMe.AddParameter("10", "2");
-					break;
-				case IMStatus.OnThePhone:
-					returnMe.AddParameter("10", "6");
 					break;
 			}
 
-			returnMe.AddParameter("19", statusMessage);
+			returnMe.AddParameter("19", statusMessage == null ? "" : statusMessage);
 
 			return returnMe;
 		}
@@ -585,7 +464,6 @@ namespace InstantMessage
 			try	{
 				client.GetStream().EndRead(e);
 			} catch (InvalidOperationException f) {
-				status = IMProtocolStatus.ERROR;
 				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR, f.Message));
 				return;
 			}
@@ -656,7 +534,6 @@ namespace InstantMessage
 			try {
 				receivePacket(new AsyncCallback(readDataAsync));
 			} catch (Exception) {
-				status = IMProtocolStatus.ERROR;
 				//Login();
 			}
 		}
@@ -841,8 +718,6 @@ namespace InstantMessage
 				// Apply some transforms to the text first
 				string newmsg = packet.Parameter["14"];
 				newmsg = Regex.Replace(newmsg, "<((font face=\\?\"([a-zA-Z ]*)\\?\")|(fade (((#([a-z0-9]*)),?)*)))>", ""); // Remove font definitions
-
-				ChatMessageBuilder builder = new ChatMessageBuilder();
 
 				// Use weird, messed up way to support yahoo UTF-8 messages
 				buddy.InvokeReceiveMessage(newmsg);
@@ -1111,7 +986,6 @@ namespace InstantMessage
 			try	{
 				request.BeginGetResponse(new AsyncCallback(OnGetYIPAddress), request);
 			} catch (WebException e) {
-				status = IMProtocolStatus.ERROR;
 				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR, e.Message));
 			}
 		}
@@ -1152,7 +1026,7 @@ namespace InstantMessage
 
 			YPacket authpkt = new YPacket();
 			authpkt.Service = YahooServices.ymsg_authentication_response;
-			if (mStatus == IMStatus.INVISIBLE)
+			if (mStatus == IMStatus.Invisible)
 				authpkt.StatusByte = new byte[] { 0x00, 0x00, 0x00, 0x0C }; // <-- Sign is as invisible
 			else
 				authpkt.StatusByte = new byte[] { 0x5A, 0x55, 0xAA, 0x55 };
@@ -1170,10 +1044,7 @@ namespace InstantMessage
 			authpkt.AddParameter("135", "10.0.0.525"); // Version Info
 
 			sendPacket(authpkt);
-
-			if (mStatus == IMStatus.OFFLINE)
-				mStatus = IMStatus.AVAILABLE;
-
+			
 			receivePacket(new AsyncCallback(readDataAsync));
 
 			//socket.BeginReceive(dataqueue, 0, dataqueue.Length, SocketFlags.None, new AsyncCallback(this.readDataAsync), this);
@@ -1441,7 +1312,6 @@ namespace InstantMessage
 					queuedpackets.Add(packet);
 				}
 				
-				status = IMProtocolStatus.ERROR;
 				authenticated = false;
 				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR));
 			}

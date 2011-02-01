@@ -8,6 +8,8 @@ using InstantMessage;
 using NexusIM.Managers;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading;
 
 namespace NexusIM.Windows
 {
@@ -32,7 +34,7 @@ namespace NexusIM.Windows
 
 		private void DeselectAllExcept(UIElementCollection source, UIElement exception)
 		{
-			foreach (ContactListItem item in source)
+			foreach (ContactListItem item in source.OfType<ContactListItem>())
 			{
 				if (item.Selected && item != exception)
 					item.Deselect();
@@ -50,24 +52,31 @@ namespace NexusIM.Windows
 
 		private void HandleStatusChange()
 		{
+			if (mIgnoreThisStatusChange)
+			{
+				mIgnoreThisStatusChange = false;
+				return;
+			}
+
 			int selectedIndex = -1;
 			switch (AccountManager.Status)
 			{
-				case IMStatus.AVAILABLE:
+				case IMStatus.Available:
 					selectedIndex = 0;
 					break;
-				case IMStatus.AWAY:
+				case IMStatus.Away:
 					selectedIndex = 1;
 					break;
-				case IMStatus.BUSY:
+				case IMStatus.Busy:
 					selectedIndex = 2;
 					break;
-				case IMStatus.INVISIBLE:
+				case IMStatus.Invisible:
 					selectedIndex = 3;
 					break;
 			}
 
-			StatusComboBox.SelectedIndex = selectedIndex;
+			mIgnoreThisStatusChange = true;
+			Dispatcher.BeginInvoke(new GenericEvent(() => StatusComboBox.SelectedIndex = selectedIndex));
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -96,6 +105,41 @@ namespace NexusIM.Windows
 					break;
 			}
 		}
+		private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (mIgnoreThisStatusChange)
+			{
+				mIgnoreThisStatusChange = false;
+				return;
+			}
+
+			int selectedIndex = StatusComboBox.SelectedIndex;
+			
+			ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) =>
+				{
+					IMStatus status;
+					switch (selectedIndex)
+					{
+						case 0:
+							status = IMStatus.Available;
+							break;
+						case 1:
+							status = IMStatus.Away;
+							break;
+						case 2:
+							status = IMStatus.Busy;
+							break;
+						case 3:
+							status = IMStatus.Invisible;
+							break;
+						default:
+							status = IMStatus.Available;
+							break;
+					}
+					mIgnoreThisStatusChange = true;
+					AccountManager.Status = status;
+				}), null);
+		}
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);
@@ -110,5 +154,8 @@ namespace NexusIM.Windows
 				DeselectAllExcept(ContactListControl.Children, null);
 			}
 		}
+
+		// Variables
+		private bool mIgnoreThisStatusChange;
 	}
 }

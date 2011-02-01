@@ -35,6 +35,6 @@
 			<TextBlock x:Name="UsernameLabel" Text="{Binding Username}" VerticalAlignment="Center" Grid.Column="0" />
 			<TextBlock x:Name="StatusMessageLabel" Text="{Binding StatusMessage}" VerticalAlignment="Center" Grid.Column="1" Margin="5,0,0,0" Foreground="#EF7D7D7D" TextTrimming="CharacterEllipsis" />
 		</Grid>
-		<Image HorizontalAlignment="Right" Margin="0,0,-1,-2" Source="/NexusIMWPF;component/Resources/link.png" Stretch="Fill" VerticalAlignment="Bottom" Width="8" Height="8" />		
+		<Image HorizontalAlignment="Right" Margin="0,0,-1,-2" Source="/NexusIMWPF;component/Resources/link.png" Stretch="Fill" VerticalAlignment="Bottom" Width="16" Height="16" />		
 	</Grid>
 </UserControl>

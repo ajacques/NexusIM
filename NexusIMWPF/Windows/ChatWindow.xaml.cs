@@ -63,7 +63,7 @@ namespace NexusIM.Windows
 			if (Contact.Status == IMBuddyStatus.Offline)
 				UserOfflineWarning.Visibility = Visibility.Visible;
 
-			if (Contact.Protocol.Status == IMStatus.OFFLINE)
+			if (Contact.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
 				SelfInvisibleWarning.Visibility = Visibility.Visible;
 		}
 	}

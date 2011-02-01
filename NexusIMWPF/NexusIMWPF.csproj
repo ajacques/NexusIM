@@ -92,6 +92,7 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\..\wpf-notifyicon\NotifyIconWpf\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Effects" />
     <Reference Include="Microsoft.Expression.Interactions" />
@@ -135,13 +136,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CEConnectionPool.cs" />
-    <Compile Include="ChatClasses.cs" />
     <Compile Include="Controls\ChatMessageInline.cs" />
     <Compile Include="Controls\ContactListGroup.xaml.cs">
       <DependentUpon>ContactListGroup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ContactListItem.xaml.cs">
       <DependentUpon>ContactListItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\StatusOrb.xaml.cs">
+      <DependentUpon>StatusOrb.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SysTrayContextMenu.cs" />
     <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />
@@ -288,6 +291,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SetupAccountItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\StatusOrb.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -13,6 +13,7 @@ namespace NexusIM.Controls
 		public SysTrayContextMenu()
 		{
 			SetupMenuItems();
+			SetupEventHandlers();
 
 			AccountManager.StatusChanged += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
 			AccountManager_onStatusChange(null, null);
@@ -67,6 +68,10 @@ namespace NexusIM.Controls
 			ExitItem.Header = "Exit";
 			base.Items.Add(ExitItem);
 		}
+		private void SetupEventHandlers()
+		{
+			SignOutItem.Click += new RoutedEventHandler(SignOutItem_Click);
+		}
 
 		public MenuItem ContactListItem
 		{
@@ -104,6 +109,10 @@ namespace NexusIM.Controls
 			private set;
 		}
 
+		private void SignOutItem_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 		private void ContactListItem_Click(object sender, RoutedEventArgs e)
 		{
 			WindowSystem.OpenContactListWindow();
@@ -114,11 +123,16 @@ namespace NexusIM.Controls
 
 			if (onlineCount == 0)
 			{
-				AvailabilityGroupItem.IsEnabled = false;
-				SignOutItem.Header = "Sign In";
+				Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
+					AvailabilityGroupItem.IsEnabled = false;
+					SignOutItem.Header = "Sign In";
+				}));	
 			} else {
-				AvailabilityGroupItem.IsEnabled = true;
-				SignOutItem.Header = string.Format("Sign Out ({0} accounts)", onlineCount);
+				Dispatcher.BeginInvoke(new GenericEvent(() => {
+					AvailabilityGroupItem.IsEnabled = true;
+					SignOutItem.Header = string.Format("Sign Out ({0} accounts)", onlineCount);
+				}));				
 			}
 		}
 	}

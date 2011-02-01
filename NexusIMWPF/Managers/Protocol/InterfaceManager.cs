@@ -53,6 +53,9 @@ namespace NexusIM.Managers
 		}
 		private static void IMProtocol_ContactListChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
+			if (WindowSystem.ContactListWindow == null)
+				return;
+
 			foreach (IContact contact in e.NewItems)
 			{
 				WindowSystem.ContactListWindow.AddContact(contact);

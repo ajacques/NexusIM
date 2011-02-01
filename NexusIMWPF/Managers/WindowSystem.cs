@@ -31,7 +31,7 @@ namespace NexusIM.Managers
 		public static void OpenDummyWindow()
 		{
 			if (DummyWindow != null)
-				throw new InvalidOperationException("Cannot open another dummy window");
+				throw new InvalidOperationException("Can't open another dummy window");
 
 			DummyWindow = new DummyWindow();
 			//Application.Dispatcher.BeginInvoke(new ThreadStart(() => DummyWindow.Show() ), DispatcherPriority.Background);

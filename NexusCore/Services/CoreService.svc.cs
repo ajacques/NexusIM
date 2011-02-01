@@ -4,30 +4,28 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security;
 using System.Security.Authentication;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
-using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using NexusCore.Controllers;
 using NexusCore.Databases;
 using NexusCore.DataContracts;
 using NexusCore.PushChannel;
-using System.ServiceModel.Channels;
 using NexusCore.Support;
 
 namespace NexusCore.Services
-{
-	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, AutomaticSessionShutdown = true)]
+{	
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Required)]
 	[KnownType(typeof(WCFWebPrettyFault))]
-	public sealed class CoreService : ICoreService, ICoreServiceWinPhone, ICoreServiceLocationSlim, ISwarmCallback, IDisposable
+	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, AutomaticSessionShutdown = true)]
+	public sealed class CoreService : ICoreService, ICoreServiceWinPhone, ICoreServiceLocationSlim, IDisposable
 	{
 		public CoreService()
 		{
@@ -35,9 +33,7 @@ namespace NexusCore.Services
 		}
 
 		// HttpSessionState
-		// swarmmsgqueue : (List<ISwarmMessage>) Swarm IMessage Queue
 		// userid : (int) Currently logged in user's id
-		// deviceid : (int) Currently logged in device's id
 
 		// ICoreService
 		public void Login(string username, string password)
@@ -46,6 +42,8 @@ namespace NexusCore.Services
 
 			if (session["userid"] != null)
 				throw WCFExceptionTypes.AlreadyAuthenticated;
+
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			User mUserData = db.TryLogin(username, password);
 			NexusAuditLogDataContext audit = new NexusAuditLogDataContext();
@@ -62,6 +60,59 @@ namespace NexusCore.Services
 				throw WCFExceptionTypes.BadLogin;
 			}
 		}
+		public void Login(string token)
+		{
+			// Attempts to get a user that matches the input token
+			AuthToken mToken;
+			User mUserData = db.TryTokenLogin(token, out mToken);
+			HttpSessionState session = HttpContext.Current.Session;
+
+			if (mUserData != null)
+			{
+				if (DateTime.UtcNow > mToken.expires)
+				{
+					db.AuthTokens.DeleteOnSubmit(mToken);
+					db.SubmitChanges();
+				}
+
+				session["userid"] = mUserData.id;
+				session["token"] = mToken.token;
+				Trace.WriteLine("CoreService: UserToken login with generic user authentication token");
+			} else {
+				Device mDevice = db.TryDeviceTokenLogin(token, out mUserData);
+				if (mUserData != null)
+				{
+					session["userid"] = mUserData.id;
+					session["deviceid"] = mDevice.id;
+					Trace.WriteLine("CoreService: UserToken login with device authentication token");
+				} else {
+					Trace.TraceError("CoreService: UserToken login failed due to invalid authentication token");
+					throw new FaultException<AuthenticationException>(new AuthenticationException("Given user credentials are invalid"), new FaultReason("Given user credentials are invalid"), new FaultCode("Sender"));
+				}
+			}
+		}
+		void Login()
+		{
+			HttpClientCertificate certificate = HttpContext.Current.Request.ClientCertificate;
+			
+		}
+
+		public void Logout()
+		{
+			HttpSessionState session = HttpContext.Current.Session;
+
+			if (session["deviceid"] != null)
+			{
+				Device row = db.GetDeviceById((int)session["device"]);
+				row.lastseen = DateTime.UtcNow;
+			}
+
+			db.SubmitChanges(); // Submit any pending changes
+
+			session.Clear();
+			session.Abandon();
+		}
+
 		public bool AccountsSignedIn()
 		{
 			HttpSessionState session = HttpContext.Current.Session;
@@ -78,7 +129,7 @@ namespace NexusCore.Services
 
 			bool isImSignedIn = (from a in db.Accounts
 									 where a.userid == userid 
-									 && WebIMProtocolManager.StorageBin.Any(si => si.ProtocolId == a.id && si.Protocol.Status != InstantMessage.IMStatus.OFFLINE)
+									 && WebIMProtocolManager.StorageBin.Any(si => si.ProtocolId == a.id && si.Protocol.ProtocolStatus == InstantMessage.IMProtocolStatus.Online)
 									 select a).Any();
 				
 				//(from u in db.Users where u.id == userid select u.IsIMSignedIn).First();
@@ -117,67 +168,7 @@ namespace NexusCore.Services
 
 			return info;
 		}
-
-		public string CookieLogin(string username, string password)
-		{
-			Login(username, password);
-
-			return HttpContext.Current.Session.SessionID;
-		}
-		public void Login(string token)
-		{
-			// Attempts to get a user that matches the input token
-			AuthToken mToken;
-			User mUserData = db.TryTokenLogin(token, out mToken);
-			HttpSessionState session = HttpContext.Current.Session;
-
-			if (mUserData != null)
-			{
-				if (DateTime.UtcNow > mToken.expires)
-				{
-					db.AuthTokens.DeleteOnSubmit(mToken);
-					db.SubmitChanges();
-				}
-
-				session["userid"] = mUserData.id;
-				session["token"] = mToken.token;
-				Trace.WriteLine("CoreService: UserToken login with generic user authentication token");
-			} else {
-				Device mDevice = db.TryDeviceTokenLogin(token, out mUserData);
-				if (mUserData != null)
-				{
-					session["userid"] = mUserData.id;
-					session["deviceid"] = mDevice.id;
-					Trace.WriteLine("CoreService: UserToken login with device authentication token");
-				} else {
-					Trace.TraceError("CoreService: UserToken login failed due to invalid authentication token");
-					throw new FaultException<AuthenticationException>(new AuthenticationException("Given user credentials are invalid"), new FaultReason("Given user credentials are invalid"), new FaultCode("Sender"));
-				}
-			}
-		}
-		public void Logout()
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-
-			if (session["deviceid"] != null)
-			{
-				Device row = db.GetDeviceById((int)session["device"]);
-				row.lastseen = DateTime.UtcNow;
-			}
-
-			if (session["swarmmsgqueue"] != null)
-			{
-				Swarm swarm = SwarmManager.Swarms.Where(s => s.Members.Any(m => m.DeviceId == (int)session["deviceid"])).FirstOrDefault();
-				swarm.Members.RemoveAll(sm => sm.DeviceId == (int)session["deviceid"]);
-				if (swarm.Members.Count == 0)
-					SwarmManager.Swarms.Remove(swarm);
-			}
-
-			db.SubmitChanges(); // Submit any pending changes
-
-			session.Clear();
-			session.Abandon();
-		}
+		
 		public string GenerateToken(AuthenticationTokenTypes types)
 		{
 			HttpSessionState session = HttpContext.Current.Session;
@@ -241,230 +232,7 @@ namespace NexusCore.Services
 
 			return new MyAccountInformation(user.username, user.firstname);
 		}
-
-		// Device Swarm
-		public void SwarmSubscribe(string deviceid)
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-			Device mDevice;
-			if (session["deviceid"] == null) // Check to see if we have already authenticated as a device
-				mDevice = db.TryDeviceTokenLogin(deviceid);
-			else
-				throw new FaultException("Already authenticated");
-
-			if (session["swarmmsgqueue"] == null)
-				session["swarmmsgqueue"] = new List<ISwarmMessage>();
-
-			SwarmMember member = new SwarmMember(userid, (int)session["deviceid"], this);
-			SwarmManager.AddToSwarm(member);
-		}
-		public void SwarmSubscribe()
-		{
-			Trace.WriteLine("CoreService: Client is subscribing to their swarm");
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-			{
-				Trace.TraceError("CoreService: Client is not authenticated");
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-			}
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-			{
-				Trace.TraceError("CoreService: SwarmSubscribe failed because session is not yet authenticated as a device");
-				throw new FaultException("Not yet authenticated as a device");
-			}
-
-			int deviceid = (int)session["deviceid"];
-
-			if (session["swarmmsgqueue"] == null)
-				session["swarmmsgqueue"] = new List<MessageSerializable>();
-
-			SwarmMember member = new SwarmMember(userid, (int)session["deviceid"], this);
-			SwarmManager.AddToSwarm(member);
-
-			Trace.WriteLine("CoreService: Client successfully subscribed to their swarm");
-		}
-		public void SwarmUnSubscribe()
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			SwarmManager.RemoveFromSwarm(deviceid);
-			session["swarmmsgqueue"] = null;
-			session["deviceid"] = null;
-		}
-		public IEnumerable<ISwarmMessage> GetSwarmMessages()
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			var messages = db.GetDeviceMessageQueue(deviceid);
-
-			return messages;
-		}
-		public void SendSwarmMessage(ISwarmMessage message, MessageOptions options)
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-			{
-				Trace.TraceError("CoreService: SendSwarmMessage failed because the session is not authenticated");
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-			}
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] != null)
-				message.SenderDevice = (int)session["deviceid"];
-			else
-				message.SenderDevice = 0;
-
-			SwarmManager.SendMessage(userid, message, options);
-		}
-		public void StartPushMessageStream(PushChannelType stype, int port)
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			ISwarmCallback callback;
-
-			UriBuilder builder = new UriBuilder();
-
-			if (stype == PushChannelType.GenericUdp)
-				builder.Scheme = "soap.udp";
-			else if (stype == PushChannelType.GenericUdp)
-				builder.Scheme = "net.tcp";
-			builder.Port = port;
-
-			if (HttpContext.Current.Request.UserHostAddress == "::1") // Testing
-				builder.Host = "localhost";
-			else
-				builder.Host = HttpContext.Current.Request.UserHostAddress;
-
-			if (stype == PushChannelType.GenericUdp)
-				callback = PushCallbackFactory.CreateUDP(builder.Uri);
-			else if (stype == PushChannelType.GenericTcp)
-				callback = PushCallbackFactory.CreateTCP(builder.Uri);
-			else
-				throw new FaultException<ArgumentException>(new ArgumentException(), new FaultReason(""), new FaultCode("BadSocketType"));
-
-			if (SwarmManager.SwarmHasDevice(deviceid))
-				SwarmManager.GetDevice(deviceid).Callback = callback;
-			else
-				SwarmManager.AddToSwarm(new SwarmMember(userid, deviceid, callback));
-		}
-		public void StartPushMessageStream(Uri urichannel)
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-			{
-				Trace.TraceError("CoreService: (StartPushMessageStream(Uri)) Session is not authenticated");
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-			}
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			Device device = db.GetDeviceById(deviceid);
-			DeviceType dtype = db.GetDeviceType(device.devicetype);
-
-			if (dtype.RequiresCustomPush && dtype.CustomPushPattern != null)
-			{
-				Assembly.GetCallingAssembly().CreateInstance(dtype.CustomPushPattern, true);
-			}
-		}
-		public void RegisterAsMaster(int accountid)
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			db.SubmitChanges();
-		}
-		public void UnregisterAsMaster(int accountid)
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			Account acc = db.GetSingleAccount(accountid);
-
-			Device device = db.GetDeviceById(deviceid);
-			device.lastseen = DateTime.UtcNow;
-
-			db.SubmitChanges();
-		}
-		public void DeviceKeepAlive()
-		{
-			HttpSessionState session = HttpContext.Current.Session;
-			if (session["userid"] == null)
-				throw new FaultException<SecurityException>(new SecurityException("This session has not been authorized to do this operation"), new FaultReason("Session has not logged-in"), new FaultCode("Sender"));
-
-			int userid = (int)session["userid"];
-
-			if (session["deviceid"] == null)
-				throw new FaultException("Not yet authenticated as a device");
-
-			int deviceid = (int)session["deviceid"];
-
-			Device device = db.GetDeviceById(deviceid);
-			device.lastseen = DateTime.UtcNow;
-
-			db.SubmitChanges();
-		}
-
-		// ISwarmCallback
-		public void OnSwarmMessage(ISwarmMessage message)
-		{
-		}
-
+	
 		private bool isAuthenticated()
 		{
 			var session = HttpContext.Current.Session;
@@ -499,7 +267,6 @@ namespace NexusCore.Services
 
 			return mLocations;
 		}
-		[FaultContract(typeof(WCFWebPrettyFault))]
 		public UserLocationData GetLocation(int rowId)
 		{
 			HttpSessionState session = HttpContext.Current.Session;

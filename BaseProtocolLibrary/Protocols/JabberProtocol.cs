@@ -97,57 +97,6 @@ namespace InstantMessage
 			jc.Close();
 			CleanupBuddyList();
 		}
-		public override void ChangeStatus(IMStatus newstatus)
-		{
-			if (!mEnabled)
-				return; // If it's not even enabled
-
-			if (newstatus == mStatus)
-				return;
-
-			if (newstatus == IMStatus.OFFLINE)
-			{
-				Disconnect();
-			} else if (newstatus == IMStatus.AVAILABLE && !jc.IsAuthenticated) {
-				BeginLogin();
-			} else if (newstatus == IMStatus.AVAILABLE) {
-				XmlDocument doc = new XmlDocument();
-				XmlElement presence = doc.CreateElement("presence");
-				XmlElement xStatus = doc.CreateElement("newstatus");
-				presence.SetAttribute("from", mUsername);
-				xStatus.InnerText = "";
-				presence.AppendChild(xStatus);
-				jc.Write(presence);
-			} else if (newstatus == IMStatus.IDLE && status == IMProtocolStatus.Online) {
-				XmlDocument doc = new XmlDocument();
-				XmlElement presence = doc.CreateElement("presence");
-				XmlElement xStatus = doc.CreateElement("newstatus");
-				XmlElement xShow = doc.CreateElement("show");
-				presence.SetAttribute("from", mUsername);
-				xStatus.InnerText = "Idle since " + DateTime.Now.ToString("t");
-				presence.AppendChild(xStatus);
-				xShow.InnerText = "away";
-				presence.AppendChild(xShow);
-
-				jc.Write(presence);
-			} else if (newstatus == IMStatus.AWAY)	{
-				XmlDocument doc = new XmlDocument();
-				XmlElement presence = doc.CreateElement("presence");
-				XmlElement xStatus = doc.CreateElement("newstatus");
-				XmlElement xShow = doc.CreateElement("show");
-				presence.SetAttribute("from", mUsername);
-				xStatus.InnerText = "Away from Keyboard";
-				presence.AppendChild(xStatus);
-				xShow.InnerText = "away";
-				presence.AppendChild(xShow);
-
-				jc.Write(presence);
-			} else if (newstatus == IMStatus.INVISIBLE) {
-				if (IsOnlineStatus(mStatus))
-					Disconnect();
-			}
-			mStatus = newstatus;
-		}
 		public override void AddFriend(string name, string nickname, string group)
 		{
 			string[] groups = {group};
@@ -211,7 +160,7 @@ namespace InstantMessage
 		}
 		public override bool IsOnlineStatus(IMStatus status)
 		{
-			if (status == IMStatus.OFFLINE || status == IMStatus.INVISIBLE)
+			if (status == IMStatus.OFFLINE || status == IMStatus.Invisible)
 				return false;
 			else
 				return true;

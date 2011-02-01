@@ -45,8 +45,6 @@ namespace NexusIM.Managers
 
 			NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
 
-			mGeneralStatus = IMStatus.OFFLINE;
-
 			Trace.WriteLine("AccountManager loaded and ready");
 			Trace.WriteLine("Connectivity Status: " + NetworkListManager.Connectivity.ToString());
 		}
@@ -60,7 +58,6 @@ namespace NexusIM.Managers
 			if (accounts.Contains(extraData))
 				throw new ArgumentException("This protocol has already been added");
 
-			extraData.Protocol.Status = IMStatus.OFFLINE;
 			extraData.IsReady = true;
 			accounts.Add(extraData);
 
@@ -149,7 +146,7 @@ namespace NexusIM.Managers
 			}
 		}
 		
-		private static IMStatus mGeneralStatus = IMStatus.AVAILABLE;
+		private static IMStatus mGeneralStatus = IMStatus.Available;
 		private static List<IMProtocolExtraData> accounts;
 	}
 }
