@@ -19,11 +19,22 @@ namespace NexusWeb.Databases
 			if (user == null)
 				return null;
 
-			byte[] output = new byte[user.PasswordHash.Length];
-			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
-			decryptor.TransformBlock(user.PasswordHash, 0, user.PasswordHash.Length, output, 0);
+			// Password System v2
 
-			password = HashString(password);
+			// Decrypt password salt using our site key
+			byte[] output = new byte[user.PasswordSalt.Length];
+			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
+			int count = decryptor.TransformBlock(user.PasswordSalt, 0, user.PasswordSalt.Length, output, 0);
+
+			byte[] pwdbytes = mEncoder.GetBytes(password);
+			byte[] concatOutput = new byte[count + password.Length];
+			Buffer.BlockCopy(output, 0, concatOutput, 0, count);
+			Buffer.BlockCopy(pwdbytes, 0, concatOutput, count, pwdbytes.Length);
+			
+			password = HashString(concatOutput);
+
+			if (user.password != password)
+				return null;
 			
 			user.lastseen = DateTime.UtcNow;
 			try	{
@@ -57,6 +68,7 @@ namespace NexusWeb.Databases
 				throw new SecurityException("Invalid security Exception") ;
 		}
 
+		#region Database Helpers
 		/// <summary>
 		/// Returns the number of devices the specified user has
 		/// </summary>
@@ -192,6 +204,7 @@ namespace NexusWeb.Databases
 
 			return false;
 		}
+		#endregion
 
 		public string HashString(string input)
 		{
@@ -214,7 +227,8 @@ namespace NexusWeb.Databases
 				if (mSaltDecryptor == null)
 				{
 					mSaltDecryptor = new AesCryptoServiceProvider();
-					mSaltDecryptor.Key = mEncoder.GetBytes(Settings.Default.SaltDecryptionKey);
+					mSaltDecryptor.Key = Encoding.Default.GetBytes(Settings.Default.SaltDecryptionKey);
+					mSaltDecryptor.IV = new byte[16];
 				}
 				return mSaltDecryptor;
 			}

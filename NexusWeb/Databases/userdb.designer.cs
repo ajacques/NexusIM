@@ -2614,8 +2614,8 @@ namespace NexusWeb.Databases
     partial void OnAccountListVersionChanged();
     partial void OnIsIMSignedInChanging(bool value);
     partial void OnIsIMSignedInChanged();
-    partial void OnPasswordHashChanging(byte[] value);
-    partial void OnPasswordHashChanged();
+    partial void OnPasswordSaltChanging(byte[] value);
+    partial void OnPasswordSaltChanged();
     #endregion
 		
 		public User()
@@ -2974,7 +2974,7 @@ namespace NexusWeb.Databases
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PasswordHash", DbType="binary(64) NOT NULL", CanBeNull=false)]
-		public byte[] PasswordHash
+		public byte[] PasswordSalt
 		{
 			get
 			{
@@ -2984,11 +2984,11 @@ namespace NexusWeb.Databases
 			{
 				if ((this._PasswordHash != value))
 				{
-					this.OnPasswordHashChanging(value);
+					this.OnPasswordSaltChanging(value);
 					this.SendPropertyChanging();
 					this._PasswordHash = value;
-					this.SendPropertyChanged("PasswordHash");
-					this.OnPasswordHashChanged();
+					this.SendPropertyChanged("PasswordSalt");
+					this.OnPasswordSaltChanged();
 				}
 			}
 		}

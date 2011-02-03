@@ -25,9 +25,13 @@ namespace NexusCore.Databases
 			byte[] output = new byte[user.PasswordSalt.Length];
 			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
 			int count = decryptor.TransformBlock(user.PasswordSalt, 0, user.PasswordSalt.Length, output, 0);
-			string salt = mEncoder.GetString(output, 0, count);
 
-			password = HashString(salt + password);
+			byte[] pwdbytes = mEncoder.GetBytes(password);
+			byte[] concatOutput = new byte[count + password.Length];
+			Buffer.BlockCopy(output, 0, concatOutput, 0, count);
+			Buffer.BlockCopy(pwdbytes, 0, concatOutput, count, pwdbytes.Length);
+			
+			password = HashString(concatOutput);
 
 			if (user.password != password)
 				return null;

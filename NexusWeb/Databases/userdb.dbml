@@ -136,7 +136,7 @@
       <Column Name="DefaultPhotoAcl" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="AccountListVersion" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
       <Column Name="IsIMSignedIn" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="PasswordHash" Type="System.Byte[]" DbType="binary(64) NOT NULL" CanBeNull="false" />
+      <Column Name="PasswordSalt" Storage="_PasswordHash" Type="System.Byte[]" DbType="binary(64) NOT NULL" CanBeNull="false" />
       <Association Name="User_AuthToken" Member="AuthTokens" ThisKey="id" OtherKey="userid" Type="AuthToken" />
       <Association Name="User_LocationPrivacy" Member="LocationPrivacies" ThisKey="id" OtherKey="userid" Type="LocationPrivacy" />
       <Association Name="User_UserLocation" Member="UserLocations" ThisKey="id" OtherKey="userid" Type="UserLocation" />
