@@ -153,6 +153,7 @@
       <DependentUpon>SetupAccountItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="FirstRunSetup.cs" />
+    <Compile Include="LazyWeak.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
     <Compile Include="Managers\Application\IPCHandler.cs" />
@@ -206,6 +207,9 @@
     </Compile>
     <Compile Include="Windows\SysTrayPeekWindow.xaml.cs">
       <DependentUpon>SysTrayPeekWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ToasterNotification.xaml.cs">
+      <DependentUpon>ToasterNotification.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -322,6 +326,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\ToasterNotification.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -374,6 +382,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NexusIM_Icons\NexusIM_Icons.csproj">
+      <Project>{E851D4D7-09AB-4A1B-BCE6-5BA5AB7D9832}</Project>
+      <Name>NexusIM_Icons</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

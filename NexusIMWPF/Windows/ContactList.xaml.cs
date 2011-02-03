@@ -51,8 +51,6 @@ namespace NexusIM.Windows
 
 		private void HandleStatusChange()
 		{
-			
-
 			int selectedIndex = -1;
 			switch (AccountManager.Status)
 			{
@@ -69,15 +67,14 @@ namespace NexusIM.Windows
 					selectedIndex = 3;
 					break;
 			}
-
 			
 			Dispatcher.BeginInvoke(new GenericEvent(() => StatusComboBox.SelectedIndex = selectedIndex));
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			Left = SystemParameters.PrimaryScreenWidth - (double)GetValue(WidthProperty);
-			Top = SystemParameters.PrimaryScreenHeight / 2 - ((double)GetValue(HeightProperty) / 2);
+			if (!SuperTaskbarManager.IsSetup)
+				ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => SuperTaskbarManager.Setup()));
 		}
 		private void EditAccounts_Click(object sender, RoutedEventArgs e)
 		{
@@ -155,8 +152,15 @@ namespace NexusIM.Windows
 				DeselectAllExcept(ContactListControl.Children, null);
 			}
 		}
+		protected override void OnInitialized(EventArgs e)
+		{
+			base.OnInitialized(e);
+			
+			Left = SystemParameters.PrimaryScreenWidth - (double)GetValue(WidthProperty);
+			Top = SystemParameters.PrimaryScreenHeight / 2 - ((double)GetValue(HeightProperty) / 2);
+		}
 
 		// Variables
-		private bool mIgnoreThisStatusChange;
+		private bool mIgnoreThisStatusChange = true; // Ignore the first change
 	}
 }

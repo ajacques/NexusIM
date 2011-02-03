@@ -79,9 +79,9 @@
 					<Rectangle RadiusX="3" RadiusY="3" Fill="#FFFFFFD1" Stroke="#FFDEDEDE" />
 					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="5" VerticalAlignment="Top" FontSize="12">
 						<Run Text="You currently appear offline to this user." /><LineBreak />
-						<Hyperlink TextDecorations="None"><Run Text="Appear online" /></Hyperlink>
+						<Hyperlink TextDecorations="None" Click="AppearOnline_Click"><Run Text="Appear online" /></Hyperlink>
 						<Run Text="|" />
-						<Hyperlink TextDecorations="None"><Run Text="Appear online to everyone" /></Hyperlink>
+						<Hyperlink TextDecorations="None" Click="AppearOnlineToAll_Click"><Run Text="Appear online to everyone" /></Hyperlink>
 					</TextBlock>
 				</Grid>
 			</StackPanel>

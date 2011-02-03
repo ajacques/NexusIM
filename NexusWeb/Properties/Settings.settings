@@ -50,5 +50,8 @@
     <Setting Name="SecureReferrerAcceptRegex" Description="Regex match string to verify secure requests come from an authorized domain. Counter-CSRF This is designed for WCF method calls, not every web page." Type="System.String" Scope="Application">
       <Value Profile="(Default)">(localhost|im.adrensoftware.com|5.64.115.83|dev.nexus-im.com|pub.nexus-im.com)</Value>
     </Setting>
+    <Setting Name="SaltDecryptionKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">wLP1Ce4L-QnxYr6sR5HT1lMqBV8U0p/G</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

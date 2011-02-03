@@ -2554,6 +2554,8 @@ namespace NexusWeb.Databases
 		
 		private bool _IsIMSignedIn;
 		
+		private byte[] _PasswordHash;
+		
 		private EntitySet<AuthToken> _AuthTokens;
 		
 		private EntitySet<LocationPrivacy> _LocationPrivacies;
@@ -2612,6 +2614,8 @@ namespace NexusWeb.Databases
     partial void OnAccountListVersionChanged();
     partial void OnIsIMSignedInChanging(bool value);
     partial void OnIsIMSignedInChanged();
+    partial void OnPasswordHashChanging(byte[] value);
+    partial void OnPasswordHashChanged();
     #endregion
 		
 		public User()
@@ -2965,6 +2969,26 @@ namespace NexusWeb.Databases
 					this._IsIMSignedIn = value;
 					this.SendPropertyChanged("IsIMSignedIn");
 					this.OnIsIMSignedInChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PasswordHash", DbType="binary(64) NOT NULL", CanBeNull=false)]
+		public byte[] PasswordHash
+		{
+			get
+			{
+				return this._PasswordHash;
+			}
+			set
+			{
+				if ((this._PasswordHash != value))
+				{
+					this.OnPasswordHashChanging(value);
+					this.SendPropertyChanging();
+					this._PasswordHash = value;
+					this.SendPropertyChanged("PasswordHash");
+					this.OnPasswordHashChanged();
 				}
 			}
 		}

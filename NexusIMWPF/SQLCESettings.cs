@@ -12,9 +12,6 @@ namespace NexusIM
 		public SQLCESettings(string connectionString)
 		{
 			mConnectionString = connectionString;
-			mAccountList = new LazyWeak<SqlAccountList>(() => new SqlAccountList(connectionString));
-			mGenericSettings = new LazyWeak<SqlDictionary>(() => new SqlDictionary(connectionString));
-			mProtocolSettings = new LazyWeak<SqlProtocolDictionary>(() => new SqlProtocolDictionary(connectionString));
 		}
 
 		// Nested Classes
@@ -613,26 +610,32 @@ namespace NexusIM
 		public IList<IMProtocol> Accounts
 		{
 			get	{
-				return mAccountList.Value;
+				if (mAccountList == null)
+					mAccountList = new SqlAccountList(mConnectionString);
+				return mAccountList;
 			}
 		}
 		public IDictionary<string, string> Settings
 		{
 			get	{
-				return mGenericSettings.Value;
+				if (mGenericSettings == null)
+					mGenericSettings = new SqlDictionary(mConnectionString);
+				return mGenericSettings;
 			}
 		}
 		public IDictionary<IMProtocol, IDictionary<string, string>> ProtocolSettings
 		{
 			get	{
-				return mProtocolSettings.Value;
+				if (mProtocolSettings == null)
+					mProtocolSettings = new SqlProtocolDictionary(mConnectionString);
+				return mProtocolSettings;
 			}
 		}
 		
 		// Variables
 		private string mConnectionString;
-		private LazyWeak<SqlAccountList> mAccountList;
-		private LazyWeak<SqlDictionary> mGenericSettings;
-		private LazyWeak<SqlProtocolDictionary> mProtocolSettings;
+		private SqlAccountList mAccountList;
+		private SqlDictionary mGenericSettings;
+		private SqlProtocolDictionary mProtocolSettings;
 	}
 }

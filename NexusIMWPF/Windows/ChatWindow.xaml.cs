@@ -6,6 +6,7 @@ using NexusIM.Controls;
 using InstantMessage.Events;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using NexusIM.Managers;
 
 namespace NexusIM.Windows
 {
@@ -63,8 +64,14 @@ namespace NexusIM.Windows
 			if (Contact.Status == IMBuddyStatus.Offline)
 				UserOfflineWarning.Visibility = Visibility.Visible;
 
-			if (Contact.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
+			if (Contact.Protocol.Status == IMStatus.Invisible)
 				SelfInvisibleWarning.Visibility = Visibility.Visible;
+		}
+		private void AppearOnline_Click(object sender, RoutedEventArgs e) {}
+		private void AppearOnlineToAll_Click(object sender, RoutedEventArgs e)
+		{
+			AccountManager.Status = IMStatus.Available;
+			SelfInvisibleWarning.Visibility = Visibility.Collapsed;
 		}
 	}
 }

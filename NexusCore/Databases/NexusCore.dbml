@@ -30,6 +30,7 @@
       <Column Name="AccountListVersion" Type="System.UInt16" DbType="smallint" CanBeNull="false" />
       <Column Name="IsIMSignedIn" Type="bool" DbType="bit" CanBeNull="false" />
       <Column Name="lastname" Member="LastName" Storage="_lastname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="PasswordSalt" Storage="_PasswordHash" Type="System.Byte[]" DbType="binary(64) NOT NULL" CanBeNull="false" />
       <Association Name="User_Account" Member="Accounts" ThisKey="id" OtherKey="userid" Type="Account" />
       <Association Name="User_AuthToken" Member="AuthTokens" ThisKey="id" OtherKey="userid" Type="AuthToken" />
       <Association Name="User_Device" Member="Devices" ThisKey="id" OtherKey="userid" Type="Device" Cardinality="One" />

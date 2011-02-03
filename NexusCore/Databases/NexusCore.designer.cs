@@ -547,6 +547,8 @@ namespace NexusCore.Databases
 		
 		private string _lastname;
 		
+		private byte[] _PasswordHash;
+		
 		private EntitySet<Account> _Accounts;
 		
 		private EntitySet<AuthToken> _AuthTokens;
@@ -587,6 +589,8 @@ namespace NexusCore.Databases
     partial void OnIsIMSignedInChanged();
     partial void OnLastNameChanging(string value);
     partial void OnLastNameChanged();
+    partial void OnPasswordSaltChanging(byte[] value);
+    partial void OnPasswordSaltChanged();
     #endregion
 		
 		public User()
@@ -836,6 +840,26 @@ namespace NexusCore.Databases
 					this._lastname = value;
 					this.SendPropertyChanged("LastName");
 					this.OnLastNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PasswordHash", DbType="binary(64) NOT NULL", CanBeNull=false)]
+		public byte[] PasswordSalt
+		{
+			get
+			{
+				return this._PasswordHash;
+			}
+			set
+			{
+				if ((this._PasswordHash != value))
+				{
+					this.OnPasswordSaltChanging(value);
+					this.SendPropertyChanging();
+					this._PasswordHash = value;
+					this.SendPropertyChanged("PasswordSalt");
+					this.OnPasswordSaltChanged();
 				}
 			}
 		}

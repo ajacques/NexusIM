@@ -48,6 +48,7 @@ namespace NexusIM.Managers
 
 			Trace.WriteLine("AccountManager loaded and ready");
 			Trace.WriteLine("Connectivity Status: " + NetworkListManager.Connectivity.ToString());
+			mConnected = true;
 		}
 
 		public static void AddNewAccount(IMProtocol protocol)
@@ -62,7 +63,7 @@ namespace NexusIM.Managers
 			extraData.IsReady = true;
 			accounts.Add(extraData);
 
-			if (extraData.Enabled && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
+			if (Connected && extraData.Enabled && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
 			{
 				extraData.Protocol.BeginLogin();
 			}
@@ -150,8 +151,33 @@ namespace NexusIM.Managers
 				}
 			}
 		}
-		
+		public static bool Connected
+		{
+			get	{
+				return mConnected;
+			}
+			set	{
+				if (mConnected != value)
+				{
+					mConnected = value;
+
+					foreach (var account in Accounts)
+					{
+						if (account.Enabled && account.Protocol.ProtocolStatus == IMProtocolStatus.Online)
+						{
+							if (value)
+								account.Protocol.BeginLogin();
+							else
+								account.Protocol.Disconnect();
+						}
+					}
+					NotifyPropertyChanged("Connected");
+				}
+			}
+		}
+
 		private static IMStatus mGeneralStatus = IMStatus.Available;
 		private static List<IMProtocolExtraData> accounts;
+		private static bool mConnected;
 	}
 }

@@ -119,45 +119,6 @@ namespace NexusWeb.Services
 			session.Clear();
 			session.Abandon();
 		}
-
-		[OperationContract]
-		public void LoginHashedPassword(string username, string passwordhash)
-		{
-			if (!CounterCSRF.IsValidFromSecureWCF())
-			{
-				Trace.TraceError(String.Format("NexusWeb: Attempted WCF call from outside secure website boundaries (Method: AccountService.SetLocationShareState): {0}", HttpContext.Current.Request.UrlReferrer.AbsoluteUri));
-				throw WCFExceptions.CrossSiteViolation;
-			}
-
-			HttpSessionState session = HttpContext.Current.Session;
-			HttpResponse response = HttpContext.Current.Response;
-
-			if (session["userid"] != null)
-				return;
-
-			userdbDataContext db = new userdbDataContext();
-			var userrow = (from u in db.Users
-						   where u.username == username && u.password == passwordhash
-						   select new {id = u.id, username = u.username}).FirstOrDefault();
-			NexusAuditLogDataContext audit = new NexusAuditLogDataContext();
-
-			if (userrow == null)
-			{
-				Trace.WriteLine("NexusWeb: Invalid login credentials");
-
-				db.Dispose();
-								
-				audit.LogLoginAttempt(username, null);
-
-				throw WCFExceptions.BadCredentials;
-			}
-			audit.LogLoginAttempt(userrow.id);
-
-			session.Add("userid", userrow.id);
-			session.Add("username", userrow.username);
-
-			db.Dispose();
-		}
 		
 		[OperationContract]
 		public void CreateAccount(string firstName, string lastName, string email, string password, UserGender gender, DateTime dob)

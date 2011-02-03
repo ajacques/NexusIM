@@ -61,8 +61,10 @@ namespace InstantMessage
 				status = IMProtocolStatus.Offline;
 				mConnected = false;
 				
+
 				try {
-					socket.Close();
+					if (socket != null)
+						socket.Close();
 				} catch (Exception) {}
 			} else if (status == IMProtocolStatus.Connecting) {
 
@@ -431,33 +433,7 @@ namespace InstantMessage
 		{
 			return yahoo64encode(Encoding.UTF8.GetBytes(data));
 		}
-		/// <summary>
-		/// Generates the Authentication hash used in the login process
-		/// </summary>
-		/// <param name="crumb">Crumb key from the web login page</param>
-		/// <param name="challenge">Challenge key sent from the yahoo messenger servers.</param>
-		/// <returns>String to be sent in the authentication response packet</returns>
-		private string generateAuthHash(string crumb, string challenge)
-		{
-			byte[] bs = Encoding.UTF8.GetBytes(crumb + challenge);
-#if SILVERLIGHT
-			return MD5Core.GetHashString(crumb + challenge);
-#else
-			MD5CryptoServiceProvider md5sp = new MD5CryptoServiceProvider();
-			bs = md5sp.ComputeHash(bs);
-#endif
-			StringBuilder s = new StringBuilder();
-			foreach (byte b in bs)
-			{
-				s.Append(b.ToString("x2").ToLower());
-			}
-			string md5 = s.ToString();
-			//string returnVal = base64encode(md5);
-			string returnVal = yahoo64encode(bs);
-
-			return returnVal;
-		}
-
+		
 		private void readDataAsync(IAsyncResult e)
 		{
 			try	{
@@ -544,7 +520,10 @@ namespace InstantMessage
 			pktdata = pktdata.PadRight(20, '\0'); // Make sure we didn't chop off the packet part
 			return pktdata;
 		}
-		protected static string[] customSplit(string inputstr, string separator)
+
+		#region Packet Handlers
+
+		private static string[] customSplit(string inputstr, string separator)
 		{
 			List<string> splits = new List<string>();
 			if (inputstr.Contains(separator))
@@ -803,173 +782,36 @@ namespace InstantMessage
 			}
 		}
 
-		private void OnGetYIPAddress(IAsyncResult e)
-		{
-			HttpWebRequest request = e.AsyncState as HttpWebRequest;
-			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
-			string streamBuf = "";
+		#endregion
 
-			if (response.StatusCode == HttpStatusCode.OK)
+		#region Connection/Authentication Methods
+		
+		/// <summary>
+		/// Generates the Authentication hash used in the login process
+		/// </summary>
+		/// <param name="crumb">Crumb key from the web login page</param>
+		/// <param name="challenge">Challenge key sent from the yahoo messenger servers.</param>
+		/// <returns>String to be sent in the authentication response packet</returns>
+		private string generateAuthHash(string crumb, string challenge)
+		{
+			byte[] bs = Encoding.UTF8.GetBytes(crumb + challenge);
+#if SILVERLIGHT
+			return MD5Core.GetHashString(crumb + challenge);
+#else
+			MD5CryptoServiceProvider md5sp = new MD5CryptoServiceProvider();
+			bs = md5sp.ComputeHash(bs);
+#endif
+			StringBuilder s = new StringBuilder();
+			foreach (byte b in bs)
 			{
-				StreamReader reader = new StreamReader(response.GetResponseStream());
-				streamBuf = reader.ReadToEnd();
-				reader.Close();
-			} else {
-				Trace.WriteLine("Yahoo: Http server returned " + response.StatusCode.ToString() + " while getting CS_IP (" + response.StatusDescription + ")");
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.Unknown));
-				return;
+				s.Append(b.ToString("x2").ToLower());
 			}
+			string md5 = s.ToString();
+			//string returnVal = base64encode(md5);
+			string returnVal = yahoo64encode(bs);
 
-			int start = streamBuf.IndexOf("CS_IP_ADDRESS") + 14;
-			int end = (streamBuf.Length - start) - 2;
-
-			connectServer = streamBuf.Substring(start, end);
-			Trace.WriteLine("Yahoo: YMSG Communication Server: " + connectServer);
-
-			if (token == "")
-			{
-				try	{
-					token = mConfig["token"];
-				} catch (KeyNotFoundException) {}
-			}
-
-			if (String.IsNullOrEmpty(token))
-			{
-				Trace.WriteLine("Yahoo: Token invalid, requesting new token");
-				HttpWebRequest rqst = (HttpWebRequest)WebRequest.Create(string.Format("https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}", Username, Password));
-
-				receiveHttpData(rqst, new EventHandler<PacketEventArgs>(OnGetYToken));
-			} else {
-				Trace.WriteLine("Yahoo: Token valid, continuing");
-				DoGetYCookies();
-			}			
+			return returnVal;
 		}
-
-		private string generateUrl(string addition)
-		{
-			if (urlstartaddr != "")
-				return urlstartaddr + System.Web.HttpUtility.UrlEncode(addition);
-			else
-				return addition;
-		}
-
-		private void OnGetYCookies(IAsyncResult e)
-		{
-			HttpWebRequest request = e.AsyncState as HttpWebRequest;
-			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
-			Stream stream = response.GetResponseStream();
-			StreamReader reader = new StreamReader(stream);
-			string streamBuf = reader.ReadToEnd();
-			int validfor = 0;
-
-			// Parsing
-			int result = Convert.ToInt32(Regex.Match(streamBuf, @"^([0-9]*)").Groups[1].Value);
-			if (result == 0)
-			{
-				Match key = Regex.Match(streamBuf, @"(v=[^;]*)");
-				Match key2 = Regex.Match(streamBuf, @"(z=[^;]*)");
-				Match key3 = Regex.Match(streamBuf, @"crumb=([\S]*)");
-				authtoken = key.Groups[1].Value.ToString();
-				authtoken2 = key2.Groups[1].Value.ToString();
-				crumb = key3.Groups[1].Value.ToString();
-				Match valid = Regex.Match(streamBuf, "cookievalidfor=([0-9]*)");
-				validfor = Convert.ToInt32(valid.Groups[1].Value);
-			} else if (result == 100) {
-				beginAuthenticate();
-				return;
-			}
-
-			mConfig["authtoken1"] = authtoken;
-			mConfig["authtoken2"] = authtoken2;
-			mConfig["authcrumb"] = crumb;
-			mConfig["tokenexpires"] = DateTime.UtcNow.AddSeconds(validfor).ToUnixEpoch().ToString();
-
-			FinishAuth();
-		}
-
-		private void OnGetYToken(object sender, PacketEventArgs e)
-		{
-			string streamBuf = e.PacketData;
-
-			// Parsing
-			int result = Convert.ToInt32(Regex.Match(streamBuf, @"^([0-9]*)").Groups[1].Value);
-			if (result == 0)
-			{
-				Match key = Regex.Match(streamBuf, @"ymsgr=([\S]*)");
-				token = key.Groups[1].Value.ToString();
-
-				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
-
-				if (savepassword)
-					mConfig.Add("token", token);
-			} else if (result == 1212) { // Invalid Credentials
-				Trace.WriteLine("Yahoo: OnGetYToken got Invalid credentials Error. Handling");
-				triggerBadCredentialsError();
-				return;
-			} else if (result == 1213) { // Security lock from too many invalid logins
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
-				return;
-			} else if (result == 1235) {
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.INVALID_USERNAME));
-				return;
-			} else if (result == 1236) {
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.LIMIT_REACHED));
-				return;
-			}
-
-			DoGetYCookies();
-		}
-
-		private void DoGetYCookies()
-		{
-			int expires = 0;
-			try	{
-				authtoken = mConfig["authtoken1"];
-				authtoken2 = mConfig["authtoken2"];
-				crumb = mConfig["authcrumb"];
-				expires = Convert.ToInt32(mConfig["tokenexpires"]);
-			} catch (KeyNotFoundException) {}
-
-			int epoch = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-
-			// Check to see if we are missing any tokens or if the tokens have expired
-			if (String.IsNullOrEmpty(authtoken) || String.IsNullOrEmpty(authtoken2) || String.IsNullOrEmpty(crumb) || epoch > expires)
-			{
-				Trace.WriteLineIf(epoch > expires, "Yahoo: Saved Auth2 tokens expired... Requesting");
-				Trace.WriteLineIf(epoch < expires, "Yahoo: Saved Auth2 tokens invalid... Requesting");
-
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(generateUrl("https://login.yahoo.com/config/pwtoken_login?src=ymsgr&token=" + token));
-				request.BeginGetResponse(new AsyncCallback(OnGetYCookies), request);
-			} else {
-				Trace.WriteLine("Yahoo: All Authentication tokens are ready.");
-				FinishAuth();
-			}
-		}
-
-		private void FinishAuth()
-		{
-			// These tokens are later used for address book downloading and other yahoo specific details
-			logincookies.Add("Y", authtoken);
-			logincookies.Add("T", authtoken2);
-
-			authtoken += "; path=/; domain=.yahoo.com";
-			authtoken2 += "; path=/; domain=.yahoo.com";
-
-			client = new TcpClient();
-
-			Trace.WriteLine("Yahoo: Attempting connection to YMSG server");
-
-			client.Connect(IPAddress.Parse(connectServer), 5050);
-
-			nWriter = new StreamWriter(client.GetStream());
-			nReader = new StreamReader(client.GetStream());
-
-			nWriter.AutoFlush = true; // We want all data to get sent immediately after we write it to the stream
-
-			//if (client.Connected)
-				OnYServerConnect();
-		}
-
 		/// <summary>
 		/// Step 1.
 		/// Begins authentication process of connecting to the yahoo servers
@@ -988,7 +830,6 @@ namespace InstantMessage
 				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR, e.Message));
 			}
 		}
-		
 		// Begin Packet Stuff
 		// Part 1
 		private void OnYServerConnect()
@@ -1000,7 +841,6 @@ namespace InstantMessage
 
 			receivePacket(new AsyncCallback(SendInitAuthPkt));
 		}
-
 		private void SendInitAuthPkt(IAsyncResult e)
 		{
 			client.GetStream().EndRead(e);
@@ -1062,30 +902,161 @@ namespace InstantMessage
 				queuedpackets.Clear();
 			}
 		}
-
-#if PocketPC || WINDOWS
-		private void OnPacketReceive(IAsyncResult e)
+		private void OnGetYIPAddress(IAsyncResult e)
 		{
-			EventHandler<PacketEventArgs> callback = (EventHandler<PacketEventArgs>)e.AsyncState;
-			string pktdata = dEncoding.GetString(dataqueue, 0, dataqueue.Length);
-#else
-		private void OnPacketReceive(object sender, SocketAsyncEventArgs e)
-		{
-			EventHandler<PacketEventArgs> callback = (EventHandler<PacketEventArgs>)e.UserToken;
-			string pktdata = dEncoding.GetString(e.Buffer, 0, e.Buffer.Length);
-		
-#endif
-			pktdata = pktdata.Trim(new char[] { '\0' });
-			pktdata = pktdata.PadRight(20, '\0'); // Make sure we didn't chop off the packet part
-			YPacket pkt = YPacket.FromPacket(pktdata);
+			HttpWebRequest request = e.AsyncState as HttpWebRequest;
+			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
+			string streamBuf = "";
 
-			if (pkt.StatusByte == new byte[] { 0xff, 0xff, 0xff, 0xff })
+			if (response.StatusCode == HttpStatusCode.OK)
 			{
-
+				StreamReader reader = new StreamReader(response.GetResponseStream());
+				streamBuf = reader.ReadToEnd();
+				reader.Close();
+			} else {
+				Trace.WriteLine("Yahoo: Http server returned " + response.StatusCode.ToString() + " while getting CS_IP (" + response.StatusDescription + ")");
+				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.Unknown));
+				return;
 			}
 
-			callback(this, new PacketEventArgs(pktdata));
+			int start = streamBuf.IndexOf("CS_IP_ADDRESS") + 14;
+			int end = (streamBuf.Length - start) - 2;
+
+			connectServer = IPAddress.Parse(streamBuf.Substring(start, end));
+			Trace.WriteLine("Yahoo: YMSG Communication Server: " + connectServer);
+
+			if (String.IsNullOrEmpty(token))
+				token = mConfig["token"];
+
+			if (String.IsNullOrEmpty(token))
+			{
+				Trace.WriteLine("Yahoo: Authentication token is invalid, requesting new token");
+				HttpWebRequest rqst = (HttpWebRequest)WebRequest.Create(string.Format(mAuthTokenGetUrl, Username, Password));
+				rqst.BeginGetResponse(new AsyncCallback(OnGetYToken), rqst);
+			} else {
+				Trace.WriteLine("Yahoo: Authentication token valid, continuing");
+				DoGetYCookies();
+			}			
 		}
+		private void OnGetYCookies(IAsyncResult e)
+		{
+			HttpWebRequest request = e.AsyncState as HttpWebRequest;
+			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
+			Stream stream = response.GetResponseStream();
+			StreamReader reader = new StreamReader(stream);
+			string streamBuf = reader.ReadToEnd();
+			int validfor = 0;
+
+			// Parsing
+			int result = Convert.ToInt32(Regex.Match(streamBuf, @"^([0-9]*)").Groups[1].Value);
+			if (result == 0)
+			{
+				Match key = Regex.Match(streamBuf, @"(v=[^;]*)");
+				Match key2 = Regex.Match(streamBuf, @"(z=[^;]*)");
+				Match key3 = Regex.Match(streamBuf, @"crumb=([\S]*)");
+				authtoken = key.Groups[1].Value.ToString();
+				authtoken2 = key2.Groups[1].Value.ToString();
+				crumb = key3.Groups[1].Value.ToString();
+				Match valid = Regex.Match(streamBuf, "cookievalidfor=([0-9]*)");
+				validfor = Convert.ToInt32(valid.Groups[1].Value);
+			} else if (result == 100) {
+				beginAuthenticate();
+				return;
+			}
+
+			mConfig["authtoken1"] = authtoken;
+			mConfig["authtoken2"] = authtoken2;
+			mConfig["authcrumb"] = crumb;
+			mConfig["tokenexpires"] = DateTime.UtcNow.AddSeconds(validfor).ToUnixEpoch().ToString();
+
+			FinishAuth();
+		}
+		private void OnGetYToken(IAsyncResult e)
+		{
+			HttpWebRequest request = e.AsyncState as HttpWebRequest;
+			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
+			Stream stream = response.GetResponseStream();
+			StreamReader reader = new StreamReader(stream);
+			string streamBuf = reader.ReadToEnd();
+
+			// Parsing
+			int result = Convert.ToInt32(Regex.Match(streamBuf, @"^([0-9]*)").Groups[1].Value);
+			if (result == 0)
+			{
+				Match key = Regex.Match(streamBuf, @"ymsgr=([\S]*)");
+				token = key.Groups[1].Value.ToString();
+
+				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
+
+				if (savepassword)
+					mConfig.Add("token", token);
+			} else if (result == 1212) { // Invalid Credentials
+				Trace.WriteLine("Yahoo: OnGetYToken got Invalid credentials Error. Handling");
+				triggerBadCredentialsError();
+				return;
+			} else if (result == 1213) { // Security lock from too many invalid logins
+				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
+				return;
+			} else if (result == 1235) {
+				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.INVALID_USERNAME));
+				return;
+			} else if (result == 1236) {
+				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.LIMIT_REACHED));
+				return;
+			}
+
+			DoGetYCookies();
+		}
+		private void DoGetYCookies()
+		{
+			int expires = 0;
+			try	{
+				authtoken = mConfig["authtoken1"];
+				authtoken2 = mConfig["authtoken2"];
+				crumb = mConfig["authcrumb"];
+				expires = Convert.ToInt32(mConfig["tokenexpires"]);
+			} catch (KeyNotFoundException) {}
+
+			int epoch = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+
+			// Check to see if we are missing any tokens or if the tokens have expired
+			if (String.IsNullOrEmpty(authtoken) || String.IsNullOrEmpty(authtoken2) || String.IsNullOrEmpty(crumb) || epoch > expires)
+			{
+				Trace.WriteLineIf(epoch > expires, "Yahoo: Saved Auth2 tokens expired... Requesting");
+				Trace.WriteLineIf(epoch < expires, "Yahoo: Saved Auth2 tokens invalid... Requesting");
+
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://login.yahoo.com/config/pwtoken_login?src=ymsgr&token=" + token);
+				request.BeginGetResponse(new AsyncCallback(OnGetYCookies), request);
+			} else {
+				Trace.WriteLine("Yahoo: All Authentication tokens are ready.");
+				FinishAuth();
+			}
+		}
+		private void FinishAuth()
+		{
+			// These tokens are later used for address book downloading and other yahoo specific details
+			logincookies.Add("Y", authtoken);
+			logincookies.Add("T", authtoken2);
+
+			authtoken += "; path=/; domain=.yahoo.com";
+			authtoken2 += "; path=/; domain=.yahoo.com";
+
+			client = new TcpClient();
+
+			Trace.WriteLine("Yahoo: Attempting connection to YMSG server");
+
+			client.Connect(connectServer, 5050);
+
+			nWriter = new StreamWriter(client.GetStream());
+			nReader = new StreamReader(client.GetStream());
+
+			nWriter.AutoFlush = true; // We want all data to get sent immediately after we write it to the stream
+
+			//if (client.Connected)
+				OnYServerConnect();
+		}
+
+		#endregion			
 
 		private void OnAfterYAddressBookDl(IAsyncResult e)
 		{
@@ -1165,33 +1136,11 @@ namespace InstantMessage
 		// Callbacks
 		private void onYAddressBookDownload()
 		{
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlstartaddr + mAddressBookUrl);
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(mAddressBookUrl);
 			request.CookieContainer = new CookieContainer();
 			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("Y", logincookies["Y"], "/", ".yahoo.com"));
 			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("T", logincookies["T"], "/", ".yahoo.com"));
 			request.BeginGetResponse(new AsyncCallback(OnAfterYAddressBookDl), request);
-		}
-
-#if SILVERLIGHT
-		private void OnReceiveHttpData(IAsyncResult e)
-		{
-			HttpAsync state = (HttpAsync)e.AsyncState;
-			HttpWebRequest request = (HttpWebRequest)state.request;
-			EventHandler<PacketEventArgs> callback = state.callback;
-			HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(e);
-#else
-		private void OnReceiveHttpData(HttpWebRequest request, EventHandler<PacketEventArgs> callback)
-		{
-			HttpWebResponse response = null;
-			try	{
-				response = (HttpWebResponse)request.GetResponse();
-			} catch (WebException) {
-				return;
-			}
-#endif
-			StreamReader reader = new StreamReader(response.GetResponseStream());
-
-			callback(this, new PacketEventArgs(reader.ReadToEnd()));
 		}
 
 		private void SmsDataDownload(IAsyncResult e)
@@ -1286,21 +1235,11 @@ namespace InstantMessage
 			if (client == null)
 				throw new NullReferenceException("Client is null");
 
-			if (session != "")
+			if (!String.IsNullOrEmpty(session))
 				packet.Session = session;
 
 			try	{
 				client.GetStream().Write(packet.ToBytes(), 0, packet.ToBytes().Length);
-				return;
-#if PocketPC || WINDOWS
-				socket.Send(packet.ToBytes());
-#else
-				SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-				args.SetBuffer(packet.ToBytes(), 0, packet.ToBytes().Length);
-				args.SocketFlags = SocketFlags.None;
-				args.SendPacketsFlags = 0;
-				socket.SendAsync(args);
-#endif
 			} catch (IOException) {
 				lock (queuedpackets)
 				{
@@ -1316,32 +1255,28 @@ namespace InstantMessage
 			if (callback != null)
 				client.GetStream().BeginRead(dataqueue, 0, dataqueue.Length, callback, null);
 		}
-		private void receiveHttpData(HttpWebRequest request, EventHandler<PacketEventArgs> callback)
-		{
-#if SILVERLIGHT
-			request.BeginGetResponse(new AsyncCallback(OnReceiveHttpData), new HttpAsync(request, callback));
-#else
-			OnReceiveHttpData(request, callback);
-#endif
-		}
 
 		// Protocol Specific Variables
 		private byte[] dataqueue = new byte[1024];
 		private Dictionary<string, int> converstationCount = new Dictionary<string, int>();
 		private string session = "";
+
+		// Socket Information
 		private Socket socket = null;
 		private TcpClient client;
 		private StreamWriter nWriter;
 		private StreamReader nReader;
+		private IPAddress connectServer;
+
+		// State Information
 		private bool yaddrbookdld = false;
 		private bool authenticated = false;
-		private string token = "";
-		private string authtoken = "";
-		private string authtoken2 = "";
-		private string crumb = "";
-		private string connectServer = "";
-		private string urlstartaddr = "";
-		private bool mCancelConnect; // Set to true to cancel a current authentication attempt
+
+		// Authentication Information
+		private string token;
+		private string authtoken;
+		private string authtoken2;
+		private string crumb;
 		
 		// SMS Carrier Information
 		private List<CarrierInfo> mCarriers = new List<CarrierInfo>();
@@ -1351,9 +1286,10 @@ namespace InstantMessage
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private Dictionary<string, string> logincookies = new Dictionary<string, string>();
 		private List<YPacket> queuedpackets = new List<YPacket>();
-		private string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
-		private string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&prog-ver=10.0.0.1102&useutf8=1&legenc=codepage-1252";
-		protected static Encoding dEncoding = Encoding.GetEncoding("windows-1252");
+		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
+		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
+		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
+		private static Encoding dEncoding = Encoding.GetEncoding("windows-1252");
 
 		private enum YahooServices
 		{

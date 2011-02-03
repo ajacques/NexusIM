@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using NexusCore.DataContracts;
+using NexusCore.Properties;
 
 namespace NexusCore.Databases
 {
@@ -14,11 +15,29 @@ namespace NexusCore.Databases
 	{
 		public User TryLogin(string username, string password)
 		{
-			password = hashPassword(password); // Prepare for this
+			var user = (from c in this.Users
+						where c.username == username
+						select c).FirstOrDefault();
 
-			var users = from c in this.Users where c.username == username && c.password == password select c;
+			if (user == null)
+				return null;
 
-			return users.FirstOrDefault();
+			byte[] output = new byte[user.PasswordSalt.Length];
+			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
+			int count = decryptor.TransformBlock(user.PasswordSalt, 0, user.PasswordSalt.Length, output, 0);
+			string salt = mEncoder.GetString(output, 0, count);
+
+			password = HashString(salt + password);
+
+			if (user.password != password)
+				return null;
+			
+			user.lastseen = DateTime.UtcNow;
+			try	{
+				SubmitChanges();
+			} catch (ChangeConflictException) {} // Workaround for Expression Web 4 SuperPreview loading two pages at once
+
+			return user;
 		}
 		public User TryHashLogin(int userid, string pwdhash)
 		{
@@ -26,6 +45,8 @@ namespace NexusCore.Databases
 
 			return users.FirstOrDefault();
 		}
+
+		#region Random
 		public User GetUserById(int userid)
 		{
 			var users = from u in this.Users
@@ -98,16 +119,6 @@ namespace NexusCore.Databases
 			var user = users.FirstOrDefault();
 			return user;
 		}
-		private string hashPassword(string password)
-		{
-			string output = "";
-			byte[] bytes = mEncoder.GetBytes(password);
-			byte[] value = mHasher.ComputeHash(bytes);
-			foreach (byte x in value)
-				output += String.Format("{0:x2}", x);
-
-			return output;
-		}
 		public IEnumerable<ISwarmMessage> GetDeviceMessageQueue(int deviceid)
 		{
 			throw new NotImplementedException();
@@ -136,6 +147,7 @@ namespace NexusCore.Databases
 					where dt.Id == typeid
 					select dt).FirstOrDefault();
 		}
+
 		/// <summary>
 		/// Checks to see if the specified users are currently friends with each other.
 		/// </summary>
@@ -147,26 +159,46 @@ namespace NexusCore.Databases
 			var friends = Friends.Where(f => f.userid == userid || f.friendid == userid);
 			return friends.Any(f => (f.userid == userid && f.friendid == friendid) || (f.userid == userid && f.friendid == friendid));
 		}
+		#endregion
 
-		private string serializeObject(object obj)
+		public string HashString(string input)
 		{
-			MemoryStream stream = new MemoryStream();
-			BinaryFormatter formatter = new BinaryFormatter();
-			formatter.Serialize(stream, obj);
-
-			stream.Position = 0;
-			StreamReader reader = new StreamReader(stream);
-
-			return reader.ReadToEnd();
+			byte[] bytes = mEncoder.GetBytes(input);
+			return HashString(bytes);
 		}
-		private object deserializeObject(string data)
+		public string HashString(byte[] input)
 		{
-			MemoryStream stream = new MemoryStream(mEncoder.GetBytes(data));
-			BinaryFormatter formatter = new BinaryFormatter();
-			return formatter.Deserialize(stream);
+			byte[] value = PasswordHasher.ComputeHash(input);
+			StringBuilder sb = new StringBuilder();
+			foreach (byte x in value)
+				sb.AppendFormat("{0:x2}", x);
+
+			return sb.ToString();
 		}
 
-		private static HashAlgorithm mHasher = new SHA256Managed(); // Yeah!! SHA-256! We rule!
+		private static SymmetricAlgorithm SaltDecryptor
+		{
+			get	{
+				if (mSaltDecryptor == null)
+				{
+					mSaltDecryptor = new AesCryptoServiceProvider();
+					mSaltDecryptor.Key = Encoding.Default.GetBytes(Settings.Default.SaltDecryptionKey);
+					mSaltDecryptor.IV = new byte[16];
+				}
+				return mSaltDecryptor;
+			}
+		}
+		private static HashAlgorithm PasswordHasher
+		{
+			get	{
+				if (mHasher == null)
+					mHasher = new SHA256Managed();
+				return mHasher;
+			}
+		}
+
+		private static SymmetricAlgorithm mSaltDecryptor;
+		private static HashAlgorithm mHasher; // Yeah!! SHA-256! We rule!
 		private static Encoding mEncoder = Encoding.UTF8; // If they can type it, they can use it as a password
 	}
 }

@@ -1,54 +1,34 @@
 using System;
+using System.Data.Linq;
 using System.Linq;
-using System.Collections;
-using System.Collections.Generic;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
-using System.Security;
-using System.Data.Services.Common;
-using System.Data.Services;
-using System.Data.Linq;
+using NexusWeb.Properties;
 
 namespace NexusWeb.Databases
 {
-	[DataServiceKey("Id")]
-	[IgnoreProperties("GeoTag", "User")]
-	partial class StatusUpdate
-	{
-		public double Latitude
-		{
-			get	{
-				return GeoTag != null ? GeoTag.Lat.Value : 0;
-			}
-		}
-	}
-	[DataServiceKey("Id")]
-	partial class ArticleComment
-	{
-
-	}
-	[DataServiceKey("id")]
-	[IgnoreProperties("password", "AuthTokens", "Accounts", "UserLocations", "LocationPrivacies", "Albums", "canlogin", "IsIMSignedIn", "username", "locationsharestate", "FriendListVersion", "DefaultPhotoAcl", "AccountListVersion", "emailauthtoken", "FriendListVersion")]
-	partial class User
-	{
-	}
-
 	partial class userdbDataContext
 	{
 		public User TryLogin(string username, string password)
 		{
-			password = HashString(password); // Prepare for this
-
 			var user = (from c in this.Users
-						where c.username == username && c.password == password
+						where c.username == username
 						select c).FirstOrDefault();
 
+			if (user == null)
+				return null;
+
+			byte[] output = new byte[user.PasswordHash.Length];
+			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
+			decryptor.TransformBlock(user.PasswordHash, 0, user.PasswordHash.Length, output, 0);
+
+			password = HashString(password);
+			
 			user.lastseen = DateTime.UtcNow;
 			try	{
 				SubmitChanges();
-			} catch (ChangeConflictException) { // Workaround for Expression Web 4 SuperPreview loading two pages at once
-
-			}
+			} catch (ChangeConflictException) {} // Workaround for Expression Web 4 SuperPreview loading two pages at once
 
 			return user;
 		}
@@ -215,16 +195,41 @@ namespace NexusWeb.Databases
 
 		public string HashString(string input)
 		{
-			string output = "";
 			byte[] bytes = mEncoder.GetBytes(input);
-			byte[] value = mHasher.ComputeHash(bytes);
+			return HashString(bytes);
+		}
+		public string HashString(byte[] input)
+		{
+			byte[] value = PasswordHasher.ComputeHash(input);
+			StringBuilder sb = new StringBuilder();
 			foreach (byte x in value)
-				output += String.Format("{0:x2}", x);
+				sb.AppendFormat("{0:x2}", x);
 
-			return output;
+			return sb.ToString();
 		}
 
-		private static HashAlgorithm mHasher = new SHA256Managed(); // Yeah!! SHA-256! We rule!
+		private static SymmetricAlgorithm SaltDecryptor
+		{
+			get	{
+				if (mSaltDecryptor == null)
+				{
+					mSaltDecryptor = new AesCryptoServiceProvider();
+					mSaltDecryptor.Key = mEncoder.GetBytes(Settings.Default.SaltDecryptionKey);
+				}
+				return mSaltDecryptor;
+			}
+		}
+		private static HashAlgorithm PasswordHasher
+		{
+			get	{
+				if (mHasher == null)
+					mHasher = new SHA256Managed();
+				return mHasher;
+			}
+		}
+
+		private static SymmetricAlgorithm mSaltDecryptor;
+		private static HashAlgorithm mHasher; // Yeah!! SHA-256! We rule!
 		private static Encoding mEncoder = Encoding.UTF8; // If they can type it, they can use it as a password
 	}
 }

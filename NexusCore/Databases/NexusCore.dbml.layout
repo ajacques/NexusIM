@@ -8,10 +8,10 @@
         <elementListCompartment Id="53283b9e-a916-41e9-b186-4486a6d143da" absoluteBounds="0.765, 1.21, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="573602ab-c41a-417d-b344-5ea35531bccc" absoluteBounds="3.75, 2.375, 2, 3.1170068359374996">
+    <classShape Id="573602ab-c41a-417d-b344-5ea35531bccc" absoluteBounds="3.75, 2.375, 2, 3.3093082682291666">
       <DataClassMoniker Name="/NexusCoreDataContext/User" />
       <nestedChildShapes>
-        <elementListCompartment Id="85b40a26-858d-44ba-ac86-081232646356" absoluteBounds="3.7650000000000006, 2.835, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="85b40a26-858d-44ba-ac86-081232646356" absoluteBounds="3.7650000000000006, 2.835, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="e523d1cd-ea53-451a-990d-7f7ff7034d35" absoluteBounds="0.75, 4, 2, 1.5785953776041666">
@@ -71,7 +71,7 @@
         <classShapeMoniker Id="46b978c9-9c1a-42c8-9d3b-4634f3911b5b" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.75 : 5.35734013671875); (8.375 : 5.35734013671875); (8.375 : 5.625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.75 : 5.68430826822917); (6.125 : 6.05930826822917); (6.125 : 5.25); (7 : 5.25); (7.375 : 5.625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Device" />
       <nodes>
         <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
@@ -92,7 +92,7 @@
         <classShapeMoniker Id="c8306c86-a522-4e26-969d-3520865adf17" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.75 : 2.93618985239429); (7.8437475 : 2.93618985239429); (7.8437475 : 2.57859537760417)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.75 : 2.97081204544139); (7.8437475 : 2.97081204544139); (7.8437475 : 2.57859537760417)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_LocationPrivacy" />
       <nodes>
         <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
@@ -112,14 +112,14 @@
         <elementListCompartment Id="32a4d242-96be-405e-b1d3-b869a3685b90" absoluteBounds="3.7650000000000006, 6.335, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(4.46875 : 5.4920068359375); (4.46875 : 5.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(4.38281125 : 5.68430826822917); (4.38281125 : 5.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Friend" />
       <nodes>
         <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
         <classShapeMoniker Id="fdb68b2b-6ac3-423f-8d6d-644ad183ff40" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.1406225 : 5.4920068359375); (5.1406225 : 5.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.097653125 : 5.68430826822917); (5.097653125 : 5.875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Friend1" />
       <nodes>
         <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />
@@ -132,7 +132,7 @@
         <elementListCompartment Id="3dfb3f2a-c427-47fe-b846-43f2c4f318cd" absoluteBounds="0.76499999999999968, 6.3350000000000009, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(3.75 : 5.44161049939077); (3.14895833333333 : 5.44161049939077); (3.14895833333333 : 5.73484537760417); (1.75 : 5.73484537760417); (1.75 : 5.875)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(3.75 : 5.63080276695798); (3.14895833333333 : 5.63080276695798); (3.14895833333333 : 5.73484537760417); (1.75 : 5.73484537760417); (1.75 : 5.875)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_PhoneNumber" />
       <nodes>
         <classShapeMoniker Id="573602ab-c41a-417d-b344-5ea35531bccc" />

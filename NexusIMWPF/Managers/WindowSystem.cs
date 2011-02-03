@@ -6,6 +6,7 @@ using NexusIM.Properties;
 using NexusIM.Windows;
 using NexusIMWPF;
 using InstantMessage;
+using System.Collections.Generic;
 
 namespace NexusIM.Managers
 {
@@ -19,6 +20,7 @@ namespace NexusIM.Managers
 				{
 					ContactListWindow listWindow = new ContactListWindow();
 					listWindow.Show();
+					listWindow.Closed += new EventHandler(ContactListWindow_Closed);
 					ContactListWindow = listWindow;
 				}), DispatcherPriority.Normal);
 			} else {
@@ -62,6 +64,13 @@ namespace NexusIM.Managers
 			Application = app;
 		}
 
+		// Event Handlers
+		private static void ContactListWindow_Closed(object sender, EventArgs e)
+		{
+			ContactListWindow = null; // Kill it
+		}
+
+		// Properties
 		public static ContactListWindow ContactListWindow
 		{
 			get;

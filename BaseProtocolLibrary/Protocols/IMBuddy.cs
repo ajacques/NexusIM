@@ -79,6 +79,7 @@ namespace InstantMessage
 			}
 			set {
 				mAvatar = value;
+				NotifyPropertyChanged("Avatar");
 			}
 		}
 		/// <summary>

@@ -3,25 +3,22 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Threading;
+using System.Text;
 
 namespace NexusIM.Managers
 {
 	/// <summary>
 	/// Handles connections between other instances of this application
 	/// </summary>
-	public static class IPCHandler
+	internal static class IPCHandler
 	{
 		/// <summary>
 		/// Sets-up all variables used by the named pipe, and creates the named pipe
 		/// </summary>
 		public static void Setup()
 		{
-			// TODO: Can this be done without starting a thread just to start another thread?
-			Thread t = new Thread(new ThreadStart(initWaitThread));
-			t.Name = "Named Pipe Protocol Thread";
-			t.IsBackground = true;
-			t.Priority = ThreadPriority.Lowest;
-			t.Start();
+			pipeServer = new NamedPipeServerStream("nexusim", PipeDirection.InOut, -1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+			pipeServer.BeginWaitForConnection(new AsyncCallback(onNamedPipeRead), null);
 		}
 		/// <summary>
 		/// Attempts to connect to a pre-existing instance
@@ -30,47 +27,56 @@ namespace NexusIM.Managers
 		{
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
-				pipeClient = new NamedPipeClientStream(".", "nexusim", PipeDirection.Out);
-				try {
-					pipeClient.Connect(1000);
-				} catch (IOException) {
-					return;
-				}
-				if (pipeClient.IsConnected)
-				{
-					string input = "";
+				ConnectPipe();
+				string input = "";
 
-					// Merge all command line arguments into one string
-					Environment.GetCommandLineArgs().ToList().GetRange(1, Environment.GetCommandLineArgs().Length - 1).Aggregate((l, r) => l + " " + r);
+				// Merge all command line arguments into one string
+				input = Environment.GetCommandLineArgs().Skip(1).Aggregate((l, r) => l + " " + r);
 
-					input = input.TrimEnd(new char[] { ' ' });
-					StreamWriter writer = new StreamWriter(pipeClient);
-					writer.WriteLine(input);
-					writer.Flush();
-					pipeClient.Flush();
-					pipeClient.Close();
-				}
+				input = input.TrimEnd(new char[] { ' ' });
+				StreamWriter writer = new StreamWriter(pipeClient);
+				writer.WriteLine(input);
+				writer.Flush();
+				pipeClient.Flush();
+				pipeClient.Close();
 			}
 		}
-		private static void initWaitThread()
+		public static void BringToFront()
 		{
-			pipeServer = new NamedPipeServerStream("nexusim", PipeDirection.InOut, -1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-			pipeServer.BeginWaitForConnection(new AsyncCallback(onNamedPipeRead), null);
+			try	{
+				ConnectPipe();
+			} catch (IOException) {
+				return;
+			}
+
+			byte[] mSendBytes = Encoding.ASCII.GetBytes("GETFOCUS");
+			
+			pipeClient.Write(mSendBytes, 0, mSendBytes.Length);
+			pipeClient.Close();
+			pipeClient.Dispose();
 		}
+
+		private static void ConnectPipe()
+		{
+			pipeClient = new NamedPipeClientStream(".", "nexusim", PipeDirection.Out);
+			pipeClient.Connect(1000);
+		}
+
 		private static void onNamedPipeRead(IAsyncResult e)
 		{
 			pipeServer.EndWaitForConnection(e);
 			StreamReader reader = new StreamReader(pipeServer);
 
 			do {
-				string data = "";
-				data = reader.ReadToEnd();
+				string data = reader.ReadLine();
 				CMDArgsHandler.HandleArg(data);
-			} while (true);
+			} while (pipeServer.IsConnected);
+			pipeServer.Disconnect();
+
+			pipeServer.BeginWaitForConnection(new AsyncCallback(onNamedPipeRead), null);
 		}
 
-		private static byte[] dataqueue = new byte[256];
-		private static NamedPipeServerStream pipeServer = null;
-		private static NamedPipeClientStream pipeClient = null;
+		private static NamedPipeServerStream pipeServer;
+		private static NamedPipeClientStream pipeClient;
 	}
 }

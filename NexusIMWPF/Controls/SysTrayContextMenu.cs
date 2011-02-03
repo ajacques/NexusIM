@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using InstantMessage;
 using NexusIM.Managers;
 
 namespace NexusIM.Controls
@@ -17,7 +17,7 @@ namespace NexusIM.Controls
 
 			AccountManager.StatusChanged += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
 			AccountManager_onStatusChange(null, null);
-		}		
+		}
 
 		private void SetupMenuItems()
 		{
@@ -109,9 +109,16 @@ namespace NexusIM.Controls
 			private set;
 		}
 
+		protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+		{
+			base.OnMouseDoubleClick(e);
+
+			WindowSystem.OpenContactListWindow();
+		}
+
 		private void SignOutItem_Click(object sender, RoutedEventArgs e)
 		{
-
+			AccountManager.Connected = !AccountManager.Connected;
 		}
 		private void ContactListItem_Click(object sender, RoutedEventArgs e)
 		{
@@ -119,9 +126,9 @@ namespace NexusIM.Controls
 		}
 		private void AccountManager_onStatusChange(object sender, StatusUpdateEventArgs e)
 		{
-			int onlineCount = AccountManager.Accounts.Count(p => p.Enabled);
+			bool connected = AccountManager.Connected;
 
-			if (onlineCount == 0)
+			if (!connected)
 			{
 				Dispatcher.BeginInvoke(new GenericEvent(() =>
 				{
@@ -129,9 +136,10 @@ namespace NexusIM.Controls
 					SignOutItem.Header = "Sign In";
 				}));	
 			} else {
+				int onlineCount = AccountManager.Accounts.Count(s => s.Protocol.ProtocolStatus == IMProtocolStatus.Online);
 				Dispatcher.BeginInvoke(new GenericEvent(() => {
 					AvailabilityGroupItem.IsEnabled = true;
-					SignOutItem.Header = string.Format("Sign Out ({0} accounts)", onlineCount);
+					SignOutItem.Header = "Sign Out";
 				}));				
 			}
 		}

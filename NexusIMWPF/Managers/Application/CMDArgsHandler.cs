@@ -13,6 +13,9 @@ namespace NexusIM.Managers
 	{
 		public static void HandleArg(string data)
 		{
+			if (String.IsNullOrWhiteSpace(data))
+				return;
+
 			string[] args = data.ToLowerInvariant().Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 			Dictionary<string, string> keyvalues = new Dictionary<string, string>();
 			List<string> mutators = new List<string>();
@@ -37,8 +40,18 @@ namespace NexusIM.Managers
 				}
 			}
 
+			if (mutators.Contains("bringtofront"))
+			{
+				WindowSystem.OpenContactListWindow();
+			}
+
 			if (keyvalues.ContainsKey("status"))
 			{
+				if (keyvalues["status"] == "offline")
+				{
+					AccountManager.Connected = false;
+					return;
+				}
 				try	{
 					IMStatus newstatus = (IMStatus)Enum.Parse(typeof(IMStatus), keyvalues["status"], true);
 					AccountManager.Status = newstatus;
