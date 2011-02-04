@@ -5,7 +5,7 @@ using System.Security;
 using System.Web;
 using System.Web.SessionState;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using NexusWeb.Services;
 using NexusWeb.Services.DataContracts;
 using System.Data.SqlClient;

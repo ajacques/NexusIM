@@ -111,7 +111,7 @@ namespace NexusWeb.Services
 
 			db.Requests.DeleteOnSubmit(request);
 
-			return new UserDetails(db.GetUser(request.SenderUserId));
+			return new UserDetails(db.GetUserById(request.SenderUserId));
 		}
 
 		/// <summary>
@@ -138,7 +138,7 @@ namespace NexusWeb.Services
 				throw WCFExceptions.NotFriends;
 			}
 
-			User usr = db.GetUser(profileid);
+			User usr = db.GetUserById(profileid);
 			int laststatus = db.GetUsersLastStatusUpdate(userid).Id;
 
 			int locaterow = db.UserLocations.Where(ul => ul.userid == profileid).Select(ul => ul.id).FirstOrDefault();
@@ -167,7 +167,7 @@ namespace NexusWeb.Services
 
 			NexusCoreDataContext db = new NexusCoreDataContext();
 
-			User user = db.GetUser(userid);
+			User user = db.GetUserById(userid);
 			var requests = from r in user.Requests
 						   where type == "*" || r.RequestType == type
 						   select new RequestDetails(r);

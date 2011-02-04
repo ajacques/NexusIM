@@ -102,6 +102,10 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DatabaseReferences\DatabaseReferences.csproj">
+      <Project>{9110CC1D-228A-4D53-B02D-5BE731951554}</Project>
+      <Name>DatabaseReferences</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NexusWeb\NexusWeb.csproj">
       <Project>{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}</Project>
       <Name>NexusWeb</Name>

@@ -53,6 +53,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GeoData.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="NexusAuditLog.cs">
       <DependentUpon>NexusAuditLog.dbml</DependentUpon>
     </Compile>

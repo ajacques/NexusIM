@@ -54,5 +54,16 @@ namespace NexusCore.Databases.Properties {
                 return ((string)(this["NexusAuditLogConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\sqlexpress;Initial Catalog=GeoData;Integrated Security=True;Applica" +
+            "tion Name=\"Visual Studio 2010\"")]
+        public string GeoDataConnectionString1 {
+            get {
+                return ((string)(this["GeoDataConnectionString1"]));
+            }
+        }
     }
 }

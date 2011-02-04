@@ -15,7 +15,6 @@ namespace NexusIM.Converters
 		{
 			BuddyAvatar source = value as BuddyAvatar;
 
-			source.
 
 			throw new NotImplementedException();
 		}

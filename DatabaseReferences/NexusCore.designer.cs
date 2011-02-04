@@ -75,6 +75,9 @@ namespace NexusCore.Databases
     partial void InsertAccountSetting(AccountSetting instance);
     partial void UpdateAccountSetting(AccountSetting instance);
     partial void DeleteAccountSetting(AccountSetting instance);
+    partial void InsertPhoneNumber(PhoneNumber instance);
+    partial void UpdatePhoneNumber(PhoneNumber instance);
+    partial void DeletePhoneNumber(PhoneNumber instance);
     #endregion
 		
 		public NexusCoreDataContext() : 
@@ -232,6 +235,14 @@ namespace NexusCore.Databases
 			get
 			{
 				return this.GetTable<AccountSetting>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PhoneNumber> PhoneNumbers
+		{
+			get
+			{
+				return this.GetTable<PhoneNumber>();
 			}
 		}
 		
@@ -2615,6 +2626,8 @@ namespace NexusCore.Databases
 		
 		private EntitySet<Friend> _Friends1;
 		
+		private EntitySet<PhoneNumber> _PhoneNumbers;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -2669,6 +2682,7 @@ namespace NexusCore.Databases
 			this._Requests = new EntitySet<Request>(new Action<Request>(this.attach_Requests), new Action<Request>(this.detach_Requests));
 			this._Friends = new EntitySet<Friend>(new Action<Friend>(this.attach_Friends), new Action<Friend>(this.detach_Friends));
 			this._Friends1 = new EntitySet<Friend>(new Action<Friend>(this.attach_Friends1), new Action<Friend>(this.detach_Friends1));
+			this._PhoneNumbers = new EntitySet<PhoneNumber>(new Action<PhoneNumber>(this.attach_PhoneNumbers), new Action<PhoneNumber>(this.detach_PhoneNumbers));
 			OnCreated();
 		}
 		
@@ -3162,6 +3176,19 @@ namespace NexusCore.Databases
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_PhoneNumber", Storage="_PhoneNumbers", ThisKey="id", OtherKey="UserId")]
+		public EntitySet<PhoneNumber> PhoneNumbers
+		{
+			get
+			{
+				return this._PhoneNumbers;
+			}
+			set
+			{
+				this._PhoneNumbers.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -3300,6 +3327,18 @@ namespace NexusCore.Databases
 		{
 			this.SendPropertyChanging();
 			entity.User1 = null;
+		}
+		
+		private void attach_PhoneNumbers(PhoneNumber entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_PhoneNumbers(PhoneNumber entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
 		}
 	}
 	
@@ -4050,6 +4089,229 @@ namespace NexusCore.Databases
 						this._accountid = default(int);
 					}
 					this.SendPropertyChanged("Account");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PhoneNumbers")]
+	public partial class PhoneNumber : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private int _UserId;
+		
+		private string _PhoneType;
+		
+		private ushort _CountryCode;
+		
+		private string _Number;
+		
+		private System.Nullable<ushort> _Extension;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnUserIdChanging(int value);
+    partial void OnUserIdChanged();
+    partial void OnPhoneTypeChanging(string value);
+    partial void OnPhoneTypeChanged();
+    partial void OnCountryCodeChanging(ushort value);
+    partial void OnCountryCodeChanged();
+    partial void OnSubscriberNumberChanging(string value);
+    partial void OnSubscriberNumberChanged();
+    partial void OnExtensionChanging(System.Nullable<ushort> value);
+    partial void OnExtensionChanged();
+    #endregion
+		
+		public PhoneNumber()
+		{
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="Int NOT NULL")]
+		public int UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneType", DbType="VarChar(15) NOT NULL", CanBeNull=false)]
+		public string PhoneType
+		{
+			get
+			{
+				return this._PhoneType;
+			}
+			set
+			{
+				if ((this._PhoneType != value))
+				{
+					this.OnPhoneTypeChanging(value);
+					this.SendPropertyChanging();
+					this._PhoneType = value;
+					this.SendPropertyChanged("PhoneType");
+					this.OnPhoneTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CountryCode", DbType="SmallInt NOT NULL")]
+		public ushort CountryCode
+		{
+			get
+			{
+				return this._CountryCode;
+			}
+			set
+			{
+				if ((this._CountryCode != value))
+				{
+					this.OnCountryCodeChanging(value);
+					this.SendPropertyChanging();
+					this._CountryCode = value;
+					this.SendPropertyChanged("CountryCode");
+					this.OnCountryCodeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="PhoneNumber", Storage="_Number", DbType="VarChar(14) NOT NULL", CanBeNull=false)]
+		public string SubscriberNumber
+		{
+			get
+			{
+				return this._Number;
+			}
+			set
+			{
+				if ((this._Number != value))
+				{
+					this.OnSubscriberNumberChanging(value);
+					this.SendPropertyChanging();
+					this._Number = value;
+					this.SendPropertyChanged("SubscriberNumber");
+					this.OnSubscriberNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Extension", DbType="SmallInt")]
+		public System.Nullable<ushort> Extension
+		{
+			get
+			{
+				return this._Extension;
+			}
+			set
+			{
+				if ((this._Extension != value))
+				{
+					this.OnExtensionChanging(value);
+					this.SendPropertyChanging();
+					this._Extension = value;
+					this.SendPropertyChanged("Extension");
+					this.OnExtensionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_PhoneNumber", Storage="_User", ThisKey="UserId", OtherKey="id", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.PhoneNumbers.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.PhoneNumbers.Add(this);
+						this._UserId = value.id;
+					}
+					else
+					{
+						this._UserId = default(int);
+					}
+					this.SendPropertyChanged("User");
 				}
 			}
 		}

@@ -159,9 +159,9 @@ namespace NexusCore.Services
 
 			ContactInfo info = new ContactInfo();
 			info.FirstName = contactRow.firstname;
-			info.LastName = contactRow.LastName;
+			info.LastName = contactRow.lastname;
 
-			if (db.AreFriends(userid, contactId))
+			if (db.AreFriends(userid, contactId).Value)
 			{
 				info.PhoneNumbers = contactRow.PhoneNumbers.Select(pn => new PhoneNumberStruct() { CountryCode = pn.CountryCode, Extension = pn.Extension, SubscriberNumber = pn.SubscriberNumber, Type = (PhoneType)Enum.Parse(typeof(PhoneType), pn.PhoneType) });
 			}
@@ -259,11 +259,11 @@ namespace NexusCore.Services
 							join p in db.LocationPrivacies on ul.id equals p.locationid
 							join u in db.Users on ul.userid equals u.id into sr
 							from x in sr.DefaultIfEmpty()
-							where p.userid == userid && ul.priority == 1 && a.id == p.accountid && (x == null || x.locationsharestate)
+							where p.userid == userid && a.id == p.accountid && (x == null || x.locationsharestate)
 							select new { LocationData = ul, ContactInfo = p, AccInfo = a };
 
 			// Takes the needed data from the location mash-up above, and converts it into the correct classes, then puts it in a list to return to the user
-			List<ContactLocationInfo> mLocations = locations.Select(l => new ContactLocationInfo((LocationServiceType)Enum.Parse(typeof(LocationServiceType), l.LocationData.service), l.LocationData.id, new AccountInfo(l.AccInfo.acctype, l.AccInfo.username), l.LocationData.username) { mMessagable = l.LocationData.messagable }).ToList();
+			List<ContactLocationInfo> mLocations = locations.Select(l => new ContactLocationInfo((LocationServiceType)Enum.Parse(typeof(LocationServiceType), l.LocationData.service), l.LocationData.id, new AccountInfo(l.AccInfo.acctype, l.AccInfo.username), l.LocationData.username)).ToList();
 
 			return mLocations;
 		}

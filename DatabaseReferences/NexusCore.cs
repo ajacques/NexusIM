@@ -142,17 +142,78 @@ namespace NexusCore.Databases
 					where dt.Id == typeid
 					select dt).FirstOrDefault();
 		}
-
-		/// <summary>
-		/// Checks to see if the specified users are currently friends with each other.
-		/// </summary>
-		/// <param name="userid">First user id to check</param>
-		/// <param name="friendid">Second user id to check</param>
-		/// <returns>True if the two users are currently friends.</returns>
-		public bool AreFriends(int userid, int friendid)
+		public string NewAuthToken(int userid)
 		{
-			var friends = Friends.Where(f => f.userid == userid || f.friendid == userid);
-			return friends.Any(f => (f.userid == userid && f.friendid == friendid) || (f.userid == userid && f.friendid == friendid));
+			AuthToken token = new AuthToken();
+			token.userid = userid;
+			token.token = PasswordGenerator.RandomString(30);
+			token.expires = DateTime.UtcNow.AddDays(1);
+
+			AuthTokens.InsertOnSubmit(token);
+			SubmitChanges();
+
+			return token.token;
+		}
+		/// <summary>
+		/// Returns all of the friends of the given user.
+		/// </summary>
+		/// <param name="userid"></param>
+		/// <returns></returns>
+		public IQueryable<User> GetFriends(int userid)
+		{
+			var friends = Friends.Where(f => f.userid == userid || f.friendid == userid)
+								 .Join(Users, f => f.friendid == userid ? f.userid : f.friendid, u => u.id, (f, u) => u);
+
+			/*from u in Users
+			  join f in Friends on u.Id equals f.friendid
+			  where f.userid == userid || f.friendid == userid
+			  select u;*/
+
+			return friends;
+		}
+		public StatusUpdate GetUsersLastStatusUpdate(int userid)
+		{
+			var result = from s in StatusUpdates
+						 join u in Users on s.Userid equals u.id
+						 where u.id == userid
+						 orderby s.Timestamp descending
+						 select s;
+
+			return result.First();
+		}
+		public IQueryable<UserLocation> GetPermittedLocationRows(int userid)
+		{
+			var locations = from t in UserLocations
+							join p in LocationPrivacies on t.id equals p.locationid
+							where p.userid == userid
+							select t;
+
+			return locations;
+		}
+		public bool HasLocationViewPermission(int localId, int remoteUserId)
+		{
+			if (Users.Where(u => u.id == remoteUserId).Select(u => u.locationsharestate).First() == false)
+				return false;
+
+			bool result = GetPermittedLocationRows(localId).Any(u => u.userid == remoteUserId);
+			return result;
+		}
+		public IQueryable<Device> GetOnlineDevices(int userid)
+		{
+			var devices = from d in Devices
+						  where d.userid == userid
+						  && d.lastseen == null && d.lastsignin != null // Magic line to get the online devices
+						  select d;
+
+			return devices;
+		}
+		public IQueryable<Device> GetDevices(int userid)
+		{
+			var devices = from d in Devices
+						  where d.userid == userid
+						  select d;
+
+			return devices;
 		}
 		#endregion
 

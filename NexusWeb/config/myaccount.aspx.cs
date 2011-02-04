@@ -55,7 +55,7 @@ namespace NexusWeb.Pages
 				onlinedevicesample.Items.Add(new ListItem("..."));
 
 			// Total Devices
-			int devicecount = db.GetDeviceCount(userid);
+			int devicecount = db.GetDevices(userid).Count();
 			devicetotalcount.Text = devicecount.ToString();
 
 			if (devicecount >= 1)

@@ -27,7 +27,7 @@ namespace NexusWeb.Pages
 			int userid = (int)Session["userid"];
 
 			NexusCoreDataContext db = new NexusCoreDataContext();
-			User clientUser = db.GetUser(userid);
+			User clientUser = db.GetUserById(userid);
 
 			if (Request["userid"] != null)
 			{

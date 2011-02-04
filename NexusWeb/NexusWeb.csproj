@@ -222,7 +222,6 @@
     <Compile Include="BackgroundCode\Extensions.cs" />
     <Compile Include="BackgroundCode\FireEagle.cs" />
     <Compile Include="BackgroundCode\FireEagleOAuth.cs" />
-    <Compile Include="BackgroundCode\Helpers.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -253,7 +252,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="BackgroundCode\Settings.cs" />
     <Compile Include="Services\ArticleFeed.svc.cs">
       <DependentUpon>ArticleFeed.svc</DependentUpon>
     </Compile>

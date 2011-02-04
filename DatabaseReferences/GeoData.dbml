@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="GeoData" Class="GeoDataDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=GeoData;User ID=root" SettingsObjectName="NexusCore.Databases.Properties.Settings" SettingsPropertyName="GeoDataConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\sqlexpress;Initial Catalog=GeoData;Integrated Security=True;Application Name=&quot;Visual Studio 2010&quot;" SettingsObjectName="NexusCore.Databases.Properties.Settings" SettingsPropertyName="GeoDataConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Countries" Member="Countries">
     <Type Name="Country" Id="ID1">
       <Column Name="ISO" Type="System.String" DbType="VarChar(2) NOT NULL" CanBeNull="false" />
@@ -56,6 +56,39 @@
       <Column Name="GeoData" Type="Microsoft.SqlServer.Types.SqlGeography" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="dbo.AdminLevel2" Member="AdminLevel2s">
+    <Type Name="AdminLevel2" Id="ID5">
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CountryISO" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="TwoDigitId" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="VarName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ParentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="HASC" Type="System.String" DbType="Char(11) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="EnglishType" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="ValidFrom" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="ValidTo" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AdminLevel1" Member="AdminLevel1s">
+    <Type Name="AdminLevel1" Id="ID4">
+      <Column Name="RowId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Remarks" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="GeoId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CountryISO" Type="System.String" DbType="Char(3) NOT NULL" CanBeNull="false" />
+      <Column Name="TwoDigitId" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="VarName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ParentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="HASC" Type="System.String" DbType="Char(11) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="EnglishType" Type="System.String" DbType="VarChar(64) NOT NULL" CanBeNull="false" />
+      <Column Name="ValidFrom" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="ValidTo" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetCountry" Method="GetCountry">
     <Parameter Name="lat" Type="System.Double" DbType="Float" />
     <Parameter Name="lng" Type="System.Double" DbType="Float" />
@@ -70,5 +103,15 @@
     <Parameter Name="lat" Type="System.Double" DbType="Float" />
     <Parameter Name="lng" Type="System.Double" DbType="Float" />
     <ElementType IdRef="ID3" />
+  </Function>
+  <Function Name="dbo.GetAdminLevel1" Method="GetAdminLevel1">
+    <Parameter Name="lat" Type="System.Double" DbType="Float" />
+    <Parameter Name="lng" Type="System.Double" DbType="Float" />
+    <ElementType IdRef="ID4" />
+  </Function>
+  <Function Name="dbo.GetAdminLevel2" Method="GetAdminLevel2">
+    <Parameter Name="lat" Type="System.Double" DbType="Float" />
+    <Parameter Name="lng" Type="System.Double" DbType="Float" />
+    <ElementType IdRef="ID5" />
   </Function>
 </Database>

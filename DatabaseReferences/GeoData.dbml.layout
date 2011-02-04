@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="GeoData">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11.25, 10.125" name="GeoData">
   <DataContextMoniker Name="/GeoDataDataContext" />
   <nestedChildShapes>
     <classShape Id="917d835f-c20a-4279-9805-89f73c6cf2f0" absoluteBounds="3.375, 1.375, 2, 4.6554182942708326">
@@ -18,6 +18,18 @@
       <DataClassMoniker Name="/GeoDataDataContext/USA_State" />
       <nestedChildShapes>
         <elementListCompartment Id="a3707ace-3c68-4540-8cd0-9c7aa0cae522" absoluteBounds="8.765, 1.835, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="15b1ce51-50d3-4bb0-96f0-e3b5efb5468c" absoluteBounds="9, 4, 2, 3.1170068359375">
+      <DataClassMoniker Name="/GeoDataDataContext/AdminLevel2" />
+      <nestedChildShapes>
+        <elementListCompartment Id="068a8676-c2a3-4c6d-ae32-5f37ffdfddfa" absoluteBounds="9.015, 4.46, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="19a5198c-d6a2-49af-a44a-2ba7845c84e3" absoluteBounds="5.625, 6.625, 2, 3.3093082682291666">
+      <DataClassMoniker Name="/GeoDataDataContext/AdminLevel1" />
+      <nestedChildShapes>
+        <elementListCompartment Id="43317314-72c6-49ef-bb25-b017816fdb2f" absoluteBounds="5.64, 7.085, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

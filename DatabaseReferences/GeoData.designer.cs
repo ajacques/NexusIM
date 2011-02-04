@@ -36,10 +36,16 @@ namespace NexusCore.Databases
     partial void InsertUSA_State(USA_State instance);
     partial void UpdateUSA_State(USA_State instance);
     partial void DeleteUSA_State(USA_State instance);
+    partial void InsertAdminLevel2(AdminLevel2 instance);
+    partial void UpdateAdminLevel2(AdminLevel2 instance);
+    partial void DeleteAdminLevel2(AdminLevel2 instance);
+    partial void InsertAdminLevel1(AdminLevel1 instance);
+    partial void UpdateAdminLevel1(AdminLevel1 instance);
+    partial void DeleteAdminLevel1(AdminLevel1 instance);
     #endregion
 		
 		public GeoDataDataContext() : 
-				base(global::NexusCore.Databases.Properties.Settings.Default.GeoDataConnectionString, mappingSource)
+				base(global::NexusCore.Databases.Properties.Settings.Default.GeoDataConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -92,6 +98,22 @@ namespace NexusCore.Databases
 			}
 		}
 		
+		public System.Data.Linq.Table<AdminLevel2> AdminLevel2s
+		{
+			get
+			{
+				return this.GetTable<AdminLevel2>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AdminLevel1> AdminLevel1s
+		{
+			get
+			{
+				return this.GetTable<AdminLevel1>();
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCountry")]
 		public ISingleResult<Country> GetCountry([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lat, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lng)
 		{
@@ -111,6 +133,20 @@ namespace NexusCore.Databases
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), lat, lng);
 			return ((ISingleResult<USA_State>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetAdminLevel1")]
+		public ISingleResult<AdminLevel1> GetAdminLevel1([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lat, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lng)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), lat, lng);
+			return ((ISingleResult<AdminLevel1>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetAdminLevel2")]
+		public ISingleResult<AdminLevel2> GetAdminLevel2([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lat, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lng)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), lat, lng);
+			return ((ISingleResult<AdminLevel2>)(result.ReturnValue));
 		}
 	}
 	
@@ -1110,6 +1146,682 @@ namespace NexusCore.Databases
 					this._GeoData = value;
 					this.SendPropertyChanged("GeoData");
 					this.OnGeoDataChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AdminLevel2")]
+	public partial class AdminLevel2 : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _Remarks;
+		
+		private int _Id;
+		
+		private string _CountryISO;
+		
+		private string _TwoDigitId;
+		
+		private string _Name;
+		
+		private string _VarName;
+		
+		private int _ParentId;
+		
+		private string _HASC;
+		
+		private string _Type;
+		
+		private string _EnglishType;
+		
+		private string _ValidFrom;
+		
+		private string _ValidTo;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnRemarksChanging(string value);
+    partial void OnRemarksChanged();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnCountryISOChanging(string value);
+    partial void OnCountryISOChanged();
+    partial void OnTwoDigitIdChanging(string value);
+    partial void OnTwoDigitIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnVarNameChanging(string value);
+    partial void OnVarNameChanged();
+    partial void OnParentIdChanging(int value);
+    partial void OnParentIdChanged();
+    partial void OnHASCChanging(string value);
+    partial void OnHASCChanged();
+    partial void OnTypeChanging(string value);
+    partial void OnTypeChanged();
+    partial void OnEnglishTypeChanging(string value);
+    partial void OnEnglishTypeChanged();
+    partial void OnValidFromChanging(string value);
+    partial void OnValidFromChanged();
+    partial void OnValidToChanging(string value);
+    partial void OnValidToChanged();
+    #endregion
+		
+		public AdminLevel2()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Remarks", DbType="VarChar(255)")]
+		public string Remarks
+		{
+			get
+			{
+				return this._Remarks;
+			}
+			set
+			{
+				if ((this._Remarks != value))
+				{
+					this.OnRemarksChanging(value);
+					this.SendPropertyChanging();
+					this._Remarks = value;
+					this.SendPropertyChanged("Remarks");
+					this.OnRemarksChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CountryISO", DbType="Char(3) NOT NULL", CanBeNull=false)]
+		public string CountryISO
+		{
+			get
+			{
+				return this._CountryISO;
+			}
+			set
+			{
+				if ((this._CountryISO != value))
+				{
+					this.OnCountryISOChanging(value);
+					this.SendPropertyChanging();
+					this._CountryISO = value;
+					this.SendPropertyChanged("CountryISO");
+					this.OnCountryISOChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwoDigitId", DbType="Char(2) NOT NULL", CanBeNull=false)]
+		public string TwoDigitId
+		{
+			get
+			{
+				return this._TwoDigitId;
+			}
+			set
+			{
+				if ((this._TwoDigitId != value))
+				{
+					this.OnTwoDigitIdChanging(value);
+					this.SendPropertyChanging();
+					this._TwoDigitId = value;
+					this.SendPropertyChanged("TwoDigitId");
+					this.OnTwoDigitIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VarName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string VarName
+		{
+			get
+			{
+				return this._VarName;
+			}
+			set
+			{
+				if ((this._VarName != value))
+				{
+					this.OnVarNameChanging(value);
+					this.SendPropertyChanging();
+					this._VarName = value;
+					this.SendPropertyChanged("VarName");
+					this.OnVarNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentId", DbType="Int NOT NULL")]
+		public int ParentId
+		{
+			get
+			{
+				return this._ParentId;
+			}
+			set
+			{
+				if ((this._ParentId != value))
+				{
+					this.OnParentIdChanging(value);
+					this.SendPropertyChanging();
+					this._ParentId = value;
+					this.SendPropertyChanged("ParentId");
+					this.OnParentIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HASC", DbType="Char(11) NOT NULL", CanBeNull=false)]
+		public string HASC
+		{
+			get
+			{
+				return this._HASC;
+			}
+			set
+			{
+				if ((this._HASC != value))
+				{
+					this.OnHASCChanging(value);
+					this.SendPropertyChanging();
+					this._HASC = value;
+					this.SendPropertyChanged("HASC");
+					this.OnHASCChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="VarChar(64) NOT NULL", CanBeNull=false)]
+		public string Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EnglishType", DbType="VarChar(64) NOT NULL", CanBeNull=false)]
+		public string EnglishType
+		{
+			get
+			{
+				return this._EnglishType;
+			}
+			set
+			{
+				if ((this._EnglishType != value))
+				{
+					this.OnEnglishTypeChanging(value);
+					this.SendPropertyChanging();
+					this._EnglishType = value;
+					this.SendPropertyChanged("EnglishType");
+					this.OnEnglishTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidFrom", DbType="VarChar(32)")]
+		public string ValidFrom
+		{
+			get
+			{
+				return this._ValidFrom;
+			}
+			set
+			{
+				if ((this._ValidFrom != value))
+				{
+					this.OnValidFromChanging(value);
+					this.SendPropertyChanging();
+					this._ValidFrom = value;
+					this.SendPropertyChanged("ValidFrom");
+					this.OnValidFromChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidTo", DbType="VarChar(32)")]
+		public string ValidTo
+		{
+			get
+			{
+				return this._ValidTo;
+			}
+			set
+			{
+				if ((this._ValidTo != value))
+				{
+					this.OnValidToChanging(value);
+					this.SendPropertyChanging();
+					this._ValidTo = value;
+					this.SendPropertyChanged("ValidTo");
+					this.OnValidToChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AdminLevel1")]
+	public partial class AdminLevel1 : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _RowId;
+		
+		private string _Remarks;
+		
+		private int _GeoId;
+		
+		private string _CountryISO;
+		
+		private string _TwoDigitId;
+		
+		private string _Name;
+		
+		private string _VarName;
+		
+		private int _ParentId;
+		
+		private string _HASC;
+		
+		private string _Type;
+		
+		private string _EnglishType;
+		
+		private string _ValidFrom;
+		
+		private string _ValidTo;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnRowIdChanging(int value);
+    partial void OnRowIdChanged();
+    partial void OnRemarksChanging(string value);
+    partial void OnRemarksChanged();
+    partial void OnGeoIdChanging(int value);
+    partial void OnGeoIdChanged();
+    partial void OnCountryISOChanging(string value);
+    partial void OnCountryISOChanged();
+    partial void OnTwoDigitIdChanging(string value);
+    partial void OnTwoDigitIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnVarNameChanging(string value);
+    partial void OnVarNameChanged();
+    partial void OnParentIdChanging(int value);
+    partial void OnParentIdChanged();
+    partial void OnHASCChanging(string value);
+    partial void OnHASCChanged();
+    partial void OnTypeChanging(string value);
+    partial void OnTypeChanged();
+    partial void OnEnglishTypeChanging(string value);
+    partial void OnEnglishTypeChanged();
+    partial void OnValidFromChanging(string value);
+    partial void OnValidFromChanged();
+    partial void OnValidToChanging(string value);
+    partial void OnValidToChanged();
+    #endregion
+		
+		public AdminLevel1()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RowId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int RowId
+		{
+			get
+			{
+				return this._RowId;
+			}
+			set
+			{
+				if ((this._RowId != value))
+				{
+					this.OnRowIdChanging(value);
+					this.SendPropertyChanging();
+					this._RowId = value;
+					this.SendPropertyChanged("RowId");
+					this.OnRowIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Remarks", DbType="VarChar(255)")]
+		public string Remarks
+		{
+			get
+			{
+				return this._Remarks;
+			}
+			set
+			{
+				if ((this._Remarks != value))
+				{
+					this.OnRemarksChanging(value);
+					this.SendPropertyChanging();
+					this._Remarks = value;
+					this.SendPropertyChanged("Remarks");
+					this.OnRemarksChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoId", DbType="Int NOT NULL")]
+		public int GeoId
+		{
+			get
+			{
+				return this._GeoId;
+			}
+			set
+			{
+				if ((this._GeoId != value))
+				{
+					this.OnGeoIdChanging(value);
+					this.SendPropertyChanging();
+					this._GeoId = value;
+					this.SendPropertyChanged("GeoId");
+					this.OnGeoIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CountryISO", DbType="Char(3) NOT NULL", CanBeNull=false)]
+		public string CountryISO
+		{
+			get
+			{
+				return this._CountryISO;
+			}
+			set
+			{
+				if ((this._CountryISO != value))
+				{
+					this.OnCountryISOChanging(value);
+					this.SendPropertyChanging();
+					this._CountryISO = value;
+					this.SendPropertyChanged("CountryISO");
+					this.OnCountryISOChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwoDigitId", DbType="Char(2) NOT NULL", CanBeNull=false)]
+		public string TwoDigitId
+		{
+			get
+			{
+				return this._TwoDigitId;
+			}
+			set
+			{
+				if ((this._TwoDigitId != value))
+				{
+					this.OnTwoDigitIdChanging(value);
+					this.SendPropertyChanging();
+					this._TwoDigitId = value;
+					this.SendPropertyChanged("TwoDigitId");
+					this.OnTwoDigitIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VarName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string VarName
+		{
+			get
+			{
+				return this._VarName;
+			}
+			set
+			{
+				if ((this._VarName != value))
+				{
+					this.OnVarNameChanging(value);
+					this.SendPropertyChanging();
+					this._VarName = value;
+					this.SendPropertyChanged("VarName");
+					this.OnVarNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentId", DbType="Int NOT NULL")]
+		public int ParentId
+		{
+			get
+			{
+				return this._ParentId;
+			}
+			set
+			{
+				if ((this._ParentId != value))
+				{
+					this.OnParentIdChanging(value);
+					this.SendPropertyChanging();
+					this._ParentId = value;
+					this.SendPropertyChanged("ParentId");
+					this.OnParentIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HASC", DbType="Char(11) NOT NULL", CanBeNull=false)]
+		public string HASC
+		{
+			get
+			{
+				return this._HASC;
+			}
+			set
+			{
+				if ((this._HASC != value))
+				{
+					this.OnHASCChanging(value);
+					this.SendPropertyChanging();
+					this._HASC = value;
+					this.SendPropertyChanged("HASC");
+					this.OnHASCChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="VarChar(64) NOT NULL", CanBeNull=false)]
+		public string Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EnglishType", DbType="VarChar(64) NOT NULL", CanBeNull=false)]
+		public string EnglishType
+		{
+			get
+			{
+				return this._EnglishType;
+			}
+			set
+			{
+				if ((this._EnglishType != value))
+				{
+					this.OnEnglishTypeChanging(value);
+					this.SendPropertyChanging();
+					this._EnglishType = value;
+					this.SendPropertyChanged("EnglishType");
+					this.OnEnglishTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidFrom", DbType="VarChar(32)")]
+		public string ValidFrom
+		{
+			get
+			{
+				return this._ValidFrom;
+			}
+			set
+			{
+				if ((this._ValidFrom != value))
+				{
+					this.OnValidFromChanging(value);
+					this.SendPropertyChanging();
+					this._ValidFrom = value;
+					this.SendPropertyChanged("ValidFrom");
+					this.OnValidFromChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidTo", DbType="VarChar(32)")]
+		public string ValidTo
+		{
+			get
+			{
+				return this._ValidTo;
+			}
+			set
+			{
+				if ((this._ValidTo != value))
+				{
+					this.OnValidToChanging(value);
+					this.SendPropertyChanging();
+					this._ValidTo = value;
+					this.SendPropertyChanged("ValidTo");
+					this.OnValidToChanged();
 				}
 			}
 		}

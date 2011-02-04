@@ -22,7 +22,6 @@ namespace NexusWeb.Pages
 			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			try	{
-				db.TryLogout(userid);
 				Session.Clear();
 				Session.Abandon();
 			} catch (SecurityException) {

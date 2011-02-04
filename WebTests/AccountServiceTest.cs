@@ -10,7 +10,7 @@ using NexusWeb.Services;
 using NexusWeb;
 using WebTests.Properties;
 using System.Data.Linq;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace WebTests
 {
