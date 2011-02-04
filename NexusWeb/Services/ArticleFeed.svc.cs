@@ -9,13 +9,12 @@ using NexusWeb.Services.DataContracts;
 using System.ServiceModel;
 using System.Net;
 using System.Security;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using System.ServiceModel.Channels;
 using System.IO;
 using System.ServiceModel.Activation;
 using System.Xml;
 using System.Collections;
-using System.Data.Linq;
 using System.Web.SessionState;
 using System.Web.Script.Services;
 using System.Linq.Expressions;
@@ -44,7 +43,7 @@ namespace NexusWeb.Services
 
 			NameValueCollection urlParams = HttpUtility.ParseQueryString(requestUri.Query);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			IQueryable<StatusUpdate> query = db.StatusUpdates;
 
 			if (urlParams["since"] != null)
@@ -104,7 +103,7 @@ namespace NexusWeb.Services
 
 			NameValueCollection urlParams = HttpUtility.ParseQueryString(requestUri.Query);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			IQueryable<User> query = db.Users;
 
 			string fullNameQuery = urlParams["fullname"];

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -17,7 +17,7 @@ namespace NexusWeb.Pages
 
 			int userid = (int)Session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/myaccounts.js"));
 			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/jquery.tablednd_0_5.js"));

@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NexusCore" Class="userdbDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=NexusCore;Integrated Security=True;Application Name=NexusWeb" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="NexusCoreConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="NexusCore" Class="NexusCoreDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;Initial Catalog=NexusCore;Integrated Security=True;Application Name=NexusWeb" SettingsObjectName="NexusCore.Databases.Properties.Settings" SettingsPropertyName="NexusCoreConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.AuthTokens" Member="AuthTokens">
     <Type Name="AuthToken">
       <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
@@ -105,6 +105,7 @@
       <Column Name="enabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="LoginState" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="HostComputer" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Account_AccountSetting" Member="AccountSettings" ThisKey="id" OtherKey="accountid" Type="AccountSetting" />
       <Association Name="User_Account" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
@@ -182,6 +183,15 @@
       <Column Name="Timestamp" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Association Name="User_Friend" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
       <Association Name="User_Friend1" Member="User1" ThisKey="friendid" OtherKey="id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AccountSettings" Member="AccountSettings">
+    <Type Name="AccountSetting">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="accountid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="configkey" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="configvalue" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Association Name="Account_AccountSetting" Member="Account" ThisKey="accountid" OtherKey="id" Type="Account" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
     </Type>
   </Table>
   <Function Name="dbo.GeoTagStatusMessage" Method="GeoTagStatusMessage">

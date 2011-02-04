@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Services
 {
@@ -24,7 +24,7 @@ namespace NexusWeb.Services
 		[OperationContract]
 		public bool UsernameInUse(string username)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			
 			bool result = db.Users.Any(u => u.username == username);
 

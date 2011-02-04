@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using NexusWeb.Properties;
 using System.Collections;
 using NexusWeb;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -23,7 +23,7 @@ namespace NexusWeb.Pages
 			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/mydevices.js"));
 			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/Devices.svc"));
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			foreach (Device device in db.GetDevices(userid))
 			{

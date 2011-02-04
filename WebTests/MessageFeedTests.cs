@@ -98,7 +98,7 @@ namespace WebTests
 		{
 			var feed = new MessageFeed_Accessor();
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			if (feed.GetCachedFriends(1).Count() != db.GetFriends(1).Count())
 				throw new Exception("Cached Friends Count does not match DB-stored friend count");
@@ -116,7 +116,7 @@ namespace WebTests
 
 			feed.PostStatusMessage(msg);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var result = db.StatusUpdates.Where(su => su.MessageBody == msg && su.Userid == userid);
 
 			db.StatusUpdates.DeleteAllOnSubmit(result);
@@ -144,7 +144,7 @@ namespace WebTests
 			
 			feed.PostStatusMessage(msg, geoloc);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var result = db.StatusUpdates.Where(su => su.MessageBody == msg && su.Userid == userid).FirstOrDefault();
 
 			db.StatusUpdates.DeleteOnSubmit(result);

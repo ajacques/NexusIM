@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NexusWeb.Databases
+namespace NexusCore.Databases
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;
@@ -36,7 +36,7 @@ namespace NexusWeb.Databases
     #endregion
 		
 		public NexusAuditLogDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["NexusAuditLogConnectionString"].ConnectionString, mappingSource)
+				base(global::NexusCore.Databases.Properties.Settings.Default.NexusAuditLogConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -94,7 +94,7 @@ namespace NexusWeb.Databases
 		
 		private int _Id;
 		
-		private string _Site;
+		private string _site;
 		
 		private System.DateTime _TimeStamp;
 		
@@ -106,7 +106,7 @@ namespace NexusWeb.Databases
 		
 		private bool _Succeded;
 		
-		private int _IPAddress;
+		private string _IPAddress;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -126,7 +126,7 @@ namespace NexusWeb.Databases
     partial void OnUserIdChanged();
     partial void OnSuccededChanging(bool value);
     partial void OnSuccededChanged();
-    partial void OnIPAddressChanging(int value);
+    partial void OnIPAddressChanging(string value);
     partial void OnIPAddressChanged();
     #endregion
 		
@@ -155,20 +155,20 @@ namespace NexusWeb.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Site", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Name="site", Storage="_site", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
 		public string Site
 		{
 			get
 			{
-				return this._Site;
+				return this._site;
 			}
 			set
 			{
-				if ((this._Site != value))
+				if ((this._site != value))
 				{
 					this.OnSiteChanging(value);
 					this.SendPropertyChanging();
-					this._Site = value;
+					this._site = value;
 					this.SendPropertyChanged("Site");
 					this.OnSiteChanged();
 				}
@@ -195,7 +195,7 @@ namespace NexusWeb.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="VarChar(50)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
 		public string UserName
 		{
 			get
@@ -275,8 +275,8 @@ namespace NexusWeb.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IPAddress", DbType="Int NOT NULL")]
-		public int IPAddress
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IPAddress", DbType="VARCHAR(50) NOT NULL", CanBeNull=false)]
+		public string IPAddress
 		{
 			get
 			{

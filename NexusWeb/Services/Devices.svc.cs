@@ -9,7 +9,7 @@ using System.Web;
 using System.Text.RegularExpressions;
 using System.Web.SessionState;
 using NexusWeb.AdminChannel;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Services
 {
@@ -32,7 +32,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			DeviceType type = db.GetDeviceType(devicetype);
 
@@ -64,7 +64,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var device = (from d in db.Devices
 						  where d.userid == userid && d.id == deviceid
@@ -97,7 +97,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var devices = from d in db.Devices
 						  where d.userid == userid && d.id == deviceid

@@ -39,7 +39,7 @@ namespace NexusCore.Databases
     #endregion
 		
 		public GeoDataDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["GeoDataConnectionString"].ConnectionString, mappingSource)
+				base(global::NexusCore.Databases.Properties.Settings.Default.GeoDataConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -466,7 +466,7 @@ namespace NexusCore.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoData", CanBeNull=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoData")]
 		public Microsoft.SqlServer.Types.SqlGeometry GeoData
 		{
 			get

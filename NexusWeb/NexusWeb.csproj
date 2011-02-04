@@ -181,16 +181,6 @@
     <Content Include="App_Browsers\tablets\tablets.browser">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Databases\GeoData.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>GeoData.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Databases\NexusAuditLog.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>NexusAuditLog.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\AdminChannel\AdminChannel1.wsdl" />
     <None Include="Service References\AdminChannel\AdminChannel3.xsd">
       <SubType>Designer</SubType>
@@ -224,19 +214,6 @@
     <Compile Include="BackgroundCode\CounterCSRF.cs" />
     <Compile Include="BackgroundCode\GoogleLatitudeOAuth.cs" />
     <Compile Include="BackgroundCode\ServiceAuthorizationManager.cs" />
-    <Compile Include="Databases\GeoData.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GeoData.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\NexusAuditLog.cs">
-      <DependentUpon>NexusAuditLog.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\NexusAuditLog.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NexusAuditLog.dbml</DependentUpon>
-    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -287,14 +264,6 @@
     <Compile Include="Services\PhotoDataContracts.cs" />
     <Compile Include="Services\Photos.svc.cs">
       <DependentUpon>Photos.svc</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\userdb.cs">
-      <DependentUpon>userdb.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\userdb.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>userdb.dbml</DependentUpon>
     </Compile>
     <Compile Include="Services\Accounts.svc.cs">
       <DependentUpon>Accounts.svc</DependentUpon>
@@ -500,25 +469,11 @@
     <Content Include="config\locationconfig.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Databases\GeoData.dbml.layout">
-      <DependentUpon>GeoData.dbml</DependentUpon>
-    </None>
-    <None Include="Databases\NexusAuditLog.dbml.layout">
-      <DependentUpon>NexusAuditLog.dbml</DependentUpon>
-    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Databases\userdb.dbml.layout">
-      <DependentUpon>userdb.dbml</DependentUpon>
-    </None>
-    <None Include="Databases\userdb.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>userdb.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Web.sitemap" />
     <Content Include="config\mydevices.aspx" />
     <Content Include="config\popups\editaccount.aspx" />
@@ -540,7 +495,12 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\AdminChannel\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DatabaseReferences\DatabaseReferences.csproj">
+      <Project>{9110CC1D-228A-4D53-B02D-5BE731951554}</Project>
+      <Name>DatabaseReferences</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,7 +6,7 @@ using System.Drawing;
 using NexusWeb.Services.DataContracts;
 using System.Collections.Generic;
 using System.Linq;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Services
 {
@@ -17,7 +17,7 @@ namespace NexusWeb.Services
 	{
 		public PhotoService()
 		{
-			db = new userdbDataContext();
+			db = new NexusCoreDataContext();
 		}
 
 		public void UploadPhoto(Stream uploadstream)
@@ -38,6 +38,6 @@ namespace NexusWeb.Services
 			throw new NotImplementedException();
 		}
 
-		private userdbDataContext db;
+		private NexusCoreDataContext db;
 	}
 }

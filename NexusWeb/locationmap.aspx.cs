@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -14,7 +14,7 @@ namespace NexusWeb.Pages
 		{
 			if (Session["userid"] != null && Request.Cookies["AUTHTOKEN"] == null)
 			{
-				userdbDataContext db = new userdbDataContext();
+				NexusCoreDataContext db = new NexusCoreDataContext();
 				int userid = (int)Session["userid"];
 
 				string token = db.NewAuthToken(userid);

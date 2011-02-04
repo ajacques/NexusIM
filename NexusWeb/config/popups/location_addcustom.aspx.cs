@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.UI;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.SubPages
 {
@@ -19,7 +19,7 @@ namespace NexusWeb.SubPages
 
 				Enum.Parse(typeof(LocationServiceType), service);
 
-				userdbDataContext db = new userdbDataContext();
+				NexusCoreDataContext db = new NexusCoreDataContext();
 
 				int rowid = db.UserLocations.Where(ul => ul.identifier == identifier && ul.service == service).Select(ul => ul.id).FirstOrDefault();
 

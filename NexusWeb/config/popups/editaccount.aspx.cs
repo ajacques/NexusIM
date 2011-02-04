@@ -2,7 +2,7 @@
 using System.Web.UI;
 using System.Net;
 using System.Linq;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.SubPages
 {
@@ -19,7 +19,7 @@ namespace NexusWeb.SubPages
 			int userid = (int)Session["userid"];
 			int accid = Convert.ToInt32(Request["id"]);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var account = from a in db.Accounts
 						  where a.userid == userid && a.id == accid

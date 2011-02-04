@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using System.Globalization;
 
 namespace NexusWeb.Masters
@@ -22,7 +22,7 @@ namespace NexusWeb.Masters
 			if (Session["userid"] != null)
 			{
 				int userid = (int)Session["userid"];
-				userdbDataContext db = new userdbDataContext();
+				NexusCoreDataContext db = new NexusCoreDataContext();
 				var user = (from u in db.Users
 							where u.id == userid
 							select new { u.firstname, u.lastname }).First();

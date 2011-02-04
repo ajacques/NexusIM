@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Authentication;
 using System.Web.UI;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using NexusWeb.Masters;
 using System.Linq;
 
@@ -23,7 +23,7 @@ namespace NexusWeb.Pages
 		}
 		private void AttemptLogin(string username, string password)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var user = db.TryLogin(username, password);
 

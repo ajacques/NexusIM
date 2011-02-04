@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using System.Text.RegularExpressions;
 using NexusWeb.Properties;
 using NexusWeb;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -23,7 +23,7 @@ namespace NexusWeb.Pages
 				string data = glatitudeident.Text;
 				Match rgx = Regex.Match(data, Resources.GoogleLatitudeIdentiferParseRegex);
 
-				userdbDataContext db = new userdbDataContext();
+				NexusCoreDataContext db = new NexusCoreDataContext();
 				UserLocation location = new UserLocation();
 				location.userid = (int)Session["userid"];
 				location.service = "GoogleLatitude";

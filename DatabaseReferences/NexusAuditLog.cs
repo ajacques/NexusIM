@@ -1,5 +1,11 @@
 using System;
 using System.Web;
+namespace DatabaseReferences
+{
+	partial class NexusAuditLogDataContext
+	{
+	}
+}
 
 namespace NexusCore.Databases
 {

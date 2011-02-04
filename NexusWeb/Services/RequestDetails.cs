@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using System.Runtime.Serialization;
 
 namespace NexusWeb.Services.DataContracts

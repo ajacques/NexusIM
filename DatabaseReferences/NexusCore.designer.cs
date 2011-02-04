@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NexusWeb.Databases
+namespace NexusCore.Databases
 {
 	using System.Data.Linq;
 	using System.Data.Linq.Mapping;
@@ -23,7 +23,7 @@ namespace NexusWeb.Databases
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="NexusCore")]
-	public partial class userdbDataContext : System.Data.Linq.DataContext
+	public partial class NexusCoreDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
@@ -72,33 +72,36 @@ namespace NexusWeb.Databases
     partial void InsertFriend(Friend instance);
     partial void UpdateFriend(Friend instance);
     partial void DeleteFriend(Friend instance);
+    partial void InsertAccountSetting(AccountSetting instance);
+    partial void UpdateAccountSetting(AccountSetting instance);
+    partial void DeleteAccountSetting(AccountSetting instance);
     #endregion
 		
-		public userdbDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["NexusCoreConnectionString"].ConnectionString, mappingSource)
+		public NexusCoreDataContext() : 
+				base(global::NexusCore.Databases.Properties.Settings.Default.NexusCoreConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public userdbDataContext(string connection) : 
+		public NexusCoreDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public userdbDataContext(System.Data.IDbConnection connection) : 
+		public NexusCoreDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public userdbDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public NexusCoreDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public userdbDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public NexusCoreDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -221,6 +224,14 @@ namespace NexusWeb.Databases
 			get
 			{
 				return this.GetTable<Friend>();
+			}
+		}
+		
+		public System.Data.Linq.Table<AccountSetting> AccountSettings
+		{
+			get
+			{
+				return this.GetTable<AccountSetting>();
 			}
 		}
 		
@@ -2046,6 +2057,8 @@ namespace NexusWeb.Databases
 		
 		private string _HostComputer;
 		
+		private EntitySet<AccountSetting> _AccountSettings;
+		
 		private EntityRef<User> _User;
 		
     #region Extensibility Method Definitions
@@ -2076,6 +2089,7 @@ namespace NexusWeb.Databases
 		
 		public Account()
 		{
+			this._AccountSettings = new EntitySet<AccountSetting>(new Action<AccountSetting>(this.attach_AccountSettings), new Action<AccountSetting>(this.detach_AccountSettings));
 			this._User = default(EntityRef<User>);
 			OnCreated();
 		}
@@ -2284,6 +2298,19 @@ namespace NexusWeb.Databases
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_AccountSetting", Storage="_AccountSettings", ThisKey="id", OtherKey="accountid")]
+		public EntitySet<AccountSetting> AccountSettings
+		{
+			get
+			{
+				return this._AccountSettings;
+			}
+			set
+			{
+				this._AccountSettings.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Account", Storage="_User", ThisKey="userid", OtherKey="id", IsForeignKey=true)]
 		public User User
 		{
@@ -2336,6 +2363,18 @@ namespace NexusWeb.Databases
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_AccountSettings(AccountSetting entity)
+		{
+			this.SendPropertyChanging();
+			entity.Account = this;
+		}
+		
+		private void detach_AccountSettings(AccountSetting entity)
+		{
+			this.SendPropertyChanging();
+			entity.Account = null;
 		}
 	}
 	
@@ -3836,6 +3875,181 @@ namespace NexusWeb.Databases
 						this._friendid = default(int);
 					}
 					this.SendPropertyChanged("User1");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AccountSettings")]
+	public partial class AccountSetting : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private int _accountid;
+		
+		private string _configkey;
+		
+		private string _configvalue;
+		
+		private EntityRef<Account> _Account;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnaccountidChanging(int value);
+    partial void OnaccountidChanged();
+    partial void OnconfigkeyChanging(string value);
+    partial void OnconfigkeyChanged();
+    partial void OnconfigvalueChanging(string value);
+    partial void OnconfigvalueChanged();
+    #endregion
+		
+		public AccountSetting()
+		{
+			this._Account = default(EntityRef<Account>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_accountid", DbType="Int NOT NULL")]
+		public int accountid
+		{
+			get
+			{
+				return this._accountid;
+			}
+			set
+			{
+				if ((this._accountid != value))
+				{
+					if (this._Account.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnaccountidChanging(value);
+					this.SendPropertyChanging();
+					this._accountid = value;
+					this.SendPropertyChanged("accountid");
+					this.OnaccountidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_configkey", DbType="VarChar(20) NOT NULL", CanBeNull=false)]
+		public string configkey
+		{
+			get
+			{
+				return this._configkey;
+			}
+			set
+			{
+				if ((this._configkey != value))
+				{
+					this.OnconfigkeyChanging(value);
+					this.SendPropertyChanging();
+					this._configkey = value;
+					this.SendPropertyChanged("configkey");
+					this.OnconfigkeyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_configvalue", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+		public string configvalue
+		{
+			get
+			{
+				return this._configvalue;
+			}
+			set
+			{
+				if ((this._configvalue != value))
+				{
+					this.OnconfigvalueChanging(value);
+					this.SendPropertyChanging();
+					this._configvalue = value;
+					this.SendPropertyChanged("configvalue");
+					this.OnconfigvalueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Account_AccountSetting", Storage="_Account", ThisKey="accountid", OtherKey="id", IsForeignKey=true, DeleteOnNull=true, DeleteRule="CASCADE")]
+		public Account Account
+		{
+			get
+			{
+				return this._Account.Entity;
+			}
+			set
+			{
+				Account previousValue = this._Account.Entity;
+				if (((previousValue != value) 
+							|| (this._Account.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Account.Entity = null;
+						previousValue.AccountSettings.Remove(this);
+					}
+					this._Account.Entity = value;
+					if ((value != null))
+					{
+						value.AccountSettings.Add(this);
+						this._accountid = value.id;
+					}
+					else
+					{
+						this._accountid = default(int);
+					}
+					this.SendPropertyChanged("Account");
 				}
 			}
 		}

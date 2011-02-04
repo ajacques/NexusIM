@@ -2,7 +2,7 @@
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using NexusWeb.Services.DataContracts;
 
 namespace NexusWeb.Services

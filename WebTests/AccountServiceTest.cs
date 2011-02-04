@@ -73,7 +73,7 @@ namespace WebTests
 			AccountService_Accessor service = new AccountService_Accessor();
 			service.SetLocationShareState(true);
 
-			userdbDataContext db = new userdbDataContext(Settings.Default.NexusCoreConnectionString);
+			NexusCoreDataContext db = new NexusCoreDataContext(Settings.Default.NexusCoreConnectionString);
 
 			var result = from u in db.Users
 						  where u.id == userid
@@ -111,7 +111,7 @@ namespace WebTests
 
 			service.EditIMAccount(accid, "generated", "generated");
 
-			userdbDataContext db = new userdbDataContext(Settings.Default.NexusCoreConnectionString);
+			NexusCoreDataContext db = new NexusCoreDataContext(Settings.Default.NexusCoreConnectionString);
 
 			var result = (from a in db.Accounts
 						 where a.id == accid

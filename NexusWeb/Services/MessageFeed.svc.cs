@@ -17,7 +17,7 @@ using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using Microsoft.ApplicationServer.Caching;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using NexusWeb.Properties;
 using NexusWeb.Services.DataContracts;
 using System.Collections;
@@ -61,7 +61,7 @@ namespace NexusWeb.Services
 			int userid;
 			HandleWCFAuth(out userid);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			// Add their friends
 			var friends = db.GetFriends(userid).Select(u => new UserDetails(u));
@@ -75,7 +75,7 @@ namespace NexusWeb.Services
 			int userid;
 			HandleWCFAuth(out userid);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			if (userid == recipient)
 			{
 				Trace.WriteLine(String.Format("User {0} attempted to send friend request to them self", userid, recipient));
@@ -96,7 +96,7 @@ namespace NexusWeb.Services
 			int userid;
 			HandleWCFAuth(out userid);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var request = (from r in db.Requests
 						  where r.Id == requestId && r.RequestType == "friend" && r.RecipientUserId == userid
 						  select r).FirstOrDefault();
@@ -124,7 +124,7 @@ namespace NexusWeb.Services
 			int userid;
 			HandleWCFAuth(out userid);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			if (!db.AreFriends(userid, profileid).Value && profileid != userid) // Verify that the both users are friends
 			{
@@ -165,7 +165,7 @@ namespace NexusWeb.Services
 			int userid;
 			HandleWCFAuth(out userid);
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			User user = db.GetUser(userid);
 			var requests = from r in user.Requests
@@ -186,7 +186,7 @@ namespace NexusWeb.Services
 			post.MessageBody = messageBody;
 			post.Timestamp = DateTime.UtcNow;
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			db.StatusUpdates.InsertOnSubmit(post);
 			db.SubmitChanges();
 
@@ -207,7 +207,7 @@ namespace NexusWeb.Services
 			if (position != null && position.mAccuracy != null)
 				post.GeoTagAccuracy = position.mAccuracy;
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			db.StatusUpdates.InsertOnSubmit(post);
 			//db.SubmitChanges();
 
@@ -227,7 +227,7 @@ namespace NexusWeb.Services
 		[WebInvoke(Method = "GET")]
 		public Stream GetUserImage(int userid, PhotoSize size)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var user = (from u in db.Users
 						where u.id == userid
 						select new { u.DisplayImageId, u.DefaultPhotoAcl }).FirstOrDefault();
@@ -247,7 +247,7 @@ namespace NexusWeb.Services
 				}
 			}
 
-			string imgpath;
+			string imgpath = "";
 
 			if (user == null || user.DisplayImageId == null)
 			{
@@ -312,7 +312,7 @@ HttpSessionState session = HttpContext.Current.Session;
 		}
 		private int[] GetCachedFriends(int userid)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			if (!Settings.Default.EnableAppFabricCache)
 				return db.GetFriends(userid).Select(u => u.id).ToArray();
@@ -332,7 +332,7 @@ HttpSessionState session = HttpContext.Current.Session;
 		}
 		private ClientStatusUpdate GetStatusUpdate(int articleid)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var result = (from su in db.StatusUpdates
 						  where su.Id == articleid
 						  select su).FirstOrDefault();
@@ -358,13 +358,13 @@ HttpSessionState session = HttpContext.Current.Session;
 		/// <param name="whereclause">Predicate to search through status updates for.</param>
 		internal static IEnumerable<ClientStatusUpdate> GetStatusUpdates(Func<StatusUpdate, bool> whereclause)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			return db.StatusUpdates.Where(whereclause).Select(mDbToUsableStatusUpdate);
 		}
 		private static IEnumerable<ClientArticleComment> GetComments(Func<ArticleComment, bool> whereclause)
 		{
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			return db.ArticleComments.Where(whereclause).Select(c => new ClientArticleComment() { mUserId = c.UserId, mTimeStamp = c.TimeStamp, mMessageBody = c.MessageBody });
 		}
 

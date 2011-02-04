@@ -6,8 +6,7 @@ using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using NexusCore.DataContracts;
-using NexusCore.Properties;
+using System.Configuration;
 
 namespace NexusCore.Databases
 {
@@ -16,8 +15,8 @@ namespace NexusCore.Databases
 		public User TryLogin(string username, string password)
 		{
 			var user = (from c in this.Users
-						where c.username == username
-						select c).FirstOrDefault();
+					   where c.username == username
+					   select c).FirstOrDefault();
 
 			if (user == null)
 				return null;
@@ -123,14 +122,6 @@ namespace NexusCore.Databases
 			var user = users.FirstOrDefault();
 			return user;
 		}
-		public IEnumerable<ISwarmMessage> GetDeviceMessageQueue(int deviceid)
-		{
-			throw new NotImplementedException();
-		}
-		public void AddToDeviceMessageQueue(int deviceid, ISwarmMessage message)
-		{
-			throw new NotImplementedException();
-		}
 		public Account GetSingleAccount(int accountid)
 		{
 			var acc = from a in Accounts
@@ -186,7 +177,7 @@ namespace NexusCore.Databases
 				if (mSaltDecryptor == null)
 				{
 					mSaltDecryptor = new AesCryptoServiceProvider();
-					mSaltDecryptor.Key = Encoding.Default.GetBytes(Settings.Default.SaltDecryptionKey);
+					mSaltDecryptor.Key = Encoding.Default.GetBytes(ConfigurationManager.AppSettings["SaltDecryptionKey"]);
 					mSaltDecryptor.IV = new byte[16];
 				}
 				return mSaltDecryptor;

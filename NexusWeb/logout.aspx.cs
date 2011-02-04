@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Security;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -19,7 +19,7 @@ namespace NexusWeb.Pages
 			int userid = (int)Session["userid"];
 			string token = (string)Request["token"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			try	{
 				db.TryLogout(userid);

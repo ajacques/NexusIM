@@ -70,6 +70,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTests", "DbTests\DbTests.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIMWPF", "NexusIMWPF\NexusIMWPF.csproj", "{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseReferences", "DatabaseReferences\DatabaseReferences.csproj", "{9110CC1D-228A-4D53-B02D-5BE731951554}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -198,6 +200,14 @@ Global
 		{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

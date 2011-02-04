@@ -6,7 +6,8 @@ using System.Web.UI.WebControls;
 using NexusWeb.Properties;
 using Microsoft.ApplicationServer.Caching;
 using System.Diagnostics;
-using NexusWeb.Databases;
+using NexusCore.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -24,7 +25,7 @@ namespace NexusWeb.Pages
 
 			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/Accounts.svc"));
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			bool locationShareState = db.Users.Where(ul => ul.id == userid).Select(ul => ul.locationsharestate).First();
 
@@ -47,7 +48,7 @@ namespace NexusWeb.Pages
 			HandleSuggestions(db, userid);	
 		}
 
-		private void HandleRequests(userdbDataContext db, int user)
+		private void HandleRequests(NexusCoreDataContext db, int user)
 		{
 			var requests = from r in db.Requests
 						   where r.RecipientUserId == user && r.RequestType == "location"
@@ -63,7 +64,7 @@ namespace NexusWeb.Pages
 				requestpnl.Controls.Add(label);
 			}
 		}
-		private void HandleFriendServices(userdbDataContext db, int userid)
+		private void HandleFriendServices(NexusCoreDataContext db, int userid)
 		{
 			IEnumerable<UserLocation> users = db.GetPermittedLocationRows(userid);
 
@@ -109,14 +110,14 @@ namespace NexusWeb.Pages
 				friendrows.Rows.Add(row);
 			}
 		}
-		private void HandleMyServices(userdbDataContext db, int userid)
+		private void HandleMyServices(NexusCoreDataContext db, int userid)
 		{
 			var services = from ul in db.UserLocations where ul.userid == userid select new { ServiceType = (LocationServiceType)Enum.Parse(typeof(LocationServiceType), ul.service) };
 			
 			foreach (var service in services)
 				myservices.Items.Add(service.ServiceType.ToString());
 		}
-		private void HandleSuggestions(userdbDataContext db, int userid)
+		private void HandleSuggestions(NexusCoreDataContext db, int userid)
 		{
 			Dictionary<int, string> suggest = null;
 

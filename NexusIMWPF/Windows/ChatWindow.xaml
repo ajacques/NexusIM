@@ -45,7 +45,7 @@
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
-			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Source="cataduck.jpg" Stretch="UniformToFill" />
+			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Source="{Binding Avatar}" Stretch="UniformToFill" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
 				<RichTextBox Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
 					<FlowDocument>

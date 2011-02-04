@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using NexusWeb.AdminChannel;
 using NexusWeb.Masters;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {
@@ -26,7 +26,7 @@ namespace NexusWeb.Pages
 
 			int userid = (int)Session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			User clientUser = db.GetUser(userid);
 
 			if (Request["userid"] != null)

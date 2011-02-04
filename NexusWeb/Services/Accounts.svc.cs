@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.SessionState;
 using Microsoft.ApplicationServer.Caching;
 using NexusWeb.AdminChannel;
-using NexusWeb.Databases;
+using NexusCore.Databases;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Net.Mail;
@@ -90,7 +90,7 @@ namespace NexusWeb.Services
 			if (session["userid"] != null)
 				return;
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var userrow = db.TryLogin(username, password);
 			NexusAuditLogDataContext audit = new NexusAuditLogDataContext();
 
@@ -135,7 +135,7 @@ namespace NexusWeb.Services
 			if (session["userid"] != null)
 				return;
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			User userRow = new User();
 			userRow.username = email;
 			userRow.firstname = firstName;
@@ -181,7 +181,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var rows = from lp in db.LocationPrivacies
 					   where lp.locationid == locationId
@@ -218,7 +218,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var userStates = from u in db.Users
 							 where u.id == userid
@@ -275,7 +275,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			Account row = new Account();
 			row.acctype = acctype;
@@ -315,7 +315,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var account = from a in db.Accounts
 						  where a.userid == userid && a.id == accountid
@@ -354,7 +354,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var account = (from a in db.Accounts
 						  where a.userid == userid && a.id == accountid
@@ -378,7 +378,7 @@ namespace NexusWeb.Services
 
 			int userid = (int)session["userid"];
 
-			userdbDataContext db = new userdbDataContext();
+			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			// Lots 'o magic here. Grab all the rows for the requested state changes and filter out any accounts that don't belong to this user
 			var accounts = from a in db.Accounts

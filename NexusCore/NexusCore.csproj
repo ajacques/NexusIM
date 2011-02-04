@@ -80,24 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clientaccesspolicy.xml" />
-    <None Include="Databases\GeoData.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>GeoData.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Databases\NexusAuditLog.dbml">
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>NexusAuditLog.designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Databases\NexusCore.dbml">
-      <SubType>Designer</SubType>
-      <Generator>MSLinqToSQLGenerator</Generator>
-      <LastGenOutput>NexusCore.designer.cs</LastGenOutput>
-    </None>
-    <None Include="Databases\NexusCore.dbml.layout">
-      <DependentUpon>NexusCore.dbml</DependentUpon>
-    </None>
     <Content Include="Services\AuthTokenService.svc" />
     <Content Include="Services\CoreService.svc" />
     <Content Include="Services\PushCallback.svc" />
@@ -111,39 +93,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\ClusterDistributor.cs" />
     <Compile Include="Controllers\SettingDbSerializer.cs" />
     <Compile Include="Controllers\PushCallbackFactory.cs" />
     <Compile Include="Controllers\WebIMProtocolManager.cs" />
-    <Compile Include="Databases\GeoData.cs">
-      <DependentUpon>GeoData.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\GeoData.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GeoData.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\NexusAuditLog.cs">
-      <DependentUpon>NexusAuditLog.dbml</DependentUpon>
-    </Compile>
-    <Compile Include="Databases\NexusAuditLog.designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>NexusAuditLog.dbml</DependentUpon>
-    </Compile>
     <Compile Include="DataContracts\ContactInfo.cs" />
     <Compile Include="DataContracts\PhoneNumber.cs" />
     <Compile Include="NamedPipeProtocol.cs" />
     <Compile Include="Json.cs" />
-    <Compile Include="Databases\NexusCore.cs">
-      <DependentUpon>NexusCore.dbml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Databases\NexusCore.designer.cs">
-      <DependentUpon>NexusCore.dbml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -191,19 +147,13 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Databases\GeoData.dbml.layout">
-      <DependentUpon>GeoData.dbml</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Databases\NexusAuditLog.dbml.layout">
-      <DependentUpon>NexusAuditLog.dbml</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
       <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
       <Name>BaseProtocolLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DatabaseReferences\DatabaseReferences.csproj">
+      <Project>{9110CC1D-228A-4D53-B02D-5BE731951554}</Project>
+      <Name>DatabaseReferences</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
