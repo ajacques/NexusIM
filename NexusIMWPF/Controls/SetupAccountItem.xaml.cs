@@ -73,7 +73,7 @@ namespace NexusIM.Controls
 			if (!extraData.IsReady)
 			{
 				AccountManager.AddNewAccount(extraData);
-				IMSettings.Accounts.Add(extraData.Protocol);
+				IMSettings.Accounts.Add(extraData);
 				Debug.WriteLine("User is saving new account of type" + extraData.Protocol.Protocol + ". Registering with IMSetttings and AccountManager.");
 			} else
 				Debug.WriteLine("User is saving account of type " + extraData.Protocol.Protocol);

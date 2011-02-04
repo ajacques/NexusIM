@@ -18,7 +18,7 @@ namespace InstantMessage
 	/// Stores information about a single contact
 	/// </summary>
 	[Serializable]
-	public sealed partial class IMBuddy : IComparable<IMBuddy>, IContact, INotifyPropertyChanged, IHasPresence
+	public sealed partial class IMBuddy : IContact, INotifyPropertyChanged, IHasPresence
 	{
 		public IMBuddy()
 		{
@@ -97,10 +97,7 @@ namespace InstantMessage
 		public bool Online
 		{
 			get {
-				return isOnline;
-			}
-			set {
-				isOnline = value;
+				return Status != IMBuddyStatus.Offline && Status != IMBuddyStatus.Unknown;
 			}
 		}
 		public string DisplayName
@@ -260,8 +257,6 @@ namespace InstantMessage
 					mStatusChange = DateTime.Now;
 				NotifyPropertyChanged("Status");
 
-				if (onGlobalBuddyStatusChange != null)
-					onGlobalBuddyStatusChange(this, null);
 				if (onStatusChange != null)
 					onStatusChange(this, null);
 			}
@@ -285,15 +280,18 @@ namespace InstantMessage
 				mProtocol.SetPerUserVisibilityStatus(this.Username, value);
 			}
 		}
-
-		public int CompareTo(IMBuddy right)
-		{
-			return mGuid.CompareTo(right.mGuid);
-		}
-
+		
 		public static IMBuddy FromUsername(string username, IMProtocol source)
 		{
 			return (from p in source.ContactList where p.Username == username select new { p }).FirstOrDefault().p;
+		}
+
+		public bool Equals(IContact right)
+		{
+			if (right == null)
+				throw new ArgumentNullException("contact");
+
+			return object.ReferenceEquals(Protocol, right.Protocol) && Username.Equals(right.Username);
 		}
 
 		private void NotifyPropertyChanged(string property)
@@ -303,24 +301,16 @@ namespace InstantMessage
 		}
 
 		// Events
-		/// <summary>
-		/// Subscribe to this event to receive updates whenever any buddy has a status change.
-		/// </summary>
-		public static event EventHandler onGlobalBuddyStatusChange;
-		public event EventHandler onSignOut;
 		public event EventHandler onStatusChange;
-		public event EventHandler onWindowOpen;
 		public event PropertyChangedEventHandler PropertyChanged;
 		public event EventHandler<IMMessageEventArgs> onReceiveMessage;
 		
 		// Variables
 		internal UserVisibilityStatus mVisibilityStatus;
-		private string mUsername = "";
-		private string mNickname = "";
+		private string mUsername;
+		private string mNickname;
 		private BuddyAvatar mAvatar;
-		private IMProtocol mProtocol = null;
-		private bool isOnline = false;
-		private bool mBlistItemVisible = false;
+		private IMProtocol mProtocol;
 		private bool mIsMobileContact = false;
 		private bool mIsInternalUsage = false;
 		private bool mIsOnBuddyList = true;
@@ -331,7 +321,6 @@ namespace InstantMessage
 		private string mGroup = "";
 		private string mSMSnumber = "";
 		private int mMessageLength = -1;
-		private string buddyImageKey = "";
 		private Dictionary<string, string> data = new Dictionary<string, string>();
 	}
 }

@@ -38,5 +38,9 @@ namespace InstantMessage
 		{
 			get { throw new NotImplementedException(); }
 		}
+		public bool Equals(IContact other)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

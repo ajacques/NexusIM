@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using InstantMessage;
 
-namespace NexusIM
+namespace InstantMessage
 {
 	public class IMProtocolExtraData
 	{

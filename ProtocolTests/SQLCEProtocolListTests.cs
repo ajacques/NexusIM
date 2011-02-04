@@ -18,7 +18,7 @@ namespace ProtocolTests
 		public void LoadTest()
 		{
 			SQLCESettings setting = new SQLCESettings(Settings.Default.UserProfileTest);
-			IList<IMProtocol> protocols = setting.Accounts;
+			IList<IMProtocolExtraData> protocols = setting.Accounts;
 			Assert.IsNotNull(protocols);
 		}
 
@@ -33,14 +33,15 @@ namespace ProtocolTests
 		public void EnumerateTest()
 		{
 			SQLCESettings setting = new SQLCESettings(Settings.Default.UserProfileTest);
-			IEnumerator<IMProtocol> enumer = setting.Accounts.GetEnumerator();
+			IEnumerator<IMProtocolExtraData> enumer = setting.Accounts.GetEnumerator();
 			Assert.IsNotNull(enumer);
 
 			while (enumer.MoveNext())
 			{
-				IMProtocol protocol = enumer.Current;
-				Assert.IsNotNull(protocol.ConfigurationSettings);
+				IMProtocolExtraData protocol = enumer.Current;
 				Assert.IsNotNull(protocol);
+				Assert.IsNotNull(protocol.Protocol);
+				Assert.IsNotNull(protocol.Protocol.ConfigurationSettings);
 			}
 		}
 
@@ -65,7 +66,7 @@ namespace ProtocolTests
 
 			IMProtocol protocol = new IMProtocol();
 			protocol.Username = "GenericUsername";
-			setting.Accounts.Add(protocol);
+			setting.Accounts.Add(new IMProtocolExtraData() { Protocol = protocol });
 
 			UserProfile db = UserProfile.Create(Settings.Default.UserProfileTest);
 			Assert.IsTrue(db.Accounts.Any(a => a.Username == "GenericUsername" && a.AccountType == "Default"));
@@ -76,8 +77,8 @@ namespace ProtocolTests
 		public void NotifyChangeTest()
 		{
 			SQLCESettings setting = new SQLCESettings(Settings.Default.UserProfileTest);
-			IMProtocol protocol = setting.Accounts.First(a => a.Username == "TestUpdate");
-			protocol.Username = "TestNewUpdate";
+			IMProtocolExtraData protocol = setting.Accounts.First(a => a.Protocol.Username == "TestUpdate");
+			protocol.Protocol.Username = "TestNewUpdate";
 
 			UserProfile db = UserProfile.Create(Settings.Default.UserProfileTest);
 			Assert.IsTrue(db.Accounts.Any(a => a.AccountType == "default" && a.Username == "TestNewUpdate"));

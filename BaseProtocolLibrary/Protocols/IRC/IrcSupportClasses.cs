@@ -36,11 +36,11 @@ namespace InstantMessage.Protocols.Irc
 {
 	public class IRCUserMask : IContact
 	{
-		public IRCUserMask(IRCProtocol protocol)
+		internal IRCUserMask(IRCProtocol protocol)
 		{
 			Protocol = protocol;
 		}
-		public IRCUserMask(IRCProtocol protocol, string input)
+		internal IRCUserMask(IRCProtocol protocol, string input)
 		{
 			Protocol = protocol;
 			if (!input.Contains('!'))
@@ -65,6 +65,17 @@ namespace InstantMessage.Protocols.Irc
 		{
 		}
 
+		public bool Equals(IContact right)
+		{
+			if (right == null)
+				throw new ArgumentNullException("right");
+
+			if (!(right is IRCUserMask))
+				throw new ArgumentException("right must be of type IRCUserMask");
+
+			return object.ReferenceEquals(Protocol, right.Protocol) && Username.Equals(right.Username);
+		}
+
 		public override string ToString()
 		{
 			return String.Format("{0}!{1}@{2}", Nickname, Username, Hostname);
@@ -78,6 +89,12 @@ namespace InstantMessage.Protocols.Irc
 		{
 			get;
 			internal set;
+		}
+		public IMBuddyStatus Status
+		{
+			get	{
+				return IMBuddyStatus.Unknown;
+			}
 		}
 		public string Hostname
 		{

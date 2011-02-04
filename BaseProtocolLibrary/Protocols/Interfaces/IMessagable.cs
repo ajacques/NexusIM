@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace InstantMessage.Protocols
+namespace InstantMessage
 {
 	/// <summary>
 	/// Represents an object that can be messages ie a contact or a chat room

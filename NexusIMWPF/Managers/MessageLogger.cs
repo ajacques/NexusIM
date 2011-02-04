@@ -20,7 +20,9 @@ namespace NexusIM.Managers
 			msg.Timestamp = DateTime.UtcNow;
 			msg.Sender = recipient.Protocol.Username;
 			msg.Recipient = recipient.Username;
+
 			db.PrivateMessages.InsertOnSubmit(msg);
+
 			db.SubmitChanges();
 		}
 

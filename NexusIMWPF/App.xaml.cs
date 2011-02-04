@@ -77,8 +77,9 @@ namespace NexusIMWPF
 
 			AccountManager.Setup();
 
-			foreach (IMProtocol protocol in IMSettings.Accounts)
+			foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
 				AccountManager.AddNewAccount(protocol);
+
 			Trace.WriteLine(String.Format("{0} Accounts Loaded", AccountManager.Accounts.Count()));
 
 			WindowSystem.OpenDummyWindow();

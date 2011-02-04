@@ -54,6 +54,7 @@ namespace InstantMessage
 		Away,
 		Idle,
 		Offline,
+		Unknown,
 	}
 
 	/// <summary>
@@ -632,18 +633,6 @@ namespace InstantMessage
 		protected Exception mLoginException;
 	}
 		
-	public interface IContact : IMessagable
-	{
-		IMProtocol Protocol
-		{
-			get;
-		}
-
-		string Username
-		{
-			get;
-		}
-	}
 	public interface IChatRoom : IMessagable
 	{
 		string Name

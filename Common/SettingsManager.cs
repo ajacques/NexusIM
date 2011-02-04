@@ -12,7 +12,7 @@ namespace InstantMessage
 			mSettingMgr = controller;
 		}
 
-		public static IList<IMProtocol> Accounts
+		public static IList<IMProtocolExtraData> Accounts
 		{
 			get	{
 				return mSettingMgr.Accounts;

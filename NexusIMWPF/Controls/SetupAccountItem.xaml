@@ -4,6 +4,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
+	xmlns:imc="clr-namespace:InstantMessage;assembly=Common"
 	xmlns:nx="clr-namespace:NexusIM"
 	xmlns:nxc="clr-namespace:NexusIM.Converters" 
 	x:Name="UserControl"
@@ -50,11 +51,11 @@
 		</EventTrigger>
 	</UserControl.Triggers>
 	<UserControl.DataContext>
-		<nx:IMProtocolExtraData Enabled="True">
-			<nx:IMProtocolExtraData.Protocol>
+		<imc:IMProtocolExtraData Enabled="True">
+			<imc:IMProtocolExtraData.Protocol>
 				<im:IMProtocol Enabled="true" Username="Test Username" Password="Test" />
-			</nx:IMProtocolExtraData.Protocol>
-		</nx:IMProtocolExtraData>		
+			</imc:IMProtocolExtraData.Protocol>
+		</imc:IMProtocolExtraData>		
 	</UserControl.DataContext>
 	<Grid x:Name="LayoutRoot">
 		<Border x:Name="BackgroundRect" BorderBrush="#FF686868" BorderThickness="1" CornerRadius="5" Background="Transparent" />

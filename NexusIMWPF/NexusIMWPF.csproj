@@ -136,6 +136,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CEConnectionPool.cs" />
+    <Compile Include="ChatHistory.cs">
+      <DependentUpon>ChatHistory.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="ChatHistory.designer.cs">
+      <DependentUpon>ChatHistory.dbml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Controls\ChatMessageInline.cs" />
     <Compile Include="Controls\ContactListGroup.xaml.cs">
       <DependentUpon>ContactListGroup.xaml</DependentUpon>
@@ -153,6 +161,7 @@
     <Compile Include="Controls\SetupAccountItem.xaml.cs">
       <DependentUpon>SetupAccountItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ProtocolToComboBox.cs" />
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="LazyWeak.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
@@ -172,7 +181,6 @@
     <Compile Include="Managers\WindowSystem.cs" />
     <Compile Include="MiscFuncs.cs" />
     <Compile Include="Protocol\GroupOfContacts.cs" />
-    <Compile Include="Protocol\IMProtocolExtraData.cs" />
     <Compile Include="Service References\NexusCore\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -206,6 +214,9 @@
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SelectRecipientWindow.xaml.cs">
+      <DependentUpon>SelectRecipientWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SysTrayPeekWindow.xaml.cs">
       <DependentUpon>SysTrayPeekWindow.xaml</DependentUpon>
     </Compile>
@@ -227,11 +238,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="ChatHistory.dbml.layout">
+      <DependentUpon>ChatHistory.dbml</DependentUpon>
+    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="ChatHistory.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ChatHistory.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NexusIMWPF_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
     <None Include="Service References\NexusCore\CoreService.xsd">
@@ -323,6 +342,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\SelectRecipientWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Windows\SysTrayPeekWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -409,6 +432,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\NexusCore\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -581,7 +581,6 @@ namespace InstantMessage
 				Disconnect();
 			} else {
 				IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter["7"], this);
-				buddy.Online = false;
 				buddy.Status = IMBuddyStatus.Offline;
 				triggerContactStatusChange(new IMFriendEventArgs(buddy));
 			}
@@ -654,8 +653,6 @@ namespace InstantMessage
 				if (packet.Parameter.ContainsKey("7"))
 				{
 					buddy = IMBuddy.FromUsername(packet.Parameter["7"], this);
-					buddy.Online = true;
-					buddy.Status = IMBuddyStatus.Available;
 					HandleStatusData(buddy, packet);
 					triggerContactStatusChange(new IMFriendEventArgs(buddy));
 				}
