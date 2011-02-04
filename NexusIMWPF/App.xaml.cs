@@ -67,6 +67,7 @@ namespace NexusIMWPF
 
 			InterfaceManager.Setup();
 			IPCHandler.Setup();
+			MessageLogger.Setup("Data Source=ChatHistory.sdf;Persist Security Info=False;");
 
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserData.sdf");
 

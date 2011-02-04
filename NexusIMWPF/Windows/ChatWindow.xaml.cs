@@ -7,6 +7,7 @@ using InstantMessage.Events;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using NexusIM.Managers;
+using System.ComponentModel;
 
 namespace NexusIM.Windows
 {
@@ -31,6 +32,7 @@ namespace NexusIM.Windows
 		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			Contact.onReceiveMessage += new EventHandler<IMMessageEventArgs>(OnReceiveMessage);
+			Contact.PropertyChanged += new PropertyChangedEventHandler(Contact_PropertyChanged);
 		}
 		private void OnReceiveMessage(object sender, IMMessageEventArgs e)
 		{
@@ -57,6 +59,7 @@ namespace NexusIM.Windows
 				inline.Username = "Me";
 				inline.MessageBody = message;
 				ChatHistoryBox.Inlines.Add(inline);
+				MessageLogger.LogMessageToRemote(Contact, message);
 			}
 		}
 		private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -72,6 +75,13 @@ namespace NexusIM.Windows
 		{
 			AccountManager.Status = IMStatus.Available;
 			SelfInvisibleWarning.Visibility = Visibility.Collapsed;
+		}
+		private void Contact_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Avatar")
+			{
+
+			}
 		}
 	}
 }
