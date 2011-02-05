@@ -71,6 +71,7 @@ namespace NexusIM.Controls
 		private void SetupEventHandlers()
 		{
 			SignOutItem.Click += new RoutedEventHandler(SignOutItem_Click);
+			ExitItem.Click += new RoutedEventHandler(ExitItem_Click);
 		}
 
 		public MenuItem ContactListItem
@@ -119,6 +120,11 @@ namespace NexusIM.Controls
 		private void SignOutItem_Click(object sender, RoutedEventArgs e)
 		{
 			AccountManager.Connected = !AccountManager.Connected;
+		}
+		private void ExitItem_Click(object sender, RoutedEventArgs e)
+		{
+			AccountManager.Connected = false;
+			WindowSystem.Application.Shutdown();
 		}
 		private void ContactListItem_Click(object sender, RoutedEventArgs e)
 		{

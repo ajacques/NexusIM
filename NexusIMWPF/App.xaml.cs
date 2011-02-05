@@ -40,6 +40,7 @@ namespace NexusIMWPF
 				this.Shutdown();
 			}
 			WindowSystem.RegisterApp(this);
+			this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 		}		
 
 		public void Dispose()
@@ -51,10 +52,12 @@ namespace NexusIMWPF
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			base.OnStartup(e);
+			mStopwatch = new Stopwatch();
+			mStopwatch.Start();
 
 			SetupTraceListeners();
+
 			Trace.AutoFlush = true;
-			
 			// Log some random information for debugging
 			Trace.WriteLine("Username: " + Environment.UserDomainName + "\\" + Environment.UserName);
 			Trace.WriteLine("Process ID: " + Process.GetCurrentProcess().Id);
@@ -62,43 +65,32 @@ namespace NexusIMWPF
 			Trace.WriteLine("Working Directory: " + Environment.CurrentDirectory);
 			Trace.WriteLine("CLR Version: " + Environment.Version.ToString());
 			Trace.WriteLine(string.Format("OS Is64Bit: {0} (Current Process Is64Bit: {1})", Environment.Is64BitOperatingSystem, Environment.Is64BitProcess));
-			
-			Trace.WriteLine("Mutex Locked and Loaded");
-
-			InterfaceManager.Setup();
-			IPCHandler.Setup();
-			MessageLogger.Setup("Data Source=ChatHistory.sdf;Persist Security Info=False;");
 
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserData.sdf");
-
 			Trace.WriteLine("Configuration File: " + configuri);
-
 			IMSettings.Setup(new SQLCESettings("Data Source=\"UserProfile.sdf\";Persist Security Info=False;"));
 
-			AccountManager.Setup();
-
-			foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
-				AccountManager.AddNewAccount(protocol);
-
-			Trace.WriteLine(String.Format("{0} Accounts Loaded", AccountManager.Accounts.Count()));
-
-			WindowSystem.OpenDummyWindow();
 			if (FirstRunSetup.IsFirstRun)
 			{
 				InitialSetupWindow window = new InitialSetupWindow();
 				window.Show();
+				AccountManager.Setup();
 			} else {
+				AccountManager.Setup();
+				foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
+					AccountManager.AddNewAccount(protocol);
+
 				WindowSystem.OpenContactListWindow();
 				WindowSystem.ShowSysTrayIcon();
 			}
 
 			Trace.WriteLine("Configuration file loaded and parsed.");
-				
-			Notifications.Setup();
+
 			RestartManager.Setup();
 
 			Trace.WriteLine("All Managers are loaded and ready");
-			
+			Trace.WriteLine("Load Stopwatch: Application Initialization complete in: " + mStopwatch.Elapsed);
+			mStopwatch.Stop();
 		}
 		protected override void OnExit(ExitEventArgs e)
 		{
@@ -127,5 +119,6 @@ namespace NexusIMWPF
 
 		// Variables
 		private Mutex mSingleInstanceMutex;
+		private Stopwatch mStopwatch;
 	}
 }

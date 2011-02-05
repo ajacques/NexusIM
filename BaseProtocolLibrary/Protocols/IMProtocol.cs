@@ -137,7 +137,7 @@ namespace InstantMessage
 		/// <param name="message">The contents of the message</param>
 		public virtual void SendMessage(string friendName, string message)
 		{
-			IMSendMessageEventArgs args = new IMSendMessageEventArgs(this, IMBuddy.FromUsername(friendName, this), message);
+			IMSendMessageEventArgs args = new IMSendMessageEventArgs(this, null, message);
 			triggerOnSendMessage(args);
 			if (args.Handled)
 				throw new Exception("SendMessage Handled()");

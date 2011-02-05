@@ -22,14 +22,5 @@ namespace NexusCore.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("wLP1Ce4L-QnxYr6sR5HT1lMqBV8U0p/G")]
-        public string SaltDecryptionKey {
-            get {
-                return ((string)(this["SaltDecryptionKey"]));
-            }
-        }
     }
 }

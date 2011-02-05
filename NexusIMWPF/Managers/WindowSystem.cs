@@ -52,9 +52,12 @@ namespace NexusIM.Managers
 			if (SysTrayIcon != null)
 				return;
 
-			SysTrayIcon = new TaskbarIcon();
-			SysTrayIcon.Icon = Resources.app;
-			SysTrayIcon.ContextMenu = new SysTrayContextMenu();
+			Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
+					SysTrayIcon = new TaskbarIcon();
+					SysTrayIcon.Icon = Resources.app;
+					SysTrayIcon.ContextMenu = new SysTrayContextMenu();
+				}));
 		}
 		public static void RegisterApp(App app)
 		{

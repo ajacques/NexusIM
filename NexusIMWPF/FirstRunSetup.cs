@@ -24,7 +24,7 @@ namespace NexusIM
 		public static bool IsFirstRun
 		{
 			get {
-				if (!AccountManager.Accounts.Any())
+				if (!IMSettings.Accounts.Any())
 					return true;
 				return ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun;
 			}

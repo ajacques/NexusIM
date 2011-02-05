@@ -32,7 +32,10 @@ namespace NexusIM.Windows
 
 			IEnumerable<IMBuddy> contacts = AccountManager.Accounts.Where(p => p.Enabled && p.Protocol.ProtocolStatus == IMProtocolStatus.Online).SelectMany(s => s.Protocol.ContactList);
 
-			IEnumerable<IMBuddy> results = contacts.Where(i => (!String.IsNullOrEmpty(i.Nickname) && i.Nickname.ToUpperInvariant().StartsWith(search)) || i.Username.ToUpperInvariant().StartsWith(search));
+			IEnumerable<IMBuddy> results = contacts.Where(i => 
+				(!String.IsNullOrEmpty(i.Nickname) &&
+					(i.Nickname.ToUpperInvariant().StartsWith(search) || i.Nickname.ToUpperInvariant().Split(' ').Any(s => s.StartsWith(search)))
+				) || i.Username.ToUpperInvariant().StartsWith(search));
 			Brush subtleTextBrush = new SolidColorBrush(Color.FromRgb(125, 125, 125));
 			Brush heavyTextBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
 
