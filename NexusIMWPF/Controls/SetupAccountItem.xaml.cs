@@ -80,5 +80,12 @@ namespace NexusIM.Controls
 
 			Deselect();
 		}
+		private void DeleteAccount_Click(object sender, RoutedEventArgs e)
+		{
+			IMProtocolExtraData protocol = DataContext as IMProtocolExtraData;
+
+			AccountManager.RemoveAccount(protocol);
+			IMSettings.Accounts.Remove(protocol);
+		}
 	}
 }

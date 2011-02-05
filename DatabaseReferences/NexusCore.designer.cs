@@ -2574,7 +2574,7 @@ namespace NexusCore.Databases
 		
 		private string _username;
 		
-		private string _password;
+		private byte[] _password;
 		
 		private string _firstname;
 		
@@ -2636,8 +2636,8 @@ namespace NexusCore.Databases
     partial void OnidChanged();
     partial void OnusernameChanging(string value);
     partial void OnusernameChanged();
-    partial void OnpasswordChanging(string value);
-    partial void OnpasswordChanged();
+    partial void OnPasswordChanging(byte[] value);
+    partial void OnPasswordChanged();
     partial void OnfirstnameChanging(string value);
     partial void OnfirstnameChanged();
     partial void OnlastnameChanging(string value);
@@ -2726,8 +2726,8 @@ namespace NexusCore.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_password", DbType="Char(64) NOT NULL", CanBeNull=false)]
-		public string password
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_password", DbType="binary(32) NOT NULL", CanBeNull=false)]
+		public byte[] Password
 		{
 			get
 			{
@@ -2737,11 +2737,11 @@ namespace NexusCore.Databases
 			{
 				if ((this._password != value))
 				{
-					this.OnpasswordChanging(value);
+					this.OnPasswordChanging(value);
 					this.SendPropertyChanging();
 					this._password = value;
-					this.SendPropertyChanged("password");
-					this.OnpasswordChanged();
+					this.SendPropertyChanged("Password");
+					this.OnPasswordChanged();
 				}
 			}
 		}

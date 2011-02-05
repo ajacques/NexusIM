@@ -46,7 +46,7 @@ namespace NexusWeb.Pages
 					Domain = ".nexus-im.com"
 				};
 				escalatecookie.Values.Add("userid", userid.ToString());
-				escalatecookie.Values.Add("pwdhash", clientUser.password);
+				//escalatecookie.Values.Add("pwdhash", clientUser.Password);
 
 				Response.SetCookie(escalatecookie);
 

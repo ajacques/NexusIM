@@ -71,6 +71,11 @@ namespace NexusIM.Managers
 			if (OnNewAccount != null)
 				OnNewAccount(null, new NewAccountEventArgs(extraData.Protocol));
 		}
+		public static void RemoveAccount(IMProtocolExtraData extraData)
+		{
+			extraData.Protocol.Disconnect();
+			accounts.Remove(extraData);
+		}
 
 		// Event Handlers
 		private static void Nic_AvailabilityChange(object sender, NetworkAvailabilityEventArgs e)

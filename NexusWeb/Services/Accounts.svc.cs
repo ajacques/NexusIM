@@ -140,7 +140,7 @@ namespace NexusWeb.Services
 			userRow.username = email;
 			userRow.firstname = firstName;
 			userRow.lastname = lastName;
-			userRow.password = db.HashString(password);
+			userRow.Password = db.HashString(password);
 			//userRow.dateregistered = DateTime.UtcNow;
 			//userRow.DateOfBirth = dob;
 			

@@ -25,7 +25,7 @@ namespace NexusWeb.Pages
 			if (user != null)
 			{
 				Session["userid"] = user.id;
-				Session["username"] = user.password;
+				Session["username"] = user.username;
 			}
 
 			db.Dispose();

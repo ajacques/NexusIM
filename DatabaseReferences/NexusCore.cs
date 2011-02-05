@@ -7,33 +7,47 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Configuration;
+using System.Security.Authentication;
 
 namespace NexusCore.Databases
 {
 	partial class NexusCoreDataContext
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="username"></param>
+		/// <param name="password"></param>
+		/// <returns>Returns null if no results were found for that </returns>
 		public User TryLogin(string username, string password)
 		{
 			var user = (from c in this.Users
-					   where c.username == username
+					   where c.username == username && c.canlogin
 					   select c).FirstOrDefault();
 
 			if (user == null)
 				return null;
+			
+			// Password System v2
 
+			// Decrypt the salt retrieved from the user's row using the site key
 			byte[] output = new byte[user.PasswordSalt.Length];
 			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
 			int count = decryptor.TransformBlock(user.PasswordSalt, 0, user.PasswordSalt.Length, output, 0);
 
+			// Now build the input array from the decrypted hash and password
 			byte[] pwdbytes = mEncoder.GetBytes(password);
 			byte[] concatOutput = new byte[count + password.Length];
 			Buffer.BlockCopy(output, 0, concatOutput, 0, count);
 			Buffer.BlockCopy(pwdbytes, 0, concatOutput, count, pwdbytes.Length);
-			
-			password = HashString(concatOutput);
 
-			if (user.password != password)
-				return null;
+			byte[] pwdHash = HashString(concatOutput);
+
+			for (int i = 0; i < pwdHash.Length; i++)
+			{
+				if (pwdHash[i] != user.Password[i])
+					return null;
+			}
 			
 			user.lastseen = DateTime.UtcNow;
 			try	{
@@ -44,9 +58,10 @@ namespace NexusCore.Databases
 		}
 		public User TryHashLogin(int userid, string pwdhash)
 		{
-			var users = from c in this.Users where c.id == userid && c.password == pwdhash select c;
+			throw new NotSupportedException();
+			//var users = from c in this.Users where c.id == userid && c.password == pwdhash select c;
 
-			return users.FirstOrDefault();
+			//return users.FirstOrDefault();
 		}
 
 		#region Random
@@ -217,19 +232,14 @@ namespace NexusCore.Databases
 		}
 		#endregion
 
-		public string HashString(string input)
+		public byte[] HashString(string input)
 		{
 			byte[] bytes = mEncoder.GetBytes(input);
 			return HashString(bytes);
 		}
-		public string HashString(byte[] input)
+		public byte[] HashString(byte[] input)
 		{
-			byte[] value = PasswordHasher.ComputeHash(input);
-			StringBuilder sb = new StringBuilder();
-			foreach (byte x in value)
-				sb.AppendFormat("{0:x2}", x);
-
-			return sb.ToString();
+			return PasswordHasher.ComputeHash(input);
 		}
 
 		private static SymmetricAlgorithm SaltDecryptor

@@ -601,7 +601,16 @@ namespace NexusIM
 			}
 			public bool Remove(IMProtocolExtraData item)
 			{
-				throw new NotImplementedException();
+				UserProfile db = UserProfile.Create(mConnectionString);
+				Account acc = db.Accounts.Where(a => a.Username == item.Protocol.Username && a.AccountType == item.Protocol.ShortProtocol).FirstOrDefault();
+				
+				if (acc == null)
+					return false;
+
+				db.Accounts.DeleteOnSubmit(acc);
+				db.SubmitChanges();
+
+				return true;
 			}
 
 			#endregion
