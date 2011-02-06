@@ -16,25 +16,17 @@ namespace NexusIM.Managers
 {
 	static class InterfaceManager
 	{
-		/// <summary>
-		/// Registers this class the platform handling class
-		/// Must be run before any Protocols are Created
-		/// </summary>
 		public static void Setup()
 		{
-			AccountManager.OnNewAccount += new EventHandler<NewAccountEventArgs>(AccountManager_OnNewAccount);
+			AccountManager.Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
 		public static void Shutdown()
 		{
-			AccountManager.OnNewAccount -= new EventHandler<NewAccountEventArgs>(AccountManager_OnNewAccount);
 		}
-		internal static void OpenBuddyWindow(IMBuddy iMBuddy, bool p)
+		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			throw new NotImplementedException();
-		}
-		private static void AccountManager_OnNewAccount(object sender, NewAccountEventArgs e)
-		{
-			e.Account.ContactList.CollectionChanged += new NotifyCollectionChangedEventHandler(IMProtocol_ContactListChanged);
+			foreach (IMProtocolExtraData item in e.NewItems)
+				item.Protocol.ContactList.CollectionChanged += new NotifyCollectionChangedEventHandler(IMProtocol_ContactListChanged);
 		}
 		private static void IMProtocol_ContactListChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -43,10 +35,8 @@ namespace NexusIM.Managers
 
 			foreach (IContact contact in e.NewItems)
 			{
-				WindowSystem.ContactListWindow.AddContact(contact);
+				
 			}
 		}
-
-		public static event EventHandler onWindowOpen;
 	}
 }

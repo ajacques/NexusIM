@@ -14,6 +14,8 @@ using NexusIM.Controls;
 using NexusIM.Managers;
 using System.Diagnostics;
 using System.Threading;
+using System.Collections.Specialized;
+using System.Linq;
 
 namespace NexusIM.Windows
 {
@@ -71,6 +73,20 @@ namespace NexusIM.Windows
 			SetupAccountItem item = sender as SetupAccountItem;
 			item.Select();
 		}
+		private void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			foreach (IMProtocolExtraData extraData in e.NewItems)
+			{
+				SetupAccountItem accItem = new SetupAccountItem();
+				accItem.DataContext = extraData;
+				AccountsListBox.Children.Add(accItem);
+			}
+
+			foreach (IMProtocolExtraData extraData in e.OldItems)
+			{
+				
+			}
+		}
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			foreach (IMProtocolExtraData protocol in AccountManager.Accounts)
@@ -79,7 +95,10 @@ namespace NexusIM.Windows
 				accItem.DataContext = protocol;
 				AccountsListBox.Children.Add(accItem);
 			}
+
+			AccountManager.Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
+
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);
@@ -92,6 +111,12 @@ namespace NexusIM.Windows
 			} else {
 				DeselectAllExcept(AccountsListBox.Children, null);
 			}
-		}	
+		}
+		protected override void OnClosed(EventArgs e)
+		{
+			base.OnClosed(e);
+
+			AccountManager.Accounts.CollectionChanged -= new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
+		}
 	}
 }

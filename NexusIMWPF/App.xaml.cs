@@ -78,7 +78,7 @@ namespace NexusIMWPF
 			} else {
 				AccountManager.Setup();
 				foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
-					AccountManager.AddNewAccount(protocol);
+					AccountManager.Accounts.Add(protocol);
 
 				WindowSystem.OpenContactListWindow();
 				WindowSystem.ShowSysTrayIcon();

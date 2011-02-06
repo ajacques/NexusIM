@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using InstantMessage;
 using Microsoft.WindowsAPICodePack.Net;
-using System.Reflection;
+using System.Collections.Specialized;
 
 namespace NexusIM.Managers
 {
@@ -41,7 +42,7 @@ namespace NexusIM.Managers
 	{
 		public static void Setup()
 		{
-			accounts = new List<IMProtocolExtraData>();
+			accounts = new ObservableCollection<IMProtocolExtraData>();
 			UserIdle.onUserIdle += new EventHandler(UserIdle_onChange);
 
 			NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
@@ -49,12 +50,16 @@ namespace NexusIM.Managers
 			Trace.WriteLine("AccountManager loaded and ready");
 			Trace.WriteLine("Connectivity Status: " + NetworkListManager.Connectivity.ToString());
 			mConnected = true;
+
+			accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
 
+		[Obsolete("Use Accounts.Add instead", false)]
 		public static void AddNewAccount(IMProtocol protocol)
 		{
 			AddNewAccount(new IMProtocolExtraData() { Protocol = protocol, Enabled = true, IsReady = true});
 		}
+		[Obsolete("Use Accounts.Add instead", false)]
 		public static void AddNewAccount(IMProtocolExtraData extraData)
 		{
 			if (accounts.Contains(extraData))
@@ -67,10 +72,8 @@ namespace NexusIM.Managers
 			{
 				extraData.Protocol.BeginLogin();
 			}
-
-			if (OnNewAccount != null)
-				OnNewAccount(null, new NewAccountEventArgs(extraData.Protocol));
 		}
+		[Obsolete("Use Accounts.Remove instead", false)]
 		public static void RemoveAccount(IMProtocolExtraData extraData)
 		{
 			extraData.Protocol.Disconnect();
@@ -90,9 +93,17 @@ namespace NexusIM.Managers
 		{
 
 		}
-		
+		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			foreach (IMProtocolExtraData extraData in e.NewItems)
+			{
+				extraData.IsReady = true;
+				if (Connected && extraData.Enabled && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
+					extraData.Protocol.BeginLogin();
+			}
+		}
+
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;
-		public static event EventHandler<NewAccountEventArgs> OnNewAccount;
 		public static event PropertyChangedEventHandler PropertyChanged;
 
 		private static void NotifyPropertyChanged(string propertyName)
@@ -109,7 +120,7 @@ namespace NexusIM.Managers
 		/// <summary>
 		/// Returns a list of protocols currently setup by the user
 		/// </summary>
-		public static IEnumerable<IMProtocolExtraData> Accounts
+		public static ObservableCollection<IMProtocolExtraData> Accounts
 		{
 			get {
 				return accounts;
@@ -182,7 +193,7 @@ namespace NexusIM.Managers
 		}
 
 		private static IMStatus mGeneralStatus = IMStatus.Available;
-		private static List<IMProtocolExtraData> accounts;
+		private static ObservableCollection<IMProtocolExtraData> accounts;
 		private static bool mConnected;
 	}
 }

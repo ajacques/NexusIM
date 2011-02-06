@@ -38,7 +38,7 @@ namespace NexusCore.Databases
 			// Now build the input array from the decrypted hash and password
 			byte[] pwdbytes = mEncoder.GetBytes(password);
 			byte[] concatOutput = new byte[count + password.Length];
-			Buffer.BlockCopy(output, 0, concatOutput, 0, count);
+			Buffer.BlockCopy(output, 0, concatOutput, 0, count); // BlockCopy is acceptable here because we are copying bytes which means we don't have to worry about the actual size of objects or other bounds checking
 			Buffer.BlockCopy(pwdbytes, 0, concatOutput, count, pwdbytes.Length);
 
 			byte[] pwdHash = HashString(concatOutput);
