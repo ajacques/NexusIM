@@ -83,7 +83,7 @@ namespace InstantMessage.Protocols.Irc
 		public string Nickname
 		{
 			get;
-			internal set;
+			set;
 		}
 		public string Username
 		{
@@ -106,6 +106,16 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			private set;
 		}
+
+		#region IContact Members
+
+
+		public string Group
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		#endregion
 	}
 	public struct IRCUserModeChange
 	{

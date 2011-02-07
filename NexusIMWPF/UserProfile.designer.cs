@@ -105,6 +105,8 @@ namespace NexusIM
 		
 		private bool _Enabled;
 		
+		private bool _AutoConnect;
+		
 		private EntitySet<AccountSetting> _AccountSettings;
 		
     #region Extensibility Method Definitions
@@ -121,6 +123,8 @@ namespace NexusIM
     partial void OnPasswordChanged();
     partial void OnEnabledChanging(bool value);
     partial void OnEnabledChanged();
+    partial void OnAutoConnectChanging(bool value);
+    partial void OnAutoConnectChanged();
     #endregion
 		
 		public Account()
@@ -209,7 +213,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Enabled", DbType="TinyInt NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Enabled", DbType="bit NOT NULL")]
 		public bool Enabled
 		{
 			get
@@ -225,6 +229,26 @@ namespace NexusIM
 					this._Enabled = value;
 					this.SendPropertyChanged("Enabled");
 					this.OnEnabledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AutoConnect", DbType="bit NOT NULL")]
+		public bool AutoConnect
+		{
+			get
+			{
+				return this._AutoConnect;
+			}
+			set
+			{
+				if ((this._AutoConnect != value))
+				{
+					this.OnAutoConnectChanging(value);
+					this.SendPropertyChanging();
+					this._AutoConnect = value;
+					this.SendPropertyChanged("AutoConnect");
+					this.OnAutoConnectChanged();
 				}
 			}
 		}

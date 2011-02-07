@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlowfishTests.cs" />
+    <Compile Include="ComplexChatMsgTests.cs" />
     <Compile Include="IMProtocolTests.cs" />
     <Compile Include="SQLCEProtocolListTests.cs" />
     <Compile Include="SQLCEProtocolSettingTests.cs" />

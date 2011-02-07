@@ -23,18 +23,6 @@ namespace NexusIM.Managers
 			internal set;
 		}
 	}
-	class NewAccountEventArgs : EventArgs
-	{
-		public NewAccountEventArgs(IMProtocol protocol)
-		{
-			Account = protocol;
-		}
-		public IMProtocol Account
-		{
-			get;
-			private set;
-		}
-	}
 	/// <summary>
 	/// Controls the status and all registered protocols
 	/// </summary>
@@ -73,12 +61,6 @@ namespace NexusIM.Managers
 				extraData.Protocol.BeginLogin();
 			}
 		}
-		[Obsolete("Use Accounts.Remove instead", false)]
-		public static void RemoveAccount(IMProtocolExtraData extraData)
-		{
-			extraData.Protocol.Disconnect();
-			accounts.Remove(extraData);
-		}
 
 		// Event Handlers
 		private static void Nic_AvailabilityChange(object sender, NetworkAvailabilityEventArgs e)
@@ -95,11 +77,14 @@ namespace NexusIM.Managers
 		}
 		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			foreach (IMProtocolExtraData extraData in e.NewItems)
+			if (e.NewItems != null)
 			{
-				extraData.IsReady = true;
-				if (Connected && extraData.Enabled && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
-					extraData.Protocol.BeginLogin();
+				foreach (IMProtocolExtraData extraData in e.NewItems)
+				{
+					extraData.IsReady = true;
+					if (Connected && extraData.Enabled && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
+						extraData.Protocol.BeginLogin();
+				}
 			}
 		}
 

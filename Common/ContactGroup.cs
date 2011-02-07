@@ -5,7 +5,7 @@ using System.Text;
 
 namespace InstantMessage
 {
-	public class ContactGroup : IContact, IHasPresence
+	public class ContactGroup
 	{
 		public ContactGroup()
 		{
@@ -42,5 +42,22 @@ namespace InstantMessage
 		{
 			throw new NotImplementedException();
 		}
+
+		#region IContact Members
+
+
+		public string Nickname
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+			set
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		#endregion
 	}
 }

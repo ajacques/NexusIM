@@ -1,11 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="UserProfile" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="UserProfile" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="Accounts">
     <Type Name="Account">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="AccountType" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" />
       <Column Name="Username" Type="System.String" DbType="NVarChar(32) NOT NULL" CanBeNull="false" />
       <Column Name="Password" Type="System.String" DbType="NVarChar(32)" CanBeNull="true" />
-      <Column Name="Enabled" Type="System.Boolean" DbType="TinyInt NOT NULL" CanBeNull="false" />
+      <Column Name="Enabled" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+      <Column Name="AutoConnect" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
       <Association Name="Account_AccountSetting" Member="AccountSettings" ThisKey="Id" OtherKey="AccountId" Type="AccountSetting" />
     </Type>
   </Table>

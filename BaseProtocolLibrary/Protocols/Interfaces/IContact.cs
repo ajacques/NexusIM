@@ -19,5 +19,14 @@ namespace InstantMessage
 		{
 			get;
 		}
+		string Nickname
+		{ 
+			get; 
+			set;
+		}
+		string Group
+		{
+			get;
+		}
 	}
 }

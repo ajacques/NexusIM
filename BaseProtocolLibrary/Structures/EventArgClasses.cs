@@ -89,8 +89,15 @@ namespace InstantMessage.Events
 		public string Message
 		{
 			get	{
+				if (ComplexMessage != null)
+					return ComplexMessage.ToString();
 				return mMessage;
 			}
+		}
+		public ComplexChatMessage ComplexMessage
+		{
+			get;
+			private set;
 		}
 		public MessageFlags Flags
 		{

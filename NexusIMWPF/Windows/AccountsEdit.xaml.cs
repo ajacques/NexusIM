@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Windows
 {
@@ -36,6 +37,27 @@ namespace NexusIM.Windows
 				if (item.Selected && item != exception)
 					item.Deselect();
 			}
+		}
+
+		// Helper Utilities
+		private void FadeOut(UIElement element, Delegate onComplete)
+		{
+			// Storyboard to fade out an object
+			Storyboard storyboard = new Storyboard();
+			DoubleAnimation anim = new DoubleAnimation();
+			anim.To = 0;
+			anim.SetValue(Storyboard.TargetProperty, element);
+			anim.SetValue(Storyboard.TargetPropertyProperty, new PropertyPath("(FrameworkElement.Opacity)"));
+			anim.Duration = TimeSpan.FromMilliseconds(500); // Half a second
+			storyboard.Children.Add(anim);
+			EventHandler handler = null;
+			handler = new EventHandler((object sender, EventArgs e) =>
+			{
+				Dispatcher.BeginInvoke(onComplete);
+				storyboard.Completed -= handler;
+			});
+			storyboard.Completed += handler;
+			storyboard.Begin();
 		}
 
 		// Event Handlers
@@ -75,16 +97,29 @@ namespace NexusIM.Windows
 		}
 		private void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			foreach (IMProtocolExtraData extraData in e.NewItems)
+			if (e.NewItems != null)
 			{
-				SetupAccountItem accItem = new SetupAccountItem();
-				accItem.DataContext = extraData;
-				AccountsListBox.Children.Add(accItem);
+				foreach (IMProtocolExtraData extraData in e.NewItems)
+				{
+					SetupAccountItem accItem = new SetupAccountItem();
+					accItem.DataContext = extraData;
+					AccountsListBox.Children.Add(accItem);
+				}
 			}
 
-			foreach (IMProtocolExtraData extraData in e.OldItems)
+			if (e.OldItems != null)
 			{
-				
+				foreach (IMProtocolExtraData extraData in e.OldItems)
+				{
+					foreach (UserControl element in AccountsListBox.Children)
+					{
+						if (element.DataContext == extraData)
+						{
+							FadeOut(element, new GenericEvent(() => AccountsListBox.Children.Remove(element)));
+							break;
+						}
+					}
+				}
 			}
 		}
 		private void Window_Loaded(object sender, RoutedEventArgs e)

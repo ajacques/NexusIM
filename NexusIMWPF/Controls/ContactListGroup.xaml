@@ -4,12 +4,15 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:im="clr-namespace:InstantMessage"
+	xmlns:imc="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	xmlns:c="clr-namespace:NexusIM.Converters"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ContactListGroup"
 	x:Name="UserControl"
 	d:DesignWidth="200" d:DesignHeight="20" UseLayoutRounding="True" x:FieldModifier="private" x:ClassModifier="public">
 	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+		<c:ContactToUIContact x:Key="ContactToUIContact"/>
 		<Storyboard x:Key="AnimIn">
 			<DoubleAnimation Storyboard.TargetName="ExpandoArrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Duration="0:0:0.2" To="90" />
 		</Storyboard>
@@ -21,7 +24,11 @@
 		<im:GroupOfContacts GroupName="Test Group" />
 	</UserControl.DataContext>
 	<Grid x:Name="LayoutRoot">
-		<Path x:Name="ExpandoArrow" Data="M 0,0 0,10 10,5 0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="0.5,0.5" Fill="#FF6C7C91" >
+		<Grid.RowDefinitions>
+			<RowDefinition Height="20"/>
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Path Grid.Row="0" x:Name="ExpandoArrow" Data="M 0,0 0,10 10,5 0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" RenderTransformOrigin="0.5,0.5" Fill="#FF6C7C91" UseLayoutRounding="False" >
 			<Path.RenderTransform>
 				<TransformGroup>
 					<ScaleTransform/>
@@ -31,6 +38,7 @@
 				</TransformGroup>
 			</Path.RenderTransform>
 		</Path>
-		<TextBlock Margin="25,0,0,0" TextWrapping="Wrap" Text="{Binding GroupName}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+		<TextBlock Grid.Row="0" Margin="25,0,0,0" TextWrapping="Wrap" Text="{Binding GroupName}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+		<ListView Grid.Row="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" ItemsSource="{Binding Contacts, Converter={StaticResource ContactToUIContact}}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=UserControl}" />
 	</Grid>
 </UserControl>

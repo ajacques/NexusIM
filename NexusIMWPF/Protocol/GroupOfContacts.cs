@@ -5,23 +5,23 @@ using System.Text;
 using InstantMessage;
 using System.ComponentModel;
 using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace InstantMessage
 {
-	public class GroupOfContacts : IEnumerable<IMBuddy>, INotifyPropertyChanged
+	public class GroupOfContacts : INotifyPropertyChanged
 	{
-
-
-		public IEnumerator<IMBuddy> GetEnumerator()
+		public GroupOfContacts()
 		{
-			throw new NotImplementedException();
+			Contacts = new ObservableCollection<IContact>();
+			Contacts.Add(new IMBuddy() { Username = "test" });
 		}
 
-		IEnumerator IEnumerable.GetEnumerator()
+		public ObservableCollection<IContact> Contacts
 		{
-			throw new NotImplementedException();
+			get;
+			private set;
 		}
-
 		public string GroupName
 		{
 			get	{

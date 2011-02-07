@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using InstantMessage;
-using NexusIM.Managers;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Shapes;
+using InstantMessage;
+using NexusIM.Managers;
 
 namespace NexusIM.Windows
 {
@@ -20,34 +23,35 @@ namespace NexusIM.Windows
 			this.InitializeComponent();
 		}
 
-		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+		private void SearchThread(object searchText)
 		{
-			TextBox name = sender as TextBox;
-
-			SuggestResults.Children.Clear();
-			if (String.IsNullOrWhiteSpace(name.Text))
+			string name = searchText.ToString();
+			if (String.IsNullOrWhiteSpace(name))
 				return;
 
-			string search = name.Text.ToUpperInvariant();
+			string search = name.ToUpperInvariant();
 
-			IEnumerable<IMBuddy> contacts = AccountManager.Accounts.Where(p => p.Enabled && p.Protocol.ProtocolStatus == IMProtocolStatus.Online).SelectMany(s => s.Protocol.ContactList);
+			IEnumerable<IContact> contacts = AccountManager.Accounts.Where(p => p.Enabled && p.Protocol.ProtocolStatus == IMProtocolStatus.Online).SelectMany(s => s.Protocol.ContactList);
 
-			IEnumerable<IMBuddy> results = contacts.Where(i => 
+			IEnumerable<IContact> results = contacts.Where(i =>
 				(!String.IsNullOrEmpty(i.Nickname) &&
 					(i.Nickname.ToUpperInvariant().StartsWith(search) || i.Nickname.ToUpperInvariant().Split(' ').Any(s => s.StartsWith(search)))
 				) || i.Username.ToUpperInvariant().StartsWith(search));
 			Brush subtleTextBrush = new SolidColorBrush(Color.FromRgb(125, 125, 125));
 			Brush heavyTextBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
 
+			SuggestResults.Children.Clear();
+
 			foreach (IMBuddy contact in results)
 			{
+				Grid container = new Grid();
 				TextBlock textblock = new TextBlock();
 				Run Nickname = new Run();
 				Run Username = new Run();
 
 				Nickname.Text = contact.Nickname;
 				Username.Text = String.Format("({0})", contact.Username);
-				
+
 				int nickFind = contact.Nickname.ToUpperInvariant().IndexOf(search);
 				int UserFind = contact.Username.ToUpperInvariant().IndexOf(search);
 
@@ -63,10 +67,30 @@ namespace NexusIM.Windows
 					Username.Foreground = subtleTextBrush;
 				}
 
-				textblock.Inlines.Add(Username);
+				Line sep = new Line();
+				sep.X2 = 260;
+				sep.VerticalAlignment = VerticalAlignment.Bottom;
+				sep.Stroke = (Brush)FindResource("SuggestionSeparator");
 
-				SuggestResults.Children.Add(textblock);
+				textblock.Margin = new Thickness(5);
+
+				textblock.Inlines.Add(Username);
+				container.Children.Add(textblock);
+
+				SuggestResults.Children.Add(container);
 			}
+		}
+
+		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			Stopwatch searchThread = new Stopwatch();
+			TextBox box = (TextBox)sender;
+			searchThread = new Stopwatch();
+			searchThread.Start();
+			SearchThread(box.Text);
+
+			Trace.WriteLine("Full ContactList search took " + searchThread.Elapsed.ToString());
+			searchThread.Stop();
 		}
 	}
 }

@@ -155,6 +155,7 @@
       <DependentUpon>StatusOrb.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SysTrayContextMenu.cs" />
+    <Compile Include="Converters\ContactToUIContact.cs" />
     <Compile Include="Converters\IMAvatarToImage.cs" />
     <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="Converters\ProtocolToComboBox.cs" />
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="LazyWeak.cs" />
+    <Compile Include="Managers\AggregateContactList.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
     <Compile Include="Managers\Application\IPCHandler.cs" />
