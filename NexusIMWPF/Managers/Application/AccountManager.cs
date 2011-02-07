@@ -30,7 +30,6 @@ namespace NexusIM.Managers
 	{
 		public static void Setup()
 		{
-			accounts = new ObservableCollection<IMProtocolExtraData>();
 			UserIdle.onUserIdle += new EventHandler(UserIdle_onChange);
 
 			NetworkChange.NetworkAvailabilityChanged += new NetworkAvailabilityChangedEventHandler(NetworkChange_NetworkAvailabilityChanged);
@@ -39,7 +38,7 @@ namespace NexusIM.Managers
 			Trace.WriteLine("Connectivity Status: " + NetworkListManager.Connectivity.ToString());
 			mConnected = true;
 
-			accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
+			Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
 
 		[Obsolete("Use Accounts.Add instead", false)]
@@ -108,6 +107,8 @@ namespace NexusIM.Managers
 		public static ObservableCollection<IMProtocolExtraData> Accounts
 		{
 			get {
+				if (accounts == null)
+					accounts = new ObservableCollection<IMProtocolExtraData>();
 				return accounts;
 			}
 		}

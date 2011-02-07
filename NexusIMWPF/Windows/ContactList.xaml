@@ -30,7 +30,7 @@
 		</ComboBox>
 		<ScrollViewer Margin="0,74,0,0" VerticalScrollBarVisibility="Auto">			
 			<StackPanel x:Name="ContactListControl">
-				<ListView ItemsSource="{x:Static mgr:AggregateContactList.Groups}" Foreground="Black" BorderBrush="{x:Null}" />
+				<ListView Foreground="Black" BorderBrush="{x:Null}" />
 				<nxc:ContactListGroup IsExpanded="True" />
 				<nxc:ContactListItem MouseDoubleClick="ContactListItem_MouseDoubleClick">
 					<nxc:ContactListItem.DataContext>

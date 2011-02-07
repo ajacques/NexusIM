@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Windows;
 using System.Diagnostics;
-using System.Net.Sockets;
 using System.IO;
-using InstantMessage;
-using NexusIM.Managers;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using NexusIM;
 using System.Threading;
-using NexusIM.Windows;
-using NexusIM.Properties;
+using System.Windows;
 using System.Windows.Threading;
+using InstantMessage;
+using NexusIM;
+using NexusIM.Managers;
+using NexusIM.Windows;
 
 namespace NexusIMWPF
 {
@@ -70,6 +63,7 @@ namespace NexusIMWPF
 			Trace.WriteLine("Configuration File: " + configuri);
 			IMSettings.Setup(new SQLCESettings("Data Source=\"UserProfile.sdf\";Persist Security Info=False;"));
 
+			AggregateContactList.Setup();
 			if (FirstRunSetup.IsFirstRun)
 			{
 				InitialSetupWindow window = new InitialSetupWindow();

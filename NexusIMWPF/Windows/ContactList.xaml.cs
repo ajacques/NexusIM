@@ -9,6 +9,7 @@ using System.Windows.Input;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using System.Collections.Specialized;
 
 namespace NexusIM.Windows
 {
@@ -22,6 +23,8 @@ namespace NexusIM.Windows
 			InitializeComponent();
 
 			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);
+		
+			AggregateContactList.Groups.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_Changed);
 		}
 
 		public IList ContactList
@@ -71,6 +74,7 @@ namespace NexusIM.Windows
 			Dispatcher.BeginInvoke(new GenericEvent(() => StatusComboBox.SelectedIndex = selectedIndex));
 		}
 
+		// Event Handlers
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			if (!SuperTaskbarManager.IsSetup)
@@ -138,6 +142,11 @@ namespace NexusIM.Windows
 					AccountManager.Status = status;
 				}), null);
 		}
+		private void ContactList_Changed(object sender, NotifyCollectionChangedEventArgs e)
+		{
+	
+		}
+
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);

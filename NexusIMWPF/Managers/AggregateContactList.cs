@@ -10,7 +10,7 @@ namespace NexusIM.Managers
 {
 	public static class AggregateContactList
 	{
-		static AggregateContactList()
+		public static void Setup()
 		{
 			AccountManager.Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 
@@ -31,16 +31,28 @@ namespace NexusIM.Managers
 
 		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			foreach (IContact contact in e.NewItems)
+			if (e.NewItems != null)
 			{
-				GroupOfContacts group = Groups.FirstOrDefault(g => g.GroupName == contact.Group);
-				if (group == null)
+				foreach (IMProtocolExtraData protocol in e.NewItems)
+					protocol.Protocol.ContactList.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_CollectionChanged);
+			}
+			
+		}
+		private static void ContactList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			if (e.NewItems != null)
+			{
+				foreach (IContact contact in e.NewItems)
 				{
-					group = new GroupOfContacts();
-					group.GroupName = contact.Group;
-					Groups.Add(group);
+					GroupOfContacts group = Groups.FirstOrDefault(g => g.GroupName == contact.Group);
+					if (group == null)
+					{
+						group = new GroupOfContacts();
+						group.GroupName = contact.Group;
+						Groups.Add(group);
+					}
+					group.Contacts.Add(contact);
 				}
-				group.Contacts.Add(contact);
 			}
 		}
 	}
