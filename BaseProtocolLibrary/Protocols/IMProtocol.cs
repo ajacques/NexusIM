@@ -212,7 +212,7 @@ namespace InstantMessage
 		{
 			return base.GetHashCode() + mUsername.GetHashCode() + mProtocolTypeShort.GetHashCode();
 		}
-		public ObservableCollection<IMBuddy> ContactList
+		public ContactCollection ContactList
 		{
 			get {
 				return buddylist;
@@ -606,7 +606,7 @@ namespace InstantMessage
 		// Variables
 		protected IDictionary<string, string> mConfig = new ObservableDictionary<string, string>();
 		protected ManualResetEvent mLoginWaitHandle;
-		protected ObservableCollection<IMBuddy> buddylist = new ObservableCollection<IMBuddy>();
+		protected ContactCollection buddylist = new ContactCollection();
 		protected string mUsername;
 		protected string mPassword;
 		protected string protocolType = "Default";

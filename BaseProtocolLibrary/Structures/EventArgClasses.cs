@@ -97,7 +97,7 @@ namespace InstantMessage.Events
 		public ComplexChatMessage ComplexMessage
 		{
 			get;
-			private set;
+			set;
 		}
 		public MessageFlags Flags
 		{

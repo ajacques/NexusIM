@@ -137,8 +137,8 @@ namespace InstantMessage
 
 				sendPacket(p1);
 
-				foreach (var b in buddylist)
-					b.mVisibilityStatus = UserVisibilityStatus.Offline; // Access the variable directly to prevent the class from telling us to switch stuff
+				//foreach (var b in buddylist)
+				//	b.mVisibilityStatus = UserVisibilityStatus.Offline; // Access the variable directly to prevent the class from telling us to switch stuff
 			} else if (oldStatus == IMStatus.Invisible && newStatus != IMStatus.Invisible) {
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
@@ -523,6 +523,77 @@ namespace InstantMessage
 
 		#region Packet Handlers
 
+		private static ComplexChatMessage ParseMessage(string rawData)
+		{
+			ComplexChatMessage msg = new ComplexChatMessage();
+			Regex fontMatch = new Regex("<font");
+			IMRun chatRun = new IMRun();
+
+			for (int i = 0; i < rawData.Length; i++)
+			{
+				if (rawData[i] == '<')
+				{
+					if (rawData.Substring(i, 5) == "<font")
+					{
+						int endMark = rawData.IndexOf('>', i);
+
+						if (endMark != -1)
+						{
+							int facePosition = rawData.IndexOf("face=", i, endMark - i);
+
+							if (facePosition != -1)
+							{
+								facePosition += 6;
+
+								if (facePosition >= endMark) // Malformed test
+									continue;
+
+								string fontName = rawData.Substring(facePosition, rawData.IndexOf('"', facePosition, endMark - facePosition) - facePosition);
+
+								if (String.IsNullOrEmpty(chatRun.Body))
+									chatRun.FontFamily = fontName;
+								else {
+									msg.Inlines.Add(chatRun);
+									chatRun = new IMRun();
+									chatRun.FontFamily = fontName;
+								}
+							}
+
+							int sizePosition = rawData.IndexOf("size=", i, endMark - i);
+							if (sizePosition != -1)
+							{
+								sizePosition += 6;
+
+								if (sizePosition >= endMark) // Malformed test
+									continue;
+
+								string strFontSize = rawData.Substring(sizePosition, rawData.IndexOf('"', sizePosition, endMark - sizePosition) - sizePosition);
+								int fontSize;
+
+								if (Int32.TryParse(strFontSize, out fontSize))
+								{
+									if (String.IsNullOrEmpty(chatRun.Body))
+										chatRun.FontSize = fontSize;
+									else {
+										msg.Inlines.Add(chatRun);
+										chatRun = new IMRun();
+										chatRun.FontSize = fontSize;
+									}
+								}
+							}
+							
+							i = endMark + 1;
+						}
+					}
+				}
+
+				chatRun.Body += rawData[i];
+			}
+
+			msg.Inlines.Add(chatRun);
+
+			return msg;
+		}
 		private static string[] customSplit(string inputstr, string separator)
 		{
 			List<string> splits = new List<string>();
@@ -680,25 +751,20 @@ namespace InstantMessage
 		}
 		private void HandleMessagePacket(YPacket packet)
 		{
-			IMBuddy buddy = null;
+			IContact buddy = null;
 			try {
-				buddy = IMBuddy.FromUsername(packet.Parameter["4"], this);
+				buddy = ContactList[packet.Parameter["4"]];
 			} catch (Exception) {
 				buddy = new IMBuddy(this, packet.Parameter["4"]);
-				buddy.IsOnBuddyList = false;
 			}
-			if (packet.Parameter["14"] == "<ding>")
-				buddy.ReceiveBuzz();
-			else {
-				// Apply some transforms to the text first
-				string newmsg = packet.Parameter["14"];
-				newmsg = Regex.Replace(newmsg, "<((font face=\\?\"([a-zA-Z ]*)\\?\")|(fade (((#([a-z0-9]*)),?)*)))>", ""); // Remove font definitions
 
-				// Use weird, messed up way to support yahoo UTF-8 messages
-				buddy.InvokeReceiveMessage(newmsg);
-				buddy.ShowIsTypingMessage(false);
-				triggerOnMessageReceive(new IMMessageEventArgs(buddy, newmsg));
-			}
+			// Apply some transforms to the text first
+			string newmsg = packet.Parameter["14"];
+			ComplexChatMessage msg = ParseMessage(newmsg);
+				
+			//buddy.InvokeReceiveMessage(newmsg);
+			//buddy.ShowIsTypingMessage(false);
+			triggerOnMessageReceive(new IMMessageEventArgs(buddy, newmsg) { ComplexMessage = msg });
 
 			// Tell the Yahoo servers we got this message
 			if (packet.Parameter.ContainsKey("429"))
@@ -1286,6 +1352,8 @@ namespace InstantMessage
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
 		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
 		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
+		//private const string startBoldFontToken = dEncoding.GetString(new byte[] { 0x1b, 0x5b, 0x31, 0x62 });
+		//private const string stopBoldFontToken = dEncoding.GetString(new byte[] { 0x1b, 0x5b, 0x78, 0x31 });
 		private static Encoding dEncoding = Encoding.GetEncoding("windows-1252");
 
 		private enum YahooServices
@@ -1350,7 +1418,7 @@ namespace InstantMessage
 				string payload = packetdata.Substring(20);//, packetdata.Length - 20);
 				
 				// Split the payload up into fragments
-				IEnumerator paramEnum = IMYahooProtocol.customSplit(payload, separator).GetEnumerator();
+				IEnumerator paramEnum = customSplit(payload, separator).GetEnumerator();
 
 				while (paramEnum.MoveNext())
 				{

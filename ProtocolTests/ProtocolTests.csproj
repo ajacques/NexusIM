@@ -70,6 +70,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SQLCEGenericSettingsTests.cs" />
+    <Compile Include="YahooProtocolTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Shadow Include="Test References\Common.accessor" />
@@ -99,6 +100,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Shadow Include="Test References\BaseProtocolLibrary.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

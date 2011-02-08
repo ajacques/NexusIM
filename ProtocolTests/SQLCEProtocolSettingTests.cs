@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NexusIM;
 using ProtocolTests.Properties;
 using InstantMessage;
+using InstantMessage.Protocols;
 
 namespace ProtocolTests
 {

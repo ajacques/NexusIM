@@ -94,7 +94,7 @@ namespace NexusCore.Services
 					PreconfiguredLogin(account.Db, IMStatus.Available);
 				} else {
 					account.Memory.PushContext = context;
-					account.Memory.PushContext.PushNewContacts(account.Memory.Protocol.ContactList, account.Db);
+					//account.Memory.PushContext.PushNewContacts(account.Memory.Protocol.ContactList, account.Db);
 				}
 			}
 		}

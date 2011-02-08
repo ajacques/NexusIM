@@ -6,9 +6,7 @@ using System.Drawing;
 
 namespace InstantMessage
 {
-	public interface ChatInline {}
-
-	public class TextChatInline : ChatInline
+	public class ChatInline 
 	{
 		public double FontSize
 		{
@@ -27,7 +25,7 @@ namespace InstantMessage
 		}
 	}
 
-	public class LineBreak : TextChatInline
+	public class LineBreak : ChatInline
 	{
 		public override string ToString()
 		{
@@ -35,7 +33,7 @@ namespace InstantMessage
 		}
 	}
 
-	public class HyperlinkInline : TextChatInline
+	public class HyperlinkInline : ChatInline
 	{
 		public HyperlinkInline(Uri navigateUrl, string body)
 		{
@@ -62,15 +60,18 @@ namespace InstantMessage
 
 	public class IMRun : ChatInline
 	{
-		public IMRun(string body)
+		public IMRun(string p)
 		{
-			Body = body;
+			Body = p;
 		}
-
+		public IMRun()
+		{
+			
+		}
 		public string Body
 		{
 			get;
-			private set;
+			set;
 		}
 
 		public override string ToString()

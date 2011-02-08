@@ -71,6 +71,7 @@
     <Compile Include="ComplexChatMessage.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Json.cs" />
+    <Compile Include="Protocols\ContactCollection.cs" />
     <Compile Include="Protocols\ContactDetails.cs" />
     <Compile Include="Protocols\Enums.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
