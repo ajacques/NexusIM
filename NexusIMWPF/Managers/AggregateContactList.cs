@@ -51,6 +51,7 @@ namespace NexusIM.Managers
 						group.GroupName = contact.Group;
 						Groups.Add(group);
 					}
+					ContactList.Add(contact);
 					group.Contacts.Add(contact);
 				}
 			}

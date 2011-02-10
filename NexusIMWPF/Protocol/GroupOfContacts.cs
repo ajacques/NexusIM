@@ -14,7 +14,6 @@ namespace InstantMessage
 		public GroupOfContacts()
 		{
 			Contacts = new ObservableCollection<IContact>();
-			Contacts.Add(new IMBuddy() { Username = "test" });
 		}
 
 		public ObservableCollection<IContact> Contacts

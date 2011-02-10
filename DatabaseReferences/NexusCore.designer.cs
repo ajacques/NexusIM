@@ -1380,7 +1380,7 @@ namespace NexusCore.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoTag")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoTag", CanBeNull=true)]
 		public Microsoft.SqlServer.Types.SqlGeography GeoTag
 		{
 			get
@@ -2052,8 +2052,6 @@ namespace NexusCore.Databases
 		
 		private int _userid;
 		
-		private string _guid;
-		
 		private string _acctype;
 		
 		private string _username;
@@ -2080,8 +2078,6 @@ namespace NexusCore.Databases
     partial void OnidChanged();
     partial void OnuseridChanging(int value);
     partial void OnuseridChanged();
-    partial void OnguidChanging(string value);
-    partial void OnguidChanged();
     partial void OnacctypeChanging(string value);
     partial void OnacctypeChanged();
     partial void OnusernameChanging(string value);
@@ -2145,26 +2141,6 @@ namespace NexusCore.Databases
 					this._userid = value;
 					this.SendPropertyChanged("userid");
 					this.OnuseridChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_guid", DbType="Char(36) NOT NULL", CanBeNull=false)]
-		public string guid
-		{
-			get
-			{
-				return this._guid;
-			}
-			set
-			{
-				if ((this._guid != value))
-				{
-					this.OnguidChanging(value);
-					this.SendPropertyChanging();
-					this._guid = value;
-					this.SendPropertyChanged("guid");
-					this.OnguidChanged();
 				}
 			}
 		}

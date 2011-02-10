@@ -166,7 +166,7 @@ namespace NexusCore.DataContracts
 
 		public static implicit operator AccountInfo(NexusCore.Databases.Account account)
 		{
-			return new AccountInfo(account.acctype, account.username) { mGuid = Guid.Parse(account.guid), mPassword = account.password };
+			return new AccountInfo(account.acctype, account.username) { mPassword = account.password };
 		}
 
 		public string ProtocolType

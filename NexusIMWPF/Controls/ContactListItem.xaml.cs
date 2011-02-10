@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Input;
 
 namespace NexusIM.Controls
 {
@@ -39,6 +41,16 @@ namespace NexusIM.Controls
 		private void LayoutRoot_DragOver(object sender, DragEventArgs e)
 		{
 			e.Effects = DragDropEffects.Link;
+		}
+		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+		{
+			base.OnMouseLeftButtonUp(e);
+
+			Select();
+		}
+		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+		{
+			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
 	}
 }

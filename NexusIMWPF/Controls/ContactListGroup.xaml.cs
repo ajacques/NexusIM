@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using System.Windows.Media.Animation;
+using System.Windows;
+using InstantMessage;
+using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Collections;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.ComponentModel;
-using System.Windows.Media.Animation;
 
 namespace NexusIM.Controls
 {
@@ -23,15 +20,19 @@ namespace NexusIM.Controls
 		public ContactListGroup()
 		{
 			this.InitializeComponent();
-
 		}
 
-		private void NotifyPropertyChanged(string propertyName)
+		public GroupOfContacts SourceGroup
 		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			get	{
+				return (GroupOfContacts)DataContext;
+			}
+			set	{
+				DataContext = value;
+				value.Contacts.CollectionChanged += new NotifyCollectionChangedEventHandler(Contacts_CollectionChanged);
+				AddContacts(value.Contacts);
+			}
 		}
-
 		public bool IsExpanded
 		{
 			get	{
@@ -52,6 +53,41 @@ namespace NexusIM.Controls
 					NotifyPropertyChanged("IsExpanded");
 				}
 			}
+		}
+
+		private void AddContacts(IEnumerable contacts)
+		{
+			Dispatcher.BeginInvoke(new GenericEvent(() =>
+			{
+				foreach (IContact contact in contacts)
+				{
+					ContactListItem item = new ContactListItem();
+					item.DataContext = contact;
+					ContactList.Children.Add(item);
+				}
+			}));	
+		}
+
+		private void Contacts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			AddContacts(e.NewItems);			
+		}
+		protected override void OnMouseUp(MouseButtonEventArgs e)
+		{
+			base.OnMouseUp(e);
+
+			HitTestResult result = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+		}
+		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+		{
+			return null;
+
+			return new PointHitTestResult(this, hitTestParameters.HitPoint);
+		}
+		private void NotifyPropertyChanged(string propertyName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 		
 		public event PropertyChangedEventHandler PropertyChanged;

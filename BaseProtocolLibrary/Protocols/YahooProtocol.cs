@@ -431,7 +431,7 @@ namespace InstantMessage
 		}
 		private string yahoo64encode(string data)
 		{
-			return yahoo64encode(Encoding.UTF8.GetBytes(data));
+			return yahoo64encode(dEncoding.GetBytes(data));
 		}
 		
 		private void readDataAsync(IAsyncResult e)
@@ -533,7 +533,7 @@ namespace InstantMessage
 			{
 				if (rawData[i] == '<')
 				{
-					if (rawData.Substring(i, 5) == "<font")
+					if (i + 5 < rawData.Length && rawData.Substring(i, 5) == "<font")
 					{
 						int endMark = rawData.IndexOf('>', i);
 
@@ -1352,8 +1352,6 @@ namespace InstantMessage
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
 		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
 		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
-		//private const string startBoldFontToken = dEncoding.GetString(new byte[] { 0x1b, 0x5b, 0x31, 0x62 });
-		//private const string stopBoldFontToken = dEncoding.GetString(new byte[] { 0x1b, 0x5b, 0x78, 0x31 });
 		private static Encoding dEncoding = Encoding.GetEncoding("windows-1252");
 
 		private enum YahooServices

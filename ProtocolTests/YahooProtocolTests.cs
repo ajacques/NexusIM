@@ -51,6 +51,7 @@ namespace ProtocolTests
 			IMYahooProtocol_Accessor.ParseMessage("<font size=5");
 			IMYahooProtocol_Accessor.ParseMessage("<font size=>");
 			IMYahooProtocol_Accessor.ParseMessage("<font size");
+			IMYahooProtocol_Accessor.ParseMessage("<fon");
 		}
 
 		[TestMethod]

@@ -39,6 +39,6 @@
 			</Path.RenderTransform>
 		</Path>
 		<TextBlock Grid.Row="0" Margin="15,0,0,0" TextWrapping="Wrap" Text="{Binding GroupName}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-		<ListView Grid.Row="1" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" ItemsSource="{Binding Contacts, Converter={StaticResource ContactToUIContact}}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Visibility="{Binding IsExpanded, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=UserControl}" />
+		<StackPanel x:Name="ContactList" Grid.Row="1" />
 	</Grid>
 </UserControl>

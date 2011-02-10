@@ -10,6 +10,7 @@ using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
 using System.Collections.Specialized;
+using System.Windows.Media;
 
 namespace NexusIM.Windows
 {
@@ -22,8 +23,7 @@ namespace NexusIM.Windows
 		{
 			InitializeComponent();
 
-			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);
-		
+			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);		
 			AggregateContactList.Groups.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_Changed);
 		}
 
@@ -144,22 +144,25 @@ namespace NexusIM.Windows
 		}
 		private void ContactList_Changed(object sender, NotifyCollectionChangedEventArgs e)
 		{
-	
+			foreach (GroupOfContacts contact in e.NewItems)
+			{
+				Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
+					ContactListGroup group = new ContactListGroup();
+					group.SourceGroup = contact;
+					group.IsExpanded = true;
+					ContactListControl.Children.Add(group);
+				}));
+			}			
 		}
 
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);
-
-			if (e.Source is ContactListItem)
-			{
-				ContactListItem acc = e.Source as ContactListItem;
-				acc.Select();
-
-				DeselectAllExcept(ContactListControl.Children, acc);
-			} else {
-				DeselectAllExcept(ContactListControl.Children, null);
-			}
+		}
+		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+		{
+			return base.HitTestCore(hitTestParameters);
 		}
 		protected override void OnInitialized(EventArgs e)
 		{

@@ -218,7 +218,7 @@ namespace NexusCore.Services
 
 			var accounts = from a in db.Accounts
 						   where a.userid == userid
-						   select new AccountInfo(a.acctype, a.username, a.password) { mEnabled = a.enabled, mGuid = new Guid(a.guid), mAccountId = a.id };
+						   select new AccountInfo(a.acctype, a.username, a.password) { mEnabled = a.enabled, mAccountId = a.id };
 
 			return accounts;
 		}
