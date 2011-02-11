@@ -29,15 +29,7 @@
 			</Grid>
 		</ComboBox>
 		<ScrollViewer Margin="0,74,0,0" VerticalScrollBarVisibility="Auto">			
-			<StackPanel x:Name="ContactListControl">
-				<ListView Foreground="Black" BorderBrush="{x:Null}" />
-				<nxc:ContactListGroup IsExpanded="True" />
-				<nxc:ContactListItem MouseDoubleClick="ContactListItem_MouseDoubleClick">
-					<nxc:ContactListItem.DataContext>
-						<im:IMBuddy Status="Available" StatusMessage="YEAH" Username="Penguin" />
-					</nxc:ContactListItem.DataContext>
-				</nxc:ContactListItem>
-			</StackPanel>
+			<StackPanel x:Name="ContactListControl" />
 		</ScrollViewer>
 		<Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
 			<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Margin="0,0,0,-3" Stroke="#FFFFA12E" />

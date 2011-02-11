@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Windows.Input;
 using System.Windows.Media;
+using NexusIM.Managers;
 
 namespace NexusIM.Controls
 {
@@ -55,6 +56,19 @@ namespace NexusIM.Controls
 			}
 		}
 
+		internal void DeselectAllExcept(UIElement exception)
+		{
+			foreach (UIElement elem in ContactList.Children)
+			{
+				if (elem is ContactListItem)
+				{
+					ContactListItem item = elem as ContactListItem;
+					if (item.Selected && item != exception)
+						item.Deselect();
+				}				
+			}
+		}
+
 		private void AddContacts(IEnumerable contacts)
 		{
 			Dispatcher.BeginInvoke(new GenericEvent(() =>
@@ -63,31 +77,37 @@ namespace NexusIM.Controls
 				{
 					ContactListItem item = new ContactListItem();
 					item.DataContext = contact;
+					item.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
 					ContactList.Children.Add(item);
 				}
 			}));	
 		}
 
+		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			ContactListItem item = sender as ContactListItem;
+			IMBuddy contact = item.DataContext as IMBuddy;
+
+			WindowSystem.OpenContactWindow(contact);
+		}
+
 		private void Contacts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			AddContacts(e.NewItems);			
+			AddContacts(e.NewItems);
 		}
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);
 
-			HitTestResult result = VisualTreeHelper.HitTest(this, e.GetPosition(this));
-		}
-		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
-		{
-			return null;
-
-			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
 		private void NotifyPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
+		{
+			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
 		
 		public event PropertyChangedEventHandler PropertyChanged;

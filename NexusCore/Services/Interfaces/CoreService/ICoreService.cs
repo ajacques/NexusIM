@@ -20,7 +20,7 @@ namespace NexusCore.Services
 		void Login(string token);
 
 		[OperationContract]
-		List<ContactLocationInfo> GetLocationData();
+		IEnumerable<ContactLocationInfo> GetLocationData();
 
 		[OperationContract(Name = "GetMultipleLocations")]
 		IEnumerable<UserLocationData> GetLocations(List<int> rowIds);

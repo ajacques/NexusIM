@@ -71,6 +71,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
@@ -79,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="certlogin.aspx" />
     <Content Include="clientaccesspolicy.xml" />
     <Content Include="Services\AuthTokenService.svc" />
     <Content Include="Services\CoreService.svc" />
@@ -93,6 +95,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="certlogin.aspx.cs">
+      <DependentUpon>certlogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Controllers\SettingDbSerializer.cs" />
     <Compile Include="Controllers\PushCallbackFactory.cs" />
     <Compile Include="Controllers\WebIMProtocolManager.cs" />
@@ -181,7 +187,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

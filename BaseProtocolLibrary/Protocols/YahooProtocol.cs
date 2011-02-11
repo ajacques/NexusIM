@@ -267,30 +267,6 @@ namespace InstantMessage
 				sendPacket(spacket);
 			}
 		}
-		public void StartIMVironment(string username, YahooIMVironment type)
-		{
-			if (type == YahooIMVironment.Doodle)
-			{
-				YPacket packet = new YPacket();
-				packet.Service = YahooServices.ymsg_file_transfer;
-				packet.Session = session;
-				packet.AddParameter("49", "IMVIRONMENT");
-				packet.AddParameter("1", mUsername);
-				packet.AddParameter("14", "null");
-				packet.AddParameter("13", "4");
-				packet.AddParameter("5", username);
-				packet.AddParameter("63", "doodle;107");
-				packet.AddParameter("64", "1");
-
-				sendPacket(packet);
-
-				packet.Parameter["4"] = "";
-				packet.Parameter["13"] = "0";
-				packet.Parameter["64"] = "0";
-
-				sendPacket(packet);
-			}
-		}
 		public override void InviteToChatRoom(string username, string room, string inviteText)
 		{
 			YPacket packet = new YPacket();
@@ -360,6 +336,32 @@ namespace InstantMessage
 			packet.AddParameter("187", "0");
 
 			sendPacket(packet);
+		}
+
+		// Protocol Specific functions
+		public void StartIMVironment(string username, YahooIMVironment type)
+		{
+			if (type == YahooIMVironment.Doodle)
+			{
+				YPacket packet = new YPacket();
+				packet.Service = YahooServices.ymsg_file_transfer;
+				packet.Session = session;
+				packet.AddParameter("49", "IMVIRONMENT");
+				packet.AddParameter("1", mUsername);
+				packet.AddParameter("14", "null");
+				packet.AddParameter("13", "4");
+				packet.AddParameter("5", username);
+				packet.AddParameter("63", "doodle;107");
+				packet.AddParameter("64", "1");
+
+				sendPacket(packet);
+
+				packet.Parameter["4"] = "";
+				packet.Parameter["13"] = "0";
+				packet.Parameter["64"] = "0";
+
+				sendPacket(packet);
+			}
 		}
 
 		// Packet Utility Functions
@@ -1322,10 +1324,10 @@ namespace InstantMessage
 		// Protocol Specific Variables
 		private byte[] dataqueue = new byte[1024];
 		private Dictionary<string, int> converstationCount = new Dictionary<string, int>();
-		private string session = "";
+		private string session;
 
 		// Socket Information
-		private Socket socket = null;
+		private Socket socket;
 		private TcpClient client;
 		private StreamWriter nWriter;
 		private StreamReader nReader;

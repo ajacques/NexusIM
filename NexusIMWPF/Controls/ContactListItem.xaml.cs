@@ -42,12 +42,6 @@ namespace NexusIM.Controls
 		{
 			e.Effects = DragDropEffects.Link;
 		}
-		protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-		{
-			base.OnMouseLeftButtonUp(e);
-
-			Select();
-		}
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);

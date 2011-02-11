@@ -91,7 +91,7 @@ namespace NexusCore.Services
 				}
 			}
 		}
-		void Login()
+		public void Login()
 		{
 			HttpClientCertificate certificate = HttpContext.Current.Request.ClientCertificate;
 			
@@ -241,7 +241,7 @@ namespace NexusCore.Services
 		}
 
 		// Location Data
-		public List<ContactLocationInfo> GetLocationData()
+		public IEnumerable<ContactLocationInfo> GetLocationData()
 		{
 			HttpSessionState session = HttpContext.Current.Session;
 			if (session["userid"] == null)
@@ -263,7 +263,7 @@ namespace NexusCore.Services
 							select new { LocationData = ul, ContactInfo = p, AccInfo = a };
 
 			// Takes the needed data from the location mash-up above, and converts it into the correct classes, then puts it in a list to return to the user
-			List<ContactLocationInfo> mLocations = locations.Select(l => new ContactLocationInfo((LocationServiceType)Enum.Parse(typeof(LocationServiceType), l.LocationData.service), l.LocationData.id, new AccountInfo(l.AccInfo.acctype, l.AccInfo.username), l.LocationData.username)).ToList();
+			IEnumerable<ContactLocationInfo> mLocations = locations.Select(l => new ContactLocationInfo((LocationServiceType)Enum.Parse(typeof(LocationServiceType), l.LocationData.service), l.LocationData.id, new AccountInfo(l.AccInfo.acctype, l.AccInfo.username), l.LocationData.username));
 
 			return mLocations;
 		}
