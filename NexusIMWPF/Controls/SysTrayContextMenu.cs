@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using InstantMessage;
 using NexusIM.Managers;
+using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {
@@ -35,6 +36,11 @@ namespace NexusIM.Controls
 			ContactListItem.Header = "Show Contact List";
 			ContactListItem.Click += new RoutedEventHandler(ContactListItem_Click);
 			base.Items.Add(ContactListItem);
+
+			MenuItem sendMessageItem = new MenuItem();
+			sendMessageItem.Header = "Send Instant Message";
+			sendMessageItem.Click += new RoutedEventHandler(SendMessageItem_Click);
+			base.Items.Add(sendMessageItem);
 
 			AvailabilityGroupItem = new MenuItem();
 			AvailabilityGroupItem.Header = "My Availability";
@@ -120,6 +126,11 @@ namespace NexusIM.Controls
 		private void SignOutItem_Click(object sender, RoutedEventArgs e)
 		{
 			AccountManager.Connected = !AccountManager.Connected;
+		}
+		private void SendMessageItem_Click(object sender, RoutedEventArgs e)
+		{
+			SelectRecipientWindow window = new SelectRecipientWindow();
+			window.Show();
 		}
 		private void ExitItem_Click(object sender, RoutedEventArgs e)
 		{

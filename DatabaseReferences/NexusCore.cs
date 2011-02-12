@@ -242,12 +242,16 @@ namespace NexusCore.Databases
 			return PasswordHasher.ComputeHash(input);
 		}
 
+		/// <summary>
+		/// Returns the Symmetric Algorithm that is used to decrypt the password salt.
+		/// Also loads the decryption key and IV
+		/// </summary>
 		private static SymmetricAlgorithm SaltDecryptor
 		{
 			get	{
 				if (mSaltDecryptor == null)
 				{
-					mSaltDecryptor = new AesCryptoServiceProvider();
+					mSaltDecryptor = new AesManaged();
 					mSaltDecryptor.Key = Encoding.Default.GetBytes(ConfigurationManager.AppSettings["SaltDecryptionKey"]);
 					mSaltDecryptor.IV = new byte[16];
 				}
@@ -264,7 +268,7 @@ namespace NexusCore.Databases
 		}
 
 		private static SymmetricAlgorithm mSaltDecryptor;
-		private static HashAlgorithm mHasher; // Yeah!! SHA-256! We rule!
+		private static HashAlgorithm mHasher;
 		private static Encoding mEncoder = Encoding.UTF8; // If they can type it, they can use it as a password
 	}
 }

@@ -83,7 +83,7 @@ namespace NexusIMWPF
 			RestartManager.Setup();
 
 			Trace.WriteLine("All Managers are loaded and ready");
-			Trace.WriteLine("Load Stopwatch: Application Initialization complete in: " + mStopwatch.Elapsed);
+			Trace.WriteLine("Load Stopwatch: Application initialization completed in " + mStopwatch.Elapsed);
 			mStopwatch.Stop();
 		}
 		protected override void OnExit(ExitEventArgs e)

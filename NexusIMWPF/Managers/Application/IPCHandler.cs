@@ -59,7 +59,9 @@ namespace NexusIM.Managers
 		private static void ConnectPipe()
 		{
 			pipeClient = new NamedPipeClientStream(".", "nexusim", PipeDirection.Out);
-			pipeClient.Connect(1000);
+			try	{
+				pipeClient.Connect(1000);
+			} catch (TimeoutException) {}
 		}
 
 		private static void onNamedPipeRead(IAsyncResult e)

@@ -103,18 +103,10 @@ namespace InstantMessage
 		public string DisplayName
 		{
 			get {
-				if (mNickname != "")
-					return mNickname;
-				else
+				if (String.IsNullOrEmpty(mNickname))
 					return mUsername;
-			}
-			internal set {
-				if (value != mNickname)
-				{
-					mNickname = value;
-					NotifyPropertyChanged("Nickname");
-					NotifyPropertyChanged("DisplayName");
-				}
+				else
+					return mNickname;
 			}
 		}
 		/// <summary>

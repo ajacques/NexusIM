@@ -1,14 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using System.Windows;
-using InstantMessage;
+﻿using System.Collections;
 using System.Collections.Specialized;
-using System.Collections.Generic;
-using System.Collections;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using InstantMessage;
 using NexusIM.Managers;
 
 namespace NexusIM.Controls

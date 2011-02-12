@@ -1380,7 +1380,7 @@ namespace NexusCore.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoTag", CanBeNull=true)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GeoTag")]
 		public Microsoft.SqlServer.Types.SqlGeography GeoTag
 		{
 			get

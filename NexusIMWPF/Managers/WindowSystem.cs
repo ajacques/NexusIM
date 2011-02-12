@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
+using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Properties;
 using NexusIM.Windows;
 using NexusIMWPF;
-using InstantMessage;
-using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace NexusIM.Managers
 {
 	static class WindowSystem
 	{
+		static WindowSystem()
+		{
+			ContactChatAreas = new ChatAreaCollection();
+		}
 		public static void OpenContactListWindow()
 		{
 			if (ContactListWindow == null)
@@ -38,14 +43,28 @@ namespace NexusIM.Managers
 			DummyWindow = new DummyWindow();
 			//Application.Dispatcher.BeginInvoke(new ThreadStart(() => DummyWindow.Show() ), DispatcherPriority.Background);
 		}
-		public static void OpenContactWindow(IContact contact)
+		public static void OpenContactWindow(IContact contact, bool getFocus = true)
 		{
-			Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
+			ContactChatArea area;
+			if (!ContactChatAreas.TryGetValue(contact, out area))
+			{
+				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
 				{
-					ChatWindow window = new ChatWindow();
-					window.DataContext = contact;
-					window.Show();
+					area = new ContactChatArea();
+					ContactChatAreas.Add(contact, area);
+					if (ChatWindow == null)
+					{
+						ChatWindow = new ChatWindow();
+						if (!getFocus)
+							ChatWindow.WindowState = WindowState.Minimized;
+						ChatWindow.Show();
+						ChatWindow.Visibility = Visibility.Visible;
+						if (!getFocus)
+							Win32.FlashWindow(new WindowInteropHelper(ChatWindow).Handle, false);
+					}
+					ChatWindow.AttachAreaAndShow(new ChatAreaHost(area));
 				}));
+			}
 		}
 		public static void ShowSysTrayIcon()
 		{
@@ -90,6 +109,16 @@ namespace NexusIM.Managers
 			private set;
 		}
 		public static DummyWindow DummyWindow
+		{
+			get;
+			private set;
+		}
+		public static ChatAreaCollection ContactChatAreas
+		{
+			get;
+			private set;
+		}
+		public static ChatWindow ChatWindow
 		{
 			get;
 			private set;
