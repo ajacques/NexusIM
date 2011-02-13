@@ -30,6 +30,9 @@ namespace NexusIM.Controls
 
 		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			if (e.NewValue == null)
+				return;
+
 			Contact.onReceiveMessage += new EventHandler<IMMessageEventArgs>(OnReceiveMessage);
 			Contact.PropertyChanged += new PropertyChangedEventHandler(Contact_PropertyChanged);
 		}

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace NexusIM
 {
@@ -12,6 +14,12 @@ namespace NexusIM
 			}
 		}
 
+		public static void FlashWindow(Window window)
+		{
+			WindowInteropHelper helper = new WindowInteropHelper(window);
+			FlashWindow(helper.Handle, false);
+		}
+
 		/// <summary>
 		/// Flashes the window taskbar button to get the user's attention
 		/// </summary>
@@ -19,7 +27,7 @@ namespace NexusIM
 		/// <param name="bInvert">If this parameter is TRUE, the window is flashed from one state to the other. If it is FALSE, the window is returned to its original state (either active or inactive). </param>
 		/// <returns></returns>
 		[DllImport("user32.dll")]
-		public static extern bool FlashWindow(IntPtr hWnd, bool bInvert);
+		private static extern bool FlashWindow(IntPtr hWnd, bool bInvert);
 
 		[DllImport("user32.dll")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);

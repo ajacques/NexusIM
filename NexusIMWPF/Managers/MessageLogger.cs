@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using InstantMessage;
+using System.Threading;
 
 namespace NexusIM.Managers
 {
@@ -26,6 +27,6 @@ namespace NexusIM.Managers
 			db.SubmitChanges();
 		}
 
-		private static string mConnectionString;
+		private static string mConnectionString = "Data Source=ChatHistory.sdf;Persist Security Info=False;";
 	}
 }

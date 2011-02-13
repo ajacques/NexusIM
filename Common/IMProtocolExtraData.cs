@@ -28,5 +28,10 @@ namespace InstantMessage
 			get;
 			set;
 		}
+		public bool AutoConnect
+		{
+			get;
+			set;
+		}
 	}
 }

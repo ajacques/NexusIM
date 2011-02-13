@@ -149,6 +149,7 @@
     <Compile Include="Controls\ContactChatArea.xaml.cs">
       <DependentUpon>ContactChatArea.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContactItemContextMenu.cs" />
     <Compile Include="Controls\ContactListGroup.xaml.cs">
       <DependentUpon>ContactListGroup.xaml</DependentUpon>
     </Compile>
@@ -181,6 +182,7 @@
     <Compile Include="Managers\Protocol\InterfaceManager.cs" />
     <Compile Include="Managers\Protocol\NexusCoreManager.cs" />
     <Compile Include="Managers\SafeUrlTester.cs" />
+    <Compile Include="Managers\StopwatchManager.cs" />
     <Compile Include="Managers\User Interface\ErrorManager.cs" />
     <Compile Include="Managers\User Interface\MUCManager.cs" />
     <Compile Include="Managers\User Interface\SensorManager.cs" />
@@ -211,6 +213,9 @@
     </Compile>
     <Compile Include="Windows\AddContactWindow.xaml.cs">
       <DependentUpon>AddContactWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ChatHistory.xaml.cs">
+      <DependentUpon>ChatHistory.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
@@ -341,6 +346,10 @@
     <Page Include="Windows\AddContactWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ChatHistory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ChatWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

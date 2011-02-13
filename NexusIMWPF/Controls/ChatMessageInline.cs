@@ -18,7 +18,6 @@ namespace NexusIM.Controls
 
 			mUsername.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
 
-			this.Inlines.Add(new LineBreak());
 			this.Inlines.Add(mUsername);
 			this.Inlines.Add(new Run() { Text = ":  "});
 			this.Inlines.Add(mMessage);

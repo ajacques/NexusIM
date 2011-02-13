@@ -75,6 +75,7 @@ namespace NexusIM.Controls
 				{
 					ContactListItem item = new ContactListItem();
 					item.DataContext = contact;
+					item.ContextMenu = new ContactItemContextMenu(contact);
 					item.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
 					ContactList.Children.Add(item);
 				}
@@ -83,6 +84,9 @@ namespace NexusIM.Controls
 
 		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
+			if (e.ChangedButton != MouseButton.Left)
+				return;
+
 			ContactListItem item = sender as ContactListItem;
 			IMBuddy contact = item.DataContext as IMBuddy;
 
@@ -92,11 +96,6 @@ namespace NexusIM.Controls
 		private void Contacts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			AddContacts(e.NewItems);
-		}
-		protected override void OnMouseUp(MouseButtonEventArgs e)
-		{
-			base.OnMouseUp(e);
-
 		}
 		private void NotifyPropertyChanged(string propertyName)
 		{

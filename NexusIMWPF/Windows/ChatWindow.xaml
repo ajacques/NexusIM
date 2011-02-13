@@ -6,7 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
 	x:Class="NexusIM.Windows.ChatWindow"
 	x:Name="Window" x:FieldModifier="internal" UseLayoutRounding="True"
-	Width="600" Height="500" MinWidth="150" MinHeight="100">
+	Width="600" Height="500" MinWidth="150" MinHeight="100" Title="{Binding SelectedItem.DataContext.DisplayName, ElementName=ChatAreas}">
 	<Window.Resources>
 		<Color x:Key="AvailableColor">#90C1FF99</Color>
 		<Color x:Key="BusyColor">#00FFC9C9</Color>
@@ -14,16 +14,6 @@
 		<Color x:Key="OfflineColor">#00DEDEDE</Color>
 	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
-		<TabControl x:Name="ChatAreas" Padding="0">
-			<nxc:ContactChatArea>
-				<nxc:ContactChatArea.DataContext>
-					<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars? This is a really, really long message that goes off the screen. It will marquee through.">
-						<im:IMBuddy.Avatar>
-							<im:BuddyAvatar />
-						</im:IMBuddy.Avatar>
-					</im:IMBuddy>
-				</nxc:ContactChatArea.DataContext>
-			</nxc:ContactChatArea>
-		</TabControl>
+		<TabControl x:Name="ChatAreas" Padding="0" />
 	</Grid>
 </Window>

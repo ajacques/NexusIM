@@ -103,8 +103,6 @@ namespace NexusIM
 		
 		private string _Password;
 		
-		private bool _Enabled;
-		
 		private bool _AutoConnect;
 		
 		private EntitySet<AccountSetting> _AccountSettings;
@@ -121,8 +119,6 @@ namespace NexusIM
     partial void OnUsernameChanged();
     partial void OnPasswordChanging(string value);
     partial void OnPasswordChanged();
-    partial void OnEnabledChanging(bool value);
-    partial void OnEnabledChanged();
     partial void OnAutoConnectChanging(bool value);
     partial void OnAutoConnectChanged();
     #endregion
@@ -209,26 +205,6 @@ namespace NexusIM
 					this._Password = value;
 					this.SendPropertyChanged("Password");
 					this.OnPasswordChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Enabled", DbType="bit NOT NULL")]
-		public bool Enabled
-		{
-			get
-			{
-				return this._Enabled;
-			}
-			set
-			{
-				if ((this._Enabled != value))
-				{
-					this.OnEnabledChanging(value);
-					this.SendPropertyChanging();
-					this._Enabled = value;
-					this.SendPropertyChanged("Enabled");
-					this.OnEnabledChanged();
 				}
 			}
 		}

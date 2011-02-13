@@ -33,7 +33,6 @@ namespace InstantMessage
 		{
 			mUsername = username;
 			mProtocol = protocol;
-			mGuid = Guid.NewGuid();
 		}
 		/// <summary>
 		/// Sends a message to this user
@@ -253,15 +252,6 @@ namespace InstantMessage
 					onStatusChange(this, null);
 			}
 		}
-		/// <summary>
-		/// The guid is used to identify this buddy
-		/// </summary>
-		public Guid Guid
-		{
-			get {
-				return mGuid;
-			}
-		}
 		public UserVisibilityStatus VisibilityStatus
 		{
 			get {
@@ -306,7 +296,6 @@ namespace InstantMessage
 		private bool mIsMobileContact = false;
 		private bool mIsInternalUsage = false;
 		private bool mIsOnBuddyList = true;
-		private Guid mGuid;
 		private IMBuddyStatus mStatus = IMBuddyStatus.Offline;
 		private string mStatusMessage = "";
 		private DateTime mStatusChange;

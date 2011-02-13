@@ -60,9 +60,9 @@ namespace NexusIM.Managers
 						ChatWindow.Show();
 						ChatWindow.Visibility = Visibility.Visible;
 						if (!getFocus)
-							Win32.FlashWindow(new WindowInteropHelper(ChatWindow).Handle, false);
+							Win32.FlashWindow(ChatWindow);
 					}
-					ChatWindow.AttachAreaAndShow(new ChatAreaHost(area));
+					ChatWindow.AttachAreaAndShow(new ChatAreaHost(area, contact));
 				}));
 			}
 		}

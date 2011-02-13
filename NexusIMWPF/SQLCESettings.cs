@@ -464,7 +464,7 @@ namespace NexusIM
 						});
 						protocol.ConfigurationSettings = new SqlAccountSettingDictionary(mContext, current.AccountSettings);
 
-						return new IMProtocolExtraData() { Protocol = protocol, Enabled = current.Enabled };
+						return new IMProtocolExtraData() { Protocol = protocol, Enabled = current.AutoConnect, AutoConnect = current.AutoConnect };
 					}
 				}
 
@@ -474,16 +474,17 @@ namespace NexusIM
 
 				public void Dispose()
 				{
-
-					mContext = null;
 					mEnumerator.Dispose();
+					mEnumerator = null;
+					mContext = null;
+					GC.SuppressFinalize(this);
 				}
 
 				#endregion
 
 				#region IEnumerator Members
 
-				object System.Collections.IEnumerator.Current
+				object IEnumerator.Current
 				{
 					get {
 						return Current;
@@ -559,7 +560,7 @@ namespace NexusIM
 				account.AccountType = item.Protocol.ShortProtocol;
 				account.Username = item.Protocol.Username;
 				account.Password = item.Protocol.Password;
-				account.Enabled = item.Enabled;
+				account.AutoConnect = item.AutoConnect;
 
 				foreach (var setting in item.Protocol.ConfigurationSettings)
 				{

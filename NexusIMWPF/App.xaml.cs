@@ -8,6 +8,7 @@ using InstantMessage;
 using NexusIM;
 using NexusIM.Managers;
 using NexusIM.Windows;
+using System.Net;
 
 namespace NexusIMWPF
 {
@@ -32,9 +33,11 @@ namespace NexusIMWPF
 
 				this.Shutdown();
 			}
+			StopwatchManager.Start("AppInit");
 			WindowSystem.RegisterApp(this);
 			this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-		}		
+			DoInit();
+		}
 
 		public void Dispose()
 		{
@@ -42,13 +45,25 @@ namespace NexusIMWPF
 				mSingleInstanceMutex.Dispose();
 		}
 
-		protected override void OnStartup(StartupEventArgs e)
+		protected override void OnExit(ExitEventArgs e)
 		{
-			base.OnStartup(e);
-			mStopwatch = new Stopwatch();
-			mStopwatch.Start();
+			base.OnExit(e);
 
+			mSingleInstanceMutex.Close();
+			SuperTaskbarManager.Shutdown();
+		}
+
+		private static void LoadAccounts(object state)
+		{
+			StopwatchManager.Start("AccDBLoad");
+			foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
+				AccountManager.Accounts.Add(protocol);
+			StopwatchManager.Stop("AccDBLoad");
+		}
+		private static void DoInit()
+		{
 			SetupTraceListeners();
+			StopwatchManager.TraceElapsed("AppInit", "{0} - OnStartup begin: {1}");
 
 			Trace.AutoFlush = true;
 			// Log some random information for debugging
@@ -64,15 +79,17 @@ namespace NexusIMWPF
 			IMSettings.Setup(new SQLCESettings("Data Source=\"UserProfile.sdf\";Persist Security Info=False;"));
 
 			AggregateContactList.Setup();
+			IMMessageProcessor.Setup();
 			if (FirstRunSetup.IsFirstRun)
 			{
 				InitialSetupWindow window = new InitialSetupWindow();
 				window.Show();
+				StopwatchManager.TraceElapsed("AppInit", "{0} - InitialSetup Opened in: {1}");
 				AccountManager.Setup();
 			} else {
 				AccountManager.Setup();
-				foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
-					AccountManager.Accounts.Add(protocol);
+				StopwatchManager.TraceElapsed("AppInit", "{0} - AccountManager loaded in: {1}");
+				ThreadPool.QueueUserWorkItem(new WaitCallback(LoadAccounts), null);
 
 				WindowSystem.OpenContactListWindow();
 				WindowSystem.ShowSysTrayIcon();
@@ -83,15 +100,7 @@ namespace NexusIMWPF
 			RestartManager.Setup();
 
 			Trace.WriteLine("All Managers are loaded and ready");
-			Trace.WriteLine("Load Stopwatch: Application initialization completed in " + mStopwatch.Elapsed);
-			mStopwatch.Stop();
-		}
-		protected override void OnExit(ExitEventArgs e)
-		{
-			base.OnExit(e);
-
-			mSingleInstanceMutex.Close();
-			SuperTaskbarManager.Shutdown();
+			StopwatchManager.TraceElapsed("AppInit", "{0} - Application initialization completed in: {1}");
 		}
 
 		[Conditional("DEBUG")]
@@ -99,7 +108,7 @@ namespace NexusIMWPF
 		{
 			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
 			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
-						
+			
 			try	{
 				Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate, FileAccess.Write);
 				Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
@@ -113,6 +122,5 @@ namespace NexusIMWPF
 
 		// Variables
 		private Mutex mSingleInstanceMutex;
-		private Stopwatch mStopwatch;
 	}
 }

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
-using System.Collections.Specialized;
-using System.Windows.Media;
 
 namespace NexusIM.Windows
 {
@@ -51,15 +51,6 @@ namespace NexusIM.Windows
 				
 			}
 		}
-		internal void AddContact(IContact item)
-		{
-			Dispatcher.BeginInvoke(new GenericEvent(() => {
-				ContactListItem cl = new ContactListItem();
-				cl.DataContext = item;
-				cl.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
-				ContactList.Add(cl);
-			}));
-		}
 
 		private void HandleStatusChange()
 		{
@@ -82,24 +73,36 @@ namespace NexusIM.Windows
 			
 			Dispatcher.BeginInvoke(new GenericEvent(() => StatusComboBox.SelectedIndex = selectedIndex));
 		}
+		private void AddGroups(IEnumerable source)
+		{
+			foreach (GroupOfContacts contact in source)
+			{
+				Dispatcher.BeginInvoke(new GenericEvent(() =>
+				{
+					ContactListGroup group = new ContactListGroup();
+					group.SourceGroup = contact;
+					group.IsExpanded = true;
+					ContactListControl.Children.Add(group);
+				}));
+			}
+		}
 
 		// Event Handlers
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			if (!SuperTaskbarManager.IsSetup)
 				ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => SuperTaskbarManager.Setup()));
+
+			AddGroups(AggregateContactList.Groups);
+
+			try	{
+				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");
+			} catch (KeyNotFoundException) { }
 		}
 		private void EditAccounts_Click(object sender, RoutedEventArgs e)
 		{
 			AccountsEdit window = new AccountsEdit();
 			window.Show();
-		}
-		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-		{
-			ContactListItem item = sender as ContactListItem;
-			IMBuddy contact = item.DataContext as IMBuddy;
-			
-			WindowSystem.OpenContactWindow(contact);
 		}
 		private void AccountManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -153,16 +156,8 @@ namespace NexusIM.Windows
 		}
 		private void ContactList_Changed(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			foreach (GroupOfContacts contact in e.NewItems)
-			{
-				Dispatcher.BeginInvoke(new GenericEvent(() =>
-				{
-					ContactListGroup group = new ContactListGroup();
-					group.SourceGroup = contact;
-					group.IsExpanded = true;
-					ContactListControl.Children.Add(group);
-				}));
-			}			
+			if (e.NewItems != null)
+				AddGroups(e.NewItems);
 		}
 
 		protected override void OnInitialized(EventArgs e)

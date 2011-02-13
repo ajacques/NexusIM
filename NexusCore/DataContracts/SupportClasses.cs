@@ -254,7 +254,7 @@ namespace NexusCore.DataContracts
 
 		public static implicit operator BuddyData(IMBuddy buddy)
 		{
-			return new BuddyData(buddy.Guid, buddy.Nickname, buddy.StatusMessage, buddy.Status);
+			return new BuddyData(new Guid(), buddy.Nickname, buddy.StatusMessage, buddy.Status);
 		}
 
 		[DataMember(Name = "Username")]
