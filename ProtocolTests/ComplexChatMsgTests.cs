@@ -14,7 +14,7 @@ namespace ProtocolTests
 		public void LineBreakTest()
 		{
 			ComplexChatMessage msg = new ComplexChatMessage();
-			msg.Inlines.Add(new LineBreak());
+			msg.Inlines.Add(new IMLineBreak());
 
 			Assert.AreEqual(Environment.NewLine, msg.ToString());
 		}
@@ -33,7 +33,7 @@ namespace ProtocolTests
 		{
 			ComplexChatMessage msg = new ComplexChatMessage();
 			msg.Inlines.Add(new IMRun("Test"));
-			msg.Inlines.Add(new LineBreak());
+			msg.Inlines.Add(new IMLineBreak());
 
 			Assert.AreEqual("Test" + Environment.NewLine, msg.ToString());
 		}

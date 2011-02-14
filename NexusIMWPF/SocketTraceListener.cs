@@ -45,10 +45,12 @@ namespace NexusIM
 
 		public override void WriteLine(string message)
 		{
-			try {
+			try	{
 				mWriter.WriteLine(message);
 				mWriter.Flush();
-			} catch (SocketException){
+			} catch (SocketException) {
+				Trace.Listeners.Remove(this);
+			} catch (IOException) {
 				Trace.Listeners.Remove(this);
 			}
 		}

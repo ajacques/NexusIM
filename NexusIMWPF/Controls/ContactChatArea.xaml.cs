@@ -7,6 +7,8 @@ using System.Windows.Media;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
+using System.Linq;
+using System.Windows.Documents;
 
 namespace NexusIM.Controls
 {
@@ -60,6 +62,10 @@ namespace NexusIM.Controls
 				ChatMessageInline inline = new ChatMessageInline();
 				inline.Username = "Me";
 				inline.MessageBody = message;
+				
+				if (ChatHistoryBox.Inlines.Any())
+					ChatHistoryBox.Inlines.Add(new LineBreak());
+
 				ChatHistoryBox.Inlines.Add(inline);
 				MessageLogger.LogMessageToRemote(Contact, message);
 			}

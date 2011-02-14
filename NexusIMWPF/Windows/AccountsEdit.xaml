@@ -8,7 +8,7 @@
 	x:Name="Window"
 	Title="NexusIM - Accounts"
 	Width="540" Height="380" WindowStartupLocation="CenterScreen"
-	x:ClassModifier="internal" x:FieldModifier="private" Loaded="Window_Loaded">
+	x:ClassModifier="internal" x:FieldModifier="private" Loaded="Window_Loaded" ResizeMode="NoResize" UseLayoutRounding="True">
 	<Window.Resources>
 		<Thickness x:Key="ItemMargin" Bottom="10" />
 	</Window.Resources>

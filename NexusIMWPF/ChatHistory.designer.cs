@@ -29,6 +29,9 @@ namespace NexusIM
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertPrivateMessage(PrivateMessage instance);
+    partial void UpdatePrivateMessage(PrivateMessage instance);
+    partial void DeletePrivateMessage(PrivateMessage instance);
     #endregion
 		
 		public ChatHistory(string connection) : 
@@ -65,8 +68,10 @@ namespace NexusIM
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="PrivateMessages")]
-	public partial class PrivateMessage
+	public partial class PrivateMessage : INotifyPropertyChanging, INotifyPropertyChanged
 	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private System.DateTime _Timestamp;
 		
@@ -76,11 +81,26 @@ namespace NexusIM
 		
 		private string _Recipient;
 		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnTimestampChanging(System.DateTime value);
+    partial void OnTimestampChanged();
+    partial void OnMessageBodyChanging(string value);
+    partial void OnMessageBodyChanged();
+    partial void OnSenderChanging(string value);
+    partial void OnSenderChanged();
+    partial void OnRecipientChanging(string value);
+    partial void OnRecipientChanged();
+    #endregion
+		
 		public PrivateMessage()
 		{
+			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Timestamp", DbType="DateTime NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Timestamp", DbType="DateTime NOT NULL", IsPrimaryKey=true)]
 		public System.DateTime Timestamp
 		{
 			get
@@ -91,7 +111,11 @@ namespace NexusIM
 			{
 				if ((this._Timestamp != value))
 				{
+					this.OnTimestampChanging(value);
+					this.SendPropertyChanging();
 					this._Timestamp = value;
+					this.SendPropertyChanged("Timestamp");
+					this.OnTimestampChanged();
 				}
 			}
 		}
@@ -107,7 +131,11 @@ namespace NexusIM
 			{
 				if ((this._MessageBody != value))
 				{
+					this.OnMessageBodyChanging(value);
+					this.SendPropertyChanging();
 					this._MessageBody = value;
+					this.SendPropertyChanged("MessageBody");
+					this.OnMessageBodyChanged();
 				}
 			}
 		}
@@ -123,7 +151,11 @@ namespace NexusIM
 			{
 				if ((this._Sender != value))
 				{
+					this.OnSenderChanging(value);
+					this.SendPropertyChanging();
 					this._Sender = value;
+					this.SendPropertyChanged("Sender");
+					this.OnSenderChanged();
 				}
 			}
 		}
@@ -139,8 +171,32 @@ namespace NexusIM
 			{
 				if ((this._Recipient != value))
 				{
+					this.OnRecipientChanging(value);
+					this.SendPropertyChanging();
 					this._Recipient = value;
+					this.SendPropertyChanged("Recipient");
+					this.OnRecipientChanged();
 				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}

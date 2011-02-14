@@ -25,7 +25,7 @@ namespace InstantMessage
 		}
 	}
 
-	public class LineBreak : ChatInline
+	public class IMLineBreak : ChatInline
 	{
 		public override string ToString()
 		{

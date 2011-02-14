@@ -8,7 +8,6 @@ using InstantMessage;
 using NexusIM;
 using NexusIM.Managers;
 using NexusIM.Windows;
-using System.Net;
 
 namespace NexusIMWPF
 {

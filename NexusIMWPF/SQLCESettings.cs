@@ -455,6 +455,10 @@ namespace NexusIM
 							return null;
 
 						IMProtocol protocol = IMProtocol.FromString(current.AccountType);
+						IMProtocolExtraData extraData = new IMProtocolExtraData();
+						extraData.Protocol = protocol;
+						extraData.DatabaseId = current.Id;
+						extraData.Enabled = extraData.AutoConnect = current.AutoConnect;						
 						protocol.Username = current.Username;
 						protocol.Password = current.Password;
 						protocol.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
@@ -464,7 +468,7 @@ namespace NexusIM
 						});
 						protocol.ConfigurationSettings = new SqlAccountSettingDictionary(mContext, current.AccountSettings);
 
-						return new IMProtocolExtraData() { Protocol = protocol, Enabled = current.AutoConnect, AutoConnect = current.AutoConnect };
+						return extraData;
 					}
 				}
 
@@ -476,7 +480,6 @@ namespace NexusIM
 				{
 					mEnumerator.Dispose();
 					mEnumerator = null;
-					mContext = null;
 					GC.SuppressFinalize(this);
 				}
 
