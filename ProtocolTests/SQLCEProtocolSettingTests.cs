@@ -7,6 +7,7 @@ using NexusIM;
 using ProtocolTests.Properties;
 using InstantMessage;
 using InstantMessage.Protocols;
+using InstantMessage.Protocols.Yahoo;
 
 namespace ProtocolTests
 {

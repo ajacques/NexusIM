@@ -120,16 +120,7 @@ namespace InstantMessage
 		/// <param name="group">Which group to place the buddy into</param>
 		public virtual void AddFriend(string name, string nickname, string group) {}
 		public virtual void AddFriend(string name, string nickname, string group, string introMsg = null) {}
-		/// <summary>
-		/// Removes a person from the user's contact list
-		/// </summary>
-		/// <param name="uname">What user to remove</param>
-		[Obsolete("Group stuff will be handled internally by IMProtocol", false)]
-		public virtual void RemoveFriend(string uname, string group) {}
-		public virtual void RemoveFriend(string uname)
-		{
-			RemoveFriend(uname, IMBuddy.FromUsername(uname, this).Group);
-		}
+		public virtual void RemoveFriend(string uname) {}
 		/// <summary>
 		/// Sends a private message to another user
 		/// </summary>

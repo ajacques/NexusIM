@@ -11,12 +11,10 @@ using System;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adren Software")]
 [assembly: AssemblyProduct("BaseProtocolLibrary")]
-[assembly: AssemblyCopyright("Copyright © Adren Software 2010")]
+[assembly: AssemblyCopyright("Copyright © Adren Software 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-#if WINDOWS
-[assembly: AssemblyFileVersion("1.0.0.3261")]
-#endif
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -35,7 +33,7 @@ using System;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
 
 // Private assembly for now, if we release this will probably have to change this
 [assembly: ObfuscateAssembly(assemblyIsPrivate: true)]

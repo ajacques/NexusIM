@@ -14,7 +14,7 @@ using System.Xml;
 using System.Xml.Linq;
 using InstantMessage.Events;
 
-namespace InstantMessage
+namespace InstantMessage.Protocols.Yahoo
 {
 	[IMNetwork("yahoo")]
 	public sealed partial class IMYahooProtocol : IMProtocol
@@ -60,12 +60,6 @@ namespace InstantMessage
 
 				status = IMProtocolStatus.Offline;
 				mConnected = false;
-				
-
-				try {
-					if (socket != null)
-						socket.Close();
-				} catch (Exception) {}
 			} else if (status == IMProtocolStatus.Connecting) {
 
 			}
@@ -89,15 +83,15 @@ namespace InstantMessage
 			
 			pkt.Service = YahooServices.ymsg_message;
 			pkt.Session = session;
-			pkt.AddParameter("1", mUsername);
-			pkt.AddParameter("5", friendName);
-			pkt.AddParameter("97", "1");
-			pkt.AddParameter("63", ";0");
-			pkt.AddParameter("64", "0");
-			pkt.AddParameter("206", "0");
-			pkt.AddParameter("14", newmessage);
-			//pkt.AddParameter("429", "0000000" + converstationCount[friendName] + "c35AF042C"); // <-- Not sure what this does, but it seems to have to do with how many messages I've sent.. Maybe a delivery confirmation?
-			pkt.AddParameter("450", "0");
+			pkt.AddParameter(1, mUsername);
+			pkt.AddParameter(5, friendName);
+			pkt.AddParameter(97, "1");
+			pkt.AddParameter(63, ";0");
+			pkt.AddParameter(64, "0");
+			pkt.AddParameter(206, "0");
+			pkt.AddParameter(14, newmessage);
+			//pkt.AddParameter(429, "0000000" + converstationCount[friendName] + "c35AF042C"); // <-- Not sure what this does, but it seems to have to do with how many messages I've sent.. Maybe a delivery confirmation?
+			pkt.AddParameter(450, "0");
 
 			sendPacket(pkt);
 		}
@@ -106,14 +100,14 @@ namespace InstantMessage
 			YPacket packet = new YPacket();
 			packet.Service = YahooServices.ymsg_notify;
 			packet.StatusByte = new byte[] { 0x00, 0x00, 0x00, 0x16 };
-			packet.AddParameter("49", "TYPING");
-			packet.AddParameter("1", mUsername);
-			packet.AddParameter("14", Encoding.UTF8.GetString(new byte[] { 20 }, 0, 1));
+			packet.AddParameter(49, "TYPING");
+			packet.AddParameter(1, mUsername);
+			packet.AddParameter(14, Encoding.UTF8.GetString(new byte[] { 20 }, 0, 1));
 			if (isTyping)
-				packet.AddParameter("13", "1");
+				packet.AddParameter(13, "1");
 			else
-				packet.AddParameter("13", "0");
-			packet.AddParameter("5", uname);
+				packet.AddParameter(13, "0");
+			packet.AddParameter(5, uname);
 
 			sendPacket(packet);
 		}
@@ -133,7 +127,7 @@ namespace InstantMessage
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
 				p1.Session = session;
-				p1.AddParameter("13", "2");
+				p1.AddParameter(13, "2");
 
 				sendPacket(p1);
 
@@ -143,7 +137,7 @@ namespace InstantMessage
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
 				p1.Session = session;
-				p1.AddParameter("13", "1");
+				p1.AddParameter(13, "1");
 
 				sendPacket(p1);
 			}
@@ -156,19 +150,19 @@ namespace InstantMessage
 		{
 			YPacket packet = new YPacket();
 			packet.Service = YahooServices.ymsg_add_buddy;
-			packet.AddParameter("14", introMsg);
-			packet.AddParameter("65", group);
-			packet.AddParameter("97", "1");
-			packet.AddParameter("216", String.Empty);
-			packet.AddParameter("254", String.Empty);
-			//packet.AddParameter("216", "First");
-			//packet.AddParameter("254", "Last");
-			packet.AddParameter("1", mUsername);
-			packet.AddParameter("302", "319");
-			packet.AddParameter("300", "319");
-			packet.AddParameter("7", name);
-			packet.AddParameter("301", "319");
-			packet.AddParameter("303", "319");
+			packet.AddParameter(14, introMsg);
+			packet.AddParameter(65, group);
+			packet.AddParameter(97, "1");
+			packet.AddParameter(216, String.Empty);
+			packet.AddParameter(254, String.Empty);
+			//packet.AddParameter(216, "First");
+			//packet.AddParameter(254, "Last");
+			packet.AddParameter(1, mUsername);
+			packet.AddParameter(302, "319");
+			packet.AddParameter(300, "319");
+			packet.AddParameter(7, name);
+			packet.AddParameter(301, "319");
+			packet.AddParameter(303, "319");
 
 			sendPacket(packet);
 
@@ -189,80 +183,46 @@ namespace InstantMessage
 			else
 				addbuddygroups[name] = group;
 		}
-		public override void RemoveFriend(string uname, string group)
-		{
-			IMBuddy buddy = IMBuddy.FromUsername(uname, this);
-			YPacket packet = new YPacket();
-			packet.Service = YahooServices.ymsg_remove_buddy;
-			packet.Session = session;
-			packet.AddParameter("1", mUsername);
-			packet.AddParameter("7", uname);
-			packet.AddParameter("65", group);
-
-			sendPacket(packet);
-
-			buddylist.Remove(buddy);
-
-			if (false)
-			{
-				XDocument xml = new XDocument();
-				xml.Declaration = new XDeclaration("1.0", "utf-8", "");
-
-				XElement ab = new XElement("ab");
-				XElement ct = new XElement("ct");
-
-				ab.Add(new XAttribute("k", mUsername));
-				ab.Add(new XAttribute("cc", 1));
-
-				ct.Add(new XAttribute("d", 1));
-				ct.Add(new XAttribute("yi", uname));
-				ct.Add(new XAttribute("pr", 0));
-				ct.Add(new XAttribute("id", buddy.Options["yid"]));
-
-				ab.Add(ct);
-				xml.Root.Add(ab);
-			}
-		}
 		public override void SetPerUserVisibilityStatus(string buddy, UserVisibilityStatus status)
 		{
 			if (status == UserVisibilityStatus.Permanently_Offline)
 			{
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_stealth_permanent;
-				packet.AddParameter("1", mUsername);
-				packet.AddParameter("31", "1");
-				packet.AddParameter("13", "2");
-				packet.AddParameter("302", "319");
-				packet.AddParameter("300", "319");
-				packet.AddParameter("7", buddy);
-				packet.AddParameter("301", "319");
-				packet.AddParameter("303", "319");
+				packet.AddParameter(1, mUsername);
+				packet.AddParameter(31, "1");
+				packet.AddParameter(13, "2");
+				packet.AddParameter(302, "319");
+				packet.AddParameter(300, "319");
+				packet.AddParameter(7, buddy);
+				packet.AddParameter(301, "319");
+				packet.AddParameter(303, "319");
 
 				sendPacket(packet);
 			} else if (status == UserVisibilityStatus.Online) {
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_stealth_permanent;
-				packet.AddParameter("1", mUsername);
-				packet.AddParameter("31", "2");
-				packet.AddParameter("13", "1");
-				packet.AddParameter("302", "319");
-				packet.AddParameter("300", "319");
-				packet.AddParameter("7", buddy);
-				packet.AddParameter("301", "319");
-				packet.AddParameter("303", "319");
+				packet.AddParameter(1, mUsername);
+				packet.AddParameter(31, "2");
+				packet.AddParameter(13, "1");
+				packet.AddParameter(302, "319");
+				packet.AddParameter(300, "319");
+				packet.AddParameter(7, buddy);
+				packet.AddParameter(301, "319");
+				packet.AddParameter(303, "319");
 
 				sendPacket(packet);
 
 				packet.Service = YahooServices.ymsg_stealth_session;
-				packet.Parameter["31"] = "1";
+				packet.Parameter[31] = "1";
 
 				sendPacket(packet);
 
 				YPacket spacket = new YPacket();
 				spacket.Service = YahooServices.ymsg_status_update;
-				spacket.AddParameter("10", "0");
-				spacket.AddParameter("19", "");
-				spacket.AddParameter("97", "1");
+				spacket.AddParameter(10, "0");
+				spacket.AddParameter(19, "");
+				spacket.AddParameter(97, "1");
 
 				sendPacket(spacket);
 			}
@@ -271,13 +231,13 @@ namespace InstantMessage
 		{
 			YPacket packet = new YPacket();
 			packet.Service = YahooServices.ymsg_conference_invitation;
-			packet.AddParameter("1", mUsername);
-			packet.AddParameter("50", mUsername);
-			packet.AddParameter("57", room);
-			packet.AddParameter("58", inviteText);
-			packet.AddParameter("97", "1");
-			packet.AddParameter("52", username);
-			packet.AddParameter("13", "0");
+			packet.AddParameter(1, mUsername);
+			packet.AddParameter(50, mUsername);
+			packet.AddParameter(57, room);
+			packet.AddParameter(58, inviteText);
+			packet.AddParameter(97, "1");
+			packet.AddParameter(52, username);
+			packet.AddParameter(13, "0");
 
 			sendPacket(packet);
 		}
@@ -285,15 +245,15 @@ namespace InstantMessage
 		{
 			YPacket packet = new YPacket();
 			packet.Service = YahooServices.ymsg_buddy_auth;
-			packet.AddParameter("1", mUsername);
-			packet.AddParameter("5", username);
+			packet.AddParameter(1, mUsername);
+			packet.AddParameter(5, username);
 			if (isAdded)
 			{
-				packet.AddParameter("13", "1");
+				packet.AddParameter(13, "1");
 			} else {
-				packet.AddParameter("13", "2");
-				packet.AddParameter("97", "1");
-				packet.AddParameter("14", "");
+				packet.AddParameter(13, "2");
+				packet.AddParameter(97, "1");
+				packet.AddParameter(14, "");
 			}
 
 			sendPacket(packet);
@@ -331,9 +291,9 @@ namespace InstantMessage
 		public override void SetStatusMessage(string message)
 		{
 			YPacket packet = generateStatusPacket(mStatus, message);
-			packet.AddParameter("97", "1");
-			packet.AddParameter("47", "0");
-			packet.AddParameter("187", "0");
+			packet.AddParameter(97, "1");
+			packet.AddParameter(47, "0");
+			packet.AddParameter(187, "0");
 
 			sendPacket(packet);
 		}
@@ -346,19 +306,19 @@ namespace InstantMessage
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_file_transfer;
 				packet.Session = session;
-				packet.AddParameter("49", "IMVIRONMENT");
-				packet.AddParameter("1", mUsername);
-				packet.AddParameter("14", "null");
-				packet.AddParameter("13", "4");
-				packet.AddParameter("5", username);
-				packet.AddParameter("63", "doodle;107");
-				packet.AddParameter("64", "1");
+				packet.AddParameter(49, "IMVIRONMENT");
+				packet.AddParameter(1, mUsername);
+				packet.AddParameter(14, "null");
+				packet.AddParameter(13, "4");
+				packet.AddParameter(5, username);
+				packet.AddParameter(63, "doodle;107");
+				packet.AddParameter(64, "1");
 
 				sendPacket(packet);
 
-				packet.Parameter["4"] = "";
-				packet.Parameter["13"] = "0";
-				packet.Parameter["64"] = "0";
+				packet.Parameter[4] = "";
+				packet.Parameter[13] = "0";
+				packet.Parameter[64] = "0";
 
 				sendPacket(packet);
 			}
@@ -373,49 +333,49 @@ namespace InstantMessage
 			switch (status)
 			{
 				case IMStatus.Available:
-					returnMe.AddParameter("10", "99");
+					returnMe.AddParameter(10, "99");
 					break;
 				case IMStatus.Away:
-					returnMe.AddParameter("10", "1");
+					returnMe.AddParameter(10, "1");
 					break;
 				case IMStatus.Idle:
-					returnMe.AddParameter("10", "99");
+					returnMe.AddParameter(10, "99");
 					break;
 				case IMStatus.Busy:
-					returnMe.AddParameter("10", "2");
+					returnMe.AddParameter(10, "2");
 					break;
 			}
 
-			returnMe.AddParameter("19", statusMessage == null ? "" : statusMessage);
-			returnMe.AddParameter("97", "1");
+			returnMe.AddParameter(19, statusMessage == null ? "" : statusMessage);
+			returnMe.AddParameter(97, "1");
 
 			return returnMe;
 		}
 		private void HandleStatusData(IMBuddy buddy, YPacket packet)
 		{
-			if (!packet.Parameter.ContainsKey("10"))
+			if (!packet.Parameter.ContainsKey(10))
 				return;
 
 			if (buddy.StatusMessage == "Idle")
 				buddy.StatusMessage = String.Empty;
 
-			if (packet.Parameter["10"] == "2") // Busy
+			if (packet.Parameter[10] == "2") // Busy
 			{
 				buddy.Status = IMBuddyStatus.Busy;
-			} else if (packet.Parameter["10"] == "999") { // Idle
+			} else if (packet.Parameter[10] == "999") { // Idle
 				buddy.Status = IMBuddyStatus.Idle;
 				if (buddy.StatusMessage == String.Empty)
 					buddy.StatusMessage = "Idle";
-			} else if (packet.Parameter["10"] == "0" || packet.Parameter["10"] == "99") { // Available
+			} else if (packet.Parameter[10] == "0" || packet.Parameter[10] == "99") { // Available
 				buddy.Status = IMBuddyStatus.Available;
-			} else if (packet.Parameter["10"] == "99") {
+			} else if (packet.Parameter[10] == "99") {
 				buddy.Status = IMBuddyStatus.Away;
-				buddy.StatusMessage = packet.Parameter["19"];
+				buddy.StatusMessage = packet.Parameter[19];
 			}
 
-			if (packet.Parameter.ContainsKey("19"))
+			if (packet.Parameter.ContainsKey(19))
 			{
-				buddy.StatusMessage = packet.Parameter["19"];
+				buddy.StatusMessage = packet.Parameter[19];
 			} else {
 				buddy.StatusMessage = "";
 			}
@@ -528,18 +488,17 @@ namespace InstantMessage
 		private static ComplexChatMessage ParseMessage(string rawData)
 		{
 			ComplexChatMessage msg = new ComplexChatMessage();
-			Regex fontMatch = new Regex("<font");
 			IMRun chatRun = new IMRun();
 
 			for (int i = 0; i < rawData.Length; i++)
 			{
-				if (rawData[i] == '<')
+				if (rawData[i] == '<') // Check to see if we've found a possible font declaration
 				{
-					if (i + 5 < rawData.Length && rawData.Substring(i, 5) == "<font")
+					if (i + 5 < rawData.Length && rawData.Substring(i, 5) == "<font") // Now test to see if it's part of a font declaration
 					{
-						int endMark = rawData.IndexOf('>', i);
+						int endMark = rawData.IndexOf('>', i); // Get the end of the font declaration
 
-						if (endMark != -1)
+						if (endMark != -1) // Make sure we have an end
 						{
 							int facePosition = rawData.IndexOf("face=", i, endMark - i);
 
@@ -623,29 +582,29 @@ namespace InstantMessage
 		}
 		private void HandleConferenceInvitePacket(YPacket packet)
 		{
-			triggerOnChatRoomInvite(new IMRoomInviteEventArgs(packet.Parameter["50"], packet.Parameter["50"], packet.Parameter["58"]));
+			triggerOnChatRoomInvite(new IMRoomInviteEventArgs(packet.Parameter[50], packet.Parameter[50], packet.Parameter[58]));
 		}
 		private void HandleStatusUpdatePacket(YPacket packet)
 		{
-			HandleStatusData(IMBuddy.FromUsername(packet.Parameter["7"], this), packet);
+			HandleStatusData(IMBuddy.FromUsername(packet.Parameter[7], this), packet);
 		}
 		private void HandleSMSMessagePacket(YPacket packet)
 		{
-			IMBuddy buddy = IMBuddy.FromUsername("+" + packet.Parameter["4"], this);
-			var item = (from CarrierInfo i in mCarriers let y = packet.Parameter["68"] where i.carrierid == y select new { i.maxchars, i.humanname }).FirstOrDefault();
+			IMBuddy buddy = IMBuddy.FromUsername("+" + packet.Parameter[4], this);
+			var item = (from CarrierInfo i in mCarriers let y = packet.Parameter[68] where i.carrierid == y select new { i.maxchars, i.humanname }).FirstOrDefault();
 			buddy.MaxMessageLength = item.maxchars;
-			buddy.InvokeReceiveMessage(packet.Parameter["68"]);
+			buddy.InvokeReceiveMessage(packet.Parameter[68]);
 			if (!buddy.Options.ContainsKey("smscarrier"))
 			{
 				buddy.Options.Add("smscarrier", item.humanname);
-				buddy.Options.Add("smscarriername", packet.Parameter["68"]);
+				buddy.Options.Add("smscarriername", packet.Parameter[68]);
 			}
 		}
 		private void HandlePagerLogoffPacket(YPacket packet)
 		{
 			if (packet.Status == Encoding.UTF8.GetString(new byte[] { 0xff, 0xff, 0xff, 0xff }, 0, 4)) // We got disconnected
 			{
-				if (packet.Parameter["66"] == "42")
+				if (packet.Parameter[66] == "42")
 					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.OtherClient));
 				else
 					triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.Unknown));
@@ -653,7 +612,7 @@ namespace InstantMessage
 				CleanupBuddyList();
 				Disconnect();
 			} else {
-				IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter["7"], this);
+				IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter[7], this);
 				buddy.Status = IMBuddyStatus.Offline;
 				triggerContactStatusChange(new IMFriendEventArgs(buddy));
 			}
@@ -714,7 +673,7 @@ namespace InstantMessage
 				if (starttracking)
 				{
 					if (parameters.Length > i + 1)
-						pkt.AddParameter(parameters[i], parameters[i + 1]);
+						;//pkt.AddParameter(parameters[i], parameters[i + 1]);
 					else
 						packets.Add(pkt);
 				}
@@ -723,30 +682,30 @@ namespace InstantMessage
 
 			foreach (YPacket packet in packets)
 			{
-				if (packet.Parameter.ContainsKey("7"))
+				if (packet.Parameter.ContainsKey(7))
 				{
-					buddy = IMBuddy.FromUsername(packet.Parameter["7"], this);
+					buddy = IMBuddy.FromUsername(packet.Parameter[7], this);
 					HandleStatusData(buddy, packet);
 					triggerContactStatusChange(new IMFriendEventArgs(buddy));
 				}
-				if (packet.Parameter.ContainsKey("197")) // Yahoo! Avatars code
+				if (packet.Parameter.ContainsKey(197)) // Yahoo! Avatars code
 				{
-					buddy.Avatar = BuddyAvatar.FromUrl("http://img.avatars.yahoo.com/users/" + packet.Parameter["197"] + ".medium.png", packet.Parameter["197"]);
-				} else if (packet.Parameter.ContainsKey("192"))	{ // Standard Avatar Hash - We must manually request the image data
+					buddy.Avatar = BuddyAvatar.FromUrl("http://img.avatars.yahoo.com/users/" + packet.Parameter[197] + ".medium.png", packet.Parameter[197]);
+				} else if (packet.Parameter.ContainsKey(192))	{ // Standard Avatar Hash - We must manually request the image data
 					YPacket picpack = new YPacket();
 					picpack.Service = YahooServices.ymsg_picture;
 					picpack.Session = session;
-					picpack.AddParameter("1", mUsername);
-					picpack.AddParameter("5", packet.Parameter["7"]);
-					picpack.AddParameter("13", "1");
+					picpack.AddParameter(1, mUsername);
+					picpack.AddParameter(5, packet.Parameter[7]);
+					picpack.AddParameter(13, "1");
 					sendPacket(picpack);
 				}
-				if (packet.Parameter.ContainsKey("442")) // Yahoo Power Users thing - Just an aesthetic thing
+				if (packet.Parameter.ContainsKey(442)) // Yahoo Power Users thing - Just an aesthetic thing
 				{
-					string powericon = "";
-					if (packet.Parameter["442"] == "1")
+					//string powericon = "";
+					if (packet.Parameter[442] == "1")
 					{
-						powericon = "crown";
+						//powericon = "crown";
 					}
 				}
 			}
@@ -755,13 +714,13 @@ namespace InstantMessage
 		{
 			IContact buddy = null;
 			try {
-				buddy = ContactList[packet.Parameter["4"]];
+				buddy = ContactList[packet.Parameter[4]];
 			} catch (Exception) {
-				buddy = new IMBuddy(this, packet.Parameter["4"]);
+				buddy = new IMBuddy(this, packet.Parameter[4]);
 			}
 
 			// Apply some transforms to the text first
-			string newmsg = packet.Parameter["14"];
+			string newmsg = packet.Parameter[14];
 			ComplexChatMessage msg = ParseMessage(newmsg);
 				
 			//buddy.InvokeReceiveMessage(newmsg);
@@ -769,16 +728,16 @@ namespace InstantMessage
 			triggerOnMessageReceive(new IMMessageEventArgs(buddy, newmsg) { ComplexMessage = msg });
 
 			// Tell the Yahoo servers we got this message
-			if (packet.Parameter.ContainsKey("429"))
+			if (packet.Parameter.ContainsKey(429))
 			{
 				YPacket resppkt = new YPacket();
 				resppkt.Service = YahooServices.ymsg_message_reply;
-				resppkt.AddParameter("1", mUsername);
-				resppkt.AddParameter("5", packet.Parameter["4"]);
-				resppkt.AddParameter("302", "430");
-				resppkt.AddParameter("430", packet.Parameter["429"]);
-				resppkt.AddParameter("303", "430");
-				resppkt.AddParameter("450", "0");
+				resppkt.AddParameter(1, mUsername);
+				resppkt.AddParameter(5, packet.Parameter[4]);
+				resppkt.AddParameter(302, "430");
+				resppkt.AddParameter(430, packet.Parameter[429]);
+				resppkt.AddParameter(303, "430");
+				resppkt.AddParameter(450, "0");
 
 				sendPacket(resppkt);
 			}
@@ -787,14 +746,14 @@ namespace InstantMessage
 		{
 			IMBuddy buddy = null;
 			try {
-				buddy = IMBuddy.FromUsername(packet.Parameter["4"], this);
+				buddy = IMBuddy.FromUsername(packet.Parameter[4], this);
 			} catch (Exception) {
-				buddy = new IMBuddy(this, packet.Parameter["4"]);
+				buddy = new IMBuddy(this, packet.Parameter[4]);
 				buddy.IsOnBuddyList = false;
 			}
-			if (packet.Parameter["49"] == "TYPING")
+			if (packet.Parameter[49] == "TYPING")
 			{
-				if (packet.Parameter["13"] == "1")
+				if (packet.Parameter[13] == "1")
 					buddy.ShowIsTypingMessage(true);
 				else
 					buddy.ShowIsTypingMessage(false);
@@ -802,10 +761,10 @@ namespace InstantMessage
 		}
 		private void HandlePicturePacket(YPacket packet)
 		{
-			if (packet.Parameter.ContainsKey("13") && packet.Parameter["13"] == "2" && packet.Parameter.ContainsKey("192"))
+			if (packet.Parameter.ContainsKey(13) && packet.Parameter[13] == "2" && packet.Parameter.ContainsKey(192))
 			{
-				IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter["4"], this);
-				buddy.Avatar = BuddyAvatar.FromUrl(packet.Parameter["20"], packet.Parameter["192"]);
+				IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter[4], this);
+				buddy.Avatar = BuddyAvatar.FromUrl(packet.Parameter[20], packet.Parameter[192]);
 			}
 		}
 		/// <summary>
@@ -813,21 +772,21 @@ namespace InstantMessage
 		/// </summary>
 		private void HandleBuddyAuthRequest(YPacket packet)
 		{
-			if (packet.Parameter.ContainsKey("13")) { // Key 13 is a response to a buddy add request
-				if (packet.Parameter["13"] == "1")
+			if (packet.Parameter.ContainsKey(13)) { // Key 13 is a response to a buddy add request
+				if (packet.Parameter[13] == "1")
 				{
-					IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter["4"], this);
+					IMBuddy buddy = IMBuddy.FromUsername(packet.Parameter[4], this);
 					buddy.StatusMessage = "";
 				}
-				addbuddygroups.Remove(packet.Parameter["4"]);
+				addbuddygroups.Remove(packet.Parameter[4]);
 			} else {
-				if (packet.Parameter.ContainsKey("14"))
-					triggerOnFriendRequest(this, new IMFriendRequestEventArgs(packet.Parameter["4"], packet.Parameter["14"], packet.Parameter["216"] + " " + packet.Parameter["254"]));
+				if (packet.Parameter.ContainsKey(14))
+					triggerOnFriendRequest(this, new IMFriendRequestEventArgs(packet.Parameter[4], packet.Parameter[14], packet.Parameter[216] + " " + packet.Parameter[254]));
 				else {
-					if (packet.Parameter.ContainsKey("216"))
-						triggerOnFriendRequest(this, new IMFriendRequestEventArgs(packet.Parameter["4"], packet.Parameter["216"] + " " + packet.Parameter["254"]));
+					if (packet.Parameter.ContainsKey(216))
+						triggerOnFriendRequest(this, new IMFriendRequestEventArgs(packet.Parameter[4], packet.Parameter[216] + " " + packet.Parameter[254]));
 					else
-						triggerOnFriendRequest(this, new IMFriendRequestEventArgs(packet.Parameter["4"], ""));
+						triggerOnFriendRequest(this, new IMFriendRequestEventArgs(packet.Parameter[4], ""));
 				}
 			}
 		}
@@ -836,11 +795,11 @@ namespace InstantMessage
 		/// </summary>
 		private void HandleNewMessagePacket(YPacket packet)
 		{
-			if (packet.Parameter["9"] != "0") // Are there any email
+			if (packet.Parameter[9] != "0") // Are there any email
 			{
-				if (packet.Parameter.ContainsKey("42"))
+				if (packet.Parameter.ContainsKey(42))
 				{
-					triggerOnEmailReceive(this, new IMEmailEventArgs(packet.Parameter["42"], packet.Parameter["43"], packet.Parameter["18"]));
+					triggerOnEmailReceive(this, new IMEmailEventArgs(packet.Parameter[42], packet.Parameter[43], packet.Parameter[18]));
 				} else {
 					//Notifications.ShowNotification("You have mail : ");
 				}
@@ -912,7 +871,7 @@ namespace InstantMessage
 			// Send Authentication Packet
 			YPacket authpkt = new YPacket();
 			authpkt.Service = YahooServices.ymsg_authentication;
-			authpkt.AddParameter("1", mUsername);
+			authpkt.AddParameter(1, mUsername);
 
 			sendPacket(authpkt);
 
@@ -921,12 +880,13 @@ namespace InstantMessage
 		}
 		private void OnGetAuthRespPacket(IAsyncResult e)
 		{
-			client.GetStream().EndRead(e);
-			string authreturn = GetPacketData();
+			int bytesRead = nsStream.EndRead(e);
+			byte[] bytes = new byte[bytesRead];
+			Buffer.BlockCopy(dataqueue, 0, bytes, 0, bytesRead);
 
-			YPacket p = YPacket.FromPacket(authreturn);
+			YPacket p = YPacket.FromPacket(bytes);
 			session = p.Session;
-			string challenge = p.Parameter["94"];
+			string challenge = p.Parameter[94];
 
 			YPacket authpkt = new YPacket();
 			authpkt.Service = YahooServices.ymsg_authentication_response;
@@ -935,17 +895,17 @@ namespace InstantMessage
 			else
 				authpkt.StatusByte = new byte[] { 0x5A, 0x55, 0xAA, 0x55 };
 			authpkt.Session = session;
-			authpkt.AddParameter("1", mUsername);
-			authpkt.AddParameter("0", mUsername);
-			authpkt.AddParameter("277", authtoken);
-			authpkt.AddParameter("278", authtoken2);
-			authpkt.AddParameter("307", generateAuthHash(crumb, challenge));
-			authpkt.AddParameter("244", "8388543"); // This *might* be a features list
-			authpkt.AddParameter("2", mUsername);
+			authpkt.AddParameter(1, mUsername);
+			authpkt.AddParameter(0, mUsername);
+			authpkt.AddParameter(277, authtoken);
+			authpkt.AddParameter(278, authtoken2);
+			authpkt.AddParameter(307, generateAuthHash(crumb, challenge));
+			authpkt.AddParameter(244, "8388543"); // This *might* be a features list
+			authpkt.AddParameter(2, mUsername);
 			byte[] unknownbyte = new byte[] { 0x42, 0x09, 0x30, 0x6c, 0x37, 0x64, 0x61, 0x32, 0x74, 0x35, 0x34, 0x37, 0x63, 0x75, 0x32, 0x26, 0x62, 0x3d, 0x33, 0x26, 0x73, 0x3d, 0x38, 0x6e };
-			authpkt.AddParameter("59", dEncoding.GetString(unknownbyte, 0, unknownbyte.Length));
-			authpkt.AddParameter("98", "us");
-			authpkt.AddParameter("135", "10.0.0.525"); // Version Info
+			authpkt.AddParameter(59, dEncoding.GetString(unknownbyte, 0, unknownbyte.Length));
+			authpkt.AddParameter(98, "us");
+			authpkt.AddParameter(135, "10.0.0.525"); // Version Info
 
 			sendPacket(authpkt);
 			
@@ -1111,11 +1071,7 @@ namespace InstantMessage
 			Trace.WriteLine("Yahoo: Attempting connection to YMSG server");
 
 			client.Connect(connectServer, 5050);
-
-			nWriter = new StreamWriter(client.GetStream());
-			nReader = new StreamReader(client.GetStream());
-
-			nWriter.AutoFlush = true; // We want all data to get sent immediately after we write it to the stream
+			nsStream = client.GetStream();
 
 			//if (client.Connected)
 				OnYServerConnect();
@@ -1279,7 +1235,7 @@ namespace InstantMessage
 			YPacket keepalive = new YPacket();
 			keepalive.Service = YahooServices.ymsg_keepalive;
 			keepalive.Session = session;
-			keepalive.AddParameter("0", mUsername);
+			keepalive.AddParameter(0, mUsername);
 
 			sendPacket(keepalive);
 		}
@@ -1289,9 +1245,9 @@ namespace InstantMessage
 			YPacket packet = new YPacket();
 			packet.ServiceByte = new byte[] { 0x00, 0xc1 };
 			packet.Session = session;
-			packet.AddParameter("1", mUsername);
-			packet.AddParameter("5", destination);
-			packet.AddParameter("206", "1");
+			packet.AddParameter(1, mUsername);
+			packet.AddParameter(5, destination);
+			packet.AddParameter(206, "1");
 
 			sendPacket(packet);
 		}
@@ -1327,10 +1283,8 @@ namespace InstantMessage
 		private string session;
 
 		// Socket Information
-		private Socket socket;
 		private TcpClient client;
-		private StreamWriter nWriter;
-		private StreamReader nReader;
+		private NetworkStream nsStream;
 		private IPAddress connectServer;
 
 		// State Information
@@ -1354,251 +1308,8 @@ namespace InstantMessage
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
 		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
 		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
-		private static Encoding dEncoding = Encoding.GetEncoding("windows-1252");
-
-		private enum YahooServices
-		{
-			ymsg_pager_logoff = 0x02,
-			ymsg_message = 0x06,
-			ymsg_newmail = 0x0b,
-			ymsg_skinname = 0x15,
-			ymsg_ping = 0x12,
-			ymsg_conference_invitation = 0x18,
-			ymsg_conference_logon = 0x19,
-			ymsg_conference_additional_invite = 0x1c,
-			ymsg_conference_message = 0x1d,
-			ymsg_conference_logoff = 0x1b,
-			ymsg_notify = 0x4b,
-			ymsg_verify = 0x4c,
-			ymsg_p2p_file_transfer = 0x4d,
-			ymsg_peer2peer = 0x4f,
-			ymsg_webcam = 0x50,
-			ymsg_authentication_response = 0x54,
-			ymsg_list = 0x55,
-			ymsg_authentication = 0x57,			
-			ymsg_keepalive = 0x82,
-			ymsg_add_buddy = 0x83,
-			ymsg_remove_buddy = 0x84,
-			ymsg_stealth_session = 0xba,
-			ymsg_picture = 0xbe,
-			ymsg_stealth_permanent = 0xb9,
-			ymsg_visibility_toggle = 0xc5,
-			ymsg_status_update = 0xc6,
-			ymsg_picture_update = 0xc1,
-			ymsg_file_transfer = 0xdc,
-			ymsg_contact_details = 0xd3,
-			ymsg_buddy_auth = 0xd6,
-			ymsg_status_v15 = 0xf0,
-			ymsg_list_v15 = 0xf1,
-			ymsg_message_reply = 0xfb, // Reply saying you got this message
-			ymsg_sms_message = 0x2ea
-		}
-
-		private class YPacket
-		{
-			public YPacket()
-			{
-
-			}
-			/// <summary>
-			/// Disassembles a Y! MSG packet from the string and returns a YPacket built from the input
-			/// </summary>
-			/// <param name="packetdata">String containing the packet data (Ex. "YMSG...")</param>
-			/// <returns>YPacket class based on the input</returns>
-			public static YPacket FromPacket(string packetdata)
-			{
-				YPacket packet = new YPacket();
-
-				// Extract all the header information from the packet
-				packet.ServiceByte = dEncoding.GetBytes(packetdata.Substring(10, 2));
-				packet.StatusByte = dEncoding.GetBytes(packetdata.Substring(12, 4));
-				packet.SessionByte = dEncoding.GetBytes(packetdata.Substring(16, 4));
-
-				// Extract the payload
-				string payload = packetdata.Substring(20);//, packetdata.Length - 20);
-				
-				// Split the payload up into fragments
-				IEnumerator paramEnum = customSplit(payload, separator).GetEnumerator();
-
-				while (paramEnum.MoveNext())
-				{
-					// The even fragments are the keys
-					string param = (string)paramEnum.Current;
-					if (paramEnum.MoveNext()) // Make sure there is a value for this key
-					{
-						// The odd fragments are the values
-						string value = (string)paramEnum.Current;
-						packet.AddParameter(param, value);
-					} else
-						break;
-				}
-
-				return packet;
-			}
-			public static YPacket FromWebPacket(string packetdata)
-			{
-				YPacket packet = new YPacket();
-				XDocument xml = XDocument.Parse(packetdata);
-
-				byte[] test = new byte[] { 0, 0, 0, 0 };
-
-				packet.Service = (YahooServices)Convert.ToInt32(xml.Root.Attributes("Command"));
-
-				string[] paramList = customSplit(xml.Root.Value,"^$");
-
-				for (int i = 0; i < paramList.Length; i++)
-				{
-					string key = paramList[i];
-					i++;
-					packet.AddParameter(key, paramList[i]);
-				}
-
-				return packet;
-			}
-
-			public byte[] ToBytes()
-			{
-				return dEncoding.GetBytes(Packet); //Encoding.UTF8.GetBytes(Packet);
-			}
-
-			public string Packet
-			{
-				get {
-					pktdata = CalculateContents();
-					byte[] lens = BitConverter.GetBytes(pktdata.Length);
-					byte[] lens2 = new byte[] { lens[1], lens[0] };
-
-					return "YMSG" + dEncoding.GetString(version, 0, version.Length) + nils + nils + dEncoding.GetString(lens2, 0, lens2.Length) + dEncoding.GetString(service, 0, service.Length) + dEncoding.GetString(status, 0, status.Length) + dEncoding.GetString(session, 0, session.Length) + pktdata;
-				}
-			}
-			public string Contents
-			{
-				get	{
-					return CalculateContents();
-				}
-				set	{
-					pktdata = value;
-				}
-			}
-			public string Session
-			{
-				get	{
-					return dEncoding.GetString(session, 0, session.Length);
-				}
-				set	{
-					session = dEncoding.GetBytes(value);
-				}
-			}
-			public byte[] SessionByte
-			{
-				get	{
-					return session;
-				}
-				set	{
-					session = value;
-				}
-			}
-			public string Status
-			{
-				get	{
-					return Encoding.UTF8.GetString(status, 0, status.Length);
-				}
-				set	{
-					status = Encoding.UTF8.GetBytes(value);
-				}
-			}
-			public byte[] StatusByte
-			{
-				get {
-					return status;
-				}
-				set {
-					status = value;
-				}
-			}
-			public YahooServices Service
-			{
-				get	{
-					return (YahooServices)service[1];
-				}
-				set	{
-					service[1] = (byte)value;
-				}
-			}
-			public byte[] ServiceByte
-			{
-				get	{
-					return service;
-				}
-				set	{
-					service = value;
-				}
-			}
-			public Dictionary<string, string> Parameter
-			{
-				get	{
-					return parameters;
-				}
-			}
-			private string CalculateContents()
-			{
-				string returnVal = "";
-				IEnumerator i = parameters.GetEnumerator();
-				while (i.MoveNext())
-				{
-					KeyValuePair<string, string> current = (KeyValuePair<string, string>)i.Current;
-					if (current.Value.Contains(separator))
-					{
-						foreach (string val in customSplit(current.Value, separator))
-						{
-							returnVal += current.Key + separator + val + separator;
-						}
-					} else {
-						returnVal += current.Key + separator + current.Value + separator;
-					}
-				}
-				return returnVal;
-			}
-
-			public void AddParameter(string key, string value)
-			{
-				if (!parameters.ContainsKey(key))
-					parameters.Add(key, value);
-				else {
-					parameters[key] += separator + value;
-				}
-			}
-
-			private string pktdata = "";
-			private byte[] service = new byte[] { 0x00, 0x00 };
-			private byte[] status = new byte[] { 0x00, 0x00, 0x00, 0x00 };
-			private byte[] session = new byte[] { 0x00, 0x00, 0x00, 0x00 };
-			private byte[] version = new byte[] { 0x00, 0x11 }; // YMSG17
-			public static string separator = "À€"; //dEncoding.GetString(new byte[] { 0xC0, 0x80 }, 0, 2); //"À€"; // "Ŕ€";
-			private string nils = dEncoding.GetString(new byte[] { 0x00 }, 0, 1);
-			private Dictionary<string, string> parameters = new Dictionary<string, string>();
-		}
-
-		private struct HttpAsync
-		{
-			public HttpAsync(HttpWebRequest f, EventHandler<PacketEventArgs> c)
-			{
-				request = f;
-				callback = c;
-			}
-			public HttpWebRequest request;
-			public EventHandler<PacketEventArgs> callback;
-		}
-		private struct PacketAsync
-		{
-			public PacketAsync(HttpWebRequest f, YPacket p)
-			{
-				request = f;
-				packet = p;
-			}
-			public HttpWebRequest request;
-			public YPacket packet;
-		}
+		private static Encoding dEncoding = Encoding.ASCII;
+		
 		public enum YahooIMVironment
 		{
 			Doodle

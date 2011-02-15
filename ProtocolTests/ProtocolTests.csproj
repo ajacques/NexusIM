@@ -71,6 +71,8 @@
     </Compile>
     <Compile Include="SQLCEGenericSettingsTests.cs" />
     <Compile Include="YahooProtocolTests.cs" />
+    <Compile Include="YPacketTests.cs" />
+    <Compile Include="YParamCollTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Shadow Include="Test References\Common.accessor" />

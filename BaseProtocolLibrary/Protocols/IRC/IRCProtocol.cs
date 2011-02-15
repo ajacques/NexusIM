@@ -477,6 +477,9 @@ namespace InstantMessage.Protocols.Irc
 		{
 			IRCChannel channel = mChannels.FirstOrDefault(chan => chan.Name == channelName);
 
+			if (channel == null)
+				channel = (IRCChannel)JoinChatRoom(channelName);
+
 			channel.SetParticipants(list.Split(' '));
 		}
 		private void HandleMessagePacket(string line, string[] parameters)

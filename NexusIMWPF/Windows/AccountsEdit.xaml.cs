@@ -17,6 +17,7 @@ using System.Threading;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Media.Animation;
+using InstantMessage.Protocols.Yahoo;
 
 namespace NexusIM.Windows
 {

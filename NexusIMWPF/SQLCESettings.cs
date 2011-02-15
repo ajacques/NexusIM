@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.Linq;
 using System.Linq;
 using InstantMessage;
-using System.Collections;
 
 namespace NexusIM
 {
@@ -18,16 +18,11 @@ namespace NexusIM
 		// Nested Classes
 		private class SqlDictionary : IDictionary<string, string>
 		{
-			public SqlDictionary(string connectionString)
-			{
-				mConnectionString = connectionString;
-			}
-
 			#region IDictionary<string,string> Members
 
 			public void Add(string key, string value)
 			{
-				UserProfile db = UserProfile.Create(mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 				Setting setting = new Setting();
 				setting.Key = key;
 				setting.Value = value;
@@ -38,21 +33,21 @@ namespace NexusIM
 			}
 			public bool ContainsKey(string key)
 			{
-				UserProfile db = UserProfile.Create(mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 				return db.Settings.Any(s => s.Key == key);
 			}
 			public ICollection<string> Keys
 			{
 				get {
-					UserProfile db = UserProfile.Create(mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 					return db.Settings.Select(s => s.Key).ToList();
 				}
 			}
 			public bool Remove(string key)
 			{
-				UserProfile db = UserProfile.Create(mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 				Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
 				if (setting == null)
@@ -65,7 +60,7 @@ namespace NexusIM
 			}
 			public bool TryGetValue(string key, out string value)
 			{
-				UserProfile db = UserProfile.Create(mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 				Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
 				value = null;
@@ -78,7 +73,7 @@ namespace NexusIM
 			public ICollection<string> Values
 			{
 				get {
-					UserProfile db = UserProfile.Create(mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 					return db.Settings.Select(s => s.Value).ToList();
 				}
@@ -86,7 +81,7 @@ namespace NexusIM
 			public string this[string key]
 			{
 				get	{
-					UserProfile db = UserProfile.Create(mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
@@ -96,7 +91,7 @@ namespace NexusIM
 					return setting.Value;
 				}
 				set	{
-					UserProfile db = UserProfile.Create(mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
@@ -132,7 +127,7 @@ namespace NexusIM
 			public int Count
 			{
 				get {
-					UserProfile db = UserProfile.Create(mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 					return db.Settings.Count();
 				}
@@ -154,7 +149,7 @@ namespace NexusIM
 
 			public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 			{
-				UserProfile db = UserProfile.Create(mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
 
 				return db.Settings.Select(s => new KeyValuePair<string, string>(s.Key, s.Value)).GetEnumerator();
 			}
@@ -169,8 +164,6 @@ namespace NexusIM
 			}
 
 			#endregion
-
-			private string mConnectionString;
 		}
 		private class SqlAccountSettingDictionary : IDictionary<string, string>
 		{
@@ -458,7 +451,7 @@ namespace NexusIM
 						IMProtocolExtraData extraData = new IMProtocolExtraData();
 						extraData.Protocol = protocol;
 						extraData.DatabaseId = current.Id;
-						extraData.Enabled = extraData.AutoConnect = current.AutoConnect;						
+						extraData.Enabled = extraData.AutoConnect = current.AutoConnect;
 						protocol.Username = current.Username;
 						protocol.Password = current.Password;
 						protocol.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
@@ -622,6 +615,7 @@ namespace NexusIM
 			private string mConnectionString;
 		}
 
+		// Properties
 		public IList<IMProtocolExtraData> Accounts
 		{
 			get	{
@@ -634,7 +628,7 @@ namespace NexusIM
 		{
 			get	{
 				if (mGenericSettings == null)
-					mGenericSettings = new SqlDictionary(mConnectionString);
+					mGenericSettings = new SqlDictionary();
 				return mGenericSettings;
 			}
 		}
@@ -648,7 +642,7 @@ namespace NexusIM
 		}
 		
 		// Variables
-		private string mConnectionString;
+		protected static string mConnectionString;
 		private SqlAccountList mAccountList;
 		private SqlDictionary mGenericSettings;
 		private SqlProtocolDictionary mProtocolSettings;
