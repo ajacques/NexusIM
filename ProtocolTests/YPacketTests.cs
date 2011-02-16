@@ -22,7 +22,7 @@ namespace ProtocolTests
 			Assert.AreEqual(17, packet.version[1]);
 			Assert.AreEqual("\0\0\0\0", packet.Status);
 			string value;
-			Assert.IsTrue(packet.Parameter.TryGetValue(1, out value), "Parameter was not loaded properly");
+			Assert.IsTrue(packet.Parameters.TryGetValue(1, out value), "Parameter was not loaded properly");
 			Assert.AreEqual("adrensoftware", value);
 		}
 
@@ -38,6 +38,14 @@ namespace ProtocolTests
 			Assert.AreEqual(testPacket.Length, result.Length);
 			for (int i = 0; i < testPacket.Length; i++)
 				Assert.AreEqual(testPacket[i], result[i]);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentOutOfRangeException))]
+		public void MalformedTest()
+		{
+			byte[] testPacket = { 0x59, 0x4d, 0x53, 0x47, 0x00, 0x11, 0x00, 0x00, 0x00 };
+			YPacket_Accessor packet = YPacket_Accessor.FromPacket(testPacket);
 		}
 	}
 }

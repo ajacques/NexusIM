@@ -116,6 +116,16 @@ namespace InstantMessage.Protocols.Irc
 		}
 
 		#endregion
+
+		#region IHasPresence Members
+
+
+		public string StatusMessage
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		#endregion
 	}
 	public struct IRCUserModeChange
 	{

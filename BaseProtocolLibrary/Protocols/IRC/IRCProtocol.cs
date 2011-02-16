@@ -55,7 +55,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			sendData("SQUIT");
 
-			triggerOnDisconnect(this, null);
+			triggerOnDisconnect(null);
 			status = IMProtocolStatus.Offline;
 
 			Dispose();
@@ -508,11 +508,11 @@ namespace InstantMessage.Protocols.Irc
 				bytesRead = mTextStream.EndRead(args);
 			} catch (SocketException e)	{
 				Dispose();
-				triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
 				return;
 			} catch (IOException e)	{
 				Dispose();
-				triggerOnDisconnect(this, new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
 				return;
 			}
 

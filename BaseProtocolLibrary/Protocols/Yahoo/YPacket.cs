@@ -57,6 +57,9 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		public static YPacket FromPacket(byte[] packetdata)
 		{
+			if (packetdata.Length < 20)
+				throw new ArgumentOutOfRangeException("Length should be atleast 20 bytes");
+
 			YPacket packet = new YPacket();
 
 			// Extract all the header information from the packet
@@ -188,15 +191,11 @@ namespace InstantMessage.Protocols.Yahoo
 				service = value;
 			}
 		}
-		public IDictionary<int, string> Parameter
+		public IDictionary<int, string> Parameters
 		{
 			get	{
 				return parameters;
 			}
-		}
-		private byte[] CalculatePacketBody()
-		{
-			throw new NotImplementedException();
 		}
 
 		public void AddParameter(int key, string value)
@@ -208,10 +207,9 @@ namespace InstantMessage.Protocols.Yahoo
 		private byte[] status = new byte[] { 0x00, 0x00, 0x00, 0x00 };
 		private byte[] session = new byte[] { 0x00, 0x00, 0x00, 0x00 };
 		private byte[] version = new byte[] { 0x00, 0x11 }; // YMSG17
-		public static byte[] separator = new byte[] { 0xC0, 0x80 };
+		private static readonly byte[] separator = new byte[] { 0xC0, 0x80 };
 		private static readonly byte[] packetStartBytes = new byte[] { 89, 77, 83, 71 }; // Means YMSG
-		private static Encoding dEncoding = Encoding.ASCII;
-		private string nils = dEncoding.GetString(new byte[] { 0x00 }, 0, 1);
+		private static readonly Encoding dEncoding = Encoding.ASCII;
 		private YPacketParamCollection parameters = new YPacketParamCollection();
 	}
 }

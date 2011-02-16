@@ -1,13 +1,12 @@
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Security.Authentication;
 using System.Threading;
-using System.Collections.Generic;
-using System.ComponentModel;
 using InstantMessage.Events;
 using InstantMessage.Protocols;
 
@@ -242,12 +241,10 @@ namespace InstantMessage
 		/// <summary>
 		/// True if this protocol is currently connected to the server
 		/// </summary>
-		[Obsolete("Use ProtocolStatus instead", false)]
 		public bool Connected
 		{
-			get {
-				return mConnected;
-			}
+			get;
+			protected set;
 		}
 		/// <summary>
 		/// Gets or sets the username used by the protocol
@@ -496,14 +493,9 @@ namespace InstantMessage
 		public static event EventHandler<IMErrorEventArgs> onError;
 		public event EventHandler<IMDisconnectEventArgs> onDisconnect;
 		public static event EventHandler<IMFriendRequestEventArgs> onFriendRequest;
-		[Obsolete("Use ContactStatusChange", false)]
-		public static event EventHandler<IMFriendEventArgs> onFriendSignIn;
-		[Obsolete("Use ContactStatusChange", false)]
-		public static event EventHandler<IMFriendEventArgs> onFriendSignOut;
 		public static event EventHandler<IMRoomInviteEventArgs> onChatRoomInvite;
 		public event EventHandler<IMFriendEventArgs> ContactStatusChange;
 		public event EventHandler<IMMessageEventArgs> onMessageReceive;
-		public static event EventHandler<IMMessageEventArgs> onMessageSend;
 		public static event EventHandler<IMEmailEventArgs> onEmailReceive;
 		public static event EventHandler<IMSendMessageEventArgs> onSendMessage;
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -528,10 +520,10 @@ namespace InstantMessage
 			if (onError != null)
 				onError(this, e);
 		}
-		protected void triggerOnDisconnect(object sender, IMDisconnectEventArgs e)
+		protected void triggerOnDisconnect(IMDisconnectEventArgs e)
 		{
 			if (onDisconnect != null)
-				onDisconnect(sender, e);
+				onDisconnect(this, e);
 		}
 		protected void triggerOnFriendRequest(object sender, IMFriendRequestEventArgs e)
 		{
@@ -542,11 +534,6 @@ namespace InstantMessage
 		{
 			if (ContactStatusChange != null)
 				ContactStatusChange(this, e);
-		}
-		protected void triggerOnFriendSignOut(IMFriendEventArgs e)
-		{
-			if (onFriendSignOut != null)
-				onFriendSignOut(this, e);
 		}
 		protected void triggerOnMessageReceive(IMMessageEventArgs e)
 		{
@@ -575,23 +562,6 @@ namespace InstantMessage
 
 			mLoginException = new InvalidCredentialException();
 			mLoginWaitHandle.Set();
-		}
-
-		// Classes
-		[Obsolete("No", false)]
-		protected class PacketEventArgs : EventArgs
-		{
-			public PacketEventArgs(string data)
-			{
-				mData = data;
-			}
-			public string PacketData
-			{
-				get	{
-					return mData;
-				}
-			}
-			private string mData = "";
 		}
 
 		// Variables

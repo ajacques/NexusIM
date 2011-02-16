@@ -26,7 +26,7 @@ namespace InstantMessage.Protocols.Yahoo
 		public ICollection<int> Keys
 		{
 			get {
-				throw new NotSupportedException();
+				return mGroups.Select(u => u.Key).ToList();
 			}
 		}
 		public bool Remove(int key)
@@ -51,13 +51,20 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		public ICollection<string> Values
 		{
-			get { throw new NotImplementedException(); }
+			get {
+				return mGroups.Select(u => u.Value).ToList();
+			}
 		}
 
 		public string this[int key]
 		{
 			get	{
-				throw new NotImplementedException();
+				foreach (var pair in mGroups)
+				{
+					if (pair.Key == key)
+						return pair.Value;
+				}
+				return null;
 			}
 			set	{
 				if (IsReadOnly)
@@ -72,38 +79,37 @@ namespace InstantMessage.Protocols.Yahoo
 
 		public void Add(KeyValuePair<int, string> item)
 		{
-			throw new NotImplementedException();
-		}
+			if (IsReadOnly)
+				throw new InvalidOperationException();
 
+			mGroups.Add(item);
+		}
 		public void Clear()
 		{
-			throw new NotImplementedException();
+			mGroups.Clear();
 		}
-
 		public bool Contains(KeyValuePair<int, string> item)
 		{
-			throw new NotImplementedException();
+			return mGroups.Contains(item);
 		}
-
 		public void CopyTo(KeyValuePair<int, string>[] array, int arrayIndex)
 		{
 			throw new NotImplementedException();
 		}
-
 		public int Count
 		{
-			get { throw new NotImplementedException(); }
+			get {
+				return mGroups.Count;
+			}
 		}
-
 		public bool IsReadOnly
 		{
 			get;
 			internal set;
 		}
-
 		public bool Remove(KeyValuePair<int, string> item)
 		{
-			throw new NotImplementedException();
+			return mGroups.Remove(item);
 		}
 
 		#endregion

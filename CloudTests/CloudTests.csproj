@@ -85,7 +85,6 @@
   <ItemGroup>
     <Compile Include="CoreService\AccountTests.cs" />
     <Compile Include="CoreService\AuthenticationTests.cs" />
-    <Compile Include="CoreService\CloudHostedTests.cs" />
     <Compile Include="CoreService\Locations.cs" />
     <Compile Include="UnitTestChannel.cs" />
     <Compile Include="UnitTestSession.cs" />

@@ -11,6 +11,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Runtime.Serialization;
 using InstantMessage.Events;
+using InstantMessage.Protocols;
 
 namespace InstantMessage
 {
@@ -18,7 +19,7 @@ namespace InstantMessage
 	/// Stores information about a single contact
 	/// </summary>
 	[Serializable]
-	public sealed partial class IMBuddy : IContact, INotifyPropertyChanged, IHasPresence
+	public sealed partial class IMBuddy : IContact, INotifyPropertyChanged
 	{
 		public IMBuddy()
 		{
@@ -40,7 +41,7 @@ namespace InstantMessage
 		/// <param name="message">Message contents</param>
 		public void SendMessage(string message)
 		{
-			mProtocol.SendMessage(mUsername, message);
+			mProtocol.SendMessage(this.Username, message);
 		}
 		/// <summary>
 		/// Used by the IMProtocol class to show a message that the user received from this buddy
@@ -121,18 +122,6 @@ namespace InstantMessage
 			}
 		}
 		/// <summary>
-		/// True if this buddy is an internal-use only buddy. Used by the protocol class
-		/// </summary>
-		internal bool IsInternalBuddy
-		{
-			get {
-				return mIsInternalUsage;
-			}
-			set {
-				mIsInternalUsage = value;
-			}
-		}
-		/// <summary>
 		/// True if this buddy is on the user's buddy list. False if it's a random person
 		/// </summary>
 		public bool IsOnBuddyList
@@ -142,15 +131,6 @@ namespace InstantMessage
 			}
 			set {
 				mIsOnBuddyList = value;
-			}
-		}
-		public string SMSNumber
-		{
-			get {
-				return mSMSnumber;
-			}
-			set {
-				mSMSnumber = value;
 			}
 		}
 		/// <summary>
@@ -293,14 +273,12 @@ namespace InstantMessage
 		private string mNickname;
 		private BuddyAvatar mAvatar;
 		private IMProtocol mProtocol;
-		private bool mIsMobileContact = false;
-		private bool mIsInternalUsage = false;
+		private bool mIsMobileContact;
 		private bool mIsOnBuddyList = true;
 		private IMBuddyStatus mStatus = IMBuddyStatus.Offline;
-		private string mStatusMessage = "";
+		private string mStatusMessage;
 		private DateTime mStatusChange;
-		private string mGroup = "";
-		private string mSMSnumber = "";
+		private string mGroup;
 		private int mMessageLength = -1;
 		private Dictionary<string, string> data = new Dictionary<string, string>();
 	}

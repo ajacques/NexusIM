@@ -5,17 +5,13 @@ using System.Text;
 
 namespace InstantMessage
 {
-	public interface IContact : IMessagable, IEquatable<IContact>
+	public interface IContact : IMessagable, IEquatable<IContact>, IHasPresence
 	{
 		IMProtocol Protocol
 		{
 			get;
 		}
 		string Username
-		{
-			get;
-		}
-		IMBuddyStatus Status
 		{
 			get;
 		}
