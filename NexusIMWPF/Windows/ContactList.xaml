@@ -31,7 +31,7 @@
 		<ScrollViewer Margin="0,74,0,0" VerticalScrollBarVisibility="Auto">			
 			<StackPanel x:Name="ContactListControl" />
 		</ScrollViewer>
-		<Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+		<Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="Collapsed">
 			<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Margin="0,0,0,-3" Stroke="#FFFFA12E" />
 		</Grid>
 		<Menu VerticalAlignment="Top">

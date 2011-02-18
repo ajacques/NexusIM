@@ -47,7 +47,7 @@
 			</Grid.ColumnDefinitions>
 			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Stretch="UniformToFill" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
-				<RichTextBox Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+				<RichTextBox Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0">
 					<FlowDocument>
 						<Paragraph x:Name="ChatHistoryBox">
 						</Paragraph>
@@ -93,7 +93,13 @@
 					<GradientStop Color="#FF8396FF" Offset="1"/>
 				</LinearGradientBrush>
 			</Grid.Background>
-			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown" />
+			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown" BorderBrush="Black" />
 		</Grid>
+		<Popup x:Name="ClipboardCopyAlertPopup" Placement="AbsolutePoint">
+			<Grid>
+				<Path Data="m 10,-5 5,5 95,0 0,20 -110,0 0,-20 5,0" Fill="#FFD2D2D2" />
+				<TextBlock Margin="2" Text="Copied to clipboard" IsHitTestVisible="False" />
+			</Grid>			
+		</Popup>
 	</Grid>
 </UserControl>

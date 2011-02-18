@@ -6,6 +6,11 @@ using InstantMessage;
 
 namespace InstantMessage
 {
+	public enum ProtocolSource
+	{
+		LocalSettingFile,
+		NexusCore
+	}
 	public class IMProtocolExtraData
 	{
 		public IMProtocol Protocol
@@ -29,6 +34,11 @@ namespace InstantMessage
 			set;
 		}
 		public bool AutoConnect
+		{
+			get;
+			set;
+		}
+		public ProtocolSource Source
 		{
 			get;
 			set;

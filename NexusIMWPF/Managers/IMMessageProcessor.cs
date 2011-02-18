@@ -6,6 +6,7 @@ using InstantMessage;
 using System.Collections.Specialized;
 using InstantMessage.Events;
 using NexusIM.Controls;
+using System.Windows;
 
 namespace NexusIM.Managers
 {

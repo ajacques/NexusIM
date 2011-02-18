@@ -4,20 +4,20 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	x:Class="NexusIM.Controls.StatusOrb"
 	x:Name="UserControl" mc:Ignorable="d"
-	Width="12" Height="12">
+	Width="12" Height="12" UseLayoutRounding="False">
 	<UserControl.Resources>
-		<LinearGradientBrush x:Key="Brush1" EndPoint="0.5,1" StartPoint="0.5,0">
+		<LinearGradientBrush x:Key="AvailableBrush1" EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FF85EA00" Offset="0.4"/>
 			<GradientStop Color="#FF3EBB00" Offset="0.5"/>
 			<GradientStop Color="#FF85EA00" Offset="0.6"/>
 		</LinearGradientBrush>
-		<SolidColorBrush x:Key="Brush2" Color="#FF83FF32"/>
+		<SolidColorBrush x:Key="AvailableBrush2" Color="#FF83FF32"/>
 	</UserControl.Resources>
 	<Grid x:Name="LayoutRoot">
 		<Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Visibility="Collapsed" />
 		<Rectangle RadiusY="2" RadiusX="2" Margin="1,1,0,0" Fill="#35000000" />
-		<Rectangle RadiusY="2" RadiusX="2" Margin="0.4,0.4,1.3,1.3" Fill="{DynamicResource Brush1}"/>
-		<Rectangle RadiusY="2" RadiusX="2" Margin="0,0,1,1" Stroke="{DynamicResource Brush2}" StrokeThickness="1.5"/>
+		<Rectangle RadiusY="2" RadiusX="2" Margin="0.4,0.4,1.3,1.3" Fill="{DynamicResource AvailableBrush1}"/>
+		<Rectangle RadiusY="2" RadiusX="2" Margin="0,0,1,1" Stroke="{DynamicResource AvailableBrush2}" StrokeThickness="1.5"/>
 		<Rectangle RadiusY="2" RadiusX="2" Margin="0.6,0.6,1.7,1.7" Stroke="#FFB9FF8B" StrokeThickness="1"/>
 	</Grid>
 </UserControl>

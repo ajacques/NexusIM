@@ -15,6 +15,8 @@ namespace NexusIM.Managers
 		}
 		public static void LogMessageToRemote(IContact recipient, string message)
 		{
+			return;
+
 			ChatHistory db = ChatHistory.Create(mConnectionString);
 			PrivateMessage msg = new PrivateMessage();
 			msg.MessageBody = message;

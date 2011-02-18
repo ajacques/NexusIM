@@ -43,5 +43,9 @@ namespace InstantMessage
 		{
 			get;
 		}
+		IChatAreaPool ChatAreaPool
+		{
+			get;
+		}
 	}
 }

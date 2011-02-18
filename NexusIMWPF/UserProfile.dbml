@@ -5,8 +5,9 @@
       <Column Name="AccountType" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" />
       <Column Name="Username" Type="System.String" DbType="NVarChar(32) NOT NULL" CanBeNull="false" />
       <Column Name="Password" Type="System.String" DbType="NVarChar(32)" CanBeNull="true" />
-      <Column Name="AutoConnect" Type="System.Boolean" DbType="bit NOT NULL" CanBeNull="false" />
+      <Column Name="AutoConnect" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Account_AccountSetting" Member="AccountSettings" ThisKey="Id" OtherKey="AccountId" Type="AccountSetting" />
+      <Association Name="ChatWindowPool_Account" Member="ChatWindowPool" ThisKey="Id" OtherKey="AccountId" Type="ChatWindowPool" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="AccountSettings">
@@ -16,6 +17,15 @@
       <Column Name="Key" Type="System.String" DbType="NVarChar(20) NOT NULL" CanBeNull="false" />
       <Column Name="Value" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
       <Association Name="Account_AccountSetting" Member="Account" ThisKey="AccountId" OtherKey="Id" Type="Account" IsForeignKey="true" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="ChatWindowPools">
+    <Type Name="ChatWindowPool">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PoolId" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Column Name="AccountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="NVarChar(64) NOT NULL" CanBeNull="false" />
+      <Association Name="ChatWindowPool_Account" Member="Account" Storage="_Accounts" ThisKey="AccountId" OtherKey="Id" Type="Account" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="Settings">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -15,6 +16,7 @@ namespace NexusIM.Managers
 		static WindowSystem()
 		{
 			ContactChatAreas = new ChatAreaCollection();
+			ChatWindows = new Dictionary<int, ChatWindow>();
 		}
 		public static void OpenContactListWindow()
 		{
@@ -22,10 +24,9 @@ namespace NexusIM.Managers
 			{
 				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
 				{
-					ContactListWindow listWindow = new ContactListWindow();
-					listWindow.Show();
-					listWindow.Closed += new EventHandler(ContactListWindow_Closed);
-					ContactListWindow = listWindow;
+					ContactListWindow = new ContactListWindow();
+					ContactListWindow.Show();
+					ContactListWindow.Closed += new EventHandler(ContactListWindow_Closed);
 				}), DispatcherPriority.Normal);
 			} else {
 				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
@@ -34,35 +35,32 @@ namespace NexusIM.Managers
 				}), DispatcherPriority.Normal);
 			}
 		}
-		public static void OpenDummyWindow()
-		{
-			if (DummyWindow != null)
-				throw new InvalidOperationException("Can't open another dummy window");
-
-			DummyWindow = new DummyWindow();
-			//Application.Dispatcher.BeginInvoke(new ThreadStart(() => DummyWindow.Show() ), DispatcherPriority.Background);
-		}
 		public static void OpenContactWindow(IContact contact, bool getFocus = true)
 		{
 			ContactChatArea area;
-			if (!ContactChatAreas.TryGetValue(contact, out area))
+			if (ContactChatAreas.TryGetValue(contact, out area))
 			{
-				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
+				
+			} else {
+				int? poolId = IMSettings.ChatAreaPool.GetPool(contact);
+				ChatWindow chatWindow = null;
+				if (poolId.HasValue)
 				{
-					area = new ContactChatArea();
-					ContactChatAreas.Add(contact, area);
-					if (ChatWindow == null)
+					// This contact has a pool
+					if (!ChatWindows.TryGetValue(poolId.Value, out chatWindow))
 					{
-						ChatWindow = new ChatWindow();
-						if (!getFocus)
-							ChatWindow.WindowState = WindowState.Minimized;
-						ChatWindow.Show();
-						ChatWindow.Visibility = Visibility.Visible;
-						if (!getFocus)
-							Win32.FlashWindow(ChatWindow);
+						// Window not yet open. We need to open it
+						Application.Dispatcher.Invoke(new GenericEvent(() =>
+						{
+							chatWindow = new ChatWindow();
+							chatWindow.Show();
+						}));
+						ChatWindows.Add(poolId.Value, chatWindow);
 					}
-					ChatWindow.AttachAreaAndShow(new ChatAreaHost(area, contact));
-				}));
+				} else {
+					// This contact doesn't have a designated pool
+					
+				}
 			}
 		}
 		public static void ShowSysTrayIcon()
@@ -88,6 +86,7 @@ namespace NexusIM.Managers
 		// Event Handlers
 		private static void ContactListWindow_Closed(object sender, EventArgs e)
 		{
+			ContactListWindow.Closed -= new EventHandler(ContactListWindow_Closed);
 			ContactListWindow = null; // Kill it
 		}
 
@@ -107,17 +106,12 @@ namespace NexusIM.Managers
 			get;
 			private set;
 		}
-		public static DummyWindow DummyWindow
-		{
-			get;
-			private set;
-		}
 		public static ChatAreaCollection ContactChatAreas
 		{
 			get;
 			private set;
 		}
-		public static ChatWindow ChatWindow
+		public static Dictionary<int, ChatWindow> ChatWindows
 		{
 			get;
 			private set;

@@ -366,31 +366,24 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		private void HandleStatusData(IMBuddy buddy, YPacket packet)
 		{
-			if (!packet.Parameters.ContainsKey(10))
-				return;
-
-			if (buddy.StatusMessage == "Idle")
-				buddy.StatusMessage = String.Empty;
-
-			if (packet.Parameters[10] == "2") // Busy
+			HandleStatusData(buddy, Convert.ToInt32(packet.Parameters[10]));
+		}
+		private void HandleStatusData(IMBuddy buddy, int stid)
+		{
+			switch (stid)
 			{
-				buddy.Status = IMBuddyStatus.Busy;
-			} else if (packet.Parameters[10] == "999") { // Idle
-				buddy.Status = IMBuddyStatus.Idle;
-				if (buddy.StatusMessage == String.Empty)
-					buddy.StatusMessage = "Idle";
-			} else if (packet.Parameters[10] == "0" || packet.Parameters[10] == "99") { // Available
-				buddy.Status = IMBuddyStatus.Available;
-			} else if (packet.Parameters[10] == "99") {
-				buddy.Status = IMBuddyStatus.Away;
-				buddy.StatusMessage = packet.Parameters[19];
-			}
-
-			if (packet.Parameters.ContainsKey(19))
-			{
-				buddy.StatusMessage = packet.Parameters[19];
-			} else {
-				buddy.StatusMessage = "";
+				case 0:
+					buddy.Status = IMBuddyStatus.Available;
+					break;
+				case 2:
+					buddy.Status = IMBuddyStatus.Busy;
+					break;
+				case 99:
+					buddy.Status = IMBuddyStatus.Away;
+					break;
+				case 999:
+					buddy.Status = IMBuddyStatus.Idle;
+					break;
 			}
 		}
 
@@ -421,13 +414,21 @@ namespace InstantMessage.Protocols.Yahoo
 
 			List<byte[]> blocks = new List<byte[]>();
 
-			for (int i = 0; i < dataqueue.Length; i++)
+			for (int i = 0; i <= bytesRead - 20;) // Don't increment i because we automatically do it down on the i += block.Length line
 			{
-				int length = BitConverter.ToInt32(dataqueue, i + 8);
+				if (BitConverter.IsLittleEndian)
+					Array.Reverse(dataqueue, i + 8, 2); // Int is backwards, reverse it
+				short length = BitConverter.ToInt16(dataqueue, i + 8);
 				byte[] block = new byte[20 + length];
 
 				Buffer.BlockCopy(dataqueue, i, block, 0, block.Length);
 				i += block.Length;
+				blocks.Add(block);
+
+				if (bytesRead - i < 20 && bytesRead == dataqueue.Length && nsStream.DataAvailable)
+				{
+
+				}
 			}
 
 			foreach (byte[] block in blocks)
@@ -660,63 +661,26 @@ namespace InstantMessage.Protocols.Yahoo
 			if (!yaddrbookdld)
 				YAddrBookDownload();
 
-			IMBuddy buddy = null;
-			List<YPacket> packets = new List<YPacket>();
-			bool starttracking = false;
-			YPacket pkt = null;
+			IMBuddy contact = null;
 
-			/*foreach (KeyValuePair<int, string> parameter in inpacket.Parameters)
+			foreach (KeyValuePair<int, string> packet in inpacket.Parameters)
 			{
-				if (parameter.Key == 241)
-				{
-					status = IMProtocolStatus.Connecting;
-				} else if (parameter.Key == 7) {
-					starttracking = true;
-					if (pkt != null)
-					{
-						packets.Add(pkt);
-					}
-					pkt = new YPacket();
-				}
-				if (starttracking)
-				{
-					if (inpacket.Parameters.Count > i + 1)
-						pkt.AddParameter(parameter.Key, parameters.Value);
-					else
-						packets.Add(pkt);
-				}
-				i++;
-			}
-
-			foreach (YPacket packet in packets)
-			{
-				if (packet.Parameter.ContainsKey(7))
-				{
-					buddy = IMBuddy.FromUsername(packet.Parameter[7], this);
-					HandleStatusData(buddy, packet);
-					triggerContactStatusChange(new IMFriendEventArgs(buddy));
-				}
-				if (packet.Parameter.ContainsKey(197)) // Yahoo! Avatars code
-				{
-					buddy.Avatar = BuddyAvatar.FromUrl("http://img.avatars.yahoo.com/users/" + packet.Parameter[197] + ".medium.png", packet.Parameter[197]);
-				} else if (packet.Parameter.ContainsKey(192))	{ // Standard Avatar Hash - We must manually request the image data
+				if (packet.Key == 7)
+					contact = (IMBuddy)ContactList[packet.Value];
+				else if (packet.Key == 10)
+					HandleStatusData(contact, Convert.ToInt32(inpacket.Parameters[10]));
+				else if (packet.Key == 197)
+					contact.Avatar = BuddyAvatar.FromUrl("http://img.avatars.yahoo.com/users/" + packet.Value + ".medium.png", packet.Value);
+				else if (packet.Key == 192)	{
 					YPacket picpack = new YPacket();
 					picpack.Service = YahooServices.ymsg_picture;
 					picpack.Session = session;
 					picpack.AddParameter(1, mUsername);
-					picpack.AddParameter(5, packet.Parameter[7]);
+					picpack.AddParameter(5, packet.Value);
 					picpack.AddParameter(13, "1");
 					sendPacket(picpack);
 				}
-				if (packet.Parameter.ContainsKey(442)) // Yahoo Power Users thing - Just an aesthetic thing
-				{
-					//string powericon = "";
-					if (packet.Parameter[442] == "1")
-					{
-						//powericon = "crown";
-					}
-				}
-			}*/
+			}
 		}
 		private void HandleMessagePacket(YPacket packet)
 		{
@@ -1291,7 +1255,7 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 
 		// Protocol Specific Variables
-		private byte[] dataqueue = new byte[1024];
+		private byte[] dataqueue = new byte[2048];
 		private Dictionary<string, int> converstationCount = new Dictionary<string, int>();
 		private string session;
 

@@ -30,6 +30,12 @@ namespace InstantMessage
 				return mSettingMgr.ProtocolSettings;
 			}
 		}
+		public static IChatAreaPool ChatAreaPool
+		{
+			get	{
+				return mSettingMgr.ChatAreaPool;
+			}
+		}
 
 		private static ISettings mSettingMgr;
 	}

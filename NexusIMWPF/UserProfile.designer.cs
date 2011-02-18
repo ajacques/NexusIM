@@ -35,6 +35,9 @@ namespace NexusIM
     partial void InsertAccountSetting(AccountSetting instance);
     partial void UpdateAccountSetting(AccountSetting instance);
     partial void DeleteAccountSetting(AccountSetting instance);
+    partial void InsertChatWindowPool(ChatWindowPool instance);
+    partial void UpdateChatWindowPool(ChatWindowPool instance);
+    partial void DeleteChatWindowPool(ChatWindowPool instance);
     partial void InsertSetting(Setting instance);
     partial void UpdateSetting(Setting instance);
     partial void DeleteSetting(Setting instance);
@@ -80,6 +83,14 @@ namespace NexusIM
 			}
 		}
 		
+		public System.Data.Linq.Table<ChatWindowPool> ChatWindowPools
+		{
+			get
+			{
+				return this.GetTable<ChatWindowPool>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Setting> Settings
 		{
 			get
@@ -107,6 +118,8 @@ namespace NexusIM
 		
 		private EntitySet<AccountSetting> _AccountSettings;
 		
+		private EntityRef<ChatWindowPool> _ChatWindowPool;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -126,6 +139,7 @@ namespace NexusIM
 		public Account()
 		{
 			this._AccountSettings = new EntitySet<AccountSetting>(new Action<AccountSetting>(this.attach_AccountSettings), new Action<AccountSetting>(this.detach_AccountSettings));
+			this._ChatWindowPool = default(EntityRef<ChatWindowPool>);
 			OnCreated();
 		}
 		
@@ -140,6 +154,10 @@ namespace NexusIM
 			{
 				if ((this._Id != value))
 				{
+					if (this._ChatWindowPool.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnIdChanging(value);
 					this.SendPropertyChanging();
 					this._Id = value;
@@ -209,7 +227,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AutoConnect", DbType="bit NOT NULL")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AutoConnect", DbType="Bit NOT NULL")]
 		public bool AutoConnect
 		{
 			get
@@ -239,6 +257,40 @@ namespace NexusIM
 			set
 			{
 				this._AccountSettings.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ChatWindowPool_Account", Storage="_ChatWindowPool", ThisKey="Id", OtherKey="AccountId", IsForeignKey=true)]
+		public ChatWindowPool ChatWindowPool
+		{
+			get
+			{
+				return this._ChatWindowPool.Entity;
+			}
+			set
+			{
+				ChatWindowPool previousValue = this._ChatWindowPool.Entity;
+				if (((previousValue != value) 
+							|| (this._ChatWindowPool.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ChatWindowPool.Entity = null;
+						previousValue.Account = null;
+					}
+					this._ChatWindowPool.Entity = value;
+					if ((value != null))
+					{
+						value.Account = this;
+						this._Id = value.AccountId;
+					}
+					else
+					{
+						this._Id = default(int);
+					}
+					this.SendPropertyChanged("ChatWindowPool");
+				}
 			}
 		}
 		
@@ -423,6 +475,172 @@ namespace NexusIM
 					else
 					{
 						this._AccountId = default(int);
+					}
+					this.SendPropertyChanged("Account");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="ChatWindowPools")]
+	public partial class ChatWindowPool : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private short _PoolId;
+		
+		private int _AccountId;
+		
+		private string _Username;
+		
+		private EntityRef<Account> _Accounts;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnPoolIdChanging(short value);
+    partial void OnPoolIdChanged();
+    partial void OnAccountIdChanging(int value);
+    partial void OnAccountIdChanged();
+    partial void OnUsernameChanging(string value);
+    partial void OnUsernameChanged();
+    #endregion
+		
+		public ChatWindowPool()
+		{
+			this._Accounts = default(EntityRef<Account>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PoolId", DbType="SmallInt NOT NULL")]
+		public short PoolId
+		{
+			get
+			{
+				return this._PoolId;
+			}
+			set
+			{
+				if ((this._PoolId != value))
+				{
+					this.OnPoolIdChanging(value);
+					this.SendPropertyChanging();
+					this._PoolId = value;
+					this.SendPropertyChanged("PoolId");
+					this.OnPoolIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccountId", DbType="Int NOT NULL")]
+		public int AccountId
+		{
+			get
+			{
+				return this._AccountId;
+			}
+			set
+			{
+				if ((this._AccountId != value))
+				{
+					this.OnAccountIdChanging(value);
+					this.SendPropertyChanging();
+					this._AccountId = value;
+					this.SendPropertyChanged("AccountId");
+					this.OnAccountIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Username", DbType="NVarChar(64) NOT NULL", CanBeNull=false)]
+		public string Username
+		{
+			get
+			{
+				return this._Username;
+			}
+			set
+			{
+				if ((this._Username != value))
+				{
+					this.OnUsernameChanging(value);
+					this.SendPropertyChanging();
+					this._Username = value;
+					this.SendPropertyChanged("Username");
+					this.OnUsernameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ChatWindowPool_Account", Storage="_Accounts", ThisKey="AccountId", OtherKey="Id", IsUnique=true, IsForeignKey=false)]
+		public Account Account
+		{
+			get
+			{
+				return this._Accounts.Entity;
+			}
+			set
+			{
+				Account previousValue = this._Accounts.Entity;
+				if (((previousValue != value) 
+							|| (this._Accounts.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Accounts.Entity = null;
+						previousValue.ChatWindowPool = null;
+					}
+					this._Accounts.Entity = value;
+					if ((value != null))
+					{
+						value.ChatWindowPool = this;
 					}
 					this.SendPropertyChanged("Account");
 				}

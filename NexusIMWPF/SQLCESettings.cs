@@ -432,10 +432,10 @@ namespace NexusIM
 
 			private class SqlAccountEnumerator : IEnumerator<IMProtocolExtraData>
 			{
-				public SqlAccountEnumerator(DataContext context, Table<Account> source)
+				public SqlAccountEnumerator(Table<Account> source)
 				{
 					mEnumerator = source.GetEnumerator();
-					mContext = context;
+					mContext = source.Context;
 				}
 
 				#region IEnumerator<IMProtocolExtraData> Members
@@ -506,7 +506,7 @@ namespace NexusIM
 			public IEnumerator<IMProtocolExtraData> GetEnumerator()
 			{
 				UserProfile db = UserProfile.Create(mConnectionString);
-				return new SqlAccountEnumerator(db, db.Accounts);
+				return new SqlAccountEnumerator(db.Accounts);
 			}
 
 			#endregion
@@ -614,6 +614,42 @@ namespace NexusIM
 
 			private string mConnectionString;
 		}
+		private class SqlChatAreaPool : IChatAreaPool
+		{
+			#region IChatAreaPool Members
+
+			public void PutInPool(int poolid, IContact contact)
+			{
+				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				ChatWindowPool pool = db.ChatWindowPools.FirstOrDefault(cwp => cwp.Account.Username == contact.Protocol.Username && cwp.Account.AccountType == contact.Protocol.ShortProtocol && cwp.Username == contact.Username);
+				if (pool == null)
+				{
+					pool = new ChatWindowPool();
+					pool.Username = contact.Username;
+					db.ChatWindowPools.InsertOnSubmit(pool);
+				}
+
+				pool.PoolId = (short)poolid;
+				db.SubmitChanges();
+			}
+
+			public void RemoveFromPool(IContact contact)
+			{
+				
+			}
+
+			public int? GetPool(IContact contact)
+			{
+				return null;
+			}
+
+			public int GetNextId()
+			{
+				return new Random().Next();
+			}
+
+			#endregion
+		}
 
 		// Properties
 		public IList<IMProtocolExtraData> Accounts
@@ -640,11 +676,21 @@ namespace NexusIM
 				return mProtocolSettings;
 			}
 		}
+		public IChatAreaPool ChatAreaPool
+		{
+			get	{
+				if (mChatPool == null)
+					mChatPool = new SqlChatAreaPool();
+
+				return mChatPool;
+			}
+		}
 		
 		// Variables
 		protected static string mConnectionString;
 		private SqlAccountList mAccountList;
 		private SqlDictionary mGenericSettings;
 		private SqlProtocolDictionary mProtocolSettings;
+		private SqlChatAreaPool mChatPool;
 	}
 }

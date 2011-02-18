@@ -44,6 +44,7 @@ namespace InstantMessage.Protocols.Yahoo
 		ymsg_sms_message = 0x2ea
 	}
 
+	// YPacket 2 Engine - Now uses arrays... lots and lots of arrays... and BlockCopy...
 	internal class YPacket
 	{
 		/// <summary>
@@ -206,7 +207,7 @@ namespace InstantMessage.Protocols.Yahoo
 		private byte[] service = new byte[] { 0x00, 0x00 };
 		private byte[] status = new byte[] { 0x00, 0x00, 0x00, 0x00 };
 		private byte[] session = new byte[] { 0x00, 0x00, 0x00, 0x00 };
-		private byte[] version = new byte[] { 0x00, 0x11 }; // YMSG17
+		private byte[] version = new byte[] { 0x00, 0x12 }; // YMSG18
 		private static readonly byte[] separator = new byte[] { 0xC0, 0x80 };
 		private static readonly byte[] packetStartBytes = new byte[] { 89, 77, 83, 71 }; // Means YMSG
 		private static readonly Encoding dEncoding = Encoding.ASCII;
