@@ -1,14 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
-using System.Linq;
-using System.Windows.Documents;
 
 namespace NexusIM.Controls
 {
@@ -30,6 +30,23 @@ namespace NexusIM.Controls
 			}
 		}
 
+		public void ProcessChatMessage(IMMessageEventArgs e)
+		{
+			Dispatcher.BeginInvoke(new GenericEvent(() =>
+			{
+				ChatMessageInline inline = new ChatMessageInline();
+				inline.Username = e.Sender.Username;
+				inline.UsernameColor = Color.FromRgb(0, 0, 255);
+				inline.MessageBody = e.Message;
+
+				if (ChatHistoryBox.Inlines.Any())
+					ChatHistoryBox.Inlines.Add(new LineBreak());
+
+				ChatHistoryBox.Inlines.Add(inline);
+				ChatHistoryContainer.ScrollToEnd();
+			}));
+		}
+
 		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (e.NewValue == null)
@@ -40,13 +57,7 @@ namespace NexusIM.Controls
 		}
 		private void OnReceiveMessage(object sender, IMMessageEventArgs e)
 		{
-			Dispatcher.BeginInvoke(new GenericEvent(() => {
-				ChatMessageInline inline = new ChatMessageInline();
-				inline.Username = e.Sender.Username;
-				inline.UsernameColor = Color.FromRgb(0, 0, 255);
-				inline.MessageBody = e.Message;
-				ChatHistoryBox.Inlines.Add(inline);
-			}));
+			ProcessChatMessage(e);		
 		}
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
 		{

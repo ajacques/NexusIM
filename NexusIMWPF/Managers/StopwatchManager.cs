@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace NexusIM.Managers
 {	
+	/// <summary>
+	/// Provides a simple interface to manage program wide diagnostic timing objects.
+	/// </summary>
+	/// <remarks>
+	/// All functions get optimized out when compiled as Release
+	/// </remarks>
 	static class StopwatchManager
 	{
 		[Conditional("DEBUG")]

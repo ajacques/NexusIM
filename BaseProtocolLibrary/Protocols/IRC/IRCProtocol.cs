@@ -19,10 +19,12 @@ namespace InstantMessage.Protocols.Irc
 			protocolType = "IRC";
 			mProtocolTypeShort = "irc";
 			needPassword = false;
+			Port = 6667;
 		}
-		public IRCProtocol(string hostname, int port) : this()
+		public IRCProtocol(string hostname, int port = 6667) : this()
 		{
 			Server = hostname;
+			Port = port;
 		}
 		public void Dispose()
 		{
@@ -48,12 +50,12 @@ namespace InstantMessage.Protocols.Irc
 		{
 			client = new TcpClient();
 
-			client.BeginConnect(mServer, 6667, new AsyncCallback(OnSocketConnect), null);
+			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);
 			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
 		}
 		public override void Disconnect()
 		{
-			sendData("SQUIT");
+			sendData("QUIT");
 
 			triggerOnDisconnect(null);
 			status = IMProtocolStatus.Offline;
@@ -284,6 +286,11 @@ namespace InstantMessage.Protocols.Irc
 			get	{
 				return mChannels;
 			}
+		}
+		public int Port
+		{
+			get;
+			set;
 		}
 
 		// Protocol Handlers

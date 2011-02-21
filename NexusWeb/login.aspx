@@ -73,8 +73,8 @@
 					<option value="11">November</option>
 					<option value="12">December</option>
 				</select>
-				<input type="text" id="dobDay" maxlength="2" style="width: 25px" placeholder="01" />
-				<input type="text" id="dobYear" maxlength="4" style="width: 35px" placeholder="1989" />
+				<input type="text" id="dobDay" maxlength="2" style="width: 20px; padding-left: 5px" placeholder="01" />
+				<input type="text" id="dobYear" maxlength="4" style="width: 35px; padding-left: 5px;" placeholder="1989" />
 			</span><br /><br />
 			<input type="button" value="Register" onclick="LoginPage.DoRegisterAccount();" />&nbsp;<span id="registerInProgress" style="font-size: 10pt; color: #3333CC; display: none">Please Wait...</span>
 		</td>
@@ -87,7 +87,7 @@
 			<input type="password" class="validatable" id="txtPassword" style="width: 200px" />&nbsp;<br />
 			<a href="forgotpassword.aspx" style="font-size: 10pt; margin-bottom: 10px">Forgot your password?</a>
 			<div style="height: 12pt"></div>
-			<input type="checkbox" id="rememberMe" /><label for="rememberMe" style="font-size: 10pt">Remember me</label><br /><br />
+			<input type="checkbox" id="rememberMe" /><label for="rememberMe" style="font-size: 10pt; padding-left: 5px">Remember me</label><br /><br />
 			<input type="button" onclick="LoginPage.DoLogin();return false;" Value="Login" style="" />&nbsp;<span id="logininprogress" style="font-size: 10pt; color: #3333CC; display: none">Please Wait...</span>
 		</td>
 	</tr>

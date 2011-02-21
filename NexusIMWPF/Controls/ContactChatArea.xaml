@@ -21,13 +21,13 @@
 			<DoubleAnimation Storyboard.TargetName="UserOfflineWarning" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.3" From="0" To="1" />
 		</Storyboard>
 	</UserControl.Resources>
-	<UserControl.DataContext>
+	<!--UserControl.DataContext>
 		<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars? This is a really, really long message that goes off the screen. It will marquee through.">
 			<im:IMBuddy.Avatar>
 				<im:BuddyAvatar />
 			</im:IMBuddy.Avatar>
 		</im:IMBuddy>
-	</UserControl.DataContext>
+	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
 			<LinearGradientBrush EndPoint="0.9,1" StartPoint="0.2,0" SpreadMethod="Repeat">
@@ -47,7 +47,7 @@
 			</Grid.ColumnDefinitions>
 			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Stretch="UniformToFill" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
-				<RichTextBox Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0">
+				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto">
 					<FlowDocument>
 						<Paragraph x:Name="ChatHistoryBox">
 						</Paragraph>

@@ -160,6 +160,7 @@
       <DependentUpon>StatusOrb.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SysTrayContextMenu.cs" />
+    <Compile Include="Controls\SysTrayIcon.cs" />
     <Compile Include="Converters\ContactToUIContact.cs" />
     <Compile Include="Converters\IMAvatarToImage.cs" />
     <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />

@@ -88,7 +88,7 @@ namespace NexusIMWPF
 			} else {
 				AccountManager.Setup();
 				StopwatchManager.TraceElapsed("AppInit", "{0} - AccountManager loaded in: {1}");
-				ThreadPool.QueueUserWorkItem(new WaitCallback(LoadAccounts), null);
+				ThreadPool.QueueUserWorkItem(new WaitCallback(LoadAccounts), null); // We don't need the accounts loaded immediately since they slow down the application startup due to SQLCE module loading. Schedule them to be loaded later
 
 				WindowSystem.OpenContactListWindow();
 				WindowSystem.ShowSysTrayIcon();

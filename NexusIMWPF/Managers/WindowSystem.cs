@@ -35,7 +35,7 @@ namespace NexusIM.Managers
 				}), DispatcherPriority.Normal);
 			}
 		}
-		public static void OpenContactWindow(IContact contact, bool getFocus = true)
+		public static ContactChatArea OpenContactWindow(IContact contact, bool getFocus = true)
 		{
 			ContactChatArea area;
 			if (ContactChatAreas.TryGetValue(contact, out area))
@@ -59,9 +59,18 @@ namespace NexusIM.Managers
 					}
 				} else {
 					// This contact doesn't have a designated pool
-					
+					Application.Dispatcher.Invoke(new GenericEvent(() =>
+					{
+						chatWindow = new ChatWindow();
+						area = new ContactChatArea();
+						chatWindow.AttachAreaAndShow(new ChatAreaHost(area, contact));
+						chatWindow.Show();
+					}));
+					ContactChatAreas.Add(contact, area);
 				}
 			}
+
+			return area;
 		}
 		public static void ShowSysTrayIcon()
 		{
@@ -70,9 +79,7 @@ namespace NexusIM.Managers
 
 			Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
 				{
-					SysTrayIcon = new TaskbarIcon();
-					SysTrayIcon.Icon = Resources.app;
-					SysTrayIcon.ContextMenu = new SysTrayContextMenu();
+					SysTrayIcon = new SysTrayIcon();
 				}));
 		}
 		public static void RegisterApp(App app)
@@ -101,7 +108,7 @@ namespace NexusIM.Managers
 			get;
 			private set;
 		}
-		public static TaskbarIcon SysTrayIcon
+		public static SysTrayIcon SysTrayIcon
 		{
 			get;
 			private set;

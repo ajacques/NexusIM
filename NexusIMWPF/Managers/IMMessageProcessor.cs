@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using InstantMessage;
 using System.Collections.Specialized;
+using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Controls;
-using System.Windows;
 
 namespace NexusIM.Managers
 {
@@ -33,8 +29,9 @@ namespace NexusIM.Managers
 			ContactChatArea area;
 			if (!WindowSystem.ContactChatAreas.TryGetValue(e.Sender, out area))
 			{
-				WindowSystem.OpenContactWindow(e.Sender, false);
+				area = WindowSystem.OpenContactWindow(e.Sender, false);				
 			}
+			area.ProcessChatMessage(e);
 		}
 	}
 }
