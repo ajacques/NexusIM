@@ -22,15 +22,35 @@
 			<Grid>
 				<Image Source="/NexusIMWPF;component/Resources/busy_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
 				<ListBoxItem Content="Busy" Margin="18,0,0,0" Foreground="Black" />
-			</Grid>			
+			</Grid>
 			<Grid>
 				<Image Source="/NexusIMWPF;component/Resources/invisible_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
 				<ListBoxItem Content="Invisible" Margin="18,0,0,0" Foreground="Black" />
 			</Grid>
 		</ComboBox>
-		<ScrollViewer Margin="0,74,0,0" VerticalScrollBarVisibility="Auto">			
+		<ScrollViewer Margin="0,74,0,0" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="ContactListControl" />
 		</ScrollViewer>
+		<Grid x:Name="NoEnabledAccountsWarning" Width="200" Height="120" Visibility="Collapsed">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="50" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<Rectangle Fill="#FFDADADA" RadiusX="4" RadiusY="4" Grid.RowSpan="2" />
+			<TextBlock TextWrapping="Wrap" Margin="2" Grid.Row="0">
+				<Run>You currently have no enabled accounts.</Run>
+				<LineBreak />
+				<Hyperlink TextDecorations="None" Click="EditAccounts_Click">Edit your accounts</Hyperlink>
+			</TextBlock>
+			<StackPanel Grid.Row="1">
+				<Grid>
+					<Grid.DataContext>
+						<im:IMProtocol Username="penguinnavy" />
+					</Grid.DataContext>
+					<TextBlock><Run Text="{Binding Username}" /><Run Text=" - " /><Hyperlink TextDecorations="None"><Run Text="Enable" /></Hyperlink></TextBlock>
+				</Grid>
+			</StackPanel>
+		</Grid>
 		<Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="Collapsed">
 			<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Margin="0,0,0,-3" Stroke="#FFFFA12E" />
 		</Grid>

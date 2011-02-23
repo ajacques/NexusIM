@@ -11,6 +11,7 @@ using System.Windows.Media;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using System.Linq;
 
 namespace NexusIM.Windows
 {
@@ -94,6 +95,9 @@ namespace NexusIM.Windows
 				ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => SuperTaskbarManager.Setup()));
 
 			AddGroups(AggregateContactList.Groups);
+
+			if (!AccountManager.Accounts.Any(i => i.Enabled))
+				NoEnabledAccountsWarning.Visibility = Visibility.Visible;
 
 			try	{
 				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");

@@ -1,13 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Linq;
 using System.Linq;
-using System.Text;
 using System.Security.Cryptography;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Configuration;
-using System.Security.Authentication;
+using System.Text;
 
 namespace NexusCore.Databases
 {
@@ -31,9 +28,10 @@ namespace NexusCore.Databases
 			// Password System v2
 
 			// Decrypt the salt retrieved from the user's row using the site key
-			byte[] output = new byte[user.PasswordSalt.Length];
+			byte[] output = new byte[48];
+			Buffer.BlockCopy(user.PasswordSalt, 0, output, 0, user.PasswordSalt.Length);
 			ICryptoTransform decryptor = SaltDecryptor.CreateDecryptor();
-			int count = decryptor.TransformBlock(user.PasswordSalt, 0, user.PasswordSalt.Length, output, 0);
+			int count = decryptor.TransformBlock(output, 0, output.Length, output, 0);
 
 			// Now build the input array from the decrypted hash and password
 			byte[] pwdbytes = mEncoder.GetBytes(password);

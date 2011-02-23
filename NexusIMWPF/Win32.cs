@@ -78,6 +78,24 @@ namespace NexusIM
 		public static int WM_POWERBROADCAST = 0x0218;
 		public static int WM_SIZING = 0x0214;
 
+		public static Point GetScreenMousePosition()
+		{
+			Win32Point w32Mouse = new Win32Point();
+			GetCursorPos(ref w32Mouse);
+			return new Point(w32Mouse.X, w32Mouse.Y);
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		private struct Win32Point
+		{
+			public Int32 X;
+			public Int32 Y;
+		}
+
+		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool GetCursorPos(ref Win32Point pt);
+
 		/// <summary>
 		/// Determines whether the user resumed the computer or if the system did.
 		/// </summary>

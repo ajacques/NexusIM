@@ -15,7 +15,7 @@ namespace NexusIM.Windows
 	/// <summary>
 	/// Interaction logic for SysTrayPeekWindow.xaml
 	/// </summary>
-	public partial class SysTrayPeekWindow : Window
+	public partial class SysTrayPeekWindow : UserControl
 	{
 		public SysTrayPeekWindow()
 		{

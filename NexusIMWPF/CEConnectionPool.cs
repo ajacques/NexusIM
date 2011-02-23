@@ -31,17 +31,13 @@ namespace NexusIM
 		/// <returns>An open connection</returns>
 		public IDbConnection Connection
 		{
-			get
-			{
+			get	{
+				int threadId = Thread.CurrentThread.ManagedThreadId;
+
 				lock (threadConnectionMap)
 				{
-					int threadId = Thread.CurrentThread.ManagedThreadId;
-
 					IDbConnection connection = null;
-					if (threadConnectionMap.ContainsKey(threadId))
-					{
-						connection = threadConnectionMap[threadId];
-					} else
+					if (!threadConnectionMap.TryGetValue(threadId, out connection))
 					{
 						connection = new SqlCeConnection(ConnectionString);
 						connection.Open();

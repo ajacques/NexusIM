@@ -16,25 +16,8 @@ namespace NexusIM.Controls
 		{
 			Icon = Properties.Resources.app;
 			ContextMenu = new SysTrayContextMenu();
-			TrayMouseMove += new RoutedEventHandler(SysTrayIcon_TrayMouseMove);
-			
-		}
-
-		private SysTrayPeekWindow PeekWindow
-		{
-			get;
-			set;
-		}
-
-		private void SysTrayIcon_TrayMouseMove(object sender, RoutedEventArgs e)
-		{
-			if (PeekWindow == null)
-			{
-				PeekWindow = new SysTrayPeekWindow();
-				PeekWindow.Left = SystemParameters.PrimaryScreenWidth - (this.Width + 20);
-				PeekWindow.Top = SystemParameters.PrimaryScreenHeight - this.Height;
-				PeekWindow.Show();
-			}
+			SysTrayPeekWindow peekWindow = new SysTrayPeekWindow();
+			TrayToolTip = peekWindow;
 		}
 	}
 }
