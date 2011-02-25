@@ -11,7 +11,6 @@ using System.Windows.Media;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
-using System.Linq;
 
 namespace NexusIM.Windows
 {
@@ -35,7 +34,7 @@ namespace NexusIM.Windows
 			}
 		}
 
-		private void DeselectAllExcept(UIElementCollection source, UIElement exception)
+		private void DeselectAllExcept(ICollection source, UIElement exception)
 		{
 			foreach (UIElement elem in source)
 			{
@@ -83,7 +82,7 @@ namespace NexusIM.Windows
 					ContactListGroup group = new ContactListGroup();
 					group.SourceGroup = contact;
 					group.IsExpanded = true;
-					ContactListControl.Children.Add(group);
+					ContactList.Add(group);
 				}));
 			}
 		}
@@ -96,8 +95,8 @@ namespace NexusIM.Windows
 
 			AddGroups(AggregateContactList.Groups);
 
-			if (!AccountManager.Accounts.Any(i => i.Enabled))
-				NoEnabledAccountsWarning.Visibility = Visibility.Visible;
+			//if (!AccountManager.Accounts.Any(i => i.Enabled))
+			//	NoEnabledAccountsWarning.Visibility = Visibility.Visible;
 
 			try	{
 				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");

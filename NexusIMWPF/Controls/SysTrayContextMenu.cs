@@ -35,6 +35,7 @@ namespace NexusIM.Controls
 			ContactListItem = new MenuItem();
 			ContactListItem.Header = "Show Contact List";
 			ContactListItem.Click += new RoutedEventHandler(ContactListItem_Click);
+			ContactListItem.FontWeight = FontWeight.FromOpenTypeWeight(700);
 			base.Items.Add(ContactListItem);
 
 			MenuItem sendMessageItem = new MenuItem();
@@ -76,6 +77,9 @@ namespace NexusIM.Controls
 		}
 		private void SetupEventHandlers()
 		{
+			AvailableStatusItem.Click += new RoutedEventHandler(AvailableStatusItem_Click);
+			BusyStatusItem.Click += new RoutedEventHandler(BusyStatusItem_Click);
+			InvisibleStatusItem.Click += new RoutedEventHandler(InvisibleStatusItem_Click);
 			SignOutItem.Click += new RoutedEventHandler(SignOutItem_Click);
 			ExitItem.Click += new RoutedEventHandler(ExitItem_Click);
 		}
@@ -151,14 +155,33 @@ namespace NexusIM.Controls
 				{
 					AvailabilityGroupItem.IsEnabled = false;
 					SignOutItem.Header = "Sign In";
-				}));	
+				}));
 			} else {
 				int onlineCount = AccountManager.Accounts.Count(s => s.Protocol.ProtocolStatus == IMProtocolStatus.Online);
 				Dispatcher.BeginInvoke(new GenericEvent(() => {
 					AvailabilityGroupItem.IsEnabled = true;
 					SignOutItem.Header = "Sign Out";
-				}));				
+				}));
+		
+				switch (AccountManager.Status)
+				{
+					case IMStatus.Available:
+						AvailableStatusItem.Icon = Properties.Resources.point;
+						break;
+				}
 			}
+		}
+		private void AvailableStatusItem_Click(object sender, RoutedEventArgs e)
+		{
+			AccountManager.Status = IMStatus.Available;
+		}
+		private void BusyStatusItem_Click(object sender, RoutedEventArgs e)
+		{
+			AccountManager.Status = IMStatus.Busy;
+		}
+		private void InvisibleStatusItem_Click(object sender, RoutedEventArgs e)
+		{
+			AccountManager.Status = IMStatus.Invisible;
 		}
 	}
 }

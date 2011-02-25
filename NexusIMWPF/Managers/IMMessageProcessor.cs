@@ -27,11 +27,18 @@ namespace NexusIM.Managers
 		private static void IMProtocol_OnMessageReceived(object sender, IMMessageEventArgs e)
 		{
 			ContactChatArea area;
+			bool showNotification = false;
 			if (!WindowSystem.ContactChatAreas.TryGetValue(e.Sender, out area))
 			{
-				area = WindowSystem.OpenContactWindow(e.Sender, false);				
+				area = WindowSystem.OpenContactWindow(e.Sender, false);
+				showNotification = true;
 			}
 			area.ProcessChatMessage(e);
+
+			if (showNotification)
+			{
+
+			}
 		}
 	}
 }

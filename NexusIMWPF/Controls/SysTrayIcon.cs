@@ -7,6 +7,7 @@ using NexusIM.Properties;
 using NexusIM.Windows;
 using System.Windows.Input;
 using System.Windows;
+using NexusIM.Managers;
 
 namespace NexusIM.Controls
 {
@@ -18,6 +19,12 @@ namespace NexusIM.Controls
 			ContextMenu = new SysTrayContextMenu();
 			SysTrayPeekWindow peekWindow = new SysTrayPeekWindow();
 			TrayToolTip = peekWindow;
+			TrayMouseDoubleClick += new RoutedEventHandler(SysTrayIcon_TrayMouseDoubleClick);
+		}
+
+		private void SysTrayIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+		{
+			WindowSystem.OpenContactListWindow();
 		}
 	}
 }

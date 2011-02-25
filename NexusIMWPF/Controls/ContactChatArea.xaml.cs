@@ -102,5 +102,10 @@ namespace NexusIM.Controls
 
 			}
 		}
+
+		private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
+		{
+			MessageBody.Focus();
+		}
 	}
 }

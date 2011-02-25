@@ -53,14 +53,15 @@ namespace SilverlightContactMap
 		}
 		private LocationCollection GetRadiusPoints(Location center, double radius)
 		{
+			LocationCollection points = new LocationCollection();
+			return points;
+
 			int earthRadius = 3959 * 5280; // Earth Mean Radius in Miles
 			double lat = (center.Latitude * Math.PI) / 180;
 			double lon = (center.Longitude * Math.PI) / 180;
 			double angular = radius / earthRadius;
 
-			LocationCollection points = new LocationCollection();
-
-			for (int i = 0; i <= 360; i+= 10)
+			for (int i = 0; i <= 360; i += 10)
 			{
 				Location p2 = new Location(0, 0);
 				double brng = i * Math.PI / 180;

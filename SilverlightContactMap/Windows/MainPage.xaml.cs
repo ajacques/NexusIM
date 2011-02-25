@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -79,12 +80,11 @@ namespace SilverlightContactMap.Windows
 		{
 			mPoints.Sort(delegate(ContactPoint a, ContactPoint b)
 			{
-				return 0 - a.Location.Latitude.CompareTo(b.Location.Latitude); // 90 ... -90
+				return b.Location.Latitude.CompareTo(a.Location.Latitude); // 90 ... -90
 			});
 
 			// Remove all children
-			UIElement[] elems = pLayer.Children.Select(ui => ui).ToArray();
-			foreach (UIElement elem in elems)
+			foreach (UIElement elem in pLayer.Children)
 				pLayer.Children.Remove(elem);
 
 			// Do it old school

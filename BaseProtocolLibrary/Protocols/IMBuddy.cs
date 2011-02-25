@@ -142,7 +142,13 @@ namespace InstantMessage
 				return mNickname;
 			}
 			set	{
-				mNickname = value;
+				if (mNickname != value)
+				{
+					mNickname = value;
+
+					NotifyPropertyChanged("Nickname");
+					NotifyPropertyChanged("DisplayName");
+				}
 			}
 		}
 		public IDictionary<string, string> Options

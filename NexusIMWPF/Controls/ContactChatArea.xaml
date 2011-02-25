@@ -8,7 +8,7 @@
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ContactChatArea"
 	x:Name="UserControl" x:FieldModifier="private" UseLayoutRounding="True"
-	d:DesignWidth="600" d:DesignHeight="500">
+	d:DesignWidth="600" d:DesignHeight="500" MouseUp="UserControl_MouseUp">
 	<UserControl.Resources>
 		<Color x:Key="AvailableColor">#90C1FF99</Color>
 		<Color x:Key="BusyColor">#00FFC9C9</Color>
@@ -21,19 +21,19 @@
 			<DoubleAnimation Storyboard.TargetName="UserOfflineWarning" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.3" From="0" To="1" />
 		</Storyboard>
 	</UserControl.Resources>
-	<!--UserControl.DataContext>
+	<UserControl.DataContext>
 		<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars? This is a really, really long message that goes off the screen. It will marquee through.">
 			<im:IMBuddy.Avatar>
 				<im:BuddyAvatar />
 			</im:IMBuddy.Avatar>
 		</im:IMBuddy>
-	</UserControl.DataContext-->
+	</UserControl.DataContext>
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
 			<LinearGradientBrush EndPoint="0.9,1" StartPoint="0.2,0" SpreadMethod="Repeat">
-				<GradientStop Color="{DynamicResource AvailableColor}" Offset="0"/>
-				<GradientStop Color="#FFFFFFFF" Offset="0.5"/>
-				<GradientStop Color="{DynamicResource AvailableColor}" Offset="1"/>
+				<GradientStop Color="{DynamicResource AvailableColor}" Offset="0" />
+				<GradientStop Color="#FFFFFFFF" Offset="0.5" />
+				<GradientStop Color="{DynamicResource AvailableColor}" Offset="1" />
 			</LinearGradientBrush>
 		</Grid.Background>
 		<Grid.RowDefinitions>
@@ -73,7 +73,7 @@
 					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Margin="5" VerticalAlignment="Top" FontSize="12">
 						<Run Foreground="#FF969696" Text="{Binding DisplayName, Mode=OneWay}" />
 						<Run Text="appears to be offline and will receive any messages you say after signing in." /><LineBreak />
-						<Run Text="Send email" /><Run Text=" ("/><Hyperlink TextDecorations="None"><Run Text="adam@robertjacques.com" /></Hyperlink><Run Text=")"/></TextBlock>
+					</TextBlock>
 				</Grid>
 				<Grid x:Name="SelfInvisibleWarning" VerticalAlignment="Top" Margin="5,2,5,0" Visibility="Collapsed">
 					<Rectangle RadiusX="3" RadiusY="3" Fill="#FFFFFFD1" Stroke="#FFDEDEDE" />
@@ -99,7 +99,7 @@
 			<Grid>
 				<Path Data="m 10,-5 5,5 95,0 0,20 -110,0 0,-20 5,0" Fill="#FFD2D2D2" />
 				<TextBlock Margin="2" Text="Copied to clipboard" IsHitTestVisible="False" />
-			</Grid>			
+			</Grid>
 		</Popup>
 	</Grid>
 </UserControl>

@@ -6,8 +6,15 @@ using System.Collections;
 
 namespace InstantMessage.Protocols.Yahoo
 {
-	internal enum YahooServices
+	internal static class YahooServices2
 	{
+		public static readonly byte[] ymsg_pager_logoff = { 0x00, 0x02 };
+		public static readonly byte[] ymsg_message = { 0x00, 0x06 };
+		public static readonly byte[] ymsg_authentication_response = { 0x00, 0x54 };
+	}
+
+	internal enum YahooServices
+	{		
 		ymsg_pager_logoff = 0x02,
 		ymsg_message = 0x06,
 		ymsg_newmail = 0x0b,
@@ -45,7 +52,7 @@ namespace InstantMessage.Protocols.Yahoo
 	}
 
 	// YPacket 2 Engine - Now uses arrays... lots and lots of arrays... and BlockCopy...
-	internal class YPacket
+	internal sealed class YPacket
 	{
 		/// <summary>
 		/// Disassembles a Y! MSG packet from the string and returns a YPacket built from the input
@@ -56,22 +63,22 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			return FromPacket(dEncoding.GetBytes(packetdata));
 		}
-		public static YPacket FromPacket(byte[] packetdata)
+		public static YPacket FromPacket(byte[] packetdata, int startPosition, int count)
 		{
-			if (packetdata.Length < 20)
+			if (count < 20)
 				throw new ArgumentOutOfRangeException("Length should be atleast 20 bytes");
 
 			YPacket packet = new YPacket();
 
 			// Extract all the header information from the packet
-			Buffer.BlockCopy(packetdata, 4, packet.version, 0, 2);
-			Buffer.BlockCopy(packetdata, 10, packet.ServiceByte, 0, 2);
-			Buffer.BlockCopy(packetdata, 12, packet.StatusByte, 0, 4);
-			Buffer.BlockCopy(packetdata, 16, packet.SessionByte, 0, 4);
+			Buffer.BlockCopy(packetdata, startPosition + 4, packet.version, 0, 2);
+			Buffer.BlockCopy(packetdata, startPosition + 10, packet.ServiceByte, 0, 2);
+			Buffer.BlockCopy(packetdata, startPosition + 12, packet.StatusByte, 0, 4);
+			Buffer.BlockCopy(packetdata, startPosition + 16, packet.SessionByte, 0, 4);
 
 			int key = -1;
-			int startIndex = 20;
-			for (int i = 20; i < packetdata.Length - 1; i++)
+			int startIndex = startPosition + 20;
+			for (int i = startIndex; i < count - 1; i++)
 			{
 				if (packetdata[i] == 0xc0 && packetdata[i + 1] == 0x80)
 				{
@@ -92,6 +99,10 @@ namespace InstantMessage.Protocols.Yahoo
 			packet.parameters.IsReadOnly = true; // Lock it
 
 			return packet;
+		}
+		public static YPacket FromPacket(byte[] packetdata)
+		{
+			return FromPacket(packetdata, 0, packetdata.Length);
 		}
 
 		public byte[] ToBytes()
@@ -126,7 +137,8 @@ namespace InstantMessage.Protocols.Yahoo
 
 			Buffer.BlockCopy(service, 0, finalPacket, 10, 2); // Two bytes for the service
 			Buffer.BlockCopy(status, 0, finalPacket, 12, 4); // Four bytes for the status
-			Buffer.BlockCopy(session, 0, finalPacket, 16, 4); // Four bytes for the session id
+			if (session != null)
+				Buffer.BlockCopy(session, 0, finalPacket, 16, 4); // Four bytes for the session id
 
 			int blockPosition = 20;
 			foreach (byte[] block in blocks)

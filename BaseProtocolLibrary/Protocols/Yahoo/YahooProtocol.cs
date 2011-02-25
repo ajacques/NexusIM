@@ -59,7 +59,6 @@ namespace InstantMessage.Protocols.Yahoo
 			{
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_pager_logoff;
-				packet.Session = session;
 
 				if (authenticated)
 					sendPacket(packet);
@@ -90,7 +89,6 @@ namespace InstantMessage.Protocols.Yahoo
 			}
 			
 			pkt.Service = YahooServices.ymsg_message;
-			pkt.Session = session;
 			pkt.AddParameter(1, mUsername);
 			pkt.AddParameter(5, userName);
 			pkt.AddParameter(97, "1");
@@ -288,7 +286,6 @@ namespace InstantMessage.Protocols.Yahoo
 			{
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
-				p1.Session = session;
 				p1.AddParameter(13, "2");
 
 				sendPacket(p1);
@@ -298,7 +295,6 @@ namespace InstantMessage.Protocols.Yahoo
 			} else if (oldStatus == IMStatus.Invisible && newStatus != IMStatus.Invisible) {
 				YPacket p1 = new YPacket();
 				p1.Service = YahooServices.ymsg_visibility_toggle;
-				p1.Session = session;
 				p1.AddParameter(13, "1");
 
 				sendPacket(p1);
@@ -316,7 +312,6 @@ namespace InstantMessage.Protocols.Yahoo
 			{
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_file_transfer;
-				packet.Session = session;
 				packet.AddParameter(49, "IMVIRONMENT");
 				packet.AddParameter(1, mUsername);
 				packet.AddParameter(14, "null");
@@ -412,28 +407,31 @@ namespace InstantMessage.Protocols.Yahoo
 				return;
 			}
 
-			List<byte[]> blocks = new List<byte[]>();
+			List<int> blockPoints = new List<int>();
 
 			for (int i = 0; i <= bytesRead - 20;) // Don't increment i because we automatically do it down on the i += block.Length line
 			{
 				if (BitConverter.IsLittleEndian)
 					Array.Reverse(dataqueue, i + 8, 2); // Int is backwards, reverse it
 				short length = BitConverter.ToInt16(dataqueue, i + 8);
-				byte[] block = new byte[20 + length];
-
-				Buffer.BlockCopy(dataqueue, i, block, 0, block.Length);
-				i += block.Length;
-				blocks.Add(block);
+				blockPoints.Add(i);
+				i += 20 + length;
 
 				if (bytesRead - i < 20 && bytesRead == dataqueue.Length && nsStream.DataAvailable)
 				{
 
 				}
 			}
-
-			foreach (byte[] block in blocks)
+		
+			int len = blockPoints.Count;
+			for (int i = 0; i < len; i++)
 			{
-				YPacket packet = YPacket.FromPacket(block);
+				int startIndex = blockPoints[i];
+				int endIndex = bytesRead;
+				if (i < len - 1)
+					endIndex = blockPoints[i + 1];
+				
+				YPacket packet = YPacket.FromPacket(dataqueue, startIndex, endIndex);
 
 				if (packet.Parameters.Count == 0)
 					continue;
@@ -564,31 +562,6 @@ namespace InstantMessage.Protocols.Yahoo
 
 			return msg;
 		}
-		private static string[] customSplit(string inputstr, string separator)
-		{
-			List<string> splits = new List<string>();
-			if (inputstr.Contains(separator))
-			{
-				int last = 0;
-						
-				while (true)
-				{
-					if (inputstr.StartsWith(separator) && last == 0)
-					{
-						last = separator.Length;
-					}
-					if (!inputstr.Substring(last).Contains(separator))
-					{
-						splits.Add(inputstr.Substring(last));
-						break;
-					}
-					splits.Add(inputstr.Substring(last, inputstr.IndexOf(separator, last) - last));
-					last = inputstr.IndexOf(separator, last) + separator.Length;
-				}
-			}
-
-			return splits.ToArray();
-		}
 		private void HandleConferenceInvitePacket(YPacket packet)
 		{
 			triggerOnChatRoomInvite(new IMRoomInviteEventArgs(packet.Parameters[50], packet.Parameters[50], packet.Parameters[58]));
@@ -674,7 +647,6 @@ namespace InstantMessage.Protocols.Yahoo
 				else if (packet.Key == 192)	{
 					YPacket picpack = new YPacket();
 					picpack.Service = YahooServices.ymsg_picture;
-					picpack.Session = session;
 					picpack.AddParameter(1, mUsername);
 					picpack.AddParameter(5, packet.Value);
 					picpack.AddParameter(13, "1");
@@ -853,20 +825,17 @@ namespace InstantMessage.Protocols.Yahoo
 		private void OnGetAuthRespPacket(IAsyncResult e)
 		{
 			int bytesRead = nsStream.EndRead(e);
-			byte[] bytes = new byte[bytesRead];
-			Buffer.BlockCopy(dataqueue, 0, bytes, 0, bytesRead);
 
-			YPacket p = YPacket.FromPacket(bytes);
-			session = p.Session;
+			YPacket p = YPacket.FromPacket(dataqueue, 0, bytesRead);
+			sessionByte = p.SessionByte;
 			string challenge = p.Parameters[94];
 
 			YPacket authpkt = new YPacket();
-			authpkt.Service = YahooServices.ymsg_authentication_response;
+			authpkt.ServiceByte = YahooServices2.ymsg_authentication_response;
 			if (mStatus == IMStatus.Invisible)
 				authpkt.StatusByte = new byte[] { 0x00, 0x00, 0x00, 0x0C }; // <-- Sign is as invisible
 			else
 				authpkt.StatusByte = new byte[] { 0x5A, 0x55, 0xAA, 0x55 };
-			authpkt.Session = session;
 			authpkt.AddParameter(1, mUsername);
 			authpkt.AddParameter(0, mUsername);
 			authpkt.AddParameter(277, authtoken);
@@ -877,7 +846,7 @@ namespace InstantMessage.Protocols.Yahoo
 			byte[] unknownbyte = new byte[] { 0x42, 0x09, 0x30, 0x6c, 0x37, 0x64, 0x61, 0x32, 0x74, 0x35, 0x34, 0x37, 0x63, 0x75, 0x32, 0x26, 0x62, 0x3d, 0x33, 0x26, 0x73, 0x3d, 0x38, 0x6e };
 			authpkt.AddParameter(59, dEncoding.GetString(unknownbyte, 0, unknownbyte.Length));
 			authpkt.AddParameter(98, "us");
-			authpkt.AddParameter(135, "10.0.0.525"); // Version Info
+			authpkt.AddParameter(135, "11.0.0.1751"); // Version Info
 
 			sendPacket(authpkt);
 			
@@ -1209,7 +1178,7 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			YPacket keepalive = new YPacket();
 			keepalive.Service = YahooServices.ymsg_keepalive;
-			keepalive.Session = session;
+			keepalive.SessionByte = sessionByte;
 			keepalive.AddParameter(0, mUsername);
 
 			sendPacket(keepalive);
@@ -1219,7 +1188,7 @@ namespace InstantMessage.Protocols.Yahoo
 			// http://opi.yahoo.com/online?u={username}&m=t&t=1
 			YPacket packet = new YPacket();
 			packet.ServiceByte = new byte[] { 0x00, 0xc1 };
-			packet.Session = session;
+			packet.SessionByte = sessionByte;
 			packet.AddParameter(1, mUsername);
 			packet.AddParameter(5, destination);
 			packet.AddParameter(206, "1");
@@ -1231,8 +1200,8 @@ namespace InstantMessage.Protocols.Yahoo
 			if (client == null)
 				throw new NullReferenceException("Client is null");
 
-			if (!String.IsNullOrEmpty(session))
-				packet.Session = session;
+			if (sessionByte == null)
+				packet.SessionByte = sessionByte;
 
 			byte[] packetdata = packet.ToBytes();
 
@@ -1256,8 +1225,7 @@ namespace InstantMessage.Protocols.Yahoo
 
 		// Protocol Specific Variables
 		private byte[] dataqueue = new byte[2048];
-		private Dictionary<string, int> converstationCount = new Dictionary<string, int>();
-		private string session;
+		private byte[] sessionByte;
 
 		// Socket Information
 		private TcpClient client;
@@ -1278,7 +1246,6 @@ namespace InstantMessage.Protocols.Yahoo
 		private List<CarrierInfo> mCarriers = new List<CarrierInfo>();
 		private bool mCompletedCarrierSetup = false;
 		
-		private Dictionary<string, string> roominvites = new Dictionary<string, string>();
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private Dictionary<string, string> logincookies = new Dictionary<string, string>();
 		private List<YPacket> queuedpackets = new List<YPacket>();
