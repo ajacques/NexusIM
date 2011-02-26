@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using InstantMessage;
 
 namespace NexusIM.Controls
 {
@@ -21,6 +22,13 @@ namespace NexusIM.Controls
 		public ChatMessageNotification()
 		{
 			this.InitializeComponent();
+		}
+
+		public IContact ContactSource
+		{
+			set	{
+				ContactGrid.DataContext = value;
+			}
 		}
 	}
 }

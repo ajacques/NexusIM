@@ -8,27 +8,12 @@
 	x:Class="NexusIM.Windows.ToasterNotification"
 	x:Name="Window"
 	Title="ToasterNotification"
-	Width="350" Height="70" Topmost="True" Focusable="False" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" UseLayoutRounding="True">
+	Width="350" Height="70" Topmost="True" Focusable="False" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" UseLayoutRounding="True" ShowInTaskbar="False">
 	<Window.Resources>
-		<Storyboard x:Key="AnimIn">
-			<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="Window">
-				<EasingThicknessKeyFrame KeyTime="0" Value="0,70,0,0"/>
-				<EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="0,0,0,0">
-					<EasingThicknessKeyFrame.EasingFunction>
-						<PowerEase EasingMode="EaseOut"/>
-					</EasingThicknessKeyFrame.EasingFunction>
-				</EasingThicknessKeyFrame>
-			</ThicknessAnimationUsingKeyFrames>
-		</Storyboard>
 		<Storyboard x:Key="CloseButtonHover">
 			<DoubleAnimation Storyboard.TargetName="CloseBorder" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.3" To="1" />
 		</Storyboard>
 	</Window.Resources>
-	<Window.Triggers>
-		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
-			<BeginStoryboard Storyboard="{StaticResource AnimIn}"/>
-		</EventTrigger>
-	</Window.Triggers>
 	<Window.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 			<GradientStop Color="#FF576C7C" Offset="0"/>
@@ -37,12 +22,12 @@
 	</Window.Background>
 	<Grid x:Name="LayoutRoot" RenderTransformOrigin="0,1">
 		<Grid x:Name="ContentGrid">
-			<nx:ChatMessageNotification />
+			<!--nx:ChatMessageNotification /-->
 		</Grid>
 		<Grid Margin="0,5,5,0" HorizontalAlignment="Right" VerticalAlignment="Top">
 			<Rectangle x:Name="CloseBorder" Stroke="Gray" Margin="-3,-3,-2,-2" RadiusX="1" RadiusY="1" Opacity="0" />
 			<Line X1="0" Y1="10" X2="10" Y2="0" Stroke="#FF3B3B3B" StrokeThickness="2" />
 			<Line X1="0" Y1="0" X2="10" Y2="10" HorizontalAlignment="Right" VerticalAlignment="Top" Stroke="#FF3B3B3B" StrokeThickness="2" />
-		</Grid>		
+		</Grid>
 	</Grid>
 </Window>

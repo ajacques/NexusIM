@@ -182,6 +182,7 @@
     <Compile Include="Managers\ChatWindowCollection.cs" />
     <Compile Include="Managers\IMMessageProcessor.cs" />
     <Compile Include="Managers\MessageLogger.cs" />
+    <Compile Include="Managers\NotificationQueue.cs" />
     <Compile Include="Managers\Protocol\AutoResponder.cs" />
     <Compile Include="Managers\Protocol\InterfaceManager.cs" />
     <Compile Include="Managers\Protocol\NexusCoreManager.cs" />

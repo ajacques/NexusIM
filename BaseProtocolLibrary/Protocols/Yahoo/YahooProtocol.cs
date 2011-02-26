@@ -872,7 +872,7 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			HttpWebRequest request = e.AsyncState as HttpWebRequest;
 			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
-			string streamBuf = "";
+			string streamBuf;
 
 			if (response.StatusCode == HttpStatusCode.OK)
 			{
@@ -892,12 +892,12 @@ namespace InstantMessage.Protocols.Yahoo
 			Trace.WriteLine("Yahoo: YMSG Communication Server: " + connectServer);
 
 			if (String.IsNullOrEmpty(token))
-				token = mConfig["token"];
+				mConfig.TryGetValue("token", out token);
 
 			if (String.IsNullOrEmpty(token))
 			{
 				Trace.WriteLine("Yahoo: Authentication token is invalid, requesting new token");
-				HttpWebRequest rqst = (HttpWebRequest)WebRequest.Create(string.Format(mAuthTokenGetUrl, Username, Password));
+				WebRequest rqst = WebRequest.Create(string.Format(mAuthTokenGetUrl, Username, Password));
 				rqst.BeginGetResponse(new AsyncCallback(OnGetYToken), rqst);
 			} else {
 				Trace.WriteLine("Yahoo: Authentication token valid, continuing");

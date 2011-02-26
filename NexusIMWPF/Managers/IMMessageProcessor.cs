@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Controls;
+using System.Threading;
 
 namespace NexusIM.Managers
 {
@@ -37,7 +38,7 @@ namespace NexusIM.Managers
 
 			if (showNotification)
 			{
-
+				ThreadPool.QueueUserWorkItem(new WaitCallback((object s) => NotificationQueue.EnqueueChatMessageArea(e.Sender, e.Message)), null);
 			}
 		}
 	}

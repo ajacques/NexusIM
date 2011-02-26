@@ -47,6 +47,7 @@ namespace NexusCore.Databases
 					return null;
 			}
 			
+			// Update the database to reflect that the user has just logged in
 			user.lastseen = DateTime.UtcNow;
 			try	{
 				SubmitChanges();

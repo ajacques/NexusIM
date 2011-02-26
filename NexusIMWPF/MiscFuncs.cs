@@ -101,43 +101,4 @@ namespace NexusIM
 			symbols.Add("»");
 		}
 	}
-	static class Notifications
-	{
-		public static void Setup()
-		{
-			mNotifEnabled = true;
-			//IMProtocol.onFriendSignIn += new EventHandler<IMFriendEventArgs>(buddy_SignIn);
-		}
-		public static void ShowNotification(string contents)
-		{
-			if (!mNotifEnabled)
-				return;
-			/* Do something here */
-		}
-
-		public static void buddy_SignIn(object sender, IMFriendEventArgs e)
-		{
-			if (e.Buddy.Protocol.ProtocolStatus == IMProtocolStatus.Online)
-				ShowNotification(e.Buddy.Username + " has signed on");
-		}
-		public static void protocol_NewMail(object sender, IMEmailEventArgs e)
-		{
-			ShowNotification(e.Subject);
-		}
-		public static void protocol_onFriendRequest(object sender, IMFriendRequestEventArgs e)
-		{
-			/* Do something here */
-		}
-
-		public static bool EnableNotifications
-		{
-			get {
-				return mNotifEnabled;
-			}
-			set {
-				mNotifEnabled = value;
-			}
-		}
-		private static bool mNotifEnabled = false;
-	}
 }

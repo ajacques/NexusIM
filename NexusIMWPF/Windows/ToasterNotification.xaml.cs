@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Windows.Controls;
 
 namespace NexusIM.Windows
 {
@@ -21,15 +13,24 @@ namespace NexusIM.Windows
 		public ToasterNotification()
 		{
 			this.InitializeComponent();
+		}
 
-			Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(() =>
-			{
-				var transform = PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice;
-				var corner = transform.Transform(new Point(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight));
+		public UserControl NotificationContent
+		{
+			set {
+				ContentGrid.Children.Add(value);
+			}
+		}
 
-				this.Left = corner.X - this.ActualWidth;
-				this.Top = corner.Y - this.ActualHeight - 40;
-			}));
+		protected override void OnActivated(EventArgs e)
+		{
+			base.OnActivated(e);
+
+			var transform = PresentationSource.FromVisual(this).CompositionTarget.TransformFromDevice;
+			var corner = transform.Transform(new Point(SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight));
+
+			this.Left = corner.X - this.ActualWidth;
+			this.Top = corner.Y - this.ActualHeight - 30;
 		}
 	}
 }

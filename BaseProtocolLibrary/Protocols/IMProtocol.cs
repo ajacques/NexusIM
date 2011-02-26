@@ -98,7 +98,7 @@ namespace InstantMessage
 		/// </summary>
 		public void EndLogin()
 		{
-			LoginWaitHandle.WaitOne(1000);
+			LoginWaitHandle.WaitOne();
 
 			if (mLoginException != null)
 			{
@@ -565,7 +565,7 @@ namespace InstantMessage
 		}
 
 		// Variables
-		protected IDictionary<string, string> mConfig = new ObservableDictionary<string, string>();
+		protected IDictionary<string, string> mConfig = new Dictionary<string, string>();
 		protected ManualResetEvent mLoginWaitHandle;
 		protected ContactCollection buddylist = new ContactCollection();
 		protected string mUsername;

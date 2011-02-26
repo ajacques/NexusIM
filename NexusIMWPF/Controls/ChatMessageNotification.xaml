@@ -6,18 +6,18 @@
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ChatMessageNotification"
-	x:Name="UserControl"
-	d:DesignWidth="350" d:DesignHeight="70">
+	x:Name="UserControl" x:FieldModifier="private"
+	d:DesignWidth="350" d:DesignHeight="70" UseLayoutRounding="True">
 	<Grid x:Name="LayoutRoot">
-		<Grid>
-			<Grid.DataContext>
+		<Grid x:Name="ContactGrid">
+			<!--Grid.DataContext>
 				<im:IMBuddy Username="penguinnavy" Nickname="Adam Jacques" />
-			</Grid.DataContext>
+			</Grid.DataContext-->
 			<TextBlock HorizontalAlignment="Left" Margin="38,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" FontWeight="Bold">
 				<Run Text="{Binding DisplayName, Mode=OneWay}" />
 				<Run Text="{Binding Username, StringFormat=({0})}" Foreground="#FF373737" />
 			</TextBlock>
-		</Grid>		
-		<TextBlock Margin="66,25,8,0" VerticalAlignment="Top" Height="33" FontFamily="Calibri" TextWrapping="WrapWithOverflow"><Span FontSize="15"><Run Text="‟" /></Span><Run FontSize="10" Text="Test message" BaselineAlignment="Center" /><Span FontSize="15"><Run Text="”" /></Span></TextBlock>
+		</Grid>
+		<TextBlock Margin="66,25,8,0" VerticalAlignment="Top" Height="33" FontFamily="Calibri" TextWrapping="WrapWithOverflow"><Span FontSize="15"><Run Text="‟" /></Span><Run x:Name="MessageBody" FontSize="10" BaselineAlignment="Center" /><Span FontSize="15"><Run Text="”" /></Span></TextBlock>
 	</Grid>
 </UserControl>
