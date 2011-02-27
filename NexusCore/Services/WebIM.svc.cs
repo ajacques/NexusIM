@@ -40,11 +40,7 @@ namespace NexusCore.Services
 			PushChannelContext context = new PushChannelContext((PushChannelType)session["pushChannelType"], (Uri)session["pushChannelUri"]);
 
 			if (account != null)
-			{
-				account.LoginState = true;
-				account.HostComputer = Environment.MachineName;
-				db.SubmitChanges();
-				
+			{				
 				AccountInfo info = account;
 				Trace.WriteLine("WebIM: Remote login requested of type " + info.ProtocolType + " for " + info.Username);
 				

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Controls;
 using InstantMessage;
+using System.Windows;
 
 namespace NexusIM.Controls
 {
@@ -17,7 +18,8 @@ namespace NexusIM.Controls
 		private void SetupMenuItems()
 		{
 			SendIMItem = new MenuItem();
-			SendIMItem.Header = "Send Instant Message";
+			SendIMItem.Header = "Instant Message...";
+			SendIMItem.FontWeight = FontWeight.FromOpenTypeWeight(700);
 			base.Items.Add(SendIMItem);
 		}
 

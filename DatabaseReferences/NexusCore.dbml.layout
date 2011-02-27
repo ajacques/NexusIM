@@ -56,10 +56,10 @@
         <elementListCompartment Id="10428c59-8eb0-410b-ac23-590f6cb87d84" absoluteBounds="1.5150000000000001, 0.96000000000000085, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="29060662-74bc-49b4-a75e-10a8e5295e76" absoluteBounds="7.625, 4, 2, 2.5401025390624996">
+    <classShape Id="29060662-74bc-49b4-a75e-10a8e5295e76" absoluteBounds="7.625, 4, 2, 2.1554996744791666">
       <DataClassMoniker Name="/NexusCoreDataContext/Account" />
       <nestedChildShapes>
-        <elementListCompartment Id="769cdad3-23fa-4cd7-832b-5a5d54f0f9ac" absoluteBounds="7.6400000000000006, 4.4600000000000009, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="769cdad3-23fa-4cd7-832b-5a5d54f0f9ac" absoluteBounds="7.6400000000000006, 4.4600000000000009, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
     <classShape Id="0ac229f4-d6b8-42ad-9ff6-380c77832861" absoluteBounds="1.25, 3.125, 2, 1.5785953776041666">
@@ -104,105 +104,105 @@
         <elementListCompartment Id="aa5fb73a-2eee-4f36-9687-d22e10ee8edc" absoluteBounds="8.515, 1.3350000000000009, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(4.75 : 5.10143547576608); (3.25 : 5.10143547576608)]" fixedFrom="Caller" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.75 : 5.10143547576608); (3.25 : 5.10143547576608)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_AuthToken" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="9575f0a9-d2a7-43e2-93c4-c8de136fccd5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.05076286344318 : 4); (6.05076286344318 : 3.625); (6.42358673244322 : 3.625); (6.42358673244322 : 2.82859537760417)]" fixedFrom="Caller" fixedTo="Caller">
+    <associationConnector edgePoints="[(6.05076286344318 : 4); (6.05076286344318 : 3.625); (6.42358673244322 : 3.625); (6.42358673244322 : 2.82859537760417)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_LocationPrivacy" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="06cb7379-d424-490c-8e9c-0340a06c936d" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.3125 : 4); (5.3125 : 2.89589680989583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.3125 : 4); (5.3125 : 2.89589680989583)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_UserLocation" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="96d7e9f9-a830-4fea-98d5-9d53e6a3204b" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.80233806801817 : 8.2708154296875); (5.80233806801817 : 9.625)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.80233806801817 : 8.2708154296875); (5.80233806801817 : 9.625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_StatusUpdate" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="0ea95219-e227-4961-81fe-ec9e4392cbc3" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.75 : 4.28393107499227); (3.43069920481214 : 4.28393107499227); (3.43069920481214 : 2.65549967447917)]" fixedFrom="Caller" fixedTo="Caller">
+    <associationConnector edgePoints="[(4.75 : 4.28393107499227); (3.43069920481214 : 4.28393107499227); (3.43069920481214 : 2.65549967447917)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Album" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="e7950829-dc9e-4ad0-9cf9-d9c8f0f2512f" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.75 : 5.27005126953125); (7.625 : 5.27005126953125)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(6.75 : 5.07774983723958); (7.625 : 5.07774983723958)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Account" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="29060662-74bc-49b4-a75e-10a8e5295e76" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(1.98450788429426 : 2.65549967447917); (1.98450788429426 : 3.03049967447917); (1.98938650234215 : 3.03049967447917); (1.98938650234215 : 3.125)]" manuallyRouted="true" fixedFrom="Caller" fixedTo="Caller">
+    <associationConnector edgePoints="[(1.98450788429426 : 2.65549967447917); (1.98450788429426 : 3.03049967447917); (1.98938650234215 : 3.03049967447917); (1.98938650234215 : 3.125)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/Album/Album_Photo" />
       <nodes>
         <classShapeMoniker Id="e7950829-dc9e-4ad0-9cf9-d9c8f0f2512f" />
         <classShapeMoniker Id="0ac229f4-d6b8-42ad-9ff6-380c77832861" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.41488571400289 : 8.2708154296875); (6.41488571400289 : 9.16267381054688); (7.53210588204912 : 9.16267381054688); (7.53210588204912 : 9.625)]" manuallyRouted="true" fixedFrom="Caller" fixedTo="Caller">
+    <associationConnector edgePoints="[(6.41488571400289 : 8.2708154296875); (6.41488571400289 : 9.16267381054688); (7.53210588204912 : 9.16267381054688); (7.53210588204912 : 9.625)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_ArticleComment" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="d2f47373-46e3-4615-9476-916350cd2fd1" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.625 : 10.6378516210937); (7.25 : 10.6378516210937)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(6.625 : 10.6378516210937); (7.25 : 10.6378516210937)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/StatusUpdate/StatusUpdate_ArticleComment" />
       <nodes>
         <classShapeMoniker Id="0ea95219-e227-4961-81fe-ec9e4392cbc3" />
         <classShapeMoniker Id="d2f47373-46e3-4615-9476-916350cd2fd1" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.75 : 6.88794164792456); (3.25 : 6.88794164792456)]" fixedFrom="Caller" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.75 : 6.88794164792456); (3.25 : 6.88794164792456)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Request" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="25d585e2-321a-4a9f-8acb-16ae9d66fbd5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.75 : 6.59895833333333); (3.25 : 6.59895833333333)]" fixedFrom="Caller" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.75 : 6.59895833333333); (3.25 : 6.59895833333333)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Request1" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="25d585e2-321a-4a9f-8acb-16ae9d66fbd5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.98846016168608 : 8.2708154296875); (4.98846016168608 : 9.09214987730368); (3.25 : 9.09214987730368)]" fixedFrom="Caller" fixedTo="Caller">
+    <associationConnector edgePoints="[(4.98846016168608 : 8.2708154296875); (4.98846016168608 : 9.09214987730368); (3.25 : 9.09214987730368)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Friend" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="17d28ec8-5fd0-4182-9b9b-f269f87bc4ec" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(4.85467613603633 : 8.2708154296875); (4.85467613603633 : 8.76482293865184); (3.25 : 8.76482293865184)]" fixedFrom="Caller" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(4.85467613603633 : 8.2708154296875); (4.85467613603633 : 8.76482293865184); (3.25 : 8.76482293865184)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_Friend1" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />
         <classShapeMoniker Id="17d28ec8-5fd0-4182-9b9b-f269f87bc4ec" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(9.625 : 4.28929768880208); (10.125 : 4.28929768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(9.625 : 4.28929768880208); (10.125 : 4.28929768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/Account/Account_AccountSetting" />
       <nodes>
         <classShapeMoniker Id="29060662-74bc-49b4-a75e-10a8e5295e76" />
         <classShapeMoniker Id="806122a9-1692-425b-9bfe-5ce285a6b402" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(6.68551577964047 : 4); (6.68551577964047 : 3.2131982421875); (8.7446675238548 : 3.2131982421875); (8.7446675238548 : 2.8381982421875)]" fixedFrom="Caller" fixedTo="Caller">
+    <associationConnector edgePoints="[(6.68551577964047 : 4); (6.68551577964047 : 3.2131982421875); (8.7446675238548 : 3.2131982421875); (8.7446675238548 : 2.8381982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/NexusCoreDataContext/User/User_PhoneNumber" />
       <nodes>
         <classShapeMoniker Id="e086e9a0-a10c-4f70-9baf-b5058fc8db4c" />

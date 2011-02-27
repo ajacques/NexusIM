@@ -2056,15 +2056,11 @@ namespace NexusCore.Databases
 		
 		private string _username;
 		
-		private string _password;
+		private byte[] _password;
 		
 		private string _server;
 		
 		private bool _enabled;
-		
-		private bool _LoginState;
-		
-		private string _HostComputer;
 		
 		private EntitySet<AccountSetting> _AccountSettings;
 		
@@ -2082,16 +2078,12 @@ namespace NexusCore.Databases
     partial void OnacctypeChanged();
     partial void OnusernameChanging(string value);
     partial void OnusernameChanged();
-    partial void OnpasswordChanging(string value);
+    partial void OnpasswordChanging(byte[] value);
     partial void OnpasswordChanged();
     partial void OnserverChanging(string value);
     partial void OnserverChanged();
     partial void OnenabledChanging(bool value);
     partial void OnenabledChanged();
-    partial void OnLoginStateChanging(bool value);
-    partial void OnLoginStateChanged();
-    partial void OnHostComputerChanging(string value);
-    partial void OnHostComputerChanged();
     #endregion
 		
 		public Account()
@@ -2185,8 +2177,8 @@ namespace NexusCore.Databases
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_password", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string password
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_password", DbType="VarBinary(50) NOT NULL", CanBeNull=false)]
+		public byte[] password
 		{
 			get
 			{
@@ -2241,46 +2233,6 @@ namespace NexusCore.Databases
 					this._enabled = value;
 					this.SendPropertyChanged("enabled");
 					this.OnenabledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LoginState", DbType="Bit NOT NULL")]
-		public bool LoginState
-		{
-			get
-			{
-				return this._LoginState;
-			}
-			set
-			{
-				if ((this._LoginState != value))
-				{
-					this.OnLoginStateChanging(value);
-					this.SendPropertyChanging();
-					this._LoginState = value;
-					this.SendPropertyChanged("LoginState");
-					this.OnLoginStateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HostComputer", DbType="VarChar(50)")]
-		public string HostComputer
-		{
-			get
-			{
-				return this._HostComputer;
-			}
-			set
-			{
-				if ((this._HostComputer != value))
-				{
-					this.OnHostComputerChanging(value);
-					this.SendPropertyChanging();
-					this._HostComputer = value;
-					this.SendPropertyChanged("HostComputer");
-					this.OnHostComputerChanged();
 				}
 			}
 		}

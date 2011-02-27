@@ -18,7 +18,7 @@ namespace NexusCore.Controllers
 			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var account = (from a in db.Accounts
-						   where a.acctype == protocol.Protocol && a.username == protocol.Username && a.password == protocol.Password
+						   where a.acctype == protocol.Protocol && a.username == protocol.Username
 						   select a.id).FirstOrDefault();
 
 			if (account == 0)
@@ -38,7 +38,7 @@ namespace NexusCore.Controllers
 			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			var account = (from a in db.Accounts
-						   where a.acctype == protocol.Protocol && a.username == protocol.Username && a.password == protocol.Password
+						   where a.acctype == protocol.Protocol && a.username == protocol.Username
 						   select a).FirstOrDefault();
 
 			if (account == null)
@@ -88,7 +88,7 @@ namespace NexusCore.Controllers
 			// Get an account id
 			try	{
 				accid = (from a in db.Accounts
-							 where a.acctype == protocol.Protocol && a.username == protocol.Username && a.password == protocol.Password
+							 where a.acctype == protocol.Protocol && a.username == protocol.Username
 							 select a).First().id;
 			} catch (Exception) {
 				Unregister(protocol); // This protocol isn't in our registered protocol list - ignore it

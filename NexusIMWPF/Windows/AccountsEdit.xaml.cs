@@ -18,6 +18,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Media.Animation;
 using InstantMessage.Protocols.Yahoo;
+using InstantMessage.Protocols.Irc;
 
 namespace NexusIM.Windows
 {
@@ -71,6 +72,9 @@ namespace NexusIM.Windows
 			{
 				case 1:
 					protocol = new IMYahooProtocol();
+					break;
+				case 2:
+					protocol = new IRCProtocol();
 					break;
 				default:
 					return;

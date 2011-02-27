@@ -47,6 +47,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountTests.cs" />
     <Compile Include="AuditLogIPTests.cs" />
     <Compile Include="NexusCore.designer.cs">
       <AutoGen>True</AutoGen>
@@ -79,6 +80,12 @@
     <None Include="NexusCore.dbml.layout">
       <DependentUpon>NexusCore.dbml</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DatabaseReferences\DatabaseReferences.csproj">
+      <Project>{9110CC1D-228A-4D53-B02D-5BE731951554}</Project>
+      <Name>DatabaseReferences</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

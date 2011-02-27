@@ -149,6 +149,9 @@ namespace NexusIM.Windows
 						case 3:
 							status = IMStatus.Invisible;
 							break;
+						case 5:
+							AccountManager.Connected = false;
+							return;
 						default:
 							status = IMStatus.Available;
 							break;

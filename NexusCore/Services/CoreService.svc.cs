@@ -53,7 +53,7 @@ namespace NexusCore.Services
 				session["userid"] = mUserData.id;
 
 				OperationContext.Current.OutgoingMessageHeaders.Add(MessageHeader.CreateHeader("Session", "com.nexusim.core", session.SessionID));
-				
+				session.Add("pwdhash", db.HashString(password));
 				audit.LogLoginAttempt(mUserData.id);
 			} else {
 				audit.LogLoginAttempt(username, password);
@@ -218,7 +218,7 @@ namespace NexusCore.Services
 
 			var accounts = from a in db.Accounts
 						   where a.userid == userid
-						   select new AccountInfo(a.acctype, a.username, a.password) { mEnabled = a.enabled, mAccountId = a.id };
+						   select new AccountInfo(a.acctype, a.username, "") { mEnabled = a.enabled, mAccountId = a.id };
 
 			return accounts;
 		}

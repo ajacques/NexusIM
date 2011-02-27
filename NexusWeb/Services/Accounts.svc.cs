@@ -280,7 +280,7 @@ namespace NexusWeb.Services
 			Account row = new Account();
 			row.acctype = acctype;
 			row.username = username;
-			row.password = password;
+			//row.password = password;
 
 			db.Accounts.InsertOnSubmit(row);
 			db.SubmitChanges();
@@ -325,10 +325,9 @@ namespace NexusWeb.Services
 
 			if (acc != null)
 			{
-				if (acc.username != username) // Do this to prevent Linq to SQL from thinking we changed and it uselessly sending an update to the database
-					acc.username = username;
-				if (!String.IsNullOrEmpty(password) && acc.password != password)
-					acc.password = password;
+				acc.username = username;
+				//if (!String.IsNullOrEmpty(password))
+				//	acc.DecryptedPassword = password;
 				db.SubmitChanges();
 			}
 

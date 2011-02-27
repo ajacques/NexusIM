@@ -99,11 +99,9 @@
       <Column Name="userid" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="acctype" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="username" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="password" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="password" Type="System.Byte[]" DbType="VarBinary(50) NOT NULL" CanBeNull="false" />
       <Column Name="server" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="enabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="LoginState" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="HostComputer" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Association Name="Account_AccountSetting" Member="AccountSettings" ThisKey="id" OtherKey="accountid" Type="AccountSetting" />
       <Association Name="User_Account" Member="User" ThisKey="userid" OtherKey="id" Type="User" IsForeignKey="true" />
     </Type>

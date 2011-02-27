@@ -6,7 +6,7 @@
 	xmlns:nexus="clr-namespace:NexusIM.Controls"
 	x:Class="NexusIM.Windows.AccountsEdit"
 	x:Name="Window"
-	Title="NexusIM - Accounts"
+	Title="My Accounts"
 	Width="540" Height="380" WindowStartupLocation="CenterScreen"
 	x:ClassModifier="internal" x:FieldModifier="private" Loaded="Window_Loaded" ResizeMode="NoResize" UseLayoutRounding="True">
 	<Window.Resources>
@@ -21,7 +21,6 @@
 		</Grid.Background>
 		<ScrollViewer Margin="23,28,52,99" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="AccountsListBox" VerticalAlignment="Top">
-				<nexus:SetupAccountItem Margin="{StaticResource ItemMargin}" />
 			</StackPanel>
 		</ScrollViewer>
 		<Button Content="Accept" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="AcceptButton_Click" />

@@ -10,11 +10,6 @@ namespace NexusCore.Databases
 {
 	partial class NexusCoreDataContext
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
 		/// <returns>Returns null if no results were found for that </returns>
 		public User TryLogin(string username, string password)
 		{
@@ -34,13 +29,14 @@ namespace NexusCore.Databases
 			int count = decryptor.TransformBlock(output, 0, output.Length, output, 0);
 
 			// Now build the input array from the decrypted hash and password
-			byte[] pwdbytes = mEncoder.GetBytes(password);
+			byte[] pwdbytes = Encoder.GetBytes(password);
 			byte[] concatOutput = new byte[count + password.Length];
 			Buffer.BlockCopy(output, 0, concatOutput, 0, count); // BlockCopy is acceptable here because we are copying bytes which means we don't have to worry about the actual size of objects or other bounds checking
 			Buffer.BlockCopy(pwdbytes, 0, concatOutput, count, pwdbytes.Length);
 
 			byte[] pwdHash = HashString(concatOutput);
 
+			// Check each byte to see if they match
 			for (int i = 0; i < pwdHash.Length; i++)
 			{
 				if (pwdHash[i] != user.Password[i])
@@ -233,7 +229,7 @@ namespace NexusCore.Databases
 
 		public byte[] HashString(string input)
 		{
-			byte[] bytes = mEncoder.GetBytes(input);
+			byte[] bytes = Encoder.GetBytes(input);
 			return HashString(bytes);
 		}
 		public byte[] HashString(byte[] input)
@@ -245,7 +241,7 @@ namespace NexusCore.Databases
 		/// Returns the Symmetric Algorithm that is used to decrypt the password salt.
 		/// Also loads the decryption key and IV
 		/// </summary>
-		private static SymmetricAlgorithm SaltDecryptor
+		public static SymmetricAlgorithm SaltDecryptor
 		{
 			get	{
 				if (mSaltDecryptor == null)
@@ -257,7 +253,7 @@ namespace NexusCore.Databases
 				return mSaltDecryptor;
 			}
 		}
-		private static HashAlgorithm PasswordHasher
+		public static HashAlgorithm PasswordHasher
 		{
 			get	{
 				if (mHasher == null)
@@ -265,9 +261,71 @@ namespace NexusCore.Databases
 				return mHasher;
 			}
 		}
+		public static Encoding Encoder
+		{
+			get	{
+				return Encoding.UTF8;
+			}
+		}
 
 		private static SymmetricAlgorithm mSaltDecryptor;
 		private static HashAlgorithm mHasher;
-		private static Encoding mEncoder = Encoding.UTF8; // If they can type it, they can use it as a password
+	}
+
+	public partial class Account
+	{
+		public string DecryptPassword(byte[] keygenVector)
+		{
+			SymmetricAlgorithm symkey = new AesManaged();			
+			symkey.Key = ComputeEncryptionKey(keygenVector);
+			symkey.IV = new byte[16];
+
+			ICryptoTransform transform = symkey.CreateDecryptor();
+			byte[] oPassword = new byte[password.Length];
+			int count = transform.TransformBlock(password, 0, password.Length, oPassword, 0);
+			
+			string result = NexusCoreDataContext.Encoder.GetString(oPassword, 0, count);
+			result = result.TrimEnd('\0');
+
+			return result;
+		}
+		/// <summary>
+		/// Computes the cipher text for the new password
+		/// </summary>
+		/// <remarks>
+		/// Does not save the changes to the database. You must called SubmitChanges() after calling this method
+		/// </remarks>
+		/// <param name="keygenVector">16-byte array used as a vector to create the encryption key</param>
+		/// <param name="newPassword">String to change the password</param>
+		public void ChangePassword(byte[] keygenVector, string newPassword)
+		{
+			SymmetricAlgorithm symkey = new AesManaged();
+			symkey.Key = ComputeEncryptionKey(keygenVector);
+			symkey.IV = new byte[16];
+
+			byte[] nPwdBytes = NexusCoreDataContext.Encoder.GetBytes(newPassword);
+			byte[] paddedPassword = new byte[nPwdBytes.Length + (48 - (nPwdBytes.Length % 48))];
+			Buffer.BlockCopy(nPwdBytes, 0, paddedPassword, 0, nPwdBytes.Length);
+
+			byte[] output = new byte[paddedPassword.Length];
+			ICryptoTransform transform = symkey.CreateEncryptor();
+			int count = transform.TransformBlock(paddedPassword, 0, paddedPassword.Length, output, 0);
+
+			password = output;
+		}
+
+		private byte[] ComputeEncryptionKey(byte[] keygenVector)
+		{
+			byte[] idBytes = BitConverter.GetBytes(id);
+			if (!BitConverter.IsLittleEndian)
+				Array.Reverse(idBytes);
+
+			byte[] stage1 = new byte[idBytes.Length + keygenVector.Length];
+			Buffer.BlockCopy(idBytes, 0, stage1, 0, idBytes.Length);
+			Buffer.BlockCopy(keygenVector, 0, stage1, idBytes.Length, keygenVector.Length);
+
+			HashAlgorithm hasher = NexusCoreDataContext.PasswordHasher;
+			return hasher.ComputeHash(stage1);
+		}
 	}
 }
