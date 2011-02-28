@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Windows;
 using Hardcodet.Wpf.TaskbarNotification;
-using NexusIM.Properties;
-using NexusIM.Windows;
-using System.Windows.Input;
-using System.Windows;
 using NexusIM.Managers;
+using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {

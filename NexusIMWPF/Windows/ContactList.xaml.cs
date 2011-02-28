@@ -180,6 +180,14 @@ namespace NexusIM.Windows
 			HitTestResult result = VisualTreeHelper.HitTest(ContactListControl, e.GetPosition(ContactListControl));
 			VisualTreeHelper.HitTest(ContactListControl, new HitTestFilterCallback(OnHitTestFilter), new HitTestResultCallback(OnHitTestResult), new PointHitTestParameters(e.GetPosition(ContactListControl)));
 		}
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			base.OnClosing(e);
+
+			e.Cancel = true;
+
+			this.Hide();
+		}
 		private HitTestResultBehavior OnHitTestResult(HitTestResult result)
 		{
 			DeselectAllExcept(ContactList, (UIElement)result.VisualHit);

@@ -212,6 +212,8 @@ namespace NexusCore.DataContracts
 		public string mUsername;
 		[DataMember(Name = "Password", IsRequired = false)]
 		public string mPassword;
+		[DataMember(Name = "EncryptedPassword", IsRequired = false)]
+		public byte[] mEncPassword;
 		[DataMember(Name = "Server", IsRequired = false)]
 		public string mServer;
 		[DataMember(Name = "Guid", IsRequired = false)]

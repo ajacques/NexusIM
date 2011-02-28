@@ -3,7 +3,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CloudTests.NexusCore;
+using NexusCore.Services;
+using System.Web;
+using System.Web.SessionState;
+using System.IO;
+using System.ServiceModel;
 
 namespace CloudTests.CoreServiceTests
 {
@@ -13,13 +17,7 @@ namespace CloudTests.CoreServiceTests
 	[TestClass]
 	public class AccountTests
 	{
-		public AccountTests()
-		{
-			db = new NexusCoreDataContext();
-		}
-
 		private TestContext testContextInstance;
-		private NexusCoreDataContext db;
 
 		/// <summary>
 		///Gets or sets the test context which provides
@@ -38,18 +36,27 @@ namespace CloudTests.CoreServiceTests
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			db = new NexusCoreDataContext();
+			UnitTestSession session = new UnitTestSession();
+
+			Stream stream = new MemoryStream();
+			TextWriter writer = new StreamWriter(stream);
+			HttpResponse response = new HttpResponse(writer);
+			HttpRequest request = new HttpRequest("unittesting", "http://im.adrensoftware.com/unittesting", "");
+			HttpContext.Current = new HttpContext(request, response);
+			SessionStateUtility.AddHttpSessionStateToContext(HttpContext.Current, session);
 		}
 
 		[TestCleanup]
 		public void TestCleanup()
 		{
-			db.Dispose();
+			SessionStateUtility.RemoveHttpSessionStateFromContext(HttpContext.Current);
+			HttpContext.Current = null;
 		}
 
 		[TestMethod]
-		public void CountTest()
+		public void EncryptedPasswordTest()
 		{
+			NexusCoreDataContext db = new NexusCoreDataContext();
 			var testtoken = from a in db.AuthTokens
 							where a.userid == 1
 							select a;
@@ -57,20 +64,54 @@ namespace CloudTests.CoreServiceTests
 			Assert.AreNotEqual(0, testtoken.Count(), "No Authentication Tokens to use");
 
 			string token = testtoken.First().token;
+			
+			CoreService service = new CoreService();
+			service.Login(token);
 
-			CoreServiceClient service = new CoreServiceClient();
+			var accounts = service.GetAccounts();
 
-			service.LoginWithToken(token);
+			Assert.AreNotEqual<int>(0, accounts.Count());
 
-			Assert.AreNotEqual<int>(0, service.GetAccounts().Count());
+			foreach (var account in accounts)
+			{
+				Assert.IsNotNull(account.mEncPassword, "Encrypted Password is null");
+				Assert.IsNull(account.Password);
+			}
 
 			service.Logout();
-			service.Close();
+		}
+
+		[TestMethod]
+		public void DecryptedPasswordTest()
+		{
+			NexusCoreDataContext db = new NexusCoreDataContext();
+
+			//UnitTestChannel channel = new UnitTestChannel();
+			//channel.State = CommunicationState.Opened;
+
+			//OperationContext.Current = new OperationContext(channel);
+
+			CoreService service = new CoreService();
+			service.Login("test", "test");
+
+			var accounts = service.GetAccounts();
+
+			Assert.AreNotEqual<int>(0, accounts.Count());
+
+			foreach (var account in accounts)
+			{
+				Assert.IsNull(account.mEncPassword, "Encrypted Password is null");
+				Assert.IsNotNull(account.Password);
+			}
+
+			service.Logout();
 		}
 
 		[TestMethod]
 		public void ConnectTest()
 		{
+			NexusCoreDataContext db = new NexusCoreDataContext();
+
 			var testtoken = from a in db.AuthTokens
 							where a.userid == 1
 							select a;
@@ -79,12 +120,9 @@ namespace CloudTests.CoreServiceTests
 
 			string token = testtoken.First().token;
 
-			CoreServiceClient service = new CoreServiceClient();
+			CoreService service = new CoreService();
 
-			service.LoginWithToken(token);
-
-			service.Logout();
-			service.Close();
+			service.Login(token);
 		}
 	}
 }

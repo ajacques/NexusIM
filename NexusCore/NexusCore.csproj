@@ -131,6 +131,7 @@
       <DependentUpon>PushCallback.svc</DependentUpon>
     </Compile>
     <Compile Include="DataContracts\Enums.cs" />
+    <Compile Include="Support\AccountEnumerable.cs" />
     <Compile Include="Support\ExceptionTypes.cs" />
     <Compile Include="DataContracts\MessageTransports.cs" />
     <Compile Include="Controllers\SwarmManager.cs" />
@@ -187,7 +188,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

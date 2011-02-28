@@ -6,7 +6,7 @@ using System.ServiceModel;
 
 namespace CloudTests
 {
-	class UnitTestChannel : IContextChannel
+	class UnitTestChannel : IServiceChannel
 	{
 		#region IContextChannel Members
 
@@ -144,6 +144,15 @@ namespace CloudTests
 		{
 			get;
 			internal set;
+		}
+
+		#endregion
+
+		#region IServiceChannel Members
+
+		public Uri ListenUri
+		{
+			get { throw new NotImplementedException(); }
 		}
 
 		#endregion

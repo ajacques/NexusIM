@@ -17,6 +17,8 @@ namespace NexusCore.Databases
 			attempt.Site = "nexuscore";
 			attempt.Succeded = success;
 			attempt.IPAddress = HttpContext.Current.Request.UserHostName;
+			if (attempt.IPAddress == null)
+				attempt.IPAddress = "null";
 			//attempt.IPAddress = IPAddressToInt(ipAddress).Value;
 			attempt.TimeStamp = DateTime.UtcNow;
 			attempt.UserId = userId;
@@ -30,6 +32,8 @@ namespace NexusCore.Databases
 			attempt.Site = "nexuscore";
 			attempt.Succeded = true;
 			attempt.IPAddress = HttpContext.Current.Request.UserHostName;
+			if (attempt.IPAddress == null)
+				attempt.IPAddress = "null";
 			//attempt.IPAddress = IPAddressToInt(HttpContext.Current.Request.UserHostName).Value;
 			attempt.TimeStamp = DateTime.UtcNow;
 			attempt.UserId = userId;
@@ -43,6 +47,8 @@ namespace NexusCore.Databases
 			attempt.Site = "nexuscore";
 			attempt.Succeded = false;
 			attempt.IPAddress = HttpContext.Current.Request.UserHostName;
+			if (attempt.IPAddress == null)
+				attempt.IPAddress = "null";
 			//attempt.IPAddress = IPAddressToInt(HttpContext.Current.Request.UserHostName).Value;
 			attempt.TimeStamp = DateTime.UtcNow;
 			attempt.UserName = username;

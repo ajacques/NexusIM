@@ -52,7 +52,8 @@ namespace NexusCore.Services
 			{
 				session["userid"] = mUserData.id;
 
-				OperationContext.Current.OutgoingMessageHeaders.Add(MessageHeader.CreateHeader("Session", "com.nexusim.core", session.SessionID));
+				if (OperationContext.Current != null)
+					OperationContext.Current.OutgoingMessageHeaders.Add(MessageHeader.CreateHeader("Session", "com.nexusim.core", session.SessionID));
 				session.Add("pwdhash", db.HashString(password));
 				audit.LogLoginAttempt(mUserData.id);
 			} else {
@@ -218,9 +219,13 @@ namespace NexusCore.Services
 
 			var accounts = from a in db.Accounts
 						   where a.userid == userid
-						   select new AccountInfo(a.acctype, a.username, "") { mEnabled = a.enabled, mAccountId = a.id };
+						   select a;
 
-			return accounts;
+			byte[] keygenVector = null;
+			if (session["pwdhash"] != null)
+				keygenVector = (byte[])session["pwdhash"];
+
+			return new AccountEnumerable(accounts, keygenVector);
 		}
 		public MyAccountInformation GetMyAccountInfo()
 		{

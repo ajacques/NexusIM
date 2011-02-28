@@ -120,13 +120,6 @@ namespace NexusIM.Controls
 			private set;
 		}
 
-		protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
-		{
-			base.OnMouseDoubleClick(e);
-
-			WindowSystem.OpenContactListWindow();
-		}
-
 		private void SignOutItem_Click(object sender, RoutedEventArgs e)
 		{
 			AccountManager.Connected = !AccountManager.Connected;

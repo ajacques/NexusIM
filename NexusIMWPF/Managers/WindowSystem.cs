@@ -31,6 +31,7 @@ namespace NexusIM.Managers
 			} else {
 				Application.Dispatcher.BeginInvoke(new GenericEvent(() =>
 				{
+					ContactListWindow.Show();
 					ContactListWindow.Activate();
 				}), DispatcherPriority.Normal);
 			}
