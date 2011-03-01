@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+	<backstage>
+		<tab idMso="TabShare">
+			<firstColumn>
+				<taskFormGroup idMso="GroupShare">
+					<category idMso="Share">
+						<task id="myTask1" label="Send via Instant Message">
+							<group id="myTask1Group1" label="Send via Instant Message">
+								<topItems>
+									<button id="myTaskBtn1" label="Send as Attachment" onAction="SendAsAttach" />
+								</topItems>
+							</group>
+						</task>
+					</category>
+				</taskFormGroup>
+			</firstColumn>
+		</tab>
+	</backstage>
+</customUI>
