@@ -2,8 +2,11 @@
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
-using System.Threading;
 using System.Text;
+using NexusIM.Windows;
+using InstantMessage;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace NexusIM.Managers
 {
@@ -66,14 +69,104 @@ namespace NexusIM.Managers
 		{
 			pipeServer.EndWaitForConnection(e);
 			StreamReader reader = new StreamReader(pipeServer);
+			StreamWriter writer = new StreamWriter(pipeServer);
+			writer.AutoFlush = true;
 
-			do {
-				string data = reader.ReadLine();
-				CMDArgsHandler.HandleArg(data);
-			} while (pipeServer.IsConnected);
+			while (pipeServer.IsConnected)
+			{
+				string line = reader.ReadLine();
+				if (line == null)
+					break;
+
+				int firstParam = line.IndexOf(' ');
+				if (firstParam == -1)
+				{
+					writer.WriteLine("ERROR Malformed request.");
+					continue;
+				}
+				string command = line.Substring(0, firstParam).ToLowerInvariant();
+
+				switch (command)
+				{
+					case "sendim":
+						ProcessSendIMMessage(line.Substring(7));
+						break;
+					default:
+						writer.WriteLine("ERROR Un-recognized command");
+						continue;
+				}
+			}
+
 			pipeServer.Disconnect();
-
 			pipeServer.BeginWaitForConnection(new AsyncCallback(onNamedPipeRead), null);
+		}
+
+		private static void ProcessSendIMMessage(string input)
+		{
+			string[] chunks = input.Split(' ');
+			string fileName = null;
+			string recipient = null;
+			string account = null;
+
+			foreach (string chunk in chunks)
+			{
+				int keyvalsep = chunk.IndexOf('=');
+
+				if (keyvalsep != -1)
+				{
+					string key = chunk.Substring(0, keyvalsep).ToLowerInvariant();
+					string value = chunk.Substring(keyvalsep + 1);
+
+					switch (key)
+					{
+						case "file":
+							fileName = DecodeIfNeeded(value);							
+							break;
+						case "recipient":
+							recipient = DecodeIfNeeded(value);
+							break;
+						case "account":
+							account = DecodeIfNeeded(value);
+							break;
+					}
+				}
+			}
+
+			IEnumerable<IMProtocolExtraData> actualAccounts = null;
+			if (account != null)
+			{
+				int keyvalsep = account.IndexOf(':');
+				actualAccounts = AccountManager.Accounts;
+
+				if (keyvalsep != -1)
+				{
+					string type = account.Substring(0, keyvalsep).ToLowerInvariant();
+					string username = account.Substring(keyvalsep + 1);					
+
+					if (!String.IsNullOrWhiteSpace(type))
+						actualAccounts = actualAccounts.Where(ed => ed.Protocol.Protocol == type);
+
+					if (!String.IsNullOrWhiteSpace(username))
+						actualAccounts = actualAccounts.Where(ed => ed.Protocol.Username == username);
+				} else
+					actualAccounts = actualAccounts.Where(ed => ed.Protocol.Username == account);
+			}
+
+			// Open the window
+			WindowSystem.Application.Dispatcher.BeginInvoke(new GenericEvent(() => {
+				SelectRecipientWindow window = new SelectRecipientWindow();
+				window.Show();
+				window.Activate();
+				WindowSystem.OtherWindows.Add(window);
+			}));
+		}
+
+		private static string DecodeIfNeeded(string parameter)
+		{
+			if (parameter.StartsWith("b64:"))
+				return Encoding.UTF8.GetString(Convert.FromBase64String(parameter.Substring(4)));
+			else
+				return parameter;
 		}
 
 		private static NamedPipeServerStream pipeServer;

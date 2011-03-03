@@ -16,6 +16,14 @@ namespace NexusIMWPF
 	/// </summary>
 	public partial class App : Application, IDisposable
 	{
+		[STAThread]
+		public static void Main()
+		{
+			StopwatchManager.Start("AppInit");
+			App app = new App();
+			app.Run();
+		}
+
 		public App()
 		{
 			// Single instance Lock
@@ -26,13 +34,13 @@ namespace NexusIMWPF
 
 				if (commands.Length == 1) // Bring to front
 					IPCHandler.BringToFront();
-				else {
+				else
 					IPCHandler.OpenConnection();
-				}
 
 				this.Shutdown();
+				return;
 			}
-			StopwatchManager.Start("AppInit");
+			IPCHandler.Setup();
 			WindowSystem.RegisterApp(this);
 			this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 			DoInit();
@@ -85,7 +93,8 @@ namespace NexusIMWPF
 				window.Show();
 				StopwatchManager.TraceElapsed("AppInit", "{0} - InitialSetup Opened in: {1}");
 				AccountManager.Setup();
-			} else {
+			} else
+			{
 				AccountManager.Setup();
 				StopwatchManager.TraceElapsed("AppInit", "{0} - AccountManager loaded in: {1}");
 				ThreadPool.QueueUserWorkItem(new WaitCallback(LoadAccounts), null); // We don't need the accounts loaded immediately since they slow down the application startup due to SQLCE module loading. Schedule them to be loaded later
@@ -107,8 +116,9 @@ namespace NexusIMWPF
 		{
 			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
 			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
-			
-			try	{
+
+			try
+			{
 				Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate, FileAccess.Write);
 				Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
 			} catch (IOException) { }

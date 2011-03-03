@@ -122,7 +122,7 @@ namespace WebTests
 			db.StatusUpdates.DeleteAllOnSubmit(result);
 			db.SubmitChanges();
 
-			Assert.AreNotEqual(0, result.Count());
+			Assert.AreNotEqual(0, result.Count(), "The status message did not get committed to the database because a zero was returned");
 		}
 
 		/// <summary>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="InstantMessage" Platform="DotNet">
-  <OutputDir KeepHistoric="True" KeepXmlFiles="True">E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NDependOut</OutputDir>
+  <OutputDir KeepHistoric="True" KeepXmlFiles="True">.\NDependOut</OutputDir>
   <Assemblies>
     <Name>NexusCore</Name>
     <Name>NexusWeb</Name>
@@ -41,6 +41,13 @@
     <Name>Microsoft.Phone.Controls</Name>
     <Name>Microsoft.Phone.Controls.Maps</Name>
     <Name>Newtonsoft.Json.Silverlight</Name>
+    <Name>System.Configuration</Name>
+    <Name>Microsoft.Office.Tools.Common.v4.0.Utilities</Name>
+    <Name>Microsoft.Office.Tools.Common</Name>
+    <Name>Microsoft.Office.Tools.Word</Name>
+    <Name>System.Windows.Forms</Name>
+    <Name>Microsoft.VisualStudio.Tools.Applications.Runtime</Name>
+    <Name>Microsoft.Office.Tools</Name>
     <Name>PresentationFramework</Name>
     <Name>System.Xaml</Name>
     <Name>Hardcodet.Wpf.TaskbarNotification</Name>
@@ -52,34 +59,27 @@
     <Name>System.Deployment</Name>
     <Name>System.Data.SqlServerCe</Name>
     <Name>Microsoft.WindowsAPICodePack.Sensors</Name>
-    <Name>System.Configuration</Name>
-    <Name>Microsoft.Office.Tools.Common.v4.0.Utilities</Name>
-    <Name>Microsoft.Office.Tools.Common</Name>
-    <Name>Microsoft.Office.Tools.Word</Name>
-    <Name>System.Windows.Forms</Name>
-    <Name>Microsoft.VisualStudio.Tools.Applications.Runtime</Name>
-    <Name>Microsoft.Office.Tools</Name>
   </FrameworkAssemblies>
   <Dirs>
-    <Dir>E:\Windows\Microsoft.NET\Framework\v4.0.30319</Dir>
-    <Dir>E:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NexusCore\bin</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NexusWeb\bin</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NexusIM_Icons\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\SilverlightContactMap\Bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\Common\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NexusPhone\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\ProtocolTests\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NexusIM\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\BaseProtocolLibrary\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\CloudTests\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\WebTests\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NewsFeedPushServer\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\PushTests\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\DbTests\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\NexusIMWPF\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\DatabaseReferences\bin\Debug</Dir>
-    <Dir>E:\Users\Adam\Documents\Visual Studio 2010\Projects\InstantMessage\Word_SendVia\bin\Debug</Dir>
+    <Dir>$(WINDIR)\Microsoft.NET\Framework\v4.0.30319</Dir>
+    <Dir>$(WINDIR)\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
+    <Dir>.\NexusCore\bin</Dir>
+    <Dir>.\NexusWeb\bin</Dir>
+    <Dir>.\NexusIM_Icons\bin\Debug</Dir>
+    <Dir>.\SilverlightContactMap\Bin\Debug</Dir>
+    <Dir>.\Common\bin\Debug</Dir>
+    <Dir>.\NexusPhone\bin\Debug</Dir>
+    <Dir>.\ProtocolTests\bin\Debug</Dir>
+    <Dir>.\NexusIM\bin\Debug</Dir>
+    <Dir>.\BaseProtocolLibrary\bin\Debug</Dir>
+    <Dir>.\CloudTests\bin\Debug</Dir>
+    <Dir>.\WebTests\bin\Debug</Dir>
+    <Dir>.\NewsFeedPushServer\bin\Debug</Dir>
+    <Dir>.\PushTests\bin\Debug</Dir>
+    <Dir>.\DbTests\bin\Debug</Dir>
+    <Dir>.\NexusIMWPF\bin\Debug</Dir>
+    <Dir>.\DatabaseReferences\bin\Debug</Dir>
+    <Dir>.\Word_SendVia\bin\Debug</Dir>
   </Dirs>
   <Report Kind="0" SectionsEnabled="12287" XslPath="" Flags="64512">
     <Section Enabled="True">Application Metrics</Section>

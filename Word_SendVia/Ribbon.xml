@@ -5,10 +5,15 @@
 			<firstColumn>
 				<taskFormGroup idMso="GroupShare">
 					<category idMso="Share">
-						<task id="myTask1" label="Send via Instant Message">
-							<group id="myTask1Group1" label="Send via Instant Message">
+						<task id="NXSendTask" label="Send via Instant Message">
+							<group id="NXFileTransferGroup" label="Send as File Transfer">
 								<topItems>
-									<button id="myTaskBtn1" label="Send as Attachment" onAction="SendAsAttach" />
+									<button id="myTaskBtn1" label="Send as Attachment" onAction="SendAsAttach" isDefinitive="true" imageMso="InviteMyOtherComputers" />
+								</topItems>
+							</group>
+							<group id="NXLinkGroup" label="Send as Link">
+								<topItems>
+									<button id="NxLinkButtonMain" label="Send as Link" />
 								</topItems>
 							</group>
 						</task>

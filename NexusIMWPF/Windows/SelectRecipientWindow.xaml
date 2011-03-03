@@ -6,7 +6,8 @@
 	x:Class="NexusIM.Windows.SelectRecipientWindow"
 	x:Name="Window"
 	Title="Select Recipient" UseLayoutRounding="True" 
-	Width="370" Height="260" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+	Width="370" Height="260" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+	x:FieldModifier="private">
 	<Window.Resources>
 		<cnv:ProtocolToComboBox x:Key="ProtocolToComboBox"/>
 		<ControlTemplate x:Key="AccountTemplate" TargetType="{x:Type ListBoxItem}"/>
@@ -18,11 +19,13 @@
 		</LinearGradientBrush>
 	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
-		<ComboBox Margin="57,59,57,0" VerticalAlignment="Top" SelectedIndex="0" ItemsSource="{Binding Source={x:Static mgr:AccountManager.Accounts}, Converter={StaticResource ProtocolToComboBox}}" />
-		<TextBlock HorizontalAlignment="Left" Margin="17,35,0,0" TextWrapping="Wrap" Text="Account" VerticalAlignment="Top" FontSize="15" />
-		<TextBox Margin="57,98,57,0" TextWrapping="Wrap" Height="24" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" />
-		<Button Content="Button" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75"/>
-		<Grid Margin="57,120,57,0" VerticalAlignment="Top" MaxHeight="100">
+		<TextBlock Margin="14,8,8,0" VerticalAlignment="Top" TextWrapping="Wrap">
+			<Run>Select which contact you would like to</Run> <Span x:Name="HeaderActionText">message</Span> <Run>by typing a part of their name in the box below.</Run>
+		</TextBlock>
+		<ComboBox Margin="58,112,56,98" SelectedIndex="0" ItemsSource="{Binding Source={x:Static mgr:AccountManager.Accounts}, Converter={StaticResource ProtocolToComboBox}}" d:LayoutOverrides="Height" />
+		<TextBlock HorizontalAlignment="Left" Margin="18,88,0,0" TextWrapping="Wrap" Text="Account" VerticalAlignment="Top" FontSize="15" />
+		<TextBox Margin="58,150,56,0" TextWrapping="Wrap" Height="24" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" />
+		<Grid Margin="58,172,56,0" VerticalAlignment="Top" MaxHeight="100">
 			<Rectangle Fill="#FFDEDEDE" RadiusX="2" RadiusY="2" Margin="0,-1,0,0" >
 				<Rectangle.OpacityMask>
 					<LinearGradientBrush EndPoint="0,10" StartPoint="0,0" MappingMode="Absolute">
@@ -33,5 +36,6 @@
 			</Rectangle>
 			<StackPanel x:Name="SuggestResults" />
 		</Grid>
+		<Button Content="Send" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75"/>
 	</Grid>
 </Window>

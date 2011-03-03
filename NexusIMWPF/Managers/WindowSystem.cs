@@ -17,6 +17,7 @@ namespace NexusIM.Managers
 		{
 			ContactChatAreas = new ChatAreaCollection();
 			ChatWindows = new Dictionary<int, ChatWindow>();
+			OtherWindows = new List<Window>();
 		}
 		public static void OpenContactListWindow()
 		{
@@ -120,6 +121,11 @@ namespace NexusIM.Managers
 			private set;
 		}
 		public static Dictionary<int, ChatWindow> ChatWindows
+		{
+			get;
+			private set;
+		}
+		public static List<Window> OtherWindows
 		{
 			get;
 			private set;
