@@ -76,7 +76,7 @@ namespace InstantMessage.Protocols.Irc
 				if (OnMessageReceived != null)
 					OnMessageReceived(this, new IMMessageEventArgs(new IRCUserMask(mProtocol, sender), message));
 			} catch (Exception e) {
-				Trace.TraceError(e.Message);
+				Debug.WriteLine(e.Message);
 			}
 		}
 		internal void SetParticipants(IList<string> participants)
@@ -90,9 +90,9 @@ namespace InstantMessage.Protocols.Irc
 			mInChannel = false;
 			try {
 				if (OnKickedFromChannel != null)
-				OnKickedFromChannel(this, new IMChatRoomGenericEventArgs() { Username = kicker, Message = reason });
+					OnKickedFromChannel(this, new IMChatRoomGenericEventArgs() { Username = kicker, Message = reason });
 			} catch (Exception e) {
-				Trace.TraceError(e.Message);
+				Debug.WriteLine(e.Message);
 			}
 		}
 		internal void TriggerOnUserJoin(string username)
@@ -101,7 +101,7 @@ namespace InstantMessage.Protocols.Irc
 				if (OnUserJoin != null)
 					OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = username});
 			} catch (Exception e) {
-				Trace.TraceError(e.Message);
+				Debug.WriteLine(e.Message);
 			}
 		}
 		internal void TriggerOnPart(string reason)
@@ -112,7 +112,7 @@ namespace InstantMessage.Protocols.Irc
 				if (OnLeave != null)
 					OnLeave(this, new IMChatRoomGenericEventArgs() { Message = reason, UserRequested = UserRequestedPart });
 			} catch (Exception e) {
-				Trace.TraceError(e.Message);
+				Debug.WriteLine(e.Message);
 			}
 		}
 		internal void TriggerModeChange(IEnumerable<IRCUserModeChange> users)

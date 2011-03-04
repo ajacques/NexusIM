@@ -130,6 +130,7 @@
     <Content Include="clientaccesspolicy.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="ClientBin\SilverIM.xap" />
     <Content Include="ClientBin\SilverlightContactMap.xap" />
     <Content Include="controls\FriendRequest.html" />
     <Content Include="js\crypto-sha256.js" />

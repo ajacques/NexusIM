@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Security.Authentication;
 using System.Threading;
 using InstantMessage.Events;
 using InstantMessage.Protocols;
+using System.Diagnostics;
 
 namespace InstantMessage
 {
@@ -435,6 +433,7 @@ namespace InstantMessage
 				return status;
 			}
 		}
+#if !SILVERLIGHT
 		/// <summary>
 		/// Creates a IMProtocol from the passed string
 		/// </summary>
@@ -453,6 +452,7 @@ namespace InstantMessage
 			}
 			return null;
 		}
+#endif
 		[Obsolete("", false)]
 		public static string FromProtocolString(string protocol)
 		{
@@ -516,7 +516,7 @@ namespace InstantMessage
 		}
 		protected void triggerOnError(IMErrorEventArgs e)
 		{
-			Trace.TraceError("Protocol Error: " + e.Message + " - " + e.Reason.ToString());
+			Debug.WriteLine("Protocol Error: " + e.Message + " - " + e.Reason.ToString());
 			if (onError != null)
 				onError(this, e);
 		}
@@ -560,7 +560,6 @@ namespace InstantMessage
 			if (onError != null)
 				onError(this, new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.INVALID_USERNAME, "Invalid login credentials"));
 
-			mLoginException = new InvalidCredentialException();
 			mLoginWaitHandle.Set();
 		}
 
@@ -592,27 +591,5 @@ namespace InstantMessage
 		protected string mAvatar;
 		protected IMProtocolStatus status;
 		protected Exception mLoginException;
-	}
-		
-	public interface IChatRoom : IMessagable
-	{
-		string Name
-		{
-			get;
-		}
-		bool Joined
-		{
-			get;
-		}
-		IEnumerable<string> Participants
-		{
-			get;
-		}
-		void SendMessage(string message);
-		void Leave(string reason);
-
-		event EventHandler<IMMessageEventArgs> OnMessageReceived;
-		event EventHandler OnUserListReceived;
-		event EventHandler OnJoin;
 	}
 }

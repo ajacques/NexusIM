@@ -42,7 +42,7 @@ namespace Word_SendVia
 				cStream.Connect(500);
 				StreamWriter writer = new StreamWriter(cStream);
 				writer.Write("SENDIM file=b64:");
-				string fNameb64 = Convert.ToBase64String(Encoding.ASCII.GetBytes(fileName));
+				string fNameb64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileName));
 				writer.WriteLine(fNameb64);
 				writer.Close();
 			}

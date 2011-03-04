@@ -7,6 +7,7 @@ using InstantMessage.Security;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 using System.Diagnostics;
+using InstantMessage.Protocols;
 
 namespace ProtocolTests
 {

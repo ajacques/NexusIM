@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using InstantMessage.Events;
-using System.Globalization;
+using System.Net;
 
 namespace InstantMessage.Protocols.Irc
 {
@@ -48,9 +49,16 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public override void BeginLogin()
 		{
-			client = new TcpClient();
+			client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);
+#if SILVERLIGHT
+			SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+			args.RemoteEndPoint = new DnsEndPoint(Server, Port);
+			args.Completed += new EventHandler<SocketAsyncEventArgs>(OnSocketConnect);
+			client.ConnectAsync(args);
+#else
+			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);			
+#endif
 			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
 		}
 		public override void Disconnect()
@@ -376,7 +384,7 @@ namespace InstantMessage.Protocols.Irc
 				if (OnChannelJoinFailed != null)
 					OnChannelJoinFailed(channel, new ChatRoomJoinFailedEventArgs() { Message = message, Reason = reason });
 			} catch (Exception e) {
-				Trace.WriteLine(e);
+				Debug.WriteLine(e);
 			}
 		}
 		private void HandleWhoReply(string[] line)
@@ -508,29 +516,10 @@ namespace InstantMessage.Protocols.Irc
 		}
 
 		// Socket Support Methods
-		private void readDataAsync(IAsyncResult args)
+		private void SocketReadHandleWraparound(int bytesRead)
 		{
-			int bytesRead;
-			try	{
-				bytesRead = mTextStream.EndRead(args);
-			} catch (SocketException e)	{
-				Dispose();
-				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
-				return;
-			} catch (IOException e)	{
-				Dispose();
-				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
-				return;
-			}
-
-			if (bytesRead == 0) // If we don't read anything, there's a problem
-			{
-				Dispose();
-				return;
-			}
-			
 			string streamBuf = mTextEncoder.GetString(mDataQueue, 0, bytesRead);
-			IEnumerable<string> lines = streamBuf.Split(new char[] { '\r', '\n' } ,StringSplitOptions.RemoveEmptyEntries); // newline means a new command
+			IEnumerable<string> lines = streamBuf.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries); // newline means a new command
 			int lineCount = lines.Count();
 
 			// Check to see if there was a command that was cutoff at the end of the previous buffer read.
@@ -556,35 +545,90 @@ namespace InstantMessage.Protocols.Irc
 
 			if (bytesRead == mBufferSize)
 				mBufferCutoffMessage = new StringBuilder(lines.Last()); // The last message will be queued up for the rest of the message
+		}
+#if !SILVERLIGHT
+		private void readDataAsync(IAsyncResult args)
+		{
+			int bytesRead;
+			try	{
+				bytesRead = mTextStream.EndRead(args);
+			} catch (SocketException e)	{
+				Dispose();
+				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				return;
+			} catch (IOException e)	{
+				Dispose();
+				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				return;
+			}
+
+			if (bytesRead == 0) // If we don't read anything, there's a problem
+			{
+				Dispose();
+				return;
+			}
+			
+			SocketReadHandleWraparound(bytesRead);
 
 			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{
 			client.EndConnect(e);
-			mTextStream = client.GetStream();
+			mTextStream = new NetworkStream(client);
 			mWriter = new StreamWriter(mTextStream);
 			mWriter.AutoFlush = true;
 
+			CompleteLogin();
+
+			mDataQueue = new byte[mBufferSize];
+			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+		}
+#else
+		private void OnSocketReceive(object sender, SocketAsyncEventArgs e)
+		{
+			mDataQueue = e.Buffer;
+			int bytesRead = e.BytesTransferred;
+
+			SocketReadHandleWraparound(bytesRead);
+
+			client.ReceiveAsync(e);
+		}
+		private void OnSocketConnect(object sender, SocketAsyncEventArgs e)
+		{
+			CompleteLogin();
+			
+			mDataQueue = new byte[mBufferSize];
+			SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+			args.Completed += new EventHandler<SocketAsyncEventArgs>(OnSocketReceive);
+			args.SetBuffer(mDataQueue, 0, mDataQueue.Length);
+			client.ReceiveAsync(args);
+		}
+#endif
+		private void CompleteLogin()
+		{
 			if (!String.IsNullOrEmpty(Password))
 				sendData("PASS " + Password);
 
 			if (!String.IsNullOrEmpty(mNickname))
 				sendData("NICK " + mNickname);
-			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, Environment.MachineName, mServer, mRealName));
+			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, "localhost", mServer, mRealName));
 
 			status = IMProtocolStatus.Online;
 
 			LoginWaitHandle.Set();
 			triggerOnLogin(null);
-
-			mDataQueue = new byte[mBufferSize];
-			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
 		private void sendData(string data)
 		{
-			Debug.WriteLine("--> " + data);
+#if SILVERLIGHT
+			SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+			byte[] bdata = mTextEncoder.GetBytes(data);
+			args.SetBuffer(bdata, 0, bdata.Length);
+			client.SendAsync(args);
+#else			
 			mWriter.WriteLine(data);
+#endif
 		}
 		private string ExtractNickname(string hostmask)
 		{
@@ -603,10 +647,10 @@ namespace InstantMessage.Protocols.Irc
 		private StringBuilder mBufferCutoffMessage;
 		private IList<IRCChannel> mChannels = new List<IRCChannel>();
 		private byte[] mDataQueue;
-		private TcpClient client;
+		private Socket client;
 		private StreamWriter mWriter;
 		private Stream mTextStream;
 		private const int mBufferSize = 1024;
-		private static Encoding mTextEncoder = Encoding.ASCII;
+		private static Encoding mTextEncoder = Encoding.UTF8;
 	}
 }

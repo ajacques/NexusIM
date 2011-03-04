@@ -1,20 +1,18 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BaseProtocolLibrary")]
+[assembly: AssemblyTitle("SilverIM")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adren Software")]
-[assembly: AssemblyProduct("BaseProtocolLibrary")]
-[assembly: AssemblyCopyright("Copyright © Adren Software 2011")]
+[assembly: AssemblyProduct("SilverIM")]
+[assembly: AssemblyCopyright("Copyright © Adam Jacques 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -22,7 +20,7 @@ using System;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c4e2cd51-6e4c-44c8-82d6-dabc4a1b555c")]
+[assembly: Guid("b1e3638d-f7b1-47a4-a9a4-9f7c2c231542")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -33,10 +31,7 @@ using System;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.0.0")]
+// [assembly: AssemblyVersion("1.0.*")]
 
-#if WINDOWS
-// Private assembly for now, if we release this will probably have to change this
-[assembly: ObfuscateAssembly(assemblyIsPrivate: true)]
-#endif
-[assembly: CLSCompliant(true)]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.114")]

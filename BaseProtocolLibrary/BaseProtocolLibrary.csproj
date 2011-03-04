@@ -75,6 +75,7 @@
     <Compile Include="Protocols\ContactDetails.cs" />
     <Compile Include="Protocols\Enums.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
+    <Compile Include="Protocols\Interfaces\IChatRoom.cs" />
     <Compile Include="Protocols\Interfaces\IContact.cs" />
     <Compile Include="Protocols\Interfaces\IHasPresence.cs" />
     <Compile Include="Protocols\Interfaces\IMessagable.cs" />
@@ -83,9 +84,7 @@
     <Compile Include="Protocols\IRC\IRCProtocol.cs" />
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
-    <Compile Include="Protocols\Yahoo\YahooProtocol.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Protocols\Yahoo\YahooProtocol.cs" />
     <Compile Include="Protocols\Yahoo\YPacket.cs" />
     <Compile Include="Protocols\Yahoo\YPacketParamCollection.cs" />
     <Compile Include="Structures\BuddyAvatar.cs" />
@@ -124,7 +123,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

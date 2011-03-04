@@ -18,7 +18,6 @@ namespace InstantMessage
 	/// <summary>
 	/// Stores information about a single contact
 	/// </summary>
-	[Serializable]
 	public sealed partial class IMBuddy : IContact, INotifyPropertyChanged
 	{
 		public IMBuddy()
