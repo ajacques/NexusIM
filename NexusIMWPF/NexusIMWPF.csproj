@@ -174,13 +174,9 @@
     <Compile Include="Managers\IMMessageProcessor.cs" />
     <Compile Include="Managers\MessageLogger.cs" />
     <Compile Include="Managers\NotificationQueue.cs" />
-    <Compile Include="Managers\Protocol\AutoResponder.cs" />
-    <Compile Include="Managers\Protocol\InterfaceManager.cs" />
     <Compile Include="Managers\Protocol\NexusCoreManager.cs" />
     <Compile Include="Managers\SafeUrlTester.cs" />
     <Compile Include="Managers\StopwatchManager.cs" />
-    <Compile Include="Managers\User Interface\ErrorManager.cs" />
-    <Compile Include="Managers\User Interface\MUCManager.cs" />
     <Compile Include="Managers\User Interface\SensorManager.cs" />
     <Compile Include="Managers\User Interface\SpeechManager.cs" />
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
@@ -451,9 +447,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\NexusCore\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Expression\Blend\.NETFramework\v4.0\Microsoft.Expression.Blend.WPF.targets" />

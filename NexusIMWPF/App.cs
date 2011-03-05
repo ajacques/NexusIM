@@ -80,6 +80,7 @@ namespace NexusIMWPF
 			Trace.WriteLine("Working Directory: " + Environment.CurrentDirectory);
 			Trace.WriteLine("CLR Version: " + Environment.Version.ToString());
 			Trace.WriteLine(string.Format("OS Is64Bit: {0} (Current Process Is64Bit: {1})", Environment.Is64BitOperatingSystem, Environment.Is64BitProcess));
+			Trace.WriteLineIf(Debugger.IsAttached, "Debugger is attached");
 
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserData.sdf");
 			Trace.WriteLine("Configuration File: " + configuri);

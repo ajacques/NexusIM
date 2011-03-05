@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
-using NexusIM.Windows;
 using InstantMessage;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+using NexusIM.Windows;
 
 namespace NexusIM.Managers
 {
@@ -31,7 +30,7 @@ namespace NexusIM.Managers
 			if (Environment.GetCommandLineArgs().Length > 1)
 			{
 				ConnectPipe();
-				string input = "";
+				string input;
 
 				// Merge all command line arguments into one string
 				input = Environment.GetCommandLineArgs().Skip(1).Aggregate((l, r) => l + " " + r);

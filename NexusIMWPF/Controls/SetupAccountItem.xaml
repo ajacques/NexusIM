@@ -42,16 +42,16 @@
 			<BeginStoryboard Storyboard="{StaticResource EditFadeOut}"/>
 		</EventTrigger>
 	</UserControl.Triggers>
-	<UserControl.DataContext>
+	<!--UserControl.DataContext>
 		<imc:IMProtocolExtraData Enabled="True">
 			<imc:IMProtocolExtraData.Protocol>
 				<im:IMProtocol Enabled="true" Username="Test Username" Password="Test" />
 			</imc:IMProtocolExtraData.Protocol>
 		</imc:IMProtocolExtraData>
-	</UserControl.DataContext>
+	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot">
 		<Border x:Name="BackgroundRect" BorderBrush="#FF686868" BorderThickness="1" CornerRadius="5" Background="Transparent" />
-		<Image HorizontalAlignment="Left" VerticalAlignment="Center" Margin="33,0,0,0" Source="/NexusIMWPF;component/Resources/yahoo.png" Stretch="Fill" Width="26" Height="18" />
+		<Image HorizontalAlignment="Left" Margin="33,28,0,29" Source="/NexusIMWPF;component/Resources/yahoo.png" Stretch="Fill" Width="26" />
 		<CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding Enabled, Mode=TwoWay}" />
 		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap" Text="{Binding Protocol.Username, Mode=OneWay}" />
 		<Grid x:Name="BehindGrid" Opacity="0">

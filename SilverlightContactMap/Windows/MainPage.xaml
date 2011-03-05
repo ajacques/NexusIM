@@ -1,14 +1,14 @@
 ﻿<UserControl
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:m="clr-namespace:Microsoft.Maps.MapControl;assembly=Microsoft.Maps.MapControl"
 	xmlns:overlays="clr-namespace:Microsoft.Maps.MapControl.Overlays;assembly=Microsoft.Maps.MapControl"
 	xmlns:CustomControls="clr-namespace:SilverlightContactMap.Controls"
 	xmlns:CustomWindows="clr-namespace:SilverlightContactMap.Windows"
 	mc:Ignorable="d"
 	x:Class="SilverlightContactMap.Windows.MainPage"
-    d:DesignWidth="900" d:DesignHeight="500"
+	d:DesignWidth="900" d:DesignHeight="500"
 	Loaded="UserControl_Loaded">
 	<Grid x:Name="LayoutRoot">
 		<m:Map x:Name="contacts" CredentialsProvider="AsS2Xi9W1iyJWYJv67X3CnPtgqpQrITIGqlBqKBuSkRh0benHS3vkAaC2V-s_2nP" Mode="Road" ScaleVisibility="Collapsed">

@@ -459,6 +459,10 @@ namespace NexusIM
 							current.Password = protocol.Password;
 							mContext.SubmitChanges();
 						});
+						extraData.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
+							current.AutoConnect = extraData.AutoConnect;
+							mContext.SubmitChanges();
+						});
 						protocol.ConfigurationSettings = new SqlAccountSettingDictionary(mContext, current.AccountSettings);
 
 						return extraData;

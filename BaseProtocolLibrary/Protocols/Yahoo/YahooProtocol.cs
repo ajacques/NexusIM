@@ -407,14 +407,15 @@ namespace InstantMessage.Protocols.Yahoo
 				return;
 			}
 
-			List<int> blockPoints = new List<int>();
+			List<ArraySegment<byte>> blocks = new List<ArraySegment<byte>>();
 
 			for (int i = 0; i <= bytesRead - 20;) // Don't increment i because we automatically do it down on the i += block.Length line
 			{
 				if (BitConverter.IsLittleEndian)
 					Array.Reverse(dataqueue, i + 8, 2); // Int is backwards, reverse it
 				short length = BitConverter.ToInt16(dataqueue, i + 8);
-				blockPoints.Add(i);
+				ArraySegment<byte> block = new ArraySegment<byte>(dataqueue, i, 20 + length);
+				blocks.Add(block);
 				i += 20 + length;
 
 				if (bytesRead - i < 20 && bytesRead == dataqueue.Length && nsStream.DataAvailable)
@@ -423,15 +424,10 @@ namespace InstantMessage.Protocols.Yahoo
 				}
 			}
 		
-			int len = blockPoints.Count;
-			for (int i = 0; i < len; i++)
-			{
-				int startIndex = blockPoints[i];
-				int endIndex = bytesRead;
-				if (i < len - 1)
-					endIndex = blockPoints[i + 1];
-				
-				YPacket packet = YPacket.FromPacket(dataqueue, startIndex, endIndex);
+			int len = blocks.Count;
+			foreach (ArraySegment<byte> block in blocks)
+			{			
+				YPacket packet = YPacket.FromPacket(dataqueue, block.Offset, block.Count);
 
 				if (packet.Parameters.Count == 0)
 					continue;

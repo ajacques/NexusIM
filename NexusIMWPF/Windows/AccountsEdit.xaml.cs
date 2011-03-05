@@ -108,6 +108,7 @@ namespace NexusIM.Windows
 				{
 					SetupAccountItem accItem = new SetupAccountItem();
 					accItem.DataContext = extraData;
+					accItem.Margin = (Thickness)FindResource("ItemMargin");
 					AccountsListBox.Children.Add(accItem);
 				}
 			}
@@ -133,6 +134,7 @@ namespace NexusIM.Windows
 			{
 				SetupAccountItem accItem = new SetupAccountItem();
 				accItem.DataContext = protocol;
+				accItem.Margin = (Thickness)FindResource("ItemMargin");
 				AccountsListBox.Children.Add(accItem);
 			}
 

@@ -43,7 +43,7 @@ namespace NexusIM.Managers
 		[Obsolete("Use Accounts.Add instead", false)]
 		public static void AddNewAccount(IMProtocol protocol)
 		{
-			AddNewAccount(new IMProtocolExtraData() { Protocol = protocol, Enabled = true, IsReady = true});
+			AddNewAccount(new IMProtocolExtraData() { Protocol = protocol, Enabled = true, IsReady = false});
 		}
 		[Obsolete("Use Accounts.Add instead", false)]
 		public static void AddNewAccount(IMProtocolExtraData extraData)
@@ -80,10 +80,37 @@ namespace NexusIM.Managers
 				foreach (IMProtocolExtraData extraData in e.NewItems)
 				{
 					extraData.IsReady = true;
-					if (Connected && extraData.Enabled && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Offline)
-						extraData.Protocol.BeginLogin();
+					extraData.PropertyChanged += new PropertyChangedEventHandler(IndividualProtocol_PropertyChanged);
+					ConnectIfNeeded(extraData);
 				}
 			}
+		}
+
+		private static void ConnectIfNeeded(IMProtocolExtraData extraData)
+		{
+			if (Connected)
+			{
+				if (extraData.Enabled != (extraData.Protocol.ProtocolStatus != IMProtocolStatus.Offline))
+				{
+					if (extraData.Enabled)
+						extraData.Protocol.BeginLogin();
+					else
+						extraData.Protocol.Disconnect();
+				}
+			}
+		}
+
+		private static void IndividualProtocol_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			IMProtocolExtraData extraData = (IMProtocolExtraData)sender;
+			
+			switch (e.PropertyName)
+			{
+				case "Enabled":
+					ConnectIfNeeded(extraData);
+					break;
+			}
+			
 		}
 
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;

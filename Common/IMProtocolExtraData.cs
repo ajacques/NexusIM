@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using InstantMessage;
+﻿using System.ComponentModel;
 
 namespace InstantMessage
 {
@@ -11,7 +7,7 @@ namespace InstantMessage
 		LocalSettingFile,
 		NexusCore
 	}
-	public class IMProtocolExtraData
+	public sealed class IMProtocolExtraData : INotifyPropertyChanged
 	{
 		public IMProtocol Protocol
 		{
@@ -20,8 +16,17 @@ namespace InstantMessage
 		}
 		public bool Enabled
 		{
-			get;
-			set;
+			get {
+				return mEnabled;
+			}
+			set	{
+				if (mEnabled != value)
+				{
+					mEnabled = value;
+
+					NotifyPropertyChanged("Enabled");
+				}
+			}
 		}
 		public int DatabaseId
 		{
@@ -35,13 +40,34 @@ namespace InstantMessage
 		}
 		public bool AutoConnect
 		{
-			get;
-			set;
+			get	{
+				return mAutoConnect;
+			}
+			set	{
+				if (mAutoConnect != value)
+				{
+					mAutoConnect = value;
+
+					NotifyPropertyChanged("AutoConnect");
+				}
+			}
 		}
 		public ProtocolSource Source
 		{
 			get;
 			set;
 		}
+
+		private void NotifyPropertyChanged(string propertyName)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		// Variables
+		private bool mEnabled;
+		private bool mAutoConnect;
 	}
 }

@@ -304,8 +304,6 @@ namespace InstantMessage.Protocols.Irc
 		// Protocol Handlers
 		private void ParseLine(string line)
 		{
-			Debug.WriteLine("<-- " + line);
-
 			if (line[0] == ':') // Standard message type
 			{
 				string[] parameters = line.Substring(1).Split(' ');

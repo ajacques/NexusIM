@@ -266,7 +266,4 @@ Global
 		{B1E3638D-F7B1-47A4-A9A4-9F7C2C231542} = {FE59A220-92A7-4DF0-A2D8-1B1E495B1F86}
 		{14B534DF-918A-42F8-9E2E-E5BEC7D887CA} = {FE59A220-92A7-4DF0-A2D8-1B1E495B1F86}
 	EndGlobalSection
-	GlobalSection(NDepend) = preSolution
-		Project = ".\InstantMessage.ndproj"
-	EndGlobalSection
 EndGlobal

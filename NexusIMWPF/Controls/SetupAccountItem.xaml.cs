@@ -50,8 +50,19 @@ namespace NexusIM.Controls
 		{
 			base.OnLostFocus(e);
 
-			BindingExpression expression = BindingOperations.GetBindingExpression(UsernameBox, TextBox.TextProperty);
+			ResetDataBindings();
+		}
+
+		private void ResetSingleBinding(DependencyObject target, DependencyProperty dp)
+		{
+			BindingExpression expression = BindingOperations.GetBindingExpression(target, dp);
 			expression.UpdateTarget();
+		}
+		private void ResetDataBindings()
+		{
+			ResetSingleBinding(UsernameBox, TextBox.TextProperty);
+			ResetSingleBinding(AutoConnectCheckbox, CheckBox.IsCheckedProperty);
+			PasswordBox.Password = String.Empty;
 		}
 		
 		private void CancelButton_Click(object sender, RoutedEventArgs e)

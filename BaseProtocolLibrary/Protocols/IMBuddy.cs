@@ -22,7 +22,7 @@ namespace InstantMessage
 	{
 		public IMBuddy()
 		{
-			mProtocol = new IMProtocol();
+			//mProtocol = new IMProtocol();
 		}
 		/// <summary>
 		/// Creates a new buddy
