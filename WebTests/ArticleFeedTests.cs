@@ -55,6 +55,7 @@ namespace WebTests
 
 			UnitTestSession session = new UnitTestSession();
 			session.Add("IsUnitTest", true);
+			session.Add("userid", 1);
 			mLocalSession = session;
 
 			SessionStateUtility.AddHttpSessionStateToContext(HttpContext.Current, session);

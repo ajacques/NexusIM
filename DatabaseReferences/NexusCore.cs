@@ -293,7 +293,7 @@ namespace NexusCore.Databases
 		/// Computes the cipher text for the new password
 		/// </summary>
 		/// <remarks>
-		/// Does not save the changes to the database. You must called SubmitChanges() after calling this method
+		/// Does not save the changes to the database. You must call SubmitChanges() after calling this method
 		/// </remarks>
 		/// <param name="keygenVector">16-byte array used as a vector to create the encryption key</param>
 		/// <param name="newPassword">String to change the password</param>

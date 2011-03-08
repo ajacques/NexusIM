@@ -38,7 +38,7 @@ namespace NexusCore.Controllers
 		}
 		public static StorageItem SetupAccount(AccountInfo accountInfo)
 		{
-			IMProtocol protocol = IMProtocol.FromString(accountInfo.ProtocolType);
+			IMProtocol protocol = IMProtocol.FromString(accountInfo.mProtocol);
 
 			protocol.Username = accountInfo.Username;
 			protocol.Password = accountInfo.Password;

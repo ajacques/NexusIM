@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Runtime.Serialization;
-using System.Net;
-using System.IO;
-using System.Threading;
 using InstantMessage;
 
 namespace NexusCore.DataContracts
@@ -166,15 +159,9 @@ namespace NexusCore.DataContracts
 
 		public static implicit operator AccountInfo(NexusCore.Databases.Account account)
 		{
-			return new AccountInfo(account.acctype, account.username) {  };
+			return new AccountInfo(account.acctype, account.username) { mAccountId = account.id, mEnabled = account.enabled };
 		}
 
-		public string ProtocolType
-		{
-			get {
-				return mProtocol;
-			}
-		}
 		public string Username
 		{
 			get {
@@ -206,23 +193,23 @@ namespace NexusCore.DataContracts
 			}
 		}
 
-		[DataMember(Name = "ProtocolType")]
+		[DataMember(Name = "ProtocolType", Order = 0)]
 		public string mProtocol;
-		[DataMember(Name = "Username")]
+		[DataMember(Name = "Username", Order = 1)]
 		public string mUsername;
-		[DataMember(Name = "Password", IsRequired = false)]
+		[DataMember(Name = "Password", IsRequired = false, EmitDefaultValue = false, Order = 2)]
 		public string mPassword;
-		[DataMember(Name = "EncryptedPassword", IsRequired = false)]
+		[DataMember(Name = "EncryptedPassword", IsRequired = false, EmitDefaultValue = false, Order = 2)]
 		public byte[] mEncPassword;
-		[DataMember(Name = "Server", IsRequired = false)]
+		[DataMember(Name = "Server", IsRequired = false, EmitDefaultValue = false, Order = 3)]
 		public string mServer;
-		[DataMember(Name = "Guid", IsRequired = false)]
+		[DataMember(Name = "Guid", IsRequired = false, EmitDefaultValue = false, Order = 5)]
 		public Guid mGuid;
-		[DataMember(Name = "Enabled")]
+		[DataMember(Name = "Enabled", EmitDefaultValue = false, Order = 4)]
 		public bool mEnabled;
-		[DataMember(Name = "AccountId")]
+		[DataMember(Name = "AccountId", EmitDefaultValue = false)]
 		public int mAccountId;
-		[DataMember(Name = "Status")]
+		[DataMember(Name = "Status", EmitDefaultValue = false)]
 		public IMProtocolStatus mStatus;
 	}
 

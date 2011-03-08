@@ -150,6 +150,9 @@
     <Compile Include="Controls\ContactListItem.xaml.cs">
       <DependentUpon>ContactListItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MUCChatArea.xaml.cs">
+      <DependentUpon>MUCChatArea.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\StatusOrb.xaml.cs">
       <DependentUpon>StatusOrb.xaml</DependentUpon>
     </Compile>
@@ -325,6 +328,10 @@
     <Page Include="Controls\ContactListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MUCChatArea.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SetupAccountItem.xaml">
       <Generator>MSBuild:Compile</Generator>

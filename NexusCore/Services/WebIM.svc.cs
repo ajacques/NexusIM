@@ -42,7 +42,7 @@ namespace NexusCore.Services
 			if (account != null)
 			{				
 				AccountInfo info = account;
-				Trace.WriteLine("WebIM: Remote login requested of type " + info.ProtocolType + " for " + info.Username);
+				Trace.WriteLine("WebIM: Remote login requested of type " + info.mProtocol + " for " + info.Username);
 				
 				StorageItem item = WebIMProtocolManager.SetupAccount(info);
 				item.ProtocolId = account.id;

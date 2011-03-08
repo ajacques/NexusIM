@@ -32,6 +32,9 @@ namespace NexusCore.Support
 					Account source = mEnumerator.Current;
 
 					AccountInfo info = new AccountInfo(source.acctype, source.username);
+					info.mEnabled = source.enabled;
+					info.mAccountId = source.id;
+					info.mServer = source.server;
 					if (mKeygenVector != null)
 						info.mPassword = source.DecryptPassword(mKeygenVector);
 					else
@@ -65,7 +68,7 @@ namespace NexusCore.Support
 		}
 		public IEnumerator<AccountInfo> GetEnumerator()
 		{
-			return new AccountEnumerator(mSource);
+			return new AccountEnumerator(mSource, mKeygenVector);
 		}
 		IEnumerator IEnumerable.GetEnumerator()
 		{
