@@ -21,9 +21,9 @@
 			<ColorAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0:0:0.2" To="Transparent" />
 		</Storyboard>
 	</UserControl.Resources>
-	<UserControl.DataContext>
+	<!--UserControl.DataContext>
 		<im:IMBuddy Username="Test Username" Status="Available" StatusMessage="Test Message" />
-	</UserControl.DataContext>
+	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot" DragOver="LayoutRoot_DragOver">
 		<Rectangle x:Name="Background" Fill="Transparent" RadiusX="2" RadiusY="2" />
 		<Image Source="{Binding Status, Converter={StaticResource StatusConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="16" Width="16" Margin="4,0,0,0" />

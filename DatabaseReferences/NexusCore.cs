@@ -287,6 +287,8 @@ namespace NexusCore.Databases
 			string result = NexusCoreDataContext.Encoder.GetString(oPassword, 0, count);
 			result = result.TrimEnd('\0');
 
+			symkey.Dispose();
+
 			return result;
 		}
 		/// <summary>

@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Security.Authentication;
-using System.ServiceModel;
 using InstantMessage;
 using NexusIM.NexusCore;
 
