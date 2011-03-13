@@ -88,7 +88,7 @@ namespace NexusIM.Managers
 
 		private static void ConnectIfNeeded(IMProtocolExtraData extraData)
 		{
-			if (Connected)
+			if (Connected && IsConnectedToInternet())
 			{
 				if (extraData.Enabled != (extraData.Protocol.ProtocolStatus != IMProtocolStatus.Offline))
 				{

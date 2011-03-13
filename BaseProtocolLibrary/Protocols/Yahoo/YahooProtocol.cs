@@ -785,8 +785,8 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			logincookies.Clear(); // Just in-case this is the second time we are signing in
 
-			HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://vcs.msg.yahoo.com/capacity");
-			request.ServicePoint.Expect100Continue = false; // Yahoo doesn't like these
+			WebRequest request = WebRequest.Create("http://vcs.msg.yahoo.com/capacity");
+			//request.ServicePoint.Expect100Continue = false; // Yahoo doesn't like these
 
 			try	{
 				request.BeginGetResponse(new AsyncCallback(OnGetYIPAddress), request);
@@ -1206,7 +1206,7 @@ namespace InstantMessage.Protocols.Yahoo
 			} catch (IOException) {
 				lock (queuedpackets)
 				{
-					queuedpackets.Add(packet);
+					//queuedpackets.Add(packet);
 				}
 				
 				authenticated = false;

@@ -155,12 +155,22 @@ namespace NexusIM.Controls
 					AvailabilityGroupItem.IsEnabled = true;
 					SignOutItem.Header = "Sign Out";
 				}));
-		
+				
+				GenericEvent changeDelegate = null;
+
 				switch (AccountManager.Status)
 				{
 					case IMStatus.Available:
-						AvailableStatusItem.Icon = Properties.Resources.point;
+						changeDelegate = new GenericEvent(() => AvailableStatusItem.Icon = Properties.Resources.point);
 						break;
+				}
+
+				if (changeDelegate != null)
+				{
+					if (this.Dispatcher.CheckAccess())
+						changeDelegate();
+					else
+						this.Dispatcher.BeginInvoke(changeDelegate);
 				}
 			}
 		}

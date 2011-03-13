@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data.Linq;
 using System.Linq;
 using InstantMessage;
+using InstantMessage.Protocols.Yahoo;
 
 namespace NexusIM
 {
@@ -447,7 +448,17 @@ namespace NexusIM
 						if (current == null)
 							return null;
 
-						IMProtocol protocol = IMProtocol.FromString(current.AccountType);
+						IMProtocol protocol;
+						switch (current.AccountType.ToLowerInvariant())
+						{
+							case "yahoo":
+								protocol = new IMYahooProtocol();
+								break;
+							default:
+								protocol = IMProtocol.FromString(current.AccountType);
+								break;
+						}
+
 						IMProtocolExtraData extraData = new IMProtocolExtraData();
 						extraData.Protocol = protocol;
 						extraData.DatabaseId = current.Id;

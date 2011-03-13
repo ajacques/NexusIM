@@ -8,6 +8,8 @@ using InstantMessage;
 using NexusIM;
 using NexusIM.Managers;
 using NexusIM.Windows;
+using System.Collections.Generic;
+using System.Net;
 
 namespace NexusIMWPF
 {
@@ -43,7 +45,14 @@ namespace NexusIMWPF
 			IPCHandler.Setup();
 			WindowSystem.RegisterApp(this);
 			this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+			this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 			DoInit();
+		}
+
+		private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		{
+			Trace.WriteLine("Unhandled Exception: " + e.Exception.Message);
+			Trace.WriteLine(e.Exception.StackTrace);
 		}
 
 		public void Dispose()
@@ -63,6 +72,17 @@ namespace NexusIMWPF
 		private static void LoadAccounts(object state)
 		{
 			StopwatchManager.Start("AccDBLoad");
+
+			IEnumerable<IMProtocolExtraData> accounts;
+
+			try	{
+				accounts = IMSettings.Accounts;
+			} catch (Exception e) {
+				Trace.WriteLine("ERROR: Failed to accounts from the local configuration file (Reason: " + e.Message);
+				Trace.WriteLine(e.StackTrace);
+				return;
+			}
+
 			foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
 				AccountManager.Accounts.Add(protocol);
 			StopwatchManager.Stop("AccDBLoad");
@@ -83,9 +103,10 @@ namespace NexusIMWPF
 			Trace.WriteLineIf(Debugger.IsAttached, "Debugger is attached");
 			Trace.WriteLineIf(!Debugger.IsAttached, "No debugger attached");
 
-			string configuri = Path.Combine(Environment.CurrentDirectory, "UserData.sdf");
-			Trace.WriteLine("Configuration File: " + configuri);
-			IMSettings.Setup(new SQLCESettings("Data Source=\"UserProfile.sdf\";Persist Security Info=False;"));
+			string configuri = Path.Combine(Environment.CurrentDirectory, "UserProfile.sdf");
+			string sqlceconnstr = "Data Source=\"" + configuri + "\";Persist Security Info=False;";
+			Trace.WriteLine("Configuration File: " + sqlceconnstr);
+			IMSettings.Setup(new SQLCESettings(sqlceconnstr));
 
 			AggregateContactList.Setup();
 			IMMessageProcessor.Setup();
@@ -95,8 +116,7 @@ namespace NexusIMWPF
 				window.Show();
 				StopwatchManager.TraceElapsed("AppInit", "{0} - InitialSetup Opened in: {1}");
 				AccountManager.Setup();
-			} else
-			{
+			} else {
 				AccountManager.Setup();
 				StopwatchManager.TraceElapsed("AppInit", "{0} - AccountManager loaded in: {1}");
 				ThreadPool.QueueUserWorkItem(new WaitCallback(LoadAccounts), null); // We don't need the accounts loaded immediately since they slow down the application startup due to SQLCE module loading. Schedule them to be loaded later
@@ -107,7 +127,7 @@ namespace NexusIMWPF
 
 			Trace.WriteLine("Configuration file loaded and parsed.");
 
-			RestartManager.Setup();
+			//RestartManager.Setup();
 
 			Trace.WriteLine("All Managers are loaded and ready");
 			StopwatchManager.TraceElapsed("AppInit", "{0} - Application initialization completed in: {1}");

@@ -46,6 +46,8 @@ namespace NexusCore.Support
 			public void Dispose()
 			{
 				mEnumerator.Dispose();
+				mKeygenVector = null;
+				mEnumerator = null;
 			}
 
 			object IEnumerator.Current

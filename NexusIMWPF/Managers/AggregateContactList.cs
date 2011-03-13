@@ -55,6 +55,11 @@ namespace NexusIM.Managers
 					group.Contacts.Add(contact);
 				}
 			}
+			if (e.OldItems != null)
+			{
+				foreach (IContact contact in e.OldItems)
+					ContactList.Remove(contact);
+			}
 		}
 	}
 }

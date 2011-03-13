@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InstantMessage.Internal
+namespace InstantMessage
 {
 	internal static class Endian
 	{
@@ -14,23 +14,19 @@ namespace InstantMessage.Internal
 		}
 		public static int SwapInt32(int v)
 		{
-			return (int)(((SwapInt16((short)v) & 0xffff) << 0x10) | 
-							(SwapInt16((short)(v >> 0x10)) & 0xffff));
+			return (int)(((SwapInt16((short)v) & 0xffff) << 0x10) |	(SwapInt16((short)(v >> 0x10)) & 0xffff));
 		}
 		public static uint SwapUInt32(uint v)
 		{
-			return (uint)(((SwapUInt16((ushort)v) & 0xffff) << 0x10) |
-							(SwapUInt16((ushort)(v >> 0x10)) & 0xffff));
+			return (uint)(((SwapUInt16((ushort)v) & 0xffff) << 0x10) | (SwapUInt16((ushort)(v >> 0x10)) & 0xffff));
 		}
 		public static long SwapInt64(long v)
 		{
-			return (long)(((SwapInt32((int)v) & 0xffffffffL) << 0x20) | 
-							(SwapInt32((int)(v >> 0x20)) & 0xffffffffL));
+			return (long)(((SwapInt32((int)v) & 0xffffffffL) << 0x20) |	(SwapInt32((int)(v >> 0x20)) & 0xffffffffL));
 		}
 		public static ulong SwapUInt64(ulong v)
 		{
-			return (ulong)(((SwapUInt32((uint)v) & 0xffffffffL) << 0x20) |
-							(SwapUInt32((uint)(v >> 0x20)) & 0xffffffffL));
+			return (ulong)(((SwapUInt32((uint)v) & 0xffffffffL) << 0x20) | (SwapUInt32((uint)(v >> 0x20)) & 0xffffffffL));
 		}
 
 		public static bool IsBigEndian
@@ -41,7 +37,7 @@ namespace InstantMessage.Internal
 		}
 		public static bool IsLittleEndian
 		{
-			get {
+			get	{
 				return BitConverter.IsLittleEndian;
 			}
 		}

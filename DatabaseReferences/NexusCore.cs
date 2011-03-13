@@ -276,9 +276,8 @@ namespace NexusCore.Databases
 	{
 		public string DecryptPassword(byte[] keygenVector)
 		{
-			SymmetricAlgorithm symkey = new AesManaged();			
+			SymmetricAlgorithm symkey = CryptoAlgorithm;
 			symkey.Key = ComputeEncryptionKey(keygenVector);
-			symkey.IV = new byte[16];
 
 			ICryptoTransform transform = symkey.CreateDecryptor();
 			byte[] oPassword = new byte[password.Length];
@@ -329,5 +328,20 @@ namespace NexusCore.Databases
 			HashAlgorithm hasher = NexusCoreDataContext.PasswordHasher;
 			return hasher.ComputeHash(stage1);
 		}
+
+		private static SymmetricAlgorithm CryptoAlgorithm
+		{
+			get	{
+				if (mPwdCryptoAlgo == null)
+				{
+					mPwdCryptoAlgo = new AesManaged();
+					mPwdCryptoAlgo.IV = new byte[16];
+				}
+
+				return mPwdCryptoAlgo;
+			}
+		}
+
+		private static SymmetricAlgorithm mPwdCryptoAlgo;
 	}
 }

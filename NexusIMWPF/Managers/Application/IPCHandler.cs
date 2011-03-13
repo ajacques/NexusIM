@@ -37,7 +37,7 @@ namespace NexusIM.Managers
 
 				input = input.TrimEnd(new char[] { ' ' });
 				StreamWriter writer = new StreamWriter(pipeClient);
-				writer.WriteLine(input);
+				writer.WriteLine("CMDARG  " + input);
 				writer.Flush();
 				pipeClient.Flush();
 				pipeClient.Close();
@@ -90,8 +90,12 @@ namespace NexusIM.Managers
 					case "sendim":
 						ProcessSendIMMessage(line.Substring(7));
 						break;
+					case "cmdarg":
+						ProcessCommandArgMessage(line.Substring(7));
+						break;
 					default:
-						writer.WriteLine("ERROR Un-recognized command");
+						if (pipeServer.IsConnected)
+							writer.WriteLine("ERROR Unrecognized command");
 						continue;
 				}
 			}
@@ -100,6 +104,10 @@ namespace NexusIM.Managers
 			pipeServer.BeginWaitForConnection(new AsyncCallback(onNamedPipeRead), null);
 		}
 
+		private static void ProcessCommandArgMessage(string input)
+		{
+			CMDArgsHandler.HandleArg(input);
+		}
 		private static void ProcessSendIMMessage(string input)
 		{
 			string[] chunks = input.Split(' ');

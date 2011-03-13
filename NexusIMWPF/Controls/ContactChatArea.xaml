@@ -21,13 +21,13 @@
 			<DoubleAnimation Storyboard.TargetName="UserOfflineWarning" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.3" From="0" To="1" />
 		</Storyboard>
 	</UserControl.Resources>
-	<UserControl.DataContext>
+	<!--UserControl.DataContext>
 		<im:IMBuddy Username="Adam Jacques" StatusMessage="Can we pretend that airplanes in the night sky are shooting stars? This is a really, really long message that goes off the screen. It will marquee through.">
 			<im:IMBuddy.Avatar>
 				<im:BuddyAvatar />
 			</im:IMBuddy.Avatar>
 		</im:IMBuddy>
-	</UserControl.DataContext>
+	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
 			<LinearGradientBrush EndPoint="0.9,1" StartPoint="0.2,0" SpreadMethod="Repeat">

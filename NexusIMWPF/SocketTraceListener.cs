@@ -8,7 +8,7 @@ using System.IO;
 
 namespace NexusIM
 {
-	class SocketTraceListener : TraceListener
+	class SocketTraceListener : TraceListener, IDisposable
 	{
 		public SocketTraceListener(string hostname, int port)
 		{
@@ -18,12 +18,24 @@ namespace NexusIM
 			mWriter = new StringWriter();
 		}
 
+		public void Dispose()
+		{
+			Trace.Listeners.Remove(this);
+			if (mWriter != null)
+				mWriter.Close();
+			else if (mSocket != null)
+				mSocket.Close();
+
+			mSocket = null;
+			mWriter = null;
+		}
+
 		private void OnConnect(IAsyncResult e)
 		{
 			try	{
 				mSocket.EndConnect(e);
 			} catch (SocketException) {
-				Trace.Listeners.Remove(this);
+				Dispose();
 				return;
 			}
 
@@ -39,7 +51,8 @@ namespace NexusIM
 				mWriter.Write(message);
 				mWriter.Flush();
 			} catch (SocketException) {
-				Trace.Listeners.Remove(this);
+				Dispose();
+				return;
 			}
 		}
 
@@ -49,9 +62,11 @@ namespace NexusIM
 				mWriter.WriteLine(message);
 				mWriter.Flush();
 			} catch (SocketException) {
-				Trace.Listeners.Remove(this);
+				Dispose();
+				return;
 			} catch (IOException) {
-				Trace.Listeners.Remove(this);
+				Dispose();
+				return;
 			}
 		}
 

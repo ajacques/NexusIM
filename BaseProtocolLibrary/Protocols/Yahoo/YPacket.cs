@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Collections;
 
 namespace InstantMessage.Protocols.Yahoo
 {
@@ -108,27 +106,33 @@ namespace InstantMessage.Protocols.Yahoo
 		public byte[] ToBytes()
 		{
 			int totalBlockSize = 0;
-			List<byte[]> blocks = new List<byte[]>();
+			List<byte[]> blocks = new List<byte[]>(parameters.Count);
 			foreach (var pair in parameters)
 			{
-				byte[] keyBytes = dEncoding.GetBytes(pair.Key.ToString());
-				byte[] valBytes = dEncoding.GetBytes(pair.Value);
-				byte[] block = new byte[keyBytes.Length + valBytes.Length + 4]; // Four bytes for the separators
+				string key = pair.Key.ToString();
+				string value = pair.Value;
+				byte[] block = new byte[key.Length + value.Length + 4]; // Four bytes for the separators
 				
-				Buffer.BlockCopy(keyBytes, 0, block, 0, keyBytes.Length);
-				Buffer.BlockCopy(separator, 0, block, keyBytes.Length, 2);
-				Buffer.BlockCopy(valBytes, 0, block, keyBytes.Length + 2, valBytes.Length);
-				Buffer.BlockCopy(separator, 0, block, keyBytes.Length + valBytes.Length + 2, 2);
+				// Copy the Key and the Value into parameter array
+				dEncoding.GetBytes(key, 0, key.Length, block, 0);
+				dEncoding.GetBytes(value, 0, value.Length, block, key.Length + 2);
+
+				// Now copy the separators in
+				Buffer.BlockCopy(separator, 0, block, key.Length, 2);
+				Buffer.BlockCopy(separator, 0, block, block.Length - 2, 2);
 
 				blocks.Add(block);
 				totalBlockSize += block.Length;
 			}
 
-			byte[] finalPacket = new byte[20 + totalBlockSize];
+			byte[] finalPacket = new byte[20 + totalBlockSize]; // 20 Bytes for the header
+
+			// Convert the length to Big-Endian if needed
+			if (BitConverter.IsLittleEndian)
+				totalBlockSize = Endian.SwapInt32(totalBlockSize);
 
 			byte[] lenBytes = BitConverter.GetBytes(totalBlockSize);
-			if (BitConverter.IsLittleEndian)
-				Array.Reverse(lenBytes);
+
 			Buffer.BlockCopy(lenBytes, 2, finalPacket, 8, 2);
 
 			Buffer.BlockCopy(packetStartBytes, 0, finalPacket, 0, 4); // YMSG header

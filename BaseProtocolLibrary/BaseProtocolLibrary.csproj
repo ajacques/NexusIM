@@ -69,6 +69,7 @@
     <Compile Include="Attributes.cs" />
     <Compile Include="ChatInline.cs" />
     <Compile Include="ComplexChatMessage.cs" />
+    <Compile Include="Endian.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Protocols\ContactCollection.cs" />
@@ -123,7 +124,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
