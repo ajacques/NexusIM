@@ -30,7 +30,7 @@ namespace NexusIMWPF
 		{
 			// Single instance Lock
 			mSingleInstanceMutex = new Mutex(true, "Local\\NexusIM");
-			if (!mSingleInstanceMutex.WaitOne(0, false))
+			if (!mSingleInstanceMutex.WaitOne(0, false)) // Check to see if there is already an instance running
 			{
 				string[] commands = Environment.GetCommandLineArgs();
 
@@ -39,14 +39,15 @@ namespace NexusIMWPF
 				else
 					IPCHandler.OpenConnection();
 
+				mSingleInstanceMutex.Dispose();
 				this.Shutdown();
 				return;
 			}
-			IPCHandler.Setup();
+			ThreadPool.QueueUserWorkItem(new WaitCallback(DoInit), null);
+
 			WindowSystem.RegisterApp(this);
 			this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 			this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
-			DoInit();
 		}
 
 		private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -67,8 +68,14 @@ namespace NexusIMWPF
 
 			mSingleInstanceMutex.Close();
 			SuperTaskbarManager.Shutdown();
+			this.Dispose();
 		}
 
+		private static void DelayedStart(object state)
+		{
+			IPCHandler.StartServer();
+			AccountManager.Setup();
+		}
 		private static void LoadAccounts(object state)
 		{
 			StopwatchManager.Start("AccDBLoad");
@@ -83,11 +90,15 @@ namespace NexusIMWPF
 				return;
 			}
 
-			foreach (IMProtocolExtraData protocol in IMSettings.Accounts)
-				AccountManager.Accounts.Add(protocol);
+			IEnumerator<IMProtocolExtraData> accEnumer = accounts.GetEnumerator();
+
+			while (accEnumer.MoveNext())
+				AccountManager.Accounts.Add(accEnumer.Current);
+
 			StopwatchManager.Stop("AccDBLoad");
+			accEnumer.Dispose();
 		}
-		private static void DoInit()
+		private static void DoInit(object state)
 		{
 			SetupTraceListeners();
 			StopwatchManager.TraceElapsed("AppInit", "{0} - OnStartup begin: {1}");
@@ -104,20 +115,19 @@ namespace NexusIMWPF
 			Trace.WriteLineIf(!Debugger.IsAttached, "No debugger attached");
 
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserProfile.sdf");
-			string sqlceconnstr = "Data Source=\"" + configuri + "\";Persist Security Info=False;";
-			Trace.WriteLine("Configuration File: " + sqlceconnstr);
-			IMSettings.Setup(new SQLCESettings(sqlceconnstr));
+			Trace.WriteLine("Configuration File: " + configuri);
+
+			IMSettings.Setup(new SQLCESettings("Data Source=\"" + configuri + "\";Persist Security Info=False;"));
 
 			AggregateContactList.Setup();
 			IMMessageProcessor.Setup();
+			ThreadPool.QueueUserWorkItem(new WaitCallback(DelayedStart), null);
 			if (FirstRunSetup.IsFirstRun)
 			{
 				InitialSetupWindow window = new InitialSetupWindow();
 				window.Show();
 				StopwatchManager.TraceElapsed("AppInit", "{0} - InitialSetup Opened in: {1}");
-				AccountManager.Setup();
-			} else {
-				AccountManager.Setup();
+			} else {				
 				StopwatchManager.TraceElapsed("AppInit", "{0} - AccountManager loaded in: {1}");
 				ThreadPool.QueueUserWorkItem(new WaitCallback(LoadAccounts), null); // We don't need the accounts loaded immediately since they slow down the application startup due to SQLCE module loading. Schedule them to be loaded later
 
@@ -139,9 +149,8 @@ namespace NexusIMWPF
 			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
 			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
 
-			try
-			{
-				Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate, FileAccess.Write);
+			try	{
+				Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate | FileMode.Truncate, FileAccess.Write);
 				Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
 			} catch (IOException) { }
 		}

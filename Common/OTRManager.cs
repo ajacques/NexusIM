@@ -4,7 +4,6 @@ using System.Text;
 using InstantMessage.Events;
 using System.Linq;
 using System.Diagnostics;
-using InstantMessage.Internal;
 using InstantMessage.Protocols;
 
 namespace InstantMessage.Security

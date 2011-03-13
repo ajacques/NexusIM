@@ -17,7 +17,7 @@ using InstantMessage.Events;
 namespace InstantMessage.Protocols.Yahoo
 {
 	[IMNetwork("yahoo")]
-	public sealed partial class IMYahooProtocol : IMProtocol
+	public sealed partial class IMYahooProtocol : IMProtocol, IDisposable
 	{
 		public IMYahooProtocol()
 		{
@@ -40,6 +40,9 @@ namespace InstantMessage.Protocols.Yahoo
 			if (status != IMProtocolStatus.Offline)
 				return;
 
+			if (disposed)
+				throw new ObjectDisposedException("this");
+
 			status = IMProtocolStatus.Connecting;
 			base.BeginLogin();
 			mLoginWaitHandle.Reset();
@@ -50,10 +53,15 @@ namespace InstantMessage.Protocols.Yahoo
 			beginAuthenticate();
 
 			mEnabled = true;
+			dataqueue = new byte[2048];
 		}
 		public override void Disconnect()
 		{
+			if (disposed)
+				throw new ObjectDisposedException("this");
+
 			CleanupBuddyList();
+			CleanupTransientData();
 
 			if (status == IMProtocolStatus.Online) // Check to see if we were even connected.
 			{
@@ -68,11 +76,59 @@ namespace InstantMessage.Protocols.Yahoo
 			} else if (status == IMProtocolStatus.Connecting) {
 
 			}
+
+			yaddrbookdld = false;
+			Connected = false;
+			authenticated = false;
+		}
+
+		private void CleanupTransientData()
+		{
+			if (nsStream != null)
+			{
+				nsStream.Close();
+				nsStream.Dispose();
+			}
+
+			if (client != null && client.Connected)
+				client.Close();
+
+			connectServer = null;
+			nsStream = null;
+			client = null;
+			dataqueue = null;
+			token = null;
+			authtoken = null;
+			authtoken2 = null;
+			crumb = null;
+			sessionByte = null;
+
+			if (queuedpackets != null)
+				queuedpackets.Clear();
+			if (logincookies != null)
+				logincookies.Clear();
+			if (addbuddygroups != null)
+				addbuddygroups.Clear();
+		}
+
+		public void Dispose()
+		{
+			CleanupTransientData();
+
+			queuedpackets = null;
+			logincookies = null;
+			addbuddygroups = null;
+			mCarriers = null;
+
+			disposed = true;
 		}
 
 		// Basic Messaging Functions
 		public override void SendMessage(string userName, string message)
 		{
+			if (disposed)
+				throw new ObjectDisposedException("this");
+
 			try {
 				base.SendMessage(userName, message);
 			} catch (Exception) {
@@ -1220,7 +1276,7 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 
 		// Protocol Specific Variables
-		private byte[] dataqueue = new byte[2048];
+		private byte[] dataqueue;
 		private byte[] sessionByte;
 
 		// Socket Information
@@ -1229,8 +1285,9 @@ namespace InstantMessage.Protocols.Yahoo
 		private IPAddress connectServer;
 
 		// State Information
-		private bool yaddrbookdld = false;
-		private bool authenticated = false;
+		private bool yaddrbookdld;
+		private bool authenticated;
+		private bool disposed;
 
 		// Authentication Information
 		private string token;

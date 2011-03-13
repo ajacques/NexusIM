@@ -65,6 +65,11 @@ namespace NexusIM.Controls
 			changeStatusMessage.Header = "My Status Message";
 			AvailabilityGroupItem.Items.Add(changeStatusMessage);
 
+			MenuItem gcCollectItem = new MenuItem();
+			gcCollectItem.Header = "Force GC Collection";
+			gcCollectItem.Click += new RoutedEventHandler(gcCollectItem_Click);
+			this.Items.Add(gcCollectItem);
+
 			SignOutItem = new MenuItem();
 			SignOutItem.Header = "Sign Out";
 			base.Items.Add(SignOutItem);
@@ -75,6 +80,7 @@ namespace NexusIM.Controls
 			ExitItem.Header = "Exit";
 			base.Items.Add(ExitItem);
 		}
+
 		private void SetupEventHandlers()
 		{
 			AvailableStatusItem.Click += new RoutedEventHandler(AvailableStatusItem_Click);
@@ -185,6 +191,12 @@ namespace NexusIM.Controls
 		private void InvisibleStatusItem_Click(object sender, RoutedEventArgs e)
 		{
 			AccountManager.Status = IMStatus.Invisible;
+		}
+		private void gcCollectItem_Click(object sender, RoutedEventArgs e)
+		{
+			GC.Collect();
+			GC.WaitForPendingFinalizers();
+			GC.Collect();
 		}
 	}
 }

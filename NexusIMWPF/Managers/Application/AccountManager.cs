@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using InstantMessage;
 using Microsoft.WindowsAPICodePack.Net;
+using System.Threading;
 
 namespace NexusIM.Managers
 {
@@ -75,15 +76,17 @@ namespace NexusIM.Managers
 		}
 		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			if (e.NewItems != null)
-			{
-				foreach (IMProtocolExtraData extraData in e.NewItems)
+			ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => {
+				if (e.NewItems != null)
 				{
-					extraData.IsReady = true;
-					extraData.PropertyChanged += new PropertyChangedEventHandler(IndividualProtocol_PropertyChanged);
-					ConnectIfNeeded(extraData);
+					foreach (IMProtocolExtraData extraData in e.NewItems)
+					{
+						extraData.IsReady = true;
+						extraData.PropertyChanged += new PropertyChangedEventHandler(IndividualProtocol_PropertyChanged);
+						ConnectIfNeeded(extraData);
+					}
 				}
-			}
+			}));
 		}
 
 		private static void ConnectIfNeeded(IMProtocolExtraData extraData)

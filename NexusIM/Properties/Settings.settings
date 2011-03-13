@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NexusIM.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="GoogleSafeBrowsingApiKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ABQIAAAAloNfXaQf5jpgrYCnsTPxUhQ5sy8iCjImErs7Csczn2TVRp4PgA</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>

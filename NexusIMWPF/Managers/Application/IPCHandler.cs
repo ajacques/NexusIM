@@ -17,7 +17,7 @@ namespace NexusIM.Managers
 		/// <summary>
 		/// Sets-up all variables used by the named pipe, and creates the named pipe
 		/// </summary>
-		public static void Setup()
+		public static void StartServer()
 		{
 			pipeServer = new NamedPipeServerStream("nexusim", PipeDirection.InOut, -1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
 			pipeServer.BeginWaitForConnection(new AsyncCallback(onNamedPipeRead), null);

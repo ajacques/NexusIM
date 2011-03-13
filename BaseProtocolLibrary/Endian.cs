@@ -2,7 +2,7 @@
 
 namespace InstantMessage
 {
-	internal static class Endian
+	public static class Endian
 	{
 		public static short SwapInt16(short v)
 		{

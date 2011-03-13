@@ -1,1 +1,0 @@
-ilmerge /lib:"E:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /target:winexe /targetplatform:v4,"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" /out:Merged.exe NexusIM.exe BaseProtocolLibrary.dll Common.dll jabber-net.dll MSNPSharp.dll MSNPSharp.XmlSerializers.dll netlib.Dns.dll OscarLib.dll udpBinding.dll VistaBridgeLibrary.dll zlib.net.dll

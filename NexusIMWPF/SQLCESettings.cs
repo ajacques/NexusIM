@@ -2,18 +2,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Data.Linq;
+using System.Data.SqlServerCe;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using InstantMessage;
 using InstantMessage.Protocols.Yahoo;
+using Microsoft.SqlServerCe.VersionManagement;
 
 namespace NexusIM
 {
-	public class SQLCESettings : ISettings
+	public sealed class SQLCESettings : ISettings
 	{
 		public SQLCESettings(string connectionString)
 		{
-			mConnectionString = connectionString;
+			ConnectionString = connectionString;
+			Prepare();
+		}
+
+		public void Prepare()
+		{
+			SqlCeVersion version = SqlCeVersionManager.GetVersion(ConnectionString);
+			Trace.Write("SqlCeSettings: Database file version: " + version);
+			if (version < new SqlCeVersion(4, 0))
+			{
+				Trace.WriteLine(" ... Upgrading");
+				UpgradeDatafile();
+				VerifyIntegrity();
+			} else
+				Trace.WriteLine("");
+		}
+
+		private void UpgradeDatafile()
+		{
+			SqlCeEngine engine = new SqlCeEngine(ConnectionString);
+			engine.Upgrade();
+
+			engine.Dispose();
+		}
+		private void VerifyIntegrity()
+		{
+			SqlCeEngine engine = new SqlCeEngine(ConnectionString);
+			if (!engine.Verify())
+				throw new ApplicationException("UserProfile database failed integrity check");
 		}
 
 		// Nested Classes
@@ -23,7 +56,7 @@ namespace NexusIM
 
 			public void Add(string key, string value)
 			{
-				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 				Setting setting = new Setting();
 				setting.Key = key;
 				setting.Value = value;
@@ -34,21 +67,21 @@ namespace NexusIM
 			}
 			public bool ContainsKey(string key)
 			{
-				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 				return db.Settings.Any(s => s.Key == key);
 			}
 			public ICollection<string> Keys
 			{
 				get {
-					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 					return db.Settings.Select(s => s.Key).ToList();
 				}
 			}
 			public bool Remove(string key)
 			{
-				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 				Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
 				if (setting == null)
@@ -61,7 +94,7 @@ namespace NexusIM
 			}
 			public bool TryGetValue(string key, out string value)
 			{
-				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 				Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
 				value = null;
@@ -74,7 +107,7 @@ namespace NexusIM
 			public ICollection<string> Values
 			{
 				get {
-					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 					return db.Settings.Select(s => s.Value).ToList();
 				}
@@ -82,7 +115,7 @@ namespace NexusIM
 			public string this[string key]
 			{
 				get	{
-					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
@@ -92,7 +125,7 @@ namespace NexusIM
 					return setting.Value;
 				}
 				set	{
-					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
 
@@ -128,7 +161,7 @@ namespace NexusIM
 			public int Count
 			{
 				get {
-					UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 					return db.Settings.Count();
 				}
@@ -150,7 +183,7 @@ namespace NexusIM
 
 			public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 			{
-				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
 				return db.Settings.Select(s => new KeyValuePair<string, string>(s.Key, s.Value)).GetEnumerator();
 			}
@@ -635,7 +668,7 @@ namespace NexusIM
 
 			public void PutInPool(int poolid, IContact contact)
 			{
-				UserProfile db = UserProfile.Create(SQLCESettings.mConnectionString);
+				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 				ChatWindowPool pool = db.ChatWindowPools.FirstOrDefault(cwp => cwp.Account.Username == contact.Protocol.Username && cwp.Account.AccountType == contact.Protocol.ShortProtocol && cwp.Username == contact.Username);
 				if (pool == null)
 				{
@@ -671,7 +704,7 @@ namespace NexusIM
 		{
 			get	{
 				if (mAccountList == null)
-					mAccountList = new SqlAccountList(mConnectionString);
+					mAccountList = new SqlAccountList(ConnectionString);
 				return mAccountList;
 			}
 		}
@@ -687,7 +720,7 @@ namespace NexusIM
 		{
 			get	{
 				if (mProtocolSettings == null)
-					mProtocolSettings = new SqlProtocolDictionary(mConnectionString);
+					mProtocolSettings = new SqlProtocolDictionary(ConnectionString);
 				return mProtocolSettings;
 			}
 		}
@@ -702,7 +735,11 @@ namespace NexusIM
 		}
 		
 		// Variables
-		protected static string mConnectionString;
+		private static string ConnectionString
+		{
+			get;
+			set;
+		}
 		private SqlAccountList mAccountList;
 		private SqlDictionary mGenericSettings;
 		private SqlProtocolDictionary mProtocolSettings;

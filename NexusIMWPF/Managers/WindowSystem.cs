@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
-using Hardcodet.Wpf.TaskbarNotification;
 using InstantMessage;
 using NexusIM.Controls;
-using NexusIM.Properties;
 using NexusIM.Windows;
 using NexusIMWPF;
 

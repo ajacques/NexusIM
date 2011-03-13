@@ -11,9 +11,18 @@ namespace NexusIM
 	/// <summary>
 	/// Manages open connections on a per-thread basis
 	/// </summary>
-	class CEConnectionPool
+	class CEConnectionPool : IDisposable
 	{
 		private Dictionary<int, IDbConnection> threadConnectionMap;
+
+		public void Dispose()
+		{
+			if (threadConnectionMap != null)
+			{
+				foreach (var pair in threadConnectionMap)
+					pair.Value.Dispose();
+			}
+		}
 
 		/// <summary>
 		/// Gets the connection string.
