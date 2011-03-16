@@ -9,7 +9,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using InstantMessage.Events;
-using System.Net;
 
 namespace InstantMessage.Protocols.Irc
 {
@@ -24,13 +23,16 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public IRCProtocol(string hostname, int port = 6667) : this()
 		{
+			if ((port < 0) && (port > 0xffff))
+				throw new ArgumentOutOfRangeException("port", "The port number " + port + " is not a valid port number");
+
 			Server = hostname;
 			Port = port;
 		}
 		public void Dispose()
 		{
 			if (status != IMProtocolStatus.Offline)
-				throw new InvalidOperationException("Disconnect from the server before you call Dispose");
+				Disconnect();
 
 			Debug.WriteLine("Dispose Requested... Cleaning-up resources");
 
@@ -63,12 +65,18 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public override void Disconnect()
 		{
-			sendData("QUIT");
+			try	{
+				sendData("QUIT");
+			} catch (IOException) {}
+
+#if SILVERLIGHT
+			client.Close();
+#else
+			client.Disconnect(false);
+#endif	
 
 			triggerOnDisconnect(null);
 			status = IMProtocolStatus.Offline;
-
-			Dispose();
 		}
 		public override IChatRoom JoinChatRoom(string room)
 		{
@@ -105,8 +113,7 @@ namespace InstantMessage.Protocols.Irc
 
 		public void Disconnect(string reason)
 		{
-			sendData("SQUIT :" + reason);
-			Dispose();
+			sendData("QUIT :" + reason);
 		}
 		public void LoginAsOperator(string username, string password)
 		{
@@ -211,6 +218,10 @@ namespace InstantMessage.Protocols.Irc
 			{
 				if (mResetEvent != null)
 					mResetEvent.Dispose();
+
+				mResults = null;
+				mMask = null;
+				mResetEvent = null;
 			}
 
 			public void AppendResult(IRCUserMask mask)
@@ -249,7 +260,9 @@ namespace InstantMessage.Protocols.Irc
 			}
 			public bool CompletedSynchronously
 			{
-				get { throw new NotImplementedException(); }
+				get {
+					return false;
+				}
 			}
 			public bool IsCompleted
 			{
@@ -514,7 +527,15 @@ namespace InstantMessage.Protocols.Irc
 		}
 
 		// Socket Support Methods
-		private void SocketReadHandleWraparound(int bytesRead)
+		private void SocketProcessByteQueue(int bytesRead)
+		{
+			IEnumerable<string> lines = SocketHandleLineWrapAround(bytesRead);
+
+			foreach (string line in lines)
+				ParseLine(line);
+		}
+
+		private IEnumerable<string> SocketHandleLineWrapAround(int bytesRead)
 		{
 			string streamBuf = mTextEncoder.GetString(mDataQueue, 0, bytesRead);
 			IEnumerable<string> lines = streamBuf.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries); // newline means a new command
@@ -535,18 +556,20 @@ namespace InstantMessage.Protocols.Irc
 				}
 			}
 
-			if (bytesRead == mBufferSize) // Check to see if we've read up until the buffer's end
+			if (bytesRead == mDataQueue.Length) // Check to see if we've read up until the buffer's end
+			{
 				readableLines = lines.Take(lineCount - 1);
-
-			foreach (string line in readableLines)
-				ParseLine(line);
-
-			if (bytesRead == mBufferSize)
 				mBufferCutoffMessage = new StringBuilder(lines.Last()); // The last message will be queued up for the rest of the message
+			}
+
+			return readableLines;
 		}
 #if !SILVERLIGHT
 		private void readDataAsync(IAsyncResult args)
 		{
+			if (client == null || !client.Connected)
+				return;
+
 			int bytesRead;
 			try	{
 				bytesRead = mTextStream.EndRead(args);
@@ -562,13 +585,13 @@ namespace InstantMessage.Protocols.Irc
 
 			if (bytesRead == 0) // If we don't read anything, there's a problem
 			{
-				Dispose();
+				Disconnect();
 				return;
 			}
-			
-			SocketReadHandleWraparound(bytesRead);
 
 			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+
+			SocketProcessByteQueue(bytesRead);
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{

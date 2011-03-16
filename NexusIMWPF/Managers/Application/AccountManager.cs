@@ -7,6 +7,7 @@ using System.Net.NetworkInformation;
 using InstantMessage;
 using Microsoft.WindowsAPICodePack.Net;
 using System.Threading;
+using System.Net;
 
 namespace NexusIM.Managers
 {
@@ -102,18 +103,19 @@ namespace NexusIM.Managers
 				}
 			}
 		}
+		private static void ConnectIfNeeded(object threadState)
+		{
+			ConnectIfNeeded((IMProtocolExtraData)threadState);
+		}
 
 		private static void IndividualProtocol_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			IMProtocolExtraData extraData = (IMProtocolExtraData)sender;
-			
 			switch (e.PropertyName)
 			{
 				case "Enabled":
-					ConnectIfNeeded(extraData);
+					ThreadPool.QueueUserWorkItem(new WaitCallback(ConnectIfNeeded), sender); // Don't Queue this entire method because something might change that we don't care about
 					break;
-			}
-			
+			}			
 		}
 
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;

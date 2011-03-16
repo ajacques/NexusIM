@@ -841,8 +841,13 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			logincookies.Clear(); // Just in-case this is the second time we are signing in
 
-			WebRequest request = WebRequest.Create("http://vcs.msg.yahoo.com/capacity");
-			//request.ServicePoint.Expect100Continue = false; // Yahoo doesn't like these
+			Dns.BeginGetHostEntry("vcs.msg.yahoo.com", new AsyncCallback(OnCapacityHostResolve), null); // BeginGetResponse actually uses a non-async Dns resolve method causing un-necessary delays
+		}
+		private void OnCapacityHostResolve(IAsyncResult r)
+		{
+			IPHostEntry entry = Dns.EndGetHostEntry(r);
+
+			WebRequest request = WebRequest.Create("http://" + entry.AddressList[0].ToString() + "/capacity");
 
 			try	{
 				request.BeginGetResponse(new AsyncCallback(OnGetYIPAddress), request);

@@ -32,7 +32,7 @@ namespace NexusIM
 				UpgradeDatafile();
 				VerifyIntegrity();
 			} else
-				Trace.WriteLine("");
+				Trace.WriteLine(String.Empty);
 		}
 
 		private void UpgradeDatafile()
