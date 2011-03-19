@@ -1,26 +1,17 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data.Services;
-using System.Data.Services.Common;
+using System.Collections.Specialized;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Web;
-using NexusWeb.Services.DataContracts;
-using System.ServiceModel;
-using System.Net;
-using System.Security;
-using NexusCore.Databases;
-using System.ServiceModel.Channels;
-using System.IO;
-using System.ServiceModel.Activation;
-using System.Xml;
-using System.Collections;
 using System.Web.SessionState;
-using System.Web.Script.Services;
-using System.Linq.Expressions;
-using System.Collections.Specialized;
-using System.Reflection;
-using System.Data.SqlClient;
+using NexusCore.Databases;
+using NexusWeb.Services.DataContracts;
 
 namespace NexusWeb.Services
 {

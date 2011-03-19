@@ -91,7 +91,11 @@
       <TestLink id="bd9a181a-1891-d8c6-b87e-1c416541c121" name="ConnectTest" storage="cloudtests\bin\debug\cloudtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
-  <TestList name="Protocols" id="b9f60cd9-e9c4-4f63-b05f-85ac5087d2a4" parentListId="da22bf83-52e6-4aa4-96ec-458176698109" />
+  <TestList name="Protocols" id="b9f60cd9-e9c4-4f63-b05f-85ac5087d2a4" parentListId="da22bf83-52e6-4aa4-96ec-458176698109">
+    <TestLinks>
+      <TestLink id="29c35c46-4ff7-d93d-e34e-1090d7c29d91" name="FromStringTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
   <TestList name="Common" id="baab8376-1126-4661-b1af-a0359954afa1" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
       <TestLink id="740a683d-fd81-4b74-d2c1-8770ad0851ec" name="CountTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -130,12 +134,11 @@
   </TestList>
   <TestList name="BaseProtocolLibrary" id="da22bf83-52e6-4aa4-96ec-458176698109" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
-      <TestLink id="0d9f55e8-7abf-a8b4-37a2-ac8b66d2632c" name="LineBreakTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="4273a6dd-074c-084d-a71b-b7f143886317" name="RunTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="67212302-ed66-0e4e-2035-471ce6d46ee2" name="HyperlinkTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="3ce13753-00c9-42a4-325a-b166831cebea" name="RunNewLineTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="1114599d-0a68-014e-d6ee-2046c7379da4" name="MultiRunTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="29c35c46-4ff7-d93d-e34e-1090d7c29d91" name="FromStringTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="3ce13753-00c9-42a4-325a-b166831cebea" name="RunNewLineTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="4273a6dd-074c-084d-a71b-b7f143886317" name="RunTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="0d9f55e8-7abf-a8b4-37a2-ac8b66d2632c" name="LineBreakTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="67212302-ed66-0e4e-2035-471ce6d46ee2" name="HyperlinkTest" storage="protocoltests\bin\debug\protocoltests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
   <TestList name="WebIM" id="e2952889-8186-442e-8691-92bbb91f5636" parentListId="937712c2-a0c1-4ab3-a7da-37b843f168da" />

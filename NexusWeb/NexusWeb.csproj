@@ -20,6 +20,7 @@
     <SilverlightApplicationList>{4FA9EF63-76D1-480C-8928-26EB0E21D18E}|..\SilverlightContactMap\SilverlightContactMap.csproj|ClientBin|False,{B1E3638D-F7B1-47A4-A9A4-9F7C2C231542}|..\SilverIM\SilverIM.csproj|ClientBin|False</SilverlightApplicationList>
     <TargetFrameworkProfile />
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -106,6 +107,14 @@
     <Reference Include="Microsoft.ApplicationServer.Caching.Client" />
     <Reference Include="Microsoft.ApplicationServer.Caching.Core" />
     <Reference Include="Microsoft.SqlServer.Types" />
+    <Reference Include="ServiceStack.Interfaces, Version=1.0.4069.21563, Culture=neutral, PublicKeyToken=1951d30772c6ad05, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\References\ServiceStack\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1951d30772c6ad05, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\References\ServiceStack\ServiceStack.Redis.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -130,8 +139,6 @@
     <Content Include="clientaccesspolicy.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="ClientBin\SilverIM.xap" />
-    <Content Include="ClientBin\SilverlightContactMap.xap" />
     <Content Include="controls\FriendRequest.html" />
     <Content Include="js\crypto-sha256.js" />
     <Content Include="js\jquery-ui-1.8.custom.min.js" />
@@ -177,7 +184,6 @@
     <Content Include="wstest.htm" />
     <Content Include="images\loadinggif.gif" />
     <Content Include="photoalbum.aspx" />
-    <Content Include="ClientBin\System.Windows.Controls.zip" />
     <None Include="App_Browsers\smartphones\mobile.browser" />
     <Content Include="App_Browsers\tablets\tablets.browser">
       <SubType>Designer</SubType>

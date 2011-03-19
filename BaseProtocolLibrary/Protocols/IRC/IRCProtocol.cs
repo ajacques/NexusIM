@@ -537,32 +537,35 @@ namespace InstantMessage.Protocols.Irc
 
 		private IEnumerable<string> SocketHandleLineWrapAround(int bytesRead)
 		{
-			string streamBuf = mTextEncoder.GetString(mDataQueue, 0, bytesRead);
-			IEnumerable<string> lines = streamBuf.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries); // newline means a new command
-			int lineCount = lines.Count();
-
-			// Check to see if there was a command that was cutoff at the end of the previous buffer read.
-			IEnumerable<string> readableLines = lines;
-			if (mBufferCutoffMessage != null)
+			lock (mSocketProcessLock)
 			{
-				mBufferCutoffMessage.Append(lines.First());
+				string streamBuf = mTextEncoder.GetString(mDataQueue, 0, bytesRead);
+				IEnumerable<string> lines = streamBuf.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries); // newline means a new command
+				int lineCount = lines.Count();
 
-				if (lineCount >= 2) // Check to see if there are any other commands after that one
+				// Check to see if there was a command that was cutoff at the end of the previous buffer read.
+				IEnumerable<string> readableLines = lines;
+				if (mBufferCutoffMessage != null)
 				{
-					string[] last = new string[] { mBufferCutoffMessage.ToString() };
-					mBufferCutoffMessage = null;
+					mBufferCutoffMessage.Append(lines.First());
 
-					readableLines = last.Skip(1).Union(readableLines); // Skip the partial message at the beginning and append the other lines to the list
+					if (lineCount >= 2) // Check to see if there are any other commands after that one
+					{
+						string[] last = new string[] { mBufferCutoffMessage.ToString() };
+						mBufferCutoffMessage = null;
+
+						readableLines = last.Skip(1).Union(readableLines); // Skip the partial message at the beginning and append the other lines to the list
+					}
 				}
-			}
 
-			if (bytesRead == mDataQueue.Length) // Check to see if we've read up until the buffer's end
-			{
-				readableLines = lines.Take(lineCount - 1);
-				mBufferCutoffMessage = new StringBuilder(lines.Last()); // The last message will be queued up for the rest of the message
-			}
+				if (bytesRead == mDataQueue.Length) // Check to see if we've read up until the buffer's end
+				{
+					readableLines = lines.Take(lineCount - 1);
+					mBufferCutoffMessage = new StringBuilder(lines.Last()); // The last message will be queued up for the rest of the message
+				}
 
-			return readableLines;
+				return readableLines;
+			}
 		}
 #if !SILVERLIGHT
 		private void readDataAsync(IAsyncResult args)
@@ -589,9 +592,9 @@ namespace InstantMessage.Protocols.Irc
 				return;
 			}
 
-			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
-
 			SocketProcessByteQueue(bytesRead);
+
+			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{
@@ -662,6 +665,7 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 
 		// Variables
+		private object mSocketProcessLock = new object();
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
 		private string mNickname;

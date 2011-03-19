@@ -47,12 +47,12 @@ namespace WebTests
 
 			GeoCity city = service.LatLngToCity(latitude, longitude);
 
-			Assert.AreEqual("Marquette", city.mCity);
-			Assert.AreEqual("USA", city.mCountry.ISO3);
-			Assert.AreEqual("Michigan", city.mAdminLevel1.Name);
-			Assert.AreEqual(GeoLevel1Type.State, city.mAdminLevel1.Type);
-			Assert.AreEqual("Marquette", city.mAdminLevel2.Name);
-			Assert.AreEqual(GeoLevel2Type.County, city.mAdminLevel2.Type);
+			Assert.AreEqual("Marquette", city.City);
+			Assert.AreEqual("USA", city.Country.ISO3);
+			Assert.AreEqual("Michigan", city.AdminLevel1.Name);
+			Assert.AreEqual(GeoLevel1Type.State, city.AdminLevel1.Type);
+			Assert.AreEqual("Marquette", city.AdminLevel2.Name);
+			Assert.AreEqual(GeoLevel2Type.County, city.AdminLevel2.Type);
 		}
 
 		[TestMethod]
@@ -65,12 +65,12 @@ namespace WebTests
 
 			GeoCity city = service.LatLngToCity(latitude, longitude);
 
-			Assert.IsNull(city.mCity);
-			Assert.AreEqual("USA", city.mCountry.ISO3);
-			Assert.AreEqual("Michigan", city.mAdminLevel1.Name);
-			Assert.AreEqual(GeoLevel1Type.State, city.mAdminLevel1.Type);
-			Assert.AreEqual("Marquette", city.mAdminLevel2.Name);
-			Assert.AreEqual(GeoLevel2Type.County, city.mAdminLevel2.Type);
+			Assert.IsNull(city.City);
+			Assert.AreEqual("USA", city.Country.ISO3);
+			Assert.AreEqual("Michigan", city.AdminLevel1.Name);
+			Assert.AreEqual(GeoLevel1Type.State, city.AdminLevel1.Type);
+			Assert.AreEqual("Marquette", city.AdminLevel2.Name);
+			Assert.AreEqual(GeoLevel2Type.County, city.AdminLevel2.Type);
 		}
 
 		[TestMethod]
@@ -83,10 +83,10 @@ namespace WebTests
 
 			GeoCity city = service.LatLngToCity(latitude, longitude);
 
-			Assert.AreEqual("Toronto", city.mCity);
-			Assert.AreEqual("CAN", city.mCountry.ISO3);
-			Assert.AreEqual("Ontario", city.mAdminLevel1.Name);
-			Assert.AreEqual(GeoLevel1Type.Province, city.mAdminLevel1.Type);
+			Assert.AreEqual("Toronto", city.City);
+			Assert.AreEqual("CAN", city.Country.ISO3);
+			Assert.AreEqual("Ontario", city.AdminLevel1.Name);
+			Assert.AreEqual(GeoLevel1Type.Province, city.AdminLevel1.Type);
 		}
 
 		[TestMethod]
@@ -99,9 +99,9 @@ namespace WebTests
 
 			GeoCity city = service.LatLngToCity(latitude, longitude);
 
-			Assert.AreEqual("Taipei", city.mCity);
-			Assert.AreEqual("TWN", city.mCountry.ISO3);
-			Assert.AreEqual("Taipei", city.mAdminLevel1.Name);
+			Assert.AreEqual("Taipei", city.City);
+			Assert.AreEqual("TWN", city.Country.ISO3);
+			Assert.AreEqual("Taipei", city.AdminLevel1.Name);
 		}
 	}
 }

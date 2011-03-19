@@ -1,35 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace NexusWeb.Services.DataContracts
 {
 	[DataContract(Namespace = "")]
 	public class GeoCity
 	{
-		public string City
-		{
-			get	{
-				return mCity;
-			}
-		}
-		public GeoLevel1 AdminLevel1
-		{
-			get	{
-				return mAdminLevel1;
-			}
-		}
-
 		[DataMember(Name = "City")]
-		public string mCity;
+		public string City;
 		[DataMember(Name = "AdminLevel1")]
-		public GeoLevel1 mAdminLevel1;
+		public GeoLevel1 AdminLevel1;
 		[DataMember(Name = "AdminLevel2")]
-		public GeoLevel2 mAdminLevel2;
+		public GeoLevel2 AdminLevel2;
 		[DataMember(Name = "Country")]
-		public GeoCountry mCountry;
+		public GeoCountry Country;
 	}
 
 	[DataContract]
