@@ -7,7 +7,6 @@ using NexusWeb.Properties;
 using Microsoft.ApplicationServer.Caching;
 using System.Diagnostics;
 using NexusCore.Databases;
-using NexusCore.Databases;
 
 namespace NexusWeb.Pages
 {

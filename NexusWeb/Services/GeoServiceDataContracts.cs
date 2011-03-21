@@ -5,13 +5,13 @@ namespace NexusWeb.Services.DataContracts
 	[DataContract(Namespace = "")]
 	public class GeoCity
 	{
-		[DataMember(Name = "City")]
+		[DataMember(Name = "City", EmitDefaultValue = false)]
 		public string City;
-		[DataMember(Name = "AdminLevel1")]
+		[DataMember(Name = "AdminLevel1", EmitDefaultValue = false)]
 		public GeoLevel1 AdminLevel1;
-		[DataMember(Name = "AdminLevel2")]
+		[DataMember(Name = "AdminLevel2", EmitDefaultValue = false)]
 		public GeoLevel2 AdminLevel2;
-		[DataMember(Name = "Country")]
+		[DataMember(Name = "Country", EmitDefaultValue = false)]
 		public GeoCountry Country;
 	}
 

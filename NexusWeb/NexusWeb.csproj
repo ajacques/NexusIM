@@ -107,14 +107,6 @@
     <Reference Include="Microsoft.ApplicationServer.Caching.Client" />
     <Reference Include="Microsoft.ApplicationServer.Caching.Core" />
     <Reference Include="Microsoft.SqlServer.Types" />
-    <Reference Include="ServiceStack.Interfaces, Version=1.0.4069.21563, Culture=neutral, PublicKeyToken=1951d30772c6ad05, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\ServiceStack\ServiceStack.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Redis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1951d30772c6ad05, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\References\ServiceStack\ServiceStack.Redis.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -219,6 +211,7 @@
   <ItemGroup>
     <Compile Include="BackgroundCode\BingMapsBTree.cs" />
     <Compile Include="BackgroundCode\CounterCSRF.cs" />
+    <Compile Include="BackgroundCode\RedisClient.cs" />
     <Compile Include="BackgroundCode\ServiceAuthorizationManager.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

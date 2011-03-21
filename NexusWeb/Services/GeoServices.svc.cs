@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.ServiceModel.Web;
 using System.Text;
 using NexusCore.Databases;
+using NexusWeb.Infrastructure.Redis;
 using NexusWeb.Services.DataContracts;
-using ServiceStack.Redis;
 
 namespace NexusWeb.Services
 {
@@ -14,6 +17,7 @@ namespace NexusWeb.Services
 	public class GeoService
 	{
 		[OperationContract]
+		[WebGet]
 		public GeoCity LatLngToCity(double latitude, double longitude)
 		{
 			GeoCity gcity = null;
@@ -22,21 +26,31 @@ namespace NexusWeb.Services
 			longitude = Math.Round(longitude, 3);
 
 			string cachekey = ComputeCacheKey(latitude, longitude);
-			if (EnableGISCaching && GetCachedResult(cachekey, out gcity))
-				return gcity;
+
+			if (EnableGISCaching && RedisClient != null && GetCachedResult(cachekey, out gcity))
+			{
+				Stopwatch sw = new Stopwatch();
+				sw.Start();
+				try {
+					if (RedisClient != null && GetCachedResult(cachekey, out gcity))
+						return gcity;
+				} finally {
+					sw.Stop();
+					Trace.Write(string.Format("GeoService: Redis search took {0} seconds and found ", sw.Elapsed.TotalSeconds));
+					Trace.WriteLineIf(gcity != null, "a result");
+					Trace.WriteLineIf(gcity == null, "no results");
+				}
+			}
 
 			GeoDataDataContext db = new GeoDataDataContext();
 			
 			if (gcity == null)
 				gcity = new GeoCity();
 
-			if (gcity.Country == null)
-			{
-				Country country = db.GetCountry(latitude, longitude).FirstOrDefault();
+			Country country = db.GetCountry(latitude, longitude).FirstOrDefault();
 
-				if (country != null)
-					gcity.Country = new GeoCountry() { ISO3 = country.ISO3, FullName = country.Name };
-			}
+			if (country != null)
+				gcity.Country = new GeoCountry() { ISO3 = country.ISO3, FullName = country.Name };
 
 			if (gcity.City == null)
 			{
@@ -114,10 +128,10 @@ namespace NexusWeb.Services
 			if (body == null)
 				return false;
 
-			string city = mCacheEncoding.GetString(body, 4, body[0]);
-			string admlvl1 = mCacheEncoding.GetString(body, 4 + body[0], body[1]);
-			string admlvl2 = mCacheEncoding.GetString(body, 4 + body[0] + body[1], body[2]);
-			string country = mCacheEncoding.GetString(body, 4 + body[0] + body[1] + body[2], body[3]);
+			string city = body[0] >= 1 ? mCacheEncoding.GetString(body, 4, body[0]) : null;
+			string admlvl1 = body[1] >= 1 ? mCacheEncoding.GetString(body, 4 + body[0], body[1]) : null;
+			string admlvl2 = body[2] >= 1 ? mCacheEncoding.GetString(body, 4 + body[0] + body[1], body[2]) : null;
+			string country = body[3] >= 1 ? mCacheEncoding.GetString(body, 4 + body[0] + body[1] + body[2], body[3]) : null;
 
 			gcityResult = new GeoCity();
 			gcityResult.City = city;
@@ -126,7 +140,7 @@ namespace NexusWeb.Services
 		}
 		private static void SetCachedResult(string key, GeoCity gcity)
 		{
-			byte[] city = null;			
+			byte[] city = null;
 			byte[] country = null;
 			byte[] admlvl1 = null;
 			byte[] admlvl2 = null;
@@ -162,7 +176,16 @@ namespace NexusWeb.Services
 		{
 			get	{
 				if (mRedisClient == null)
-					mRedisClient = new RedisClient("192.168.56.101", 6379);
+				{
+					try	{
+						mRedisClient = new RedisClient("192.168.56.102", 6379);
+						mRedisClient.Connect();
+					} catch (IOException e) {
+						Trace.WriteLine("GeoService: Failed to connect to Redis cache server due to reason: " + e.Message);
+						EnableGISCaching = false;
+						mRedisClient = null;
+					}
+				}
 
 				return mRedisClient;
 			}
