@@ -1,17 +1,50 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
 namespace NexusWeb.Infrastructure.Redis
 {
+	internal delegate EndPoint RedisServerSelector(string key);
+
+	internal class RedisException : Exception
+	{
+		public RedisException(string message, EndPoint activeServer) : base("Redis operation failed due to an error code returned by the Redis server.\r\nSee the ErrorDetail property for more information.")
+		{
+			ErrorDetail = message;
+			ActiveServer = activeServer;
+		}
+
+		public string ErrorDetail
+		{
+			get;
+			private set;
+		}
+		public EndPoint ActiveServer
+		{
+			get;
+			private set;
+		}
+	}
+
+	/// <summary>
+	/// Implements the Redis client protocol to connect and interface with Redis servers
+	/// </summary>
+	/// <remarks>
+	/// All methods are thread-safe.
+	/// </remarks>
 	internal class RedisClient : IDisposable
 	{
 		private RedisClient()
 		{
-			mSocketOperationLock = new object();
+			mSocketOperationLock = new object(); // Empty object that will serve as a synchronization object
+			mServerList = new List<RedisServerConnection>();
+			mEncoder = Encoding.UTF8;
 		}
 		public RedisClient(string hostname) : this(hostname, 6379) {}
+		/// <exception cref="System.ArgumentNullException">Thrown when the hostname is null or is empty</exception>
 		public RedisClient(string hostname, int port) : this()
 		{
 			if (String.IsNullOrEmpty(hostname))
@@ -22,11 +55,13 @@ namespace NexusWeb.Infrastructure.Redis
 
 			Host = hostname;
 			Port = port;
+			mServerList.Add(new RedisServerConnection(new DnsEndPoint(hostname, port)));
 		}
 
 		public void Connect()
 		{
 			mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			mSocket.NoDelay = true;
 			mSocket.Connect(Host, Port);
 			mDataStream = new NetworkStream(mSocket);
 		}
@@ -52,35 +87,30 @@ namespace NexusWeb.Infrastructure.Redis
 				mSocket = null;
 				mDisposed = true;
 				mSocketOperationLock = null;
+				mShardSelector = null;
 			}
 		}
 
 		public byte[] Get(string key)
 		{
+			if (mDisposed)
+				throw new ObjectDisposedException("this");
+
 			VerifySocketState();
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
-			byte[] buffer = new byte[6 + keyBytes.Length];
 			
-			buffer[0] = 0x47; // G
-			buffer[1] = 0x45; // E
-			buffer[2] = 0x54; // T
-			buffer[3] = 0x20; // (space)
-			buffer[buffer.Length - 2] = 0x0d; // \r
-			buffer[buffer.Length - 1] = 0x0a; // \n
+			MemoryStream stream = BuildUnifiedCommand(RedisCommands.Get, keyBytes);
 
-			Buffer.BlockCopy(keyBytes, 0, buffer, 4, keyBytes.Length);
-			
-			lock(mSocketOperationLock)
+			lock (mSocketOperationLock)
 			{
-				mDataStream.Write(buffer, 0, buffer.Length);
+				stream.WriteTo(mDataStream);
 
 				return ReadData();
 			}
 		}
-
 		public void Set(string key, byte[] data)
-		{
+		{			
 			if (key == null)
 				throw new ArgumentNullException("key");
 			if (data == null)
@@ -89,18 +119,54 @@ namespace NexusWeb.Infrastructure.Redis
 			VerifySocketState();
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
-			MemoryStream stream = BuildUnifiedCommand(new byte[] { 0x53, 0x45, 0x54 }, keyBytes, data);
-
+			
+			MemoryStream stream = BuildUnifiedCommand(RedisCommands.Set, keyBytes, data);
+			
 			lock (mSocketOperationLock)
 			{
 				stream.WriteTo(mDataStream);
 				
-				byte[] result = new byte[5];
-				mDataStream.Read(result, 0, 5);
+				ExpectOK();
 			}
 			stream.Dispose();
 		}
+		public void ChangeDatabase(int dbid)
+		{
+			if (mDatabaseId != dbid)
+			{
+				mDatabaseId = dbid;
 
+				if (mSocket != null && mSocket.Connected)
+				{
+					byte[] dbbytes = mEncoder.GetBytes(dbid.ToString());
+					MemoryStream sourceStream = BuildUnifiedCommand(RedisCommands.Select, dbbytes);
+					lock (mSocketOperationLock)
+					{
+						sourceStream.WriteTo(mDataStream);
+
+						ExpectOK();
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Reads the response from the Redis server and throws an exception if the server does not return a +OK
+		/// </summary>
+		/// <exception cref="NexusWeb.Infrastructure.Redis.RedisException">Thrown when the server returns an error.</exception>
+		private void ExpectOK()
+		{
+			byte[] result = new byte[5];
+			mDataStream.Read(result, 0, result.Length);
+
+			if (result[0] != 0x2b) // +
+			{
+				byte[] errormsg = new byte[100];
+				int bytes = mDataStream.Read(errormsg, 0, errormsg.Length);
+
+				throw new RedisException(mEncoder.GetString(errormsg, 0, bytes), mSocket.RemoteEndPoint);
+			}
+		}
 		private void VerifySocketState()
 		{
 			if (mSocket == null)
@@ -168,7 +234,73 @@ namespace NexusWeb.Infrastructure.Redis
 			stream.WriteByte(0x0d);
 			stream.WriteByte(0x0a);
 		}
+		private RedisServerConnection SelectServer(string key)
+		{
+			EndPoint point = mShardSelector(key);
 
+			foreach (RedisServerConnection conn in mServerList)
+			{
+				if (conn.EndPoint == point)
+					break;
+			}
+
+			throw new NotImplementedException();
+		}
+
+		// Nested Classes
+		private class RedisServerConnection : IDisposable
+		{
+			public RedisServerConnection(EndPoint epoint)
+			{
+				EndPoint = epoint;
+				Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				Socket.NoDelay = true;
+			}
+
+			public void Dispose()
+			{
+				EndPoint = null;
+				if (Stream != null)
+				{
+					Stream.Close();
+					Stream.Dispose();
+				}
+				if (Socket != null)
+					Socket.Dispose();
+
+				Socket = null;
+				Stream = null;
+				GC.SuppressFinalize(this);
+			}
+
+			public EndPoint EndPoint
+			{
+				get;
+				private set;
+			}
+			public Socket Socket
+			{
+				get;
+				private set;
+			}
+			public NetworkStream Stream
+			{
+				get;
+				private set;
+			}
+		}
+		private static class RedisCommands
+		{
+			public static readonly byte[] Get = new byte[] { 0x47, 0x45, 0x54 };
+			public static readonly byte[] Set = new byte[] { 0x53, 0x45, 0x54 };
+			public static readonly byte[] Select = new byte[] { 0x53, 0x45, 0x4c, 0x45, 0x43, 0x54, 0x20 };
+		}
+		private static class RedisResponses
+		{
+			public static readonly byte[] Success = new byte[] { 0x2b, 0x4f, 0x4b, 0x0d, 0x0a };
+		}
+
+		// Properties
 		public string Host
 		{
 			get;
@@ -183,8 +315,11 @@ namespace NexusWeb.Infrastructure.Redis
 		// Variables
 		private object mSocketOperationLock;
 		private Socket mSocket;
-		private Stream mDataStream;
-		private static readonly Encoding mEncoder = Encoding.UTF8;
+		private NetworkStream mDataStream;
+		private readonly Encoding mEncoder;
 		private bool mDisposed;
+		private int mDatabaseId;
+		private RedisServerSelector mShardSelector;
+		private List<RedisServerConnection> mServerList;
 	}
 }

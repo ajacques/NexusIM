@@ -82,6 +82,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RedisTests.cs" />
     <Compile Include="SecurityTests.cs" />
     <Compile Include="WCFSetupTests.cs" />
   </ItemGroup>
