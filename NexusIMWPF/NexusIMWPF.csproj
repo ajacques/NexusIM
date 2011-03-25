@@ -136,6 +136,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Controls\AccountSelectorControl.xaml.cs">
+      <DependentUpon>AccountSelectorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChatAreaHost.cs" />
     <Compile Include="Controls\ChatMessageInline.cs" />
     <Compile Include="Controls\ChatMessageNotification.xaml.cs">
@@ -221,6 +224,9 @@
     </Compile>
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\IRCSettingWindow.xaml.cs">
+      <DependentUpon>IRCSettingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\JoinChatRoom.xaml.cs">
       <DependentUpon>JoinChatRoom.xaml</DependentUpon>
@@ -317,6 +323,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\AccountSelectorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ChatMessageNotification.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -366,6 +376,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\InitialSetup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\IRCSettingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -454,7 +468,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="UserProfile.sdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

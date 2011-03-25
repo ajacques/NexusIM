@@ -22,7 +22,7 @@
 		<TextBlock Margin="14,8,8,0" VerticalAlignment="Top" TextWrapping="Wrap">
 			<Run>Select which contact you would like to</Run> <Span x:Name="HeaderActionText">message</Span> <Run>by typing a part of their name in the box below.</Run>
 		</TextBlock>
-		<ComboBox Margin="58,112,56,98" SelectedIndex="0" ItemsSource="{Binding Source={x:Static mgr:AccountManager.Accounts}, Converter={StaticResource ProtocolToComboBox}}" d:LayoutOverrides="Height" />
+		<ComboBox Margin="58,112,56,98" SelectedIndex="0" ItemsSource="{Binding Source={x:Static mgr:AccountManager.Accounts}, Converter={StaticResource ProtocolToComboBox}}" />
 		<TextBlock HorizontalAlignment="Left" Margin="18,88,0,0" TextWrapping="Wrap" Text="Account" VerticalAlignment="Top" FontSize="15" />
 		<TextBox Margin="58,150,56,0" TextWrapping="Wrap" Height="24" VerticalAlignment="Top" TextChanged="TextBox_TextChanged" />
 		<Grid Margin="58,172,56,0" VerticalAlignment="Top" MaxHeight="100">

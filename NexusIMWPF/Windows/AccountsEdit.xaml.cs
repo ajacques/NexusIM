@@ -139,7 +139,7 @@ namespace NexusIM.Windows
 			foreach (IMProtocolExtraData protocol in AccountManager.Accounts)
 			{
 				SetupAccountItem accItem = new SetupAccountItem();
-				accItem.DataContext = protocol;
+				accItem.PopulateUIControls(protocol);
 				accItem.Margin = (Thickness)FindResource("ItemMargin");
 				AccountsListBox.Children.Add(accItem);
 			}
@@ -150,11 +150,6 @@ namespace NexusIM.Windows
 		private static void SaveNewAccounts(object accounts)
 		{
 			IList<IMProtocolExtraData> mNewAccounts = (IList<IMProtocolExtraData>)accounts;
-
-			foreach (var extraData in mNewAccounts)
-			{
-				IMSettings.Accounts.Add(extraData);
-			}
 		}
 
 		protected override void OnMouseUp(MouseButtonEventArgs e)

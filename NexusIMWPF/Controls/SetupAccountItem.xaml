@@ -46,13 +46,16 @@
 		<Grid x:Name="BehindGrid" Opacity="0">
 			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Width="120" />
 			<TextBlock VerticalAlignment="Top" Margin="194,8,0,0" HorizontalAlignment="Left" />
-			<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="193,8,0,0" Text="@" Visibility="Collapsed" />
-			<TextBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="207,5,0,0" Width="100" Visibility="Collapsed" />
+			<Grid x:Name="ServerGrid" Margin="194,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+				<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="@" />
+				<TextBox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" Width="100" />
+				<TextBlock x:Name="ServerBoxHint" Foreground="#FF787878" Text="Server" Margin="48,0,33,0" VerticalAlignment="Center" IsHitTestVisible="False" />
+			</Grid>
 			<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,31,0,0" Width="120" />
 			<TextBlock x:Name="SavedText" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,33,0,0" Text="[Saved]" IsHitTestVisible="False" Foreground="#FF787878" Visibility="Collapsed" />
 			<CheckBox x:Name="AutoConnectCheckbox" Content="Connect on startup" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,2" />
 			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2" FontSize="11">
-				<Hyperlink TextDecorations="None">
+				<Hyperlink TextDecorations="None" Click="SettingsLink_Click">
 					<Run>Settings</Run>
 				</Hyperlink>
 				<Run>▪</Run>

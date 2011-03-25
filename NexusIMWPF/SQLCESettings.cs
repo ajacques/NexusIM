@@ -636,7 +636,9 @@ namespace NexusIM
 			}
 			public int Count
 			{
-				get { throw new NotImplementedException(); }
+				get {
+					throw new NotImplementedException();
+				}
 			}
 			public bool IsReadOnly
 			{
@@ -646,6 +648,9 @@ namespace NexusIM
 			}
 			public bool Remove(IMProtocolExtraData item)
 			{
+				if (item == null)
+					return false;
+
 				UserProfile db = UserProfile.Create(mConnectionString);
 				Account acc = db.Accounts.Where(a => a.Username == item.Protocol.Username && a.AccountType == item.Protocol.ShortProtocol).FirstOrDefault();
 				
