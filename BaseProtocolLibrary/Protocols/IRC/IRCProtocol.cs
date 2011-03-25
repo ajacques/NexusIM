@@ -78,7 +78,7 @@ namespace InstantMessage.Protocols.Irc
 			triggerOnDisconnect(null);
 			status = IMProtocolStatus.Offline;
 		}
-		public override IChatRoom JoinChatRoom(string room)
+		public IChatRoom JoinChatRoom(string room)
 		{
 			if (mChannels.Any(chan => chan.Name == room))
 				return mChannels.First(chan => chan.Name == room);

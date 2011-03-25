@@ -45,6 +45,7 @@ namespace NexusWeb.Infrastructure.Redis
 		}
 		public RedisClient(string hostname) : this(hostname, 6379) {}
 		/// <exception cref="System.ArgumentNullException">Thrown when the hostname is null or is empty</exception>
+		/// <param name="hostname">Default Redis server hostname in dns format or IP format</param>
 		public RedisClient(string hostname, int port) : this()
 		{
 			if (String.IsNullOrEmpty(hostname))
@@ -96,7 +97,8 @@ namespace NexusWeb.Infrastructure.Redis
 			if (mDisposed)
 				throw new ObjectDisposedException("this");
 
-			VerifySocketState();
+			if (key == null)
+				throw new ArgumentNullException("key");
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
 			
@@ -104,19 +106,19 @@ namespace NexusWeb.Infrastructure.Redis
 
 			lock (mSocketOperationLock)
 			{
+				EnsureSocketConnected();
+
 				stream.WriteTo(mDataStream);
 
 				return ReadData();
 			}
 		}
 		public void Set(string key, byte[] data)
-		{			
+		{
 			if (key == null)
 				throw new ArgumentNullException("key");
 			if (data == null)
 				throw new ArgumentNullException("data");
-
-			VerifySocketState();
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
 			
@@ -124,12 +126,62 @@ namespace NexusWeb.Infrastructure.Redis
 			
 			lock (mSocketOperationLock)
 			{
+				EnsureSocketConnected();
+
 				stream.WriteTo(mDataStream);
 				
 				ExpectOK();
 			}
 			stream.Dispose();
 		}
+		public void Set(string key, byte[] data, TimeSpan expireIn)
+		{
+			if (key == null)
+				throw new ArgumentNullException("key");
+			if (data == null)
+				throw new ArgumentNullException("data");			
+			
+			byte[] keyBytes = mEncoder.GetBytes(key);
+			byte[] expireBytes = mEncoder.GetBytes(expireIn.TotalSeconds.ToString("F0"));
+			
+			MemoryStream stream = BuildUnifiedCommand(RedisCommands.SetEx, keyBytes, expireBytes, data);
+
+			lock (mSocketOperationLock)
+			{
+				EnsureSocketConnected();
+
+				stream.WriteTo(mDataStream);
+
+				ExpectOK();
+			}
+
+			stream.Dispose();
+		}
+		public int Increment(string key, int step = 1)
+		{
+			if (key == null)
+				throw new ArgumentNullException("key");
+
+			byte[] keyBytes = mEncoder.GetBytes(key);
+			MemoryStream stream;
+
+			if (step == 1)
+				stream = BuildUnifiedCommand(RedisCommands.Increment, keyBytes);
+			else {
+				byte[] stepBytes = mEncoder.GetBytes(step.ToString());
+				stream = BuildUnifiedCommand(RedisCommands.IncrementBy, keyBytes, stepBytes);
+			}
+
+			lock (mSocketOperationLock)
+			{
+				EnsureSocketConnected();
+
+				stream.WriteTo(mDataStream);
+
+				return ExpectInt();
+			}
+		}
+
 		public void ChangeDatabase(int dbid)
 		{
 			if (mDatabaseId != dbid)
@@ -167,7 +219,16 @@ namespace NexusWeb.Infrastructure.Redis
 				throw new RedisException(mEncoder.GetString(errormsg, 0, bytes), mSocket.RemoteEndPoint);
 			}
 		}
-		private void VerifySocketState()
+		private int ExpectInt()
+		{
+			byte[] result = new byte[16];
+			int bytesRead = mDataStream.Read(result, 0, result.Length);
+
+			string number = mEncoder.GetString(result, 1, bytesRead - 2);
+
+			return Int32.Parse(number);
+		}
+		private void EnsureSocketConnected()
 		{
 			if (mSocket == null)
 				Connect();
@@ -241,7 +302,10 @@ namespace NexusWeb.Infrastructure.Redis
 			foreach (RedisServerConnection conn in mServerList)
 			{
 				if (conn.EndPoint == point)
-					break;
+				{
+					conn.EnsureConnected();
+					return conn;
+				}
 			}
 
 			throw new NotImplementedException();
@@ -255,6 +319,7 @@ namespace NexusWeb.Infrastructure.Redis
 				EndPoint = epoint;
 				Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 				Socket.NoDelay = true;
+				ThreadSyncObject = new object();
 			}
 
 			public void Dispose()
@@ -272,6 +337,14 @@ namespace NexusWeb.Infrastructure.Redis
 				Stream = null;
 				GC.SuppressFinalize(this);
 			}
+			public void EnsureConnected()
+			{
+				if (!Socket.Connected)
+				{
+					Socket.Connect(EndPoint);
+					Stream = new NetworkStream(Socket);
+				}
+			}
 
 			public EndPoint EndPoint
 			{
@@ -288,11 +361,23 @@ namespace NexusWeb.Infrastructure.Redis
 				get;
 				private set;
 			}
+			public object ThreadSyncObject
+			{
+				get;
+				private set;
+			}
 		}
 		private static class RedisCommands
 		{
 			public static readonly byte[] Get = new byte[] { 0x47, 0x45, 0x54 };
 			public static readonly byte[] Set = new byte[] { 0x53, 0x45, 0x54 };
+			/// <summary>
+			/// Set the value of an object that expires in the specified number of seconds
+			/// Format: SETEX {key} {expiration in seconds} {data}
+			/// </summary>
+			public static readonly byte[] SetEx = new byte[] { 0x53, 0x45, 0x54, 0x45, 0x58 };
+			public static readonly byte[] Increment = new byte[] { 0x49, 0x4e, 0x43, 0x52 };
+			public static readonly byte[] IncrementBy = new byte[] { 0x49, 0x4e, 0x43, 0x52, 0x42, 0x59 };
 			public static readonly byte[] Select = new byte[] { 0x53, 0x45, 0x4c, 0x45, 0x43, 0x54, 0x20 };
 		}
 		private static class RedisResponses

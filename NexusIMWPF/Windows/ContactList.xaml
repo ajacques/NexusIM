@@ -6,7 +6,7 @@
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	xmlns:converters="clr-namespace:NexusIM.Converters"
 	x:Class="NexusIM.Windows.ContactListWindow"
-	Title="NexusIM - Contact List" Height="700" Width="300" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
+	Title="NexusIM" Height="700" Width="300" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
 	Icon="/NexusIMWPF;component/Resources/nexusim.ico">
 	<Grid>
 		<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="32,23,0,0" HorizontalAlignment="Left" Width="100" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
@@ -68,7 +68,8 @@
 				<MenuItem Header="Always Ontop" IsCheckable="True" />
 			</MenuItem>
 			<MenuItem Header="Accounts">
-				<MenuItem Click="EditAccounts_Click" Header="Edit Accounts" />
+				<MenuItem Header="Join a Chat Room" />
+				<MenuItem Click="EditAccounts_Click" Header="My Accounts" />
 				<MenuItem Header="New Contact Group" IsEnabled="False" />
 			</MenuItem>
 			<MenuItem Header="Contacts">

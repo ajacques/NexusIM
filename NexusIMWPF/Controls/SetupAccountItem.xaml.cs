@@ -19,8 +19,11 @@ namespace NexusIM.Controls
 		public SetupAccountItem()
 		{
 			this.InitializeComponent();
-		}
 
+			EnabledCheckBox.Checked += new RoutedEventHandler(EnabledCheckBox_Checked);
+			PasswordBox.PasswordChanged += new RoutedEventHandler(PasswordBox_PasswordChanged);
+		}		
+		
 		public void Select()
 		{
 			Storyboard AnimFade = FindResource("EditFadeIn") as Storyboard;
@@ -34,6 +37,26 @@ namespace NexusIM.Controls
 
 			AnimFade.Begin();
 			Selected = false;
+
+			if (!mProtocol.Enabled)
+			{
+				mProtocol.Protocol.Username = UsernameBox.Text;
+
+				string password = PasswordBox.Password;
+				if (!String.IsNullOrEmpty(password))
+				{
+					mProtocol.Protocol.Password = password;
+					PasswordBox.Password = String.Empty;
+					SavedText.Visibility = Visibility.Visible;
+				}
+				PopulateUIControls(mProtocol);
+			}
+
+			if (!mProtocol.IsReady)
+			{
+				AccountManager.Accounts.Add(mProtocol);
+				IMSettings.Accounts.Add(mProtocol);
+			}
 		}
 
 		public bool Selected
@@ -46,57 +69,47 @@ namespace NexusIM.Controls
 		{
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
-		protected override void OnLostFocus(RoutedEventArgs e)
-		{
-			base.OnLostFocus(e);
 
-			ResetDataBindings();
-		}
+		public void PopulateUIControls(IMProtocolExtraData extraData)
+		{
+			mProtocol = extraData;
 
-		private void ResetSingleBinding(DependencyObject target, DependencyProperty dp)
-		{
-			BindingExpression expression = BindingOperations.GetBindingExpression(target, dp);
-			expression.UpdateTarget();
-		}
-		private void ResetDataBindings()
-		{
-			ResetSingleBinding(UsernameBox, TextBox.TextProperty);
-			ResetSingleBinding(AutoConnectCheckbox, CheckBox.IsCheckedProperty);
-			PasswordBox.Password = String.Empty;
-		}
-		
-		private void CancelButton_Click(object sender, RoutedEventArgs e)
-		{
-			IMProtocolExtraData extraData = DataContext as IMProtocolExtraData;
-			IEnumerable<BindingExpression> expressions = new BindingExpression[] { BindingOperations.GetBindingExpression(UsernameBox, TextBox.TextProperty) };
-			foreach (BindingExpression exp in expressions)
-				exp.UpdateTarget();
+			// Setup stuff
+			UsernameBox.Text = extraData.Protocol.Username;
+			AutoConnectCheckbox.IsChecked = extraData.AutoConnect;
+			MainAccountUsername.Text = extraData.Protocol.Username;
+			MainAccountTypeLabel.Text = extraData.Protocol.Protocol;
+			EnabledCheckBox.IsChecked = extraData.Enabled;
 
-			PasswordBox.Password = String.Empty;
-			Debug.WriteLine("User canceled saving new account");
-		}
-		private void SaveButton_Click(object sender, RoutedEventArgs e)
-		{
-			IMProtocolExtraData extraData = DataContext as IMProtocolExtraData;
-			extraData.Protocol.Username = UsernameBox.Text;
-			extraData.Protocol.Password = PasswordBox.Password;
+			if 
 
-			if (!extraData.IsReady)
+			if (extraData.Enabled)
 			{
-				AccountManager.Accounts.Add(extraData);
-				IMSettings.Accounts.Add(extraData);
-				Debug.WriteLine("User is saving new account of type " + extraData.Protocol.Protocol + ". Registering with IMSetttings and AccountManager.");
-			} else
-				Debug.WriteLine("User is saving account of type " + extraData.Protocol.Protocol);
-
-			Deselect();
+				UsernameBox.IsReadOnly = true;
+				PasswordBox.IsEnabled = false;
+			} else {
+				UsernameBox.IsReadOnly = false;
+				PasswordBox.IsEnabled = true;
+			}
 		}
+
 		private void DeleteAccount_Click(object sender, RoutedEventArgs e)
 		{
-			IMProtocolExtraData protocol = DataContext as IMProtocolExtraData;
-
-			AccountManager.Accounts.Remove(protocol);
-			IMSettings.Accounts.Remove(protocol);
+			AccountManager.Accounts.Remove(mProtocol);
+			IMSettings.Accounts.Remove(mProtocol);
 		}
+		private void EnabledCheckBox_Checked(object sender, RoutedEventArgs e)
+		{
+			mProtocol.Enabled = EnabledCheckBox.IsChecked.Value;
+
+			PopulateUIControls(mProtocol);
+		}
+		private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+		{
+			if (PasswordBox.SecurePassword.Length >= 1)
+				SavedText.Visibility = Visibility.Collapsed;
+		}
+
+		private IMProtocolExtraData mProtocol;
 	}
 }

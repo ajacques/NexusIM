@@ -31,36 +31,31 @@
 				<EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
 			</DoubleAnimationUsingKeyFrames>
 			<ColorAnimation Storyboard.TargetName="BackgroundRect" Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Duration="0:0:0.2" From="#AAD8E1FF" />
-			<DoubleAnimation Storyboard.TargetName="BehindGrid" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0:0:0.1" Duration="0:0:0.3" To="0" />
+			<DoubleAnimation Storyboard.TargetName="BehindGrid" Storyboard.TargetProperty="(UIElement.Opacity)" BeginTime="0" Duration="0:0:0.2" To="0" />
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetName="BehindGrid" Storyboard.TargetProperty="(UIElement.Visibility)">
 				<DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="{x:Static Visibility.Collapsed}"/>
 			</ObjectAnimationUsingKeyFrames>
 		</Storyboard>
 	</UserControl.Resources>
-	<UserControl.Triggers>
-		<EventTrigger RoutedEvent="ButtonBase.Click" SourceName="CancelButton">
-			<BeginStoryboard Storyboard="{StaticResource EditFadeOut}"/>
-		</EventTrigger>
-	</UserControl.Triggers>
-	<!--UserControl.DataContext>
-		<imc:IMProtocolExtraData Enabled="True">
-			<imc:IMProtocolExtraData.Protocol>
-				<im:IMProtocol Enabled="true" Username="Test Username" Password="Test" />
-			</imc:IMProtocolExtraData.Protocol>
-		</imc:IMProtocolExtraData>
-	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot">
 		<Border x:Name="BackgroundRect" BorderBrush="#FF686868" BorderThickness="1" CornerRadius="5" Background="Transparent" />
-		<Image HorizontalAlignment="Left" Margin="33,28,0,29" Source="/NexusIMWPF;component/Resources/yahoo.png" Stretch="Fill" Width="26" />
-		<CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="{Binding Enabled, Mode=TwoWay}" />
-		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap" Text="{Binding Protocol.Username, Mode=OneWay}" />
+		<CheckBox x:Name="EnabledCheckBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap">
+			<Run Foreground="#FF007474" x:Name="MainAccountUsername"></Run> - <Run x:Name="MainAccountTypeLabel"></Run>
+		</TextBlock>
 		<Grid x:Name="BehindGrid" Opacity="0">
-			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Text="{Binding Protocol.Username, Mode=OneWay}" Width="130" />
-			<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,31,0,0" Width="130" />
-			<CheckBox x:Name="AutoConnectCheckbox" Content="Connect on startup" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,2" IsChecked="{Binding AutoConnect}" />
-			<Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,50,0" Click="SaveButton_Click" />
-			<Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Click="CancelButton_Click" />
-			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2">
+			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Width="120" />
+			<TextBlock VerticalAlignment="Top" Margin="194,8,0,0" HorizontalAlignment="Left" />
+			<TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="193,8,0,0" Text="@" Visibility="Collapsed" />
+			<TextBox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="207,5,0,0" Width="100" Visibility="Collapsed" />
+			<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,31,0,0" Width="120" />
+			<TextBlock x:Name="SavedText" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="110,33,0,0" Text="[Saved]" IsHitTestVisible="False" Foreground="#FF787878" Visibility="Collapsed" />
+			<CheckBox x:Name="AutoConnectCheckbox" Content="Connect on startup" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70,0,0,2" />
+			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,6,2" FontSize="11">
+				<Hyperlink TextDecorations="None">
+					<Run>Settings</Run>
+				</Hyperlink>
+				<Run>▪</Run>
 				<Hyperlink TextDecorations="None" Click="DeleteAccount_Click">
 					<Run Text="Delete" />
 				</Hyperlink>

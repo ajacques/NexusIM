@@ -96,9 +96,6 @@ namespace NexusIM.Managers
 
 				protocol.Username = account.Username;
 				protocol.Password = account.Password;
-				protocol.Enabled = account.Enabled;
-
-				AccountManager.AddNewAccount(protocol);
 			}
 
 			if (OnStateChange != null)

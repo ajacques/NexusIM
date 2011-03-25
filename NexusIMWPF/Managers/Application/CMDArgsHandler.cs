@@ -88,11 +88,10 @@ namespace NexusIM.Managers
 
 				if (paccount.Count() > 0)
 				{
-					paccount.FirstOrDefault().p.JoinChatRoom(room);
+					//paccount.FirstOrDefault().p.JoinChatRoom(room);
 				} else {
 					IMProtocol account = new IRCProtocol();
 					account.Server = server;
-					account.Enabled = true;
 					//account.onLogin += new EventHandler(account_onLogin);
 
 					/* Do something here */

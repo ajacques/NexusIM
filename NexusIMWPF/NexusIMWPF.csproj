@@ -109,7 +109,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
-	<Reference Include="Microsoft.SqlServerCe.VersionManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServerCe.VersionManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -221,6 +221,9 @@
     </Compile>
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\JoinChatRoom.xaml.cs">
+      <DependentUpon>JoinChatRoom.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SelectRecipientWindow.xaml.cs">
       <DependentUpon>SelectRecipientWindow.xaml</DependentUpon>
@@ -363,6 +366,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\InitialSetup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\JoinChatRoom.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

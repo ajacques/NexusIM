@@ -153,34 +153,7 @@ namespace InstantMessage
 		/// </summary>
 		/// <param name="uname">Who to send the notification to</param>
 		public virtual void BuzzFriend(string uname) {}
-		protected virtual void ChangeAvatar() {}
-		public virtual string GetServerString(string username)
-		{
-			return "";
-		}
-		public virtual IChatRoom JoinChatRoom(string room)
-		{
-			throw new NotSupportedException();
-		}
-		public virtual void LeaveChatRoom(string room) {}
-		public virtual void ReplyToBuddyAddRequest(string username, bool isAdded) {}
-		public virtual void HandleProtocolCMDArg(string input) {}
-		/// <summary>
-		/// Invites a user to a chat room
-		/// </summary>
-		/// <param name="username">The username to send to invite to</param>
-		/// <param name="room">The room to invite the user to</param>
-		public virtual void InviteToChatRoom(string username, string room)
-		{
-			InviteToChatRoom(username, room, "");
-		}
-		/// <summary>
-		/// Invites a user to a chat room with an invitation string
-		/// </summary>
-		/// <param name="username">The username to send to invite to</param>
-		/// <param name="room">The room to invite the user to</param>
-		/// <param name="inviteText">The string to display to the recipient</param>
-		public virtual void InviteToChatRoom(string username, string room, string inviteText) {}
+
 		public override string ToString()
 		{
 			if (mUsername != "")
@@ -204,18 +177,6 @@ namespace InstantMessage
 		{
 			get {
 				return buddylist;
-			}
-		}
-		/// <summary>
-		/// True if this protocol is currently enabled
-		/// </summary>
-		public bool Enabled
-		{
-			get {
-				return mEnabled;
-			}
-			set {
-				mEnabled = value;
 			}
 		}
 		/// <summary>
@@ -308,49 +269,6 @@ namespace InstantMessage
 				return mProtocolTypeShort;
 			}
 		}
-		/// <summary>
-		/// Gets or sets the avatar to display to other users
-		/// </summary>
-		public string Avatar
-		{
-			get {
-				return mAvatar;
-			}
-			set {
-				mAvatar = value;
-				ChangeAvatar();
-			}
-		}
-		/// <summary>
-		/// True if the current protocol supports multi user chat.
-		/// </summary>
-		public bool SupportsMultiUserChat
-		{
-			get {
-				return supportsMUC;
-			}
-		}
-		public bool SupportsPerUserVisibility
-		{
-			get {
-				return supportsUserInvisiblity;
-			}
-		}
-		/// <summary>
-		/// True if the current protocol supports getting another user's attention
-		/// </summary>
-		public bool SupportsUserNotify
-		{
-			get {
-				return supportsBuzz;
-			}
-		}
-		public bool SupportsIntroMessage
-		{
-			get {
-				return supportsIntroMsg;
-			}
-		}
 		public string StatusMessage
 		{
 			get {
@@ -383,25 +301,12 @@ namespace InstantMessage
 				return mServer;
 			}
 			set {
-				mServer = value;
-			}
-		}
-		/// <summary>
-		/// True if this account type requires a username
-		/// </summary>
-		public bool RequiresUsername
-		{
-			get {
-				return needUsername;
-			}
-		}
-		/// <summary>
-		/// True if this account type requires a password
-		/// </summary>
-		public bool RequiresPassword
-		{
-			get {
-				return needPassword;
+				if (mServer != value)
+				{
+					mServer = value;
+
+					NotifyPropertyChanged("Server");
+				}
 			}
 		}
 		public Guid Guid

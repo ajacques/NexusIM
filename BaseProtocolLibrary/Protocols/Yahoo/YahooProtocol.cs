@@ -29,10 +29,6 @@ namespace InstantMessage.Protocols.Yahoo
 			supportsUserInvisiblity = true;
 			mLoginWaitHandle = new ManualResetEvent(false);
 		}
-		public override string GetServerString(string username)
-		{
-			return "scs.msg.yahoo.com";
-		}
 
 		// Basic State Functions
 		public override void BeginLogin()
@@ -216,7 +212,7 @@ namespace InstantMessage.Protocols.Yahoo
 			else
 				addbuddygroups[name] = group;
 		}
-		public override void ReplyToBuddyAddRequest(string username, bool isAdded)
+		public void ReplyToBuddyAddRequest(string username, bool isAdded)
 		{
 			YPacket packet = new YPacket();
 			packet.Service = YahooServices.ymsg_buddy_auth;
@@ -234,7 +230,7 @@ namespace InstantMessage.Protocols.Yahoo
 			sendPacket(packet);
 		}
 
-		public override void InviteToChatRoom(string username, string room, string inviteText)
+		public void InviteToChatRoom(string username, string room, string inviteText)
 		{
 			YPacket packet = new YPacket();
 			packet.Service = YahooServices.ymsg_conference_invitation;
@@ -248,7 +244,7 @@ namespace InstantMessage.Protocols.Yahoo
 
 			sendPacket(packet);
 		}
-		public override void HandleProtocolCMDArg(string input)
+		public void HandleProtocolCMDArg(string input)
 		{
 			// Break it down
 			string method = input.Substring(6, input.IndexOf("?") - 6);
