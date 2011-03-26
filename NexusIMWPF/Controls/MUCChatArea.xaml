@@ -6,7 +6,28 @@
 	mc:Ignorable="d" 
 	x:Name="UserControl"
 	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private">
-	<Grid>
-		
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<Grid>
+			<Rectangle Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
+			<RichTextBox x:Name="ChatHistoryContainer" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" MaxHeight="397" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
+				<FlowDocument>
+					<Paragraph x:Name="ChatHistoryBox">
+					</Paragraph>
+				</FlowDocument>
+			</RichTextBox>
+		</Grid>
+		<Grid Grid.Row="2">
+			<Grid.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Offset="0"/>
+					<GradientStop Color="#FF8396FF" Offset="1"/>
+				</LinearGradientBrush>
+			</Grid.Background>
+			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown"  BorderBrush="Black" />
+		</Grid>
 	</Grid>
 </UserControl>

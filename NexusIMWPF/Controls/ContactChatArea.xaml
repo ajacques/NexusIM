@@ -46,6 +46,7 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Stretch="UniformToFill" />
+			<Rectangle Grid.Column="1" Margin="8,48,8,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
 				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto">
 					<FlowDocument>
@@ -67,7 +68,6 @@
 				<TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" TextWrapping="NoWrap" Text="{Binding Status, StringFormat=({0}), Mode=OneWay}" Foreground="#FF838383" />
 				<TextBlock x:Name="StatusMessageBlock" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" TextWrapping="NoWrap" Text="{Binding StatusMessage, Mode=OneWay}" TextTrimming="CharacterEllipsis" Foreground="Black" />
 			</Grid>
-			<Rectangle Grid.Column="1" Margin="8,48,8,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<StackPanel Grid.Column="1" Margin="8,48,8,0">
 				<Grid x:Name="UserOfflineWarning" VerticalAlignment="Top" Margin="5,2,5,0" Visibility="Collapsed">
 					<Rectangle RadiusX="3" RadiusY="3" Fill="#FFF3F7FC" Stroke="#FFDEDEDE" />

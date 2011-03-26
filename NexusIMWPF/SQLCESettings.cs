@@ -2,11 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.Common;
 using System.Data.Linq;
 using System.Data.SqlServerCe;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using InstantMessage;
 using InstantMessage.Protocols.Yahoo;

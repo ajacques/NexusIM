@@ -1,9 +1,14 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:nxc="clr-namespace:NexusIM.Controls"
 	x:Class="NexusIM.Windows.JoinChatRoom"
 	x:Name="Window"
-	Title="JoinChatRoom"
-	Width="240" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
-	<Grid x:Name="LayoutRoot"/>
+	Title="Join Chat Room"
+	Width="290" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+	<Grid x:Name="LayoutRoot">
+		<nxc:AccountSelectorControl x:Name="AccountSelector" VerticalAlignment="Top" Height="22" Margin="10,20,10,0" />
+		<TextBox x:Name="RoomName" VerticalAlignment="Top" Height="23" Margin="10,61,10,0" KeyUp="RoomName_KeyUp" />
+		<Button x:Name="JoinButton" Width="75" Height="25" Content="Join" VerticalAlignment="Bottom" Margin="0,0,0,10" Click="Button_Click" IsEnabled="False" />
+	</Grid>
 </Window>

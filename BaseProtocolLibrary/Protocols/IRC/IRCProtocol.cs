@@ -78,7 +78,11 @@ namespace InstantMessage.Protocols.Irc
 			triggerOnDisconnect(null);
 			status = IMProtocolStatus.Offline;
 		}
-		public IChatRoom JoinChatRoom(string room)
+		IChatRoom IHasMUCRooms.JoinChatRoom(string room)
+		{
+			return this.JoinChatRoom(room);
+		}
+		public IRCChannel JoinChatRoom(string room)
 		{
 			if (mChannels.Any(chan => chan.Name == room))
 				return mChannels.First(chan => chan.Name == room);
@@ -303,6 +307,12 @@ namespace InstantMessage.Protocols.Irc
 			}
 		}
 		public IEnumerable<IRCChannel> Channels
+		{
+			get	{
+				return mChannels;
+			}
+		}
+		IEnumerable<IChatRoom> IHasMUCRooms.Channels
 		{
 			get	{
 				return mChannels;

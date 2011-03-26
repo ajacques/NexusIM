@@ -68,7 +68,7 @@
 				<MenuItem Header="Always Ontop" IsCheckable="True" />
 			</MenuItem>
 			<MenuItem Header="Accounts">
-				<MenuItem Header="Join a Chat Room" />
+				<MenuItem Header="Join a Chat Room" Click="JoinRoom_Click" />
 				<MenuItem Click="EditAccounts_Click" Header="My Accounts" />
 				<MenuItem Header="New Contact Group" IsEnabled="False" />
 			</MenuItem>

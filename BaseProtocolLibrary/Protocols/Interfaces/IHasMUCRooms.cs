@@ -5,13 +5,21 @@ using System.Text;
 
 namespace InstantMessage.Protocols
 {
-	public interface IHasMUCRooms<T>
+	public interface IHasMUCRooms<T> : IHasMUCRooms
 	{
-		IChatRoom JoinChatRoom(string roomName);
+		T JoinChatRoom(string roomName);
 		IEnumerable<T> Channels
 		{
 			get;
 		}
 	}
-	public interface IHasMUCRooms : IHasMUCRooms<IChatRoom> {}
+	public interface IHasMUCRooms
+	{
+		IChatRoom JoinChatRoom(string roomName);
+
+		IEnumerable<IChatRoom> Channels
+		{
+			get;
+		}
+	}
 }

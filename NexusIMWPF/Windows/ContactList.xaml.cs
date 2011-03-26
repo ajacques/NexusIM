@@ -165,6 +165,11 @@ namespace NexusIM.Windows
 			if (e.NewItems != null)
 				AddGroups(e.NewItems);
 		}
+		private void JoinRoom_Click(object sender, RoutedEventArgs e)
+		{
+			JoinChatRoom window = new JoinChatRoom();
+			window.ShowDialog();
+		}
 
 		protected override void OnInitialized(EventArgs e)
 		{
