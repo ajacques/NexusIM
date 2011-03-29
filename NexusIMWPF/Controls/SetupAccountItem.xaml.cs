@@ -39,27 +39,8 @@ namespace NexusIM.Controls
 			AnimFade.Begin();
 			Selected = false;
 
-			if (!mProtocol.Enabled)
-			{
-				mProtocol.Protocol.Username = UsernameBox.Text;
-
-				string password = PasswordBox.Password;
-				if (!String.IsNullOrEmpty(password))
-				{
-					mProtocol.Protocol.Password = password;
-					PasswordBox.Password = String.Empty;
-					SavedText.Visibility = Visibility.Visible;
-				}
-
-				if (mProtocolType == typeof(IRCProtocol))
-				{
-					IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
-					ircprot.Server = ServerBox.Text;
-					ircprot.Nickname = UsernameBox.Text;
-				}
-
-				PopulateUIControls(mProtocol);
-			}
+			ApplyChanges();
+			PopulateUIControls(mProtocol);
 
 			if (!mProtocol.IsReady)
 			{
@@ -102,6 +83,28 @@ namespace NexusIM.Controls
 				PasswordBox.IsEnabled = true;
 			}
 		}
+		private void ApplyChanges()
+		{
+			if (!mProtocol.Enabled)
+			{
+				mProtocol.Protocol.Username = UsernameBox.Text;
+
+				string password = PasswordBox.Password;
+				if (!String.IsNullOrEmpty(password))
+				{
+					mProtocol.Protocol.Password = password;
+					PasswordBox.Password = String.Empty;
+					SavedText.Visibility = Visibility.Visible;
+				}
+
+				if (mProtocolType == typeof(IRCProtocol))
+				{
+					IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
+					ircprot.Server = ServerBox.Text;
+					ircprot.Nickname = UsernameBox.Text;
+				}
+			}
+		}
 
 		private void DeleteAccount_Click(object sender, RoutedEventArgs e)
 		{
@@ -110,6 +113,7 @@ namespace NexusIM.Controls
 		}
 		private void EnabledCheckBox_Checked(object sender, RoutedEventArgs e)
 		{
+			ApplyChanges();
 			mProtocol.Enabled = EnabledCheckBox.IsChecked.Value;
 
 			PopulateUIControls(mProtocol);

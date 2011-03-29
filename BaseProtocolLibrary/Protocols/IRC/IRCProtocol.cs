@@ -12,6 +12,7 @@ using InstantMessage.Events;
 
 namespace InstantMessage.Protocols.Irc
 {
+	[IMNetwork("irc")]
 	public sealed class IRCProtocol : IMProtocol, IDisposable, IHasMUCRooms<IRCChannel>
 	{
 		public IRCProtocol()

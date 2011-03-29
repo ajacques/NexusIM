@@ -9,6 +9,7 @@ using System.Linq;
 using InstantMessage;
 using InstantMessage.Protocols.Yahoo;
 using Microsoft.SqlServerCe.VersionManagement;
+using InstantMessage.Protocols.Irc;
 
 namespace NexusIM
 {
@@ -485,6 +486,9 @@ namespace NexusIM
 							case "yahoo":
 								protocol = new IMYahooProtocol();
 								break;
+							case "irc":
+								protocol = new IRCProtocol();
+								break;
 							default:
 								protocol = IMProtocol.FromString(current.AccountType);
 								break;
@@ -669,14 +673,14 @@ namespace NexusIM
 		{
 			#region IChatAreaPool Members
 
-			public void PutInPool(int poolid, IContact contact)
+			public void PutInPool(int poolid, IMProtocol protocol, string objectId)
 			{
 				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
-				ChatWindowPool pool = db.ChatWindowPools.FirstOrDefault(cwp => cwp.Account.Username == contact.Protocol.Username && cwp.Account.AccountType == contact.Protocol.ShortProtocol && cwp.Username == contact.Username);
+				ChatWindowPool pool = db.ChatWindowPools.FirstOrDefault(cwp => cwp.Account.Username == protocol.Username && cwp.Account.AccountType == protocol.ShortProtocol && cwp.Username == objectId);
 				if (pool == null)
 				{
 					pool = new ChatWindowPool();
-					pool.Username = contact.Username;
+					pool.Username = objectId;
 					db.ChatWindowPools.InsertOnSubmit(pool);
 				}
 
@@ -684,12 +688,12 @@ namespace NexusIM
 				db.SubmitChanges();
 			}
 
-			public void RemoveFromPool(IContact contact)
+			public void RemoveFromPool(IMProtocol protocol, string objectId)
 			{
 				
 			}
 
-			public int? GetPool(IContact contact)
+			public int? GetPool(IMProtocol protocol, string objectId)
 			{
 				return null;
 			}

@@ -163,6 +163,9 @@
     </Compile>
     <Compile Include="Controls\SysTrayContextMenu.cs" />
     <Compile Include="Controls\SysTrayIcon.cs" />
+    <Compile Include="Controls\YoutubePreviewPopup.xaml.cs">
+      <DependentUpon>YoutubePreviewPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\ContactToUIContact.cs" />
     <Compile Include="Converters\IMAvatarToImage.cs" />
     <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />
@@ -198,6 +201,7 @@
     </Compile>
     <Compile Include="SocketTraceListener.cs" />
     <Compile Include="SQLCESettings.cs" />
+    <Compile Include="TestProtocol.cs" />
     <Compile Include="UserProfile.cs">
       <DependentUpon>UserProfile.dbml</DependentUpon>
     </Compile>
@@ -356,6 +360,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\YoutubePreviewPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\AccountsEdit.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -467,6 +475,9 @@
     </None>
     <Content Include="ChatHistory.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DataCache.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

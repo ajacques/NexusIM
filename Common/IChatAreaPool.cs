@@ -7,9 +7,9 @@ namespace InstantMessage
 {
 	public interface IChatAreaPool
 	{
-		void PutInPool(int poolid, IContact contact);
-		void RemoveFromPool(IContact contact);
-		int? GetPool(IContact contact);
+		void PutInPool(int poolid, IMProtocol protocol, string objectId);
+		void RemoveFromPool(IMProtocol protocol, string objectId);
+		int? GetPool(IMProtocol protocol, string objectId);
 		int GetNextId();
 	}
 }

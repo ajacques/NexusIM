@@ -26,14 +26,7 @@ namespace NexusIM.Windows
 			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);		
 			AggregateContactList.Groups.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_Changed);
 		}
-
-		public UIElementCollection ContactList
-		{
-			get	{
-				return ContactListControl.Children;
-			}
-		}
-
+		
 		private void DeselectAllExcept(ICollection source, UIElement exception)
 		{
 			foreach (UIElement elem in source)
@@ -168,7 +161,9 @@ namespace NexusIM.Windows
 		private void JoinRoom_Click(object sender, RoutedEventArgs e)
 		{
 			JoinChatRoom window = new JoinChatRoom();
-			window.ShowDialog();
+			window.Show();
+
+			mActiveDialog = window;
 		}
 
 		protected override void OnInitialized(EventArgs e)
@@ -193,6 +188,13 @@ namespace NexusIM.Windows
 
 			this.Hide();
 		}
+		protected override void OnActivated(EventArgs e)
+		{
+			base.OnActivated(e);
+
+			if (mActiveDialog != null)
+				mActiveDialog.Activate();
+		}
 		private HitTestResultBehavior OnHitTestResult(HitTestResult result)
 		{
 			DeselectAllExcept(ContactList, (UIElement)result.VisualHit);
@@ -211,7 +213,16 @@ namespace NexusIM.Windows
 				return HitTestFilterBehavior.ContinueSkipSelf;
 		}	
 
+		// Properties
+		public UIElementCollection ContactList
+		{
+			get	{
+				return ContactListControl.Children;
+			}
+		}
+
 		// Variables
 		private bool mIgnoreThisStatusChange = true; // Ignore the first change
+		private Window mActiveDialog;
 	}
 }

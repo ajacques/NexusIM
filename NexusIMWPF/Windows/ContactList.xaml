@@ -29,7 +29,7 @@
 			</Grid>
 		</ComboBox>
 		<Rectangle Stroke="#FF6A6A6A" Margin="0,56,0,0" RadiusX="3" RadiusY="3" />
-		<TextBox Margin="8,58,8,0" TextWrapping="Wrap" Text="Search for a contact..." VerticalAlignment="Top" Height="20" FontSize="10"/>
+		<TextBox Margin="8,58,8,0" TextWrapping="Wrap" Text="Search for a contact..." VerticalAlignment="Top" Height="20" FontSize="11"/>
 		<ScrollViewer Margin="0,82,0,0" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="ContactListControl" />
 		</ScrollViewer>

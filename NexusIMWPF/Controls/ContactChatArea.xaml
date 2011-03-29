@@ -46,7 +46,7 @@
 				<ColumnDefinition />
 			</Grid.ColumnDefinitions>
 			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Stretch="UniformToFill" />
-			<Rectangle Grid.Column="1" Margin="8,48,8,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
+			<Rectangle Grid.Column="1" Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
 				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto">
 					<FlowDocument>
@@ -101,6 +101,8 @@
 				<Path Data="m 10,-5 5,5 95,0 0,20 -110,0 0,-20 5,0" Fill="#FFD2D2D2" />
 				<TextBlock Margin="2" Text="Copied to clipboard" IsHitTestVisible="False" />
 			</Grid>
+		</Popup>
+		<Popup x:Name="LinkPreviewPopup">
 		</Popup>
 	</Grid>
 </UserControl>

@@ -52,6 +52,7 @@ namespace NexusIM.Controls
 		{
 			base.OnInitialized(e);
 
+			return;
 			Storyboard story = new Storyboard();
 			DoubleAnimation anim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(300)));
 			anim.SetValue(Storyboard.TargetProperty, mUsername);

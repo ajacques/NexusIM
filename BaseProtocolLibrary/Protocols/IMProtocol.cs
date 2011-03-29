@@ -90,6 +90,7 @@ namespace InstantMessage
 		public virtual void BeginLogin()
 		{
 			status = IMProtocolStatus.Connecting;
+			mLoginWaitHandle = new ManualResetEvent(false);
 		}
 		/// <summary>
 		/// Waits for the login process to complete, then continues
@@ -376,7 +377,7 @@ namespace InstantMessage
 		{
 			buddylist.Clear();
 		}
-		public ManualResetEvent LoginWaitHandle
+		public EventWaitHandle LoginWaitHandle
 		{
 			get {
 				return mLoginWaitHandle;

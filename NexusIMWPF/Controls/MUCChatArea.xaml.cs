@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Windows;
 using System.Windows.Controls;
-using InstantMessage.Protocols;
-using System.Windows.Input;
-using InstantMessage.Events;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
+using InstantMessage.Events;
+using InstantMessage.Protocols;
 
 namespace NexusIM.Controls
 {
@@ -34,7 +31,7 @@ namespace NexusIM.Controls
 			Dispatcher.BeginInvoke(new GenericEvent(() =>
 			{
 				ChatMessageInline inline = new ChatMessageInline();
-				inline.Username = e.Sender.Username;
+				inline.Username = e.Sender.Nickname;
 				inline.UsernameColor = Color.FromRgb(0, 0, 255);
 				inline.MessageBody = e.Message;
 
@@ -48,7 +45,7 @@ namespace NexusIM.Controls
 
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter)
+			if (e.Key == Key.Enter && Keyboard.IsKeyUp(Key.LeftCtrl) && Keyboard.IsKeyUp(Key.RightCtrl))
 			{
 				e.Handled = true;
 

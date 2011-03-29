@@ -841,7 +841,14 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		private void OnCapacityHostResolve(IAsyncResult r)
 		{
-			IPHostEntry entry = Dns.EndGetHostEntry(r);
+			IPHostEntry entry;
+			try	{
+				entry = Dns.EndGetHostEntry(r);
+			} catch (SocketException e) {
+				Debug.WriteLine("YahooProtocol: Dns lookup failed - Reason: " + e.Message);
+				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR));
+				return;
+			}
 
 			WebRequest request = WebRequest.Create("http://" + entry.AddressList[0].ToString() + "/capacity");
 
@@ -1007,8 +1014,7 @@ namespace InstantMessage.Protocols.Yahoo
 
 				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
 
-				if (savepassword)
-					mConfig.Add("token", token);
+				mConfig.Add("token", token);
 			} else if (result == 1212) { // Invalid Credentials
 				Trace.WriteLine("Yahoo: OnGetYToken got Invalid credentials Error. Handling");
 				triggerBadCredentialsError();

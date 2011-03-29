@@ -42,7 +42,7 @@ namespace NexusIM.Managers
 			{
 				
 			} else {
-				int? poolId = IMSettings.ChatAreaPool.GetPool(contact);
+				int? poolId = IMSettings.ChatAreaPool.GetPool(contact.Protocol, contact.Username);
 				ChatWindow chatWindow = null;
 				if (poolId.HasValue)
 				{

@@ -10,8 +10,10 @@ using System.Drawing;
 
 namespace InstantMessage
 {
-	public class ChatInline 
+	public abstract class ChatInline : ICloneable
 	{
+		public abstract object Clone();
+
 		public double FontSize
 		{
 			get;
@@ -34,6 +36,11 @@ namespace InstantMessage
 		public override string ToString()
 		{
 			return Environment.NewLine;
+		}
+
+		public override object Clone()
+		{
+			return new IMLineBreak();
 		}
 	}
 
@@ -60,6 +67,10 @@ namespace InstantMessage
 		{
 			return String.Format("{0} ({1})", Body, NavigateUri);
 		}
+		public override object Clone()
+		{
+			return new HyperlinkInline(NavigateUri, Body) { FontFamily = this.FontFamily, FontSize = this.FontSize, Foreground = this.Foreground };
+		}
 	}
 
 	public class IMRun : ChatInline
@@ -81,6 +92,10 @@ namespace InstantMessage
 		public override string ToString()
 		{
 			return Body;
+		}
+		public override object Clone()
+		{
+			return new IMRun(Body) { FontFamily = this.FontFamily, FontSize = this.FontSize, Foreground = this.Foreground };
 		}
 	}
 }
