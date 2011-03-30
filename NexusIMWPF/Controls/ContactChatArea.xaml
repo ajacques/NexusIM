@@ -102,7 +102,7 @@
 				<TextBlock Margin="2" Text="Copied to clipboard" IsHitTestVisible="False" />
 			</Grid>
 		</Popup>
-		<Popup x:Name="LinkPreviewPopup">
+		<Popup x:Name="LinkPreviewPopup" AllowsTransparency="True">
 		</Popup>
 	</Grid>
 </UserControl>

@@ -4,6 +4,7 @@ using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Controls;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace NexusIM.Managers
 {
@@ -25,6 +26,43 @@ namespace NexusIM.Managers
 			}
 		}
 
+		public static IEnumerable<ChatInline> ProcessComplexMessage(IEnumerable<ChatInline> source)
+		{
+			List<ChatInline> processed = new List<ChatInline>();
+			foreach (ChatInline inline in source)
+			{
+				if (!(inline is IMRun))
+				{
+					processed.Add(inline);
+					continue;
+				}
+
+				IMRun run = (IMRun)inline;
+				int index = run.Body.IndexOf("http://");
+
+				index = index == -1 ? run.Body.IndexOf("https://") : index;
+				index = index == -1 ? run.Body.IndexOf("ftp://") : index;
+
+				if (index != -1)
+				{
+					int endIndex = run.Body.IndexOf(' ', index);
+					string trailing = endIndex != -1 ? run.Body.Substring(endIndex) : null;
+
+					endIndex = endIndex != -1 ? endIndex : run.Body.Length;
+
+					string hyperlink = run.Body.Substring(index, endIndex - index);
+
+					run.Body = run.Body.Substring(0, index);
+
+					HyperlinkInline hinline = new HyperlinkInline(new Uri(hyperlink), hyperlink);
+					processed.Add(hinline);
+				} else
+					processed.Add(run);
+			}
+
+			return processed;
+		}
+
 		private static void IMProtocol_OnMessageReceived(object sender, IMMessageEventArgs e)
 		{
 			ContactChatArea area;
@@ -34,9 +72,10 @@ namespace NexusIM.Managers
 				area = WindowSystem.OpenContactWindow(e.Sender, false);
 				showNotification = true;
 			}
+			
 			area.ProcessChatMessage(e);
 
-			if (showNotification)
+			if (false && showNotification)
 			{
 				ThreadPool.QueueUserWorkItem(new WaitCallback((object s) => NotificationQueue.EnqueueChatMessageArea(e.Sender, e.Message)), null);
 			}

@@ -1,18 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Windows.Controls.Primitives;
-using System.Threading;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Controls
 {
@@ -40,43 +40,12 @@ namespace NexusIM.Controls
 		}
 		private void ProcessMessageImp(string author, Color authcolor, IEnumerable<ChatInline> complexmsg)
 		{
-			List<ChatInline> processed = new List<ChatInline>();
-			foreach (ChatInline inline in complexmsg)
-			{
-				if (!(inline is IMRun))
-				{
-					processed.Add(inline);
-					continue;
-				}
-
-				IMRun run = (IMRun)inline;
-				int index = run.Body.IndexOf("http://");
-
-				index = index == -1 ? run.Body.IndexOf("https://") : index;
-
-				if (index != -1)
-				{
-					int endIndex = run.Body.IndexOf(' ', index);
-					string trailing = endIndex != -1 ? run.Body.Substring(endIndex) : null;
-
-					endIndex = endIndex != -1 ? endIndex : run.Body.Length;
-
-					string hyperlink = run.Body.Substring(index, endIndex - index);
-					
-					run.Body = run.Body.Substring(0, index);
-
-					HyperlinkInline hinline = new HyperlinkInline(new Uri(hyperlink), hyperlink);
-					processed.Add(hinline);
-				} else
-					processed.Add(run);
-			}
-
 			Dispatcher.BeginInvoke(new GenericEvent(() =>
 			{
 				ChatMessageInline inline = new ChatMessageInline();
 				inline.Username = author;
 				inline.UsernameColor = authcolor;
-				foreach (ChatInline ninline in processed)
+				foreach (ChatInline ninline in complexmsg)
 				{
 					if (ninline is IMLineBreak)
 						inline.Inlines.Add(new LineBreak());
@@ -159,8 +128,11 @@ namespace NexusIM.Controls
 				string message = MessageBody.Text;
 				MessageBody.Text = String.Empty;
 
+				IEnumerable<ChatInline> inlines = new ChatInline[] { new IMRun(message) };
+				inlines = IMMessageProcessor.ProcessComplexMessage(inlines);
+
 				Contact.SendMessage(message);
-				ProcessMessageImp("Me", Color.FromRgb(255, 0, 0), new ChatInline[] { new IMRun(message) });
+				ProcessMessageImp("Me", Color.FromRgb(255, 100, 0), inlines);
 				
 				MessageLogger.LogMessageToRemote(Contact, message);
 			}
@@ -219,6 +191,19 @@ namespace NexusIM.Controls
 		}
 		private void IMHyperlink_MouseLeave(object sender, MouseEventArgs e)
 		{
+			Storyboard fadeOut = new Storyboard();
+			DoubleAnimation anim1 = new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(1)));
+			anim1.EasingFunction = new QuinticEase();
+			anim1.SetValue(Storyboard.TargetProperty, LinkPreviewPopup.Child);
+			anim1.SetValue(Storyboard.TargetPropertyProperty, new PropertyPath(FrameworkElement.OpacityProperty));
+			fadeOut.Children.Add(anim1);
+
+			EventHandler onComplete = null;
+			onComplete = new EventHandler((send, args) => {
+				fadeOut.Completed -= onComplete;
+			});
+			fadeOut.Completed += onComplete;
+			fadeOut.Begin();
 		}
 
 		private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
