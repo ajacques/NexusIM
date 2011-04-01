@@ -65,6 +65,13 @@ namespace NexusIM.Controls
 			MainAccountUsername.Text = extraData.Protocol.Username;
 			MainAccountTypeLabel.Text = extraData.Protocol.Protocol;
 			EnabledCheckBox.IsChecked = extraData.Enabled;
+			if (extraData.Protocol.Password != null)
+			{
+				if (extraData.Enabled)
+					PasswordBox.IsEnabled = false;
+				PasswordBox.Password = String.Empty;
+				SavedText.Visibility = Visibility.Visible;
+			}
 
 			if (mProtocolType == typeof(IRCProtocol))
 			{
@@ -117,6 +124,10 @@ namespace NexusIM.Controls
 			mProtocol.Enabled = EnabledCheckBox.IsChecked.Value;
 
 			PopulateUIControls(mProtocol);
+		}
+		private void AutoConnectCheckbox_Checked(object sender, RoutedEventArgs e)
+		{
+			mProtocol.AutoConnect = AutoConnectCheckbox.IsChecked.Value;
 		}
 		private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
 		{

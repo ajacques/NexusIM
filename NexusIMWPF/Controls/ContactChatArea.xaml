@@ -48,7 +48,7 @@
 			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Stretch="UniformToFill" />
 			<Rectangle Grid.Column="1" Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
-				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto">
+				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" FontFamily="Calibri">
 					<FlowDocument>
 						<Paragraph x:Name="ChatHistoryBox">
 						</Paragraph>
@@ -64,8 +64,8 @@
 					<RowDefinition />
 					<RowDefinition />
 				</Grid.RowDefinitions>
-				<TextBlock Grid.Column="0" Grid.Row="0" FontSize="19" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" Text="{Binding DisplayName, Mode=OneWay}" />
-				<TextBlock Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" TextWrapping="NoWrap" Text="{Binding Status, StringFormat=({0}), Mode=OneWay}" Foreground="#FF838383" />
+				<TextBlock x:Name="DisplayNameBlock" Grid.Column="0" Grid.Row="0" FontSize="19" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" Text="{Binding DisplayName, Mode=OneWay}" />
+				<TextBlock x:Name="StatusBlock" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,1,0,0" TextWrapping="NoWrap" Text="{Binding Status, StringFormat=({0}), Mode=OneWay}" Foreground="#FF838383" />
 				<TextBlock x:Name="StatusMessageBlock" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FontSize="12" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" TextWrapping="NoWrap" Text="{Binding StatusMessage, Mode=OneWay}" TextTrimming="CharacterEllipsis" Foreground="Black" />
 			</Grid>
 			<StackPanel Grid.Column="1" Margin="8,48,8,0">
@@ -102,7 +102,6 @@
 				<TextBlock Margin="2" Text="Copied to clipboard" IsHitTestVisible="False" />
 			</Grid>
 		</Popup>
-		<Popup x:Name="LinkPreviewPopup" AllowsTransparency="True">
-		</Popup>
+		<Popup x:Name="LinkPreviewPopup" AllowsTransparency="True" />
 	</Grid>
 </UserControl>

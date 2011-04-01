@@ -9,17 +9,17 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
-using System.Windows.Media.Animation;
 
 namespace NexusIM.Controls
 {
 	/// <summary>
 	/// Interaction logic for ContactChatArea.xaml
 	/// </summary>
-	public partial class ContactChatArea : UserControl
+	public partial class ContactChatArea : UserControl, ITabbedArea
 	{
 		public ContactChatArea()
 		{
@@ -27,13 +27,10 @@ namespace NexusIM.Controls
 			this.DataContextChanged += new DependencyPropertyChangedEventHandler(OnDataContextChanged);
 		}
 
-		private IMBuddy Contact
+		public void PopulateUIControls(object context)
 		{
-			get {
-				return DataContext as IMBuddy;
-			}
+			DataContext = context;
 		}
-
 		public void ProcessChatMessage(IMMessageEventArgs e)
 		{
 			ProcessMessageImp(e.Sender.Nickname, Color.FromRgb(0, 0, 255), e.ComplexMessage.Inlines);
@@ -107,6 +104,14 @@ namespace NexusIM.Controls
 			return block;
 		}
 
+		protected override void OnGotFocus(RoutedEventArgs e)
+		{
+			base.OnGotFocus(e);
+
+			MessageBody.Focus();
+		}
+
+		// Event Handlers
 		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if (e.NewValue == null)
@@ -205,10 +210,16 @@ namespace NexusIM.Controls
 			fadeOut.Completed += onComplete;
 			fadeOut.Begin();
 		}
-
 		private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
 		{
 			MessageBody.Focus();
+		}
+
+		private IMBuddy Contact
+		{
+			get {
+				return DataContext as IMBuddy;
+			}
 		}
 
 		private Regex mYoutubeLinkMatch = new Regex(@"^/watch\?v=([a-zA-Z0-9_-]*)");

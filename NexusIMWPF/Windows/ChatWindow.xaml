@@ -6,7 +6,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
 	x:Class="NexusIM.Windows.ChatWindow"
 	x:Name="Window" x:FieldModifier="internal" UseLayoutRounding="True"
-	Width="600" Height="500" MinWidth="150" MinHeight="100" Title="{Binding SelectedItem.DataContext.DisplayName, ElementName=ChatAreas}">
+	Width="600" Height="500" MinWidth="150" MinHeight="100">
 	<Window.Resources>
 		<Color x:Key="AvailableColor">#90C1FF99</Color>
 		<Color x:Key="BusyColor">#00FFC9C9</Color>

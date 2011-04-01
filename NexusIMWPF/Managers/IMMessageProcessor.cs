@@ -5,6 +5,7 @@ using InstantMessage.Events;
 using NexusIM.Controls;
 using System.Threading;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NexusIM.Managers
 {
@@ -51,6 +52,15 @@ namespace NexusIM.Managers
 					endIndex = endIndex != -1 ? endIndex : run.Body.Length;
 
 					string hyperlink = run.Body.Substring(index, endIndex - index);
+
+					Uri href;
+					try	{
+						href = new Uri(hyperlink);
+					} catch (UriFormatException) {
+						Debug.WriteLine("Uri " + hyperlink + " failed to parse due to invalid format");
+						processed.Add(run);
+						continue;
+					}
 
 					run.Body = run.Body.Substring(0, index);
 

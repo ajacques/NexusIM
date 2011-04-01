@@ -62,8 +62,13 @@ namespace NexusIM.Managers
 					Application.Dispatcher.Invoke(new GenericEvent(() =>
 					{
 						chatWindow = new ChatWindow();
+						chatWindow.Closed += new EventHandler(ChatWindow_Closed);
 						area = new ContactChatArea();
-						chatWindow.AttachAreaAndShow(new ChatAreaHost(area, contact));
+						ChatAreaHost host = new ChatAreaHost(area);
+						area.PopulateUIControls(contact);
+						host.GetHeaderChangeSink("DisplayName", () => contact.Username)(contact, new System.ComponentModel.PropertyChangedEventArgs("DisplayName"));
+						host.TabClosed += new EventHandler(ChatAreaHost_TabClosed);
+						chatWindow.AttachAreaAndShow(host);
 						chatWindow.Show();
 					}));
 					ContactChatAreas.Add(contact, area);
@@ -72,6 +77,7 @@ namespace NexusIM.Managers
 
 			return area;
 		}
+
 		public static void ShowSysTrayIcon()
 		{
 			if (SysTrayIcon != null)
@@ -95,6 +101,15 @@ namespace NexusIM.Managers
 		{
 			ContactListWindow.Closed -= new EventHandler(ContactListWindow_Closed);
 			ContactListWindow = null; // Kill it
+		}
+		private static void ChatWindow_Closed(object sender, EventArgs e)
+		{
+			ChatWindow window = (ChatWindow)sender;
+			
+		}
+		private static void ChatAreaHost_TabClosed(object sender, EventArgs e)
+		{
+			ChatAreaHost host = (ChatAreaHost)sender;
 		}
 
 		// Properties

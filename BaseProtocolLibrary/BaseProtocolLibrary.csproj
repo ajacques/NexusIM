@@ -86,6 +86,7 @@
     <Compile Include="Protocols\IRC\IRCProtocol.cs" />
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
+    <Compile Include="Protocols\XMPP\XmppProtocol.cs" />
     <Compile Include="Protocols\Yahoo\YahooProtocol.cs" />
     <Compile Include="Protocols\Yahoo\YPacket.cs" />
     <Compile Include="Protocols\Yahoo\YPacketParamCollection.cs" />
@@ -125,7 +126,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

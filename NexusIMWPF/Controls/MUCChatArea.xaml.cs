@@ -12,16 +12,16 @@ namespace NexusIM.Controls
 	/// <summary>
 	/// Interaction logic for MUCChatArea.xaml
 	/// </summary>
-	public partial class MUCChatArea : UserControl
+	public partial class MUCChatArea : UserControl, ITabbedArea
 	{
 		public MUCChatArea()
 		{
 			InitializeComponent();
 		}
 
-		public void PopulateUIControls(IChatRoom chatRoom)
+		public void PopulateUIControls(object context)
 		{
-			mChatRoom = chatRoom;
+			mChatRoom = (IChatRoom)context;
 
 			mChatRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(mChatRoom_OnMessageReceived);
 		}

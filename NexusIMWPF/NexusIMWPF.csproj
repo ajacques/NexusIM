@@ -144,7 +144,6 @@
     <Compile Include="Controls\ChatMessageNotification.xaml.cs">
       <DependentUpon>ChatMessageNotification.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ChatRoomAreaHost.cs" />
     <Compile Include="Controls\ContactChatArea.xaml.cs">
       <DependentUpon>ContactChatArea.xaml</DependentUpon>
     </Compile>
@@ -183,6 +182,7 @@
       <DependentUpon>DataCache.dbml</DependentUpon>
     </Compile>
     <Compile Include="FirstRunSetup.cs" />
+    <Compile Include="ITabbedArea.cs" />
     <Compile Include="LazyWeak.cs" />
     <Compile Include="Managers\AggregateContactList.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
@@ -496,7 +496,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UserProfile.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

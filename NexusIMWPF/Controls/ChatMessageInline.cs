@@ -51,14 +51,6 @@ namespace NexusIM.Controls
 		protected override void OnInitialized(EventArgs e)
 		{
 			base.OnInitialized(e);
-
-			return;
-			Storyboard story = new Storyboard();
-			DoubleAnimation anim = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(300)));
-			anim.SetValue(Storyboard.TargetProperty, mUsername);
-			anim.SetValue(Storyboard.TargetPropertyProperty, new PropertyPath(FrameworkElement.OpacityProperty));
-			story.Children.Add(anim);
-			story.Begin();
 		}
 
 		private Run mUsername;
