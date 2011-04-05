@@ -24,8 +24,10 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public IRCProtocol(string hostname, int port = 6667) : this()
 		{
-			if ((port < 0) && (port > 0xffff))
+			if ((port <= 0) && (port > 0xffff))
 				throw new ArgumentOutOfRangeException("port", "The port number " + port + " is not a valid port number");
+			if (String.IsNullOrEmpty(hostname))
+				throw new ArgumentNullException("hostname");
 
 			Server = hostname;
 			Port = port;

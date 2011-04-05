@@ -500,6 +500,7 @@ namespace NexusIM
 						extraData.Enabled = extraData.AutoConnect = current.AutoConnect;
 						protocol.Username = current.Username;
 						protocol.Password = current.Password;
+						protocol.Server = current.Server;
 						protocol.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
 							current.Username = protocol.Username;
 							current.Password = protocol.Password;

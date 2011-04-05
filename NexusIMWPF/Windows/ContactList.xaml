@@ -64,18 +64,9 @@
 					<GradientStop Color="White" Offset="1"/>
 				</LinearGradientBrush>
 			</Menu.Background>
-			<MenuItem Header="View">
-				<MenuItem Header="Always Ontop" IsCheckable="True" />
-			</MenuItem>
-			<MenuItem Header="Accounts">
+			<MenuItem Header="Tools">
 				<MenuItem Header="Join a Chat Room" Click="JoinRoom_Click" />
-				<MenuItem Click="EditAccounts_Click" Header="My Accounts" />
-				<MenuItem Header="New Contact Group" IsEnabled="False" />
-			</MenuItem>
-			<MenuItem Header="Contacts">
-				<MenuItem Header="Add Contact" />
-				<MenuItem Header="Manage Groups" />
-				<MenuItem Header="Compact View" IsCheckable="True" />
+				<MenuItem Header="My Accounts" Click="EditAccounts_Click" />
 			</MenuItem>
 		</Menu>
 	</Grid>

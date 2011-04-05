@@ -182,6 +182,7 @@
       <DependentUpon>DataCache.dbml</DependentUpon>
     </Compile>
     <Compile Include="FirstRunSetup.cs" />
+    <Compile Include="IPAddressExtensions.cs" />
     <Compile Include="ITabbedArea.cs" />
     <Compile Include="LazyWeak.cs" />
     <Compile Include="Managers\AggregateContactList.cs" />

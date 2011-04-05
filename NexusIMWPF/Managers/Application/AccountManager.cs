@@ -8,6 +8,7 @@ using InstantMessage;
 using Microsoft.WindowsAPICodePack.Net;
 using System.Threading;
 using System.Net;
+using System.Net.Sockets;
 
 namespace NexusIM.Managers
 {
@@ -92,6 +93,27 @@ namespace NexusIM.Managers
 
 		private static void ConnectIfNeeded(IMProtocolExtraData extraData)
 		{
+			bool connectAllowed = false;
+
+			if (!Connected)
+				return;
+
+			if (!String.IsNullOrEmpty(extraData.Protocol.Server))
+			{
+				ConnectivityStates status = NetworkListManager.Connectivity;
+				IPAddress tryTest;
+				if (IPAddress.TryParse(extraData.Protocol.Server, out tryTest))
+				{
+					if (tryTest.AddressFamily == AddressFamily.InterNetwork)
+					{
+						if (status.HasFlag(ConnectivityStates.IPv4Internet) || (status.HasFlag(ConnectivityStates.IPv4LocalNetwork) && tryTest.IsPrivateNetwork()))
+							connectAllowed = true;
+					}
+				} else { // Dns Record
+
+				}
+			}
+
 			if (Connected && IsConnectedToInternet())
 			{
 				if (extraData.Enabled != (extraData.Protocol.ProtocolStatus != IMProtocolStatus.Offline))

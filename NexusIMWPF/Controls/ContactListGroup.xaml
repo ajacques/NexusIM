@@ -20,15 +20,15 @@
 			<DoubleAnimation Storyboard.TargetName="ExpandoArrow" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)" Duration="0:0:0.2" To="0" />
 		</Storyboard>
 	</UserControl.Resources>
-	<UserControl.DataContext>
+	<!--UserControl.DataContext>
 		<im:GroupOfContacts GroupName="Test Group" />
-	</UserControl.DataContext>
+	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="20"/>
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		<Path Grid.Row="0" x:Name="ExpandoArrow" Data="M 0,0 0,10 10,5 0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" RenderTransformOrigin="0.5,0.5" Fill="#FF6C7C91" UseLayoutRounding="False" >
+		<Path Grid.Row="0" x:Name="ExpandoArrow" Data="M 0,0 0,10 10,5 0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" RenderTransformOrigin="0.5,0.5" Fill="#FF6C7C91" UseLayoutRounding="False">
 			<Path.RenderTransform>
 				<TransformGroup>
 					<ScaleTransform/>

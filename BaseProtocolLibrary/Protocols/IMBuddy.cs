@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net.Sockets;
-using System.Net;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Security.Permissions;
-using System.Text;
-using System.Runtime.Serialization;
 using InstantMessage.Events;
-using InstantMessage.Protocols;
 
 namespace InstantMessage
 {

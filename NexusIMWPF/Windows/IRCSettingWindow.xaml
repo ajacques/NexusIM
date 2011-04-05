@@ -7,6 +7,14 @@
 	Title="Account Settings"
 	Width="400" Height="300"
 	x:FieldModifier="private" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" UseLayoutRounding="True">
+	<Window.Resources>
+		<ToolTip x:Key="AutoExecuteTooltip">
+			<StackPanel>
+				<TextBlock FontWeight="Bold" Text="Auto Execute" />
+				<TextBlock Margin="5,0,0,0" Text="Commands that will be automatically executed when you connect to this server. Each command should be on it's own line." />
+			</StackPanel>
+		</ToolTip>
+	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
 		<Rectangle VerticalAlignment="Top" Height="24" >
 			<Rectangle.Fill>
@@ -23,11 +31,21 @@
 		<Grid VerticalAlignment="Top" Margin="0,29,0,0" Height="35">
 			<Rectangle Fill="#FFFFBC78" Stroke="#FFFF6900" />
 			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap" Text="This account is currently connected. Some settings may not take effect until you reconnect." />
-		</Grid>		
+		</Grid>
 		<Grid Margin="0,65,0,0" MaxHeight="170" VerticalAlignment="Top">
-			<TextBlock HorizontalAlignment="Left" Margin="8,5,0,0" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>
-			<TextBox Margin="66,32,0,0" TextWrapping="Wrap" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" />
-			<TextBlock HorizontalAlignment="Left" Margin="8,36,0,0" TextWrapping="Wrap" Text="Real Name:" VerticalAlignment="Top" FontSize="11"/>			
+			<StackPanel Margin="3,3,0,0">
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>				
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<TextBlock Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
+					<TextBox Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
+				</Grid>
+				<TextBlock Text="Auto Execute" ToolTip="{DynamicResource AutoExecuteTooltip}" />
+				<TextBox HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{DynamicResource AutoExecuteTooltip}" />
+			</StackPanel>
 		</Grid>
 		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75"/>
 	</Grid>

@@ -28,6 +28,11 @@
 			</im:IMBuddy.Avatar>
 		</im:IMBuddy>
 	</UserControl.DataContext-->
+	<UserControl.ContextMenu>
+		<ContextMenu>
+			<MenuItem Header="Flash Taskbar on Message" IsCheckable="True" />
+		</ContextMenu>
+	</UserControl.ContextMenu>
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
 			<LinearGradientBrush EndPoint="0.9,1" StartPoint="0.2,0" SpreadMethod="Repeat">

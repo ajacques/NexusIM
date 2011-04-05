@@ -23,7 +23,7 @@ namespace NexusIM.Windows
 		{
 			InitializeComponent();
 
-			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);		
+			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);
 			AggregateContactList.Groups.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_Changed);
 		}
 		
@@ -194,6 +194,10 @@ namespace NexusIM.Windows
 
 			if (mActiveDialog != null)
 				mActiveDialog.Activate();
+		}
+		protected override void OnMouseMove(MouseEventArgs e)
+		{
+			base.OnMouseMove(e);
 		}
 		private HitTestResultBehavior OnHitTestResult(HitTestResult result)
 		{
