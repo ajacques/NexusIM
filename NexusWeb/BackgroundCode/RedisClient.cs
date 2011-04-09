@@ -29,6 +29,15 @@ namespace NexusWeb.Infrastructure.Redis
 		}
 	}
 
+	internal enum RedisTypes
+	{
+		String,
+		List,
+		Set,
+		ZSet,
+		Hash
+	}
+
 	/// <summary>
 	/// Implements the Redis client protocol to connect and interface with Redis servers
 	/// </summary>
@@ -154,6 +163,77 @@ namespace NexusWeb.Infrastructure.Redis
 
 			stream.Dispose();
 		}
+		/// <summary>
+		/// Removes a single key from the database. No action if the key does not exist
+		/// </summary>
+		/// <remarks>
+		/// Time complexity: O(m)
+		/// m : Number of values (1 for a single string value)
+		/// </remarks>
+		/// <param name="key">The key to delete</param>
+		public void Delete(string key)
+		{
+			if (key == null)
+				throw new ArgumentNullException("key");
+
+			byte[] keyBytes = mEncoder.GetBytes(key);
+
+			using (MemoryStream stream = BuildUnifiedCommand(RedisCommands.Delete, keyBytes))
+			{
+				lock (mSocketOperationLock)
+				{
+					EnsureSocketConnected();
+
+					stream.WriteTo(mDataStream);
+
+					ExpectOK();
+				}
+			}
+		}
+		/// <summary>
+		/// Removes the specified keys. A key is ignored if it does not exist.
+		/// </summary>
+		/// <remarks>
+		/// Time complexity: O(n * m)
+		/// n : Number of keys to delete
+		/// m : Number of values (1 for a single string value)
+		/// </remarks>
+		public int Delete(params string[] keys)
+		{
+			return Delete((IEnumerable<string>)keys);
+		}
+		/// <summary>
+		/// Removes the specified keys. A key is ignored if it does not exist.
+		/// </summary>
+		/// <remarks>
+		/// Time complexity: O(n * m)
+		/// n : Number of keys to delete
+		/// m : Number of values (1 for a single string value)
+		/// </remarks>
+		public int Delete(IEnumerable<string> keys)
+		{
+			if (keys == null)
+				throw new ArgumentNullException("key");
+
+			List<byte[]> keysBytes = new List<byte[]>(2);
+			keysBytes.Add(RedisCommands.Delete);
+
+			foreach (string key in keys)
+				keysBytes.Add(mEncoder.GetBytes(key));
+
+
+			using (MemoryStream stream = BuildUnifiedCommand(keysBytes.ToArray()))
+			{
+				lock (mSocketOperationLock)
+				{
+					EnsureSocketConnected();
+
+					stream.WriteTo(mDataStream);
+
+					return ExpectInt();
+				}
+			}			
+		}
 		public int Increment(string key, int step = 1)
 		{
 			if (key == null)
@@ -178,7 +258,6 @@ namespace NexusWeb.Infrastructure.Redis
 				return ExpectInt();
 			}
 		}
-
 		public void ChangeDatabase(int dbid)
 		{
 			if (mDatabaseId != dbid)
@@ -198,6 +277,15 @@ namespace NexusWeb.Infrastructure.Redis
 				}
 			}
 		}
+		public TimeSpan GetTimeToLive(string key)
+		{
+			if (key == null)
+				throw new ArgumentNullException(key);
+
+			throw new NotImplementedException();
+		}
+
+		#region Socket Helper Methods
 
 		/// <summary>
 		/// Reads the response from the Redis server and throws an exception if the server does not return a +OK
@@ -221,7 +309,7 @@ namespace NexusWeb.Infrastructure.Redis
 			byte[] result = new byte[16];
 			int bytesRead = mDataStream.Read(result, 0, result.Length);
 
-			string number = mEncoder.GetString(result, 1, bytesRead - 2);
+			string number = mEncoder.GetString(result, 1, bytesRead - 3);
 
 			return Int32.Parse(number);
 		}
@@ -298,6 +386,8 @@ namespace NexusWeb.Infrastructure.Redis
 			stream.WriteByte(0x0a);
 		}
 
+		#endregion
+
 		private static class RedisCommands
 		{
 			/// <summary>
@@ -307,6 +397,11 @@ namespace NexusWeb.Infrastructure.Redis
 			public static readonly byte[] Get = new byte[] { 0x47, 0x45, 0x54 };
 			public static readonly byte[] Set = new byte[] { 0x53, 0x45, 0x54 };
 			/// <summary>
+			/// Delete one or more keys
+			/// Format: GET {key1} {key2} ... {keyN}
+			/// </summary>
+			public static readonly byte[] Delete = new byte[] { 0x44, 0x45, 0x4C };
+			/// <summary>
 			/// Set the value of an object that expires in the specified number of seconds
 			/// Format: SETEX {key} {expiration in seconds} {data}
 			/// </summary>
@@ -314,6 +409,7 @@ namespace NexusWeb.Infrastructure.Redis
 			public static readonly byte[] Increment = new byte[] { 0x49, 0x4e, 0x43, 0x52 };
 			public static readonly byte[] IncrementBy = new byte[] { 0x49, 0x4e, 0x43, 0x52, 0x42, 0x59 };
 			public static readonly byte[] Select = new byte[] { 0x53, 0x45, 0x4c, 0x45, 0x43, 0x54, 0x20 };
+			public static readonly byte[] TTL = new byte[] { 0x54, 0x54, 0x4C };
 		}
 		private static class RedisResponses
 		{

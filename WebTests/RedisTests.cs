@@ -71,5 +71,25 @@ namespace WebTests
 				throw;
 			}
 		}
+
+		[TestMethod]
+		public void DeleteTest()
+		{
+			RedisClient client = new RedisClient("192.168.56.102");
+
+			client.Connect();
+
+			try	{
+				client.Set("testkey", new byte[] { 0x0, 0x05, 0xff });
+				client.Set("testkey1", new byte[] { 0x0, 0x05, 0xff });
+				client.Set("testkey2", new byte[] { 0x0, 0x05, 0xff });
+
+				Assert.AreEqual(3, client.Delete("testkey", "testkey1", "testkey2"));
+			} catch (RedisException e) {
+				Trace.WriteLine("ActiveServer: " + e.ActiveServer);
+				Trace.WriteLine("ErrorDetail: " + e.ErrorDetail);
+				throw;
+			}
+		}
 	}
 }

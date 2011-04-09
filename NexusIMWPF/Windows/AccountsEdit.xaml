@@ -7,7 +7,7 @@
 	x:Class="NexusIM.Windows.AccountsEdit"
 	x:Name="Window"
 	Title="My Accounts"
-	Width="540" Height="380" WindowStartupLocation="CenterScreen"
+	Width="540" Height="400" WindowStartupLocation="CenterScreen"
 	x:ClassModifier="internal" x:FieldModifier="private" Loaded="Window_Loaded" ResizeMode="NoResize" UseLayoutRounding="True">
 	<Window.Resources>
 		<Thickness x:Key="ItemMargin" Bottom="10" />
