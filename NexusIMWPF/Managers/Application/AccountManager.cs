@@ -3,12 +3,14 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
-using InstantMessage;
-using Microsoft.WindowsAPICodePack.Net;
-using System.Threading;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
+using InstantMessage;
+using InstantMessage.Protocols.Irc;
+using Microsoft.WindowsAPICodePack.Net;
+using System.Text;
 
 namespace NexusIM.Managers
 {
@@ -85,10 +87,38 @@ namespace NexusIM.Managers
 					{
 						extraData.IsReady = true;
 						extraData.PropertyChanged += new PropertyChangedEventHandler(IndividualProtocol_PropertyChanged);
+
+						if (extraData.Protocol is IRCProtocol)
+							extraData.Protocol.LoginCompleted += new EventHandler(IrcProtocol_LoginCompleted);
+
 						ConnectIfNeeded(extraData);
 					}
 				}
 			}));
+		}
+
+		private static void IrcProtocol_LoginCompleted(object sender, EventArgs e)
+		{
+			IRCProtocol protocol = (IRCProtocol)sender;
+
+			string autoexecute;
+			if (protocol.ConfigurationSettings.TryGetValue("autoexecute", out autoexecute))
+			{
+				StringBuilder sb = new StringBuilder(32);
+
+				for (int i = 0; i < autoexecute.Length; i++)
+				{
+					if ((autoexecute[i] == '\r' || autoexecute[i] == '\n') && sb.Length >= 1)
+					{
+						protocol.SendRawMessage(sb.ToString());
+						sb.Clear();
+					} else
+						sb.Append(autoexecute[i]);
+				}
+
+				if (sb.Length >= 1)
+					protocol.SendRawMessage(sb.ToString());
+			}
 		}
 
 		private static void ConnectIfNeeded(IMProtocolExtraData extraData)

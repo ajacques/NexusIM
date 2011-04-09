@@ -4,8 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
-using NexusIM.Managers;
 using InstantMessage.Protocols.Irc;
+using NexusIM.Managers;
 using NexusIM.Windows;
 
 namespace NexusIM.Controls
@@ -23,6 +23,8 @@ namespace NexusIM.Controls
 			PasswordBox.PasswordChanged += new RoutedEventHandler(PasswordBox_PasswordChanged);
 			ServerBox.TextChanged += new TextChangedEventHandler(ServerBox_TextChanged);
 			ServerBox.LostFocus += new RoutedEventHandler(ServerBox_LostFocus);
+			AutoConnectCheckbox.Checked += new RoutedEventHandler(AutoConnectCheckbox_CheckChanged);
+			AutoConnectCheckbox.Unchecked += new RoutedEventHandler(AutoConnectCheckbox_CheckChanged);
 		}
 
 		public void Select()
@@ -81,6 +83,9 @@ namespace NexusIM.Controls
 				ServerGrid.Visibility = Visibility.Collapsed;
 			}
 
+			if (!String.IsNullOrEmpty(extraData.Protocol.Server))
+				ServerBox.Text = extraData.Protocol.Server;
+
 			if (extraData.Enabled)
 			{
 				UsernameBox.IsReadOnly = true;
@@ -125,7 +130,7 @@ namespace NexusIM.Controls
 
 			PopulateUIControls(mProtocol);
 		}
-		private void AutoConnectCheckbox_Checked(object sender, RoutedEventArgs e)
+		private void AutoConnectCheckbox_CheckChanged(object sender, RoutedEventArgs e)
 		{
 			mProtocol.AutoConnect = AutoConnectCheckbox.IsChecked.Value;
 		}
@@ -150,7 +155,7 @@ namespace NexusIM.Controls
 			{
 				IRCSettingWindow window = new IRCSettingWindow();
 				window.PopulateUIControls(mProtocol);
-				window.ShowDialog();
+				window.Show();
 			}
 		}
 

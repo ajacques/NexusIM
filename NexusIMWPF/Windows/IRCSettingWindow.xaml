@@ -1,7 +1,8 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
 	x:Class="NexusIM.Windows.IRCSettingWindow"
 	x:Name="Window"
 	Title="Account Settings"
@@ -34,7 +35,7 @@
 		</Grid>
 		<Grid Margin="0,65,0,0" MaxHeight="170" VerticalAlignment="Top">
 			<StackPanel Margin="3,3,0,0">
-				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>				
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto" />
@@ -43,10 +44,11 @@
 					<TextBlock Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
 					<TextBox Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
 				</Grid>
-				<TextBlock Text="Auto Execute" ToolTip="{DynamicResource AutoExecuteTooltip}" />
-				<TextBox HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{DynamicResource AutoExecuteTooltip}" />
+				<Grid Height="5" />
+				<TextBlock Text="Auto Execute Commands" ToolTip="{StaticResource AutoExecuteTooltip}" />
+				<TextBox x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
 			</StackPanel>
 		</Grid>
-		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75"/>
+		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="SaveButton_Click" />
 	</Grid>
 </Window>

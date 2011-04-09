@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using System.Threading;
 using System.Data.SqlServerCe;
+using System.Diagnostics;
 
 namespace NexusIM
 {
@@ -50,6 +51,7 @@ namespace NexusIM
 					{
 						connection = new SqlCeConnection(ConnectionString);
 						connection.Open();
+						Trace.WriteLine(string.Format("CEConnectionPool: Opening new {0} connection (Total: {1})", connection.Database.Substring(connection.Database.LastIndexOf('\\') + 1), ++mConnections));
 						threadConnectionMap.Add(threadId, connection);
 					}
 
@@ -67,5 +69,7 @@ namespace NexusIM
 			threadConnectionMap = new Dictionary<int, IDbConnection>();
 			ConnectionString = connectionString;
 		}
+
+		private int mConnections = 0;
 	}
 }

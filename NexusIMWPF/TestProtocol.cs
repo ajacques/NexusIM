@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using InstantMessage;
-using System.Diagnostics;
-using System.Threading;
 
 namespace NexusIM
 {
@@ -20,6 +15,7 @@ namespace NexusIM
 			ContactList.Add(new IMBuddy(this, "Away User") { Status = IMBuddyStatus.Away });
 			ContactList.Add(new IMBuddy(this, "Busy User") { Status = IMBuddyStatus.Busy });
 			ContactList.Add(new IMBuddy(this, "Test User") { Status = IMBuddyStatus.Available, StatusMessage = "Test Status Message" });
+			ContactList.Add(new IMBuddy(this, "Grouped User") { Group = "Test Group" });
 
 			mLoginWaitHandle.Set();
 

@@ -1,3 +1,4 @@
+using System;
 namespace NexusIM
 {
 	partial class UserProfile
@@ -7,7 +8,7 @@ namespace NexusIM
 			if (mPool == null)
 				mPool = new CEConnectionPool(connectionString);
 
-			return new UserProfile(mPool.Connection);
+			return new UserProfile(mPool.Connection) { Log = Console.Out };
 		}
 
 		private static CEConnectionPool mPool;

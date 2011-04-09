@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -13,15 +11,12 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
-using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using Microsoft.ApplicationServer.Caching;
 using NexusCore.Databases;
 using NexusWeb.Properties;
 using NexusWeb.Services.DataContracts;
-using System.Collections;
-using System.Collections.Specialized;
 
 namespace NexusWeb.Services
 {

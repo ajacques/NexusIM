@@ -7,9 +7,9 @@ using System.Data.SqlServerCe;
 using System.Diagnostics;
 using System.Linq;
 using InstantMessage;
+using InstantMessage.Protocols.Irc;
 using InstantMessage.Protocols.Yahoo;
 using Microsoft.SqlServerCe.VersionManagement;
-using InstantMessage.Protocols.Irc;
 
 namespace NexusIM
 {

@@ -40,7 +40,6 @@ namespace NexusWeb.Infrastructure.Redis
 		private RedisClient()
 		{
 			mSocketOperationLock = new object(); // Empty object that will serve as a synchronization object
-			mServerList = new List<RedisServerConnection>();
 			mEncoder = Encoding.UTF8;
 		}
 		public RedisClient(string hostname) : this(hostname, 6379) {}
@@ -56,7 +55,6 @@ namespace NexusWeb.Infrastructure.Redis
 
 			Host = hostname;
 			Port = port;
-			mServerList.Add(new RedisServerConnection(new DnsEndPoint(hostname, port)));
 		}
 
 		public void Connect()
@@ -88,7 +86,6 @@ namespace NexusWeb.Infrastructure.Redis
 				mSocket = null;
 				mDisposed = true;
 				mSocketOperationLock = null;
-				mShardSelector = null;
 			}
 		}
 
@@ -264,6 +261,11 @@ namespace NexusWeb.Infrastructure.Redis
 
 			return returndata;
 		}
+		/// <summary>
+		/// Builds a packet following the new Redis Unified Protocol
+		/// </summary>
+		/// <param name="commands">A collection of byte arrays for each parameter</param>
+		/// <returns>A memory stream representing the constructed message</returns>
 		private MemoryStream BuildUnifiedCommand(params byte[][] commands)
 		{
 			MemoryStream ms = new MemoryStream(100);
@@ -295,80 +297,13 @@ namespace NexusWeb.Infrastructure.Redis
 			stream.WriteByte(0x0d);
 			stream.WriteByte(0x0a);
 		}
-		private RedisServerConnection SelectServer(string key)
-		{
-			EndPoint point = mShardSelector(key);
 
-			foreach (RedisServerConnection conn in mServerList)
-			{
-				if (conn.EndPoint == point)
-				{
-					conn.EnsureConnected();
-					return conn;
-				}
-			}
-
-			throw new NotImplementedException();
-		}
-
-		// Nested Classes
-		private class RedisServerConnection : IDisposable
-		{
-			public RedisServerConnection(EndPoint epoint)
-			{
-				EndPoint = epoint;
-				Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-				Socket.NoDelay = true;
-				ThreadSyncObject = new object();
-			}
-
-			public void Dispose()
-			{
-				EndPoint = null;
-				if (Stream != null)
-				{
-					Stream.Close();
-					Stream.Dispose();
-				}
-				if (Socket != null)
-					Socket.Dispose();
-
-				Socket = null;
-				Stream = null;
-				GC.SuppressFinalize(this);
-			}
-			public void EnsureConnected()
-			{
-				if (!Socket.Connected)
-				{
-					Socket.Connect(EndPoint);
-					Stream = new NetworkStream(Socket);
-				}
-			}
-
-			public EndPoint EndPoint
-			{
-				get;
-				private set;
-			}
-			public Socket Socket
-			{
-				get;
-				private set;
-			}
-			public NetworkStream Stream
-			{
-				get;
-				private set;
-			}
-			public object ThreadSyncObject
-			{
-				get;
-				private set;
-			}
-		}
 		private static class RedisCommands
 		{
+			/// <summary>
+			/// Retrieve the value of a pair stored on the server
+			/// Format: GET {key}
+			/// </summary>
 			public static readonly byte[] Get = new byte[] { 0x47, 0x45, 0x54 };
 			public static readonly byte[] Set = new byte[] { 0x53, 0x45, 0x54 };
 			/// <summary>
@@ -404,7 +339,5 @@ namespace NexusWeb.Infrastructure.Redis
 		private readonly Encoding mEncoder;
 		private bool mDisposed;
 		private int mDatabaseId;
-		private RedisServerSelector mShardSelector;
-		private List<RedisServerConnection> mServerList;
 	}
 }
