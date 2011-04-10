@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NexusWeb.Infrastructure.Redis;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace WebTests
 {
@@ -13,7 +14,7 @@ namespace WebTests
 		public void PerformanceTest()
 		{
 			Random r = new Random();
-			RedisClient client = new RedisClient("192.168.56.102");
+			RedisClient client = new RedisClient(mServer);
 			byte[] b = new byte[16];
 			r.NextBytes(b);
 			client.Connect();
@@ -36,7 +37,7 @@ namespace WebTests
 		public void ExpireTest()
 		{
 			Random r = new Random();
-			RedisClient client = new RedisClient("192.168.56.102");
+			RedisClient client = new RedisClient(mServer);
 
 			byte[] b = new byte[16];
 			r.NextBytes(b);
@@ -51,6 +52,7 @@ namespace WebTests
 			}
 
 			Assert.IsNotNull(client.Get("testexpires"));
+			Assert.AreEqual(TimeSpan.FromSeconds(1), client.GetTimeToLive("testexpires"));
 			Thread.Sleep(2000);
 
 			Assert.IsNull(client.Get("testexpires"));
@@ -59,7 +61,7 @@ namespace WebTests
 		[TestMethod]
 		public void IncrementTest()
 		{
-			RedisClient client = new RedisClient("192.168.56.102");
+			RedisClient client = new RedisClient(mServer);
 			
 			client.Connect();
 			try	{
@@ -75,8 +77,7 @@ namespace WebTests
 		[TestMethod]
 		public void DeleteTest()
 		{
-			RedisClient client = new RedisClient("192.168.56.102");
-
+			RedisClient client = new RedisClient(mServer);
 			client.Connect();
 
 			try	{
@@ -91,5 +92,72 @@ namespace WebTests
 				throw;
 			}
 		}
+
+		[TestMethod]
+		public void EmptyListTest()
+		{
+			RedisClient client = new RedisClient(mServer);
+			client.Connect();
+			client.ChangeDatabase(1);
+			client.FlushDatabase();
+
+			RedisList list = client.GetList("UnitList");
+			Assert.IsFalse(list.IsReadOnly);
+			Assert.AreEqual(0, list.Count);
+		}
+
+		[TestMethod]
+		public void ListAddtest()
+		{
+			RedisClient client = new RedisClient(mServer);
+			client.Connect();
+			client.ChangeDatabase(1);
+			client.FlushDatabase();
+
+			RedisList list = client.GetList("UnitList");
+
+			for (byte i = 65; i < 75; i++)
+				list.Add(new byte[] { i });
+
+			Assert.AreEqual(10, list.Count);
+			Assert.AreEqual(65, list[0][0]);
+
+			IEnumerator<byte[]> cursor = list.GetEnumerator();
+			for (byte i = 65; i < 75; i++)
+			{
+				Assert.AreEqual(i, cursor.Current[0]);
+
+				cursor.MoveNext();
+			}
+		}
+
+		[TestMethod]
+		public void BatchListAddtest()
+		{
+			RedisClient client = new RedisClient(mServer);
+			client.Connect();
+			client.ChangeDatabase(1);
+			client.FlushDatabase();
+
+			RedisList list = client.GetList("UnitList");
+
+			list.BeginBatchOperation();
+			for (byte i = 65; i < 75; i++)
+				list.Add(new byte[] { i });
+			list.CommitBatchOperation();
+
+			Assert.AreEqual(10, list.Count);
+			Assert.AreEqual(65, list[0][0]);
+
+			IEnumerator<byte[]> cursor = list.GetEnumerator();
+			for (byte i = 65; i < 75; i++)
+			{
+				Assert.AreEqual(i, cursor.Current[0]);
+
+				cursor.MoveNext();
+			}
+		}
+
+		private static readonly string mServer = "192.168.56.102";
 	}
 }
