@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using InstantMessage;
 using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Taskbar;
-using NexusIM.Managers;
-using System.Drawing;
-using System.Windows;
-using InstantMessage;
 using NexusIM.Properties;
 
 namespace NexusIM.Managers

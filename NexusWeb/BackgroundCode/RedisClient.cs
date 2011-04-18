@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Collections;
+using System.Threading;
 
 namespace NexusWeb.Infrastructure.Redis
 {
@@ -632,16 +633,18 @@ namespace NexusWeb.Infrastructure.Redis
 			foreach (string key in keys)
 				keysBytes.Add(mEncoder.GetBytes(key));
 
-			using (MemoryStream stream = mRedisStream.BuildUnifiedCommand(keysBytes.ToArray()))
-			{
-				lock (mSocketOperationLock)
-				{
-					EnsureSocketConnected();
+			MemoryStream stream = null;
+			try {
+				stream = mRedisStream.BuildUnifiedCommand(keysBytes.ToArray());
+				Monitor.Enter(mSocketOperationLock);
 
-					stream.WriteTo(mRedisStream);
-
-					return mRedisStream.ExpectInt();
-				}
+				EnsureSocketConnected();
+				stream.WriteTo(mRedisStream);
+				return mRedisStream.ExpectInt();
+			} finally {
+				Monitor.Exit(mSocketOperationLock);
+				if (stream != null)
+					stream.Dispose();
 			}			
 		}
 		public int Increment(string key, int step = 1)

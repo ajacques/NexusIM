@@ -77,7 +77,6 @@ namespace NexusIM.Managers
 
 			return area;
 		}
-
 		public static void ShowSysTrayIcon()
 		{
 			if (SysTrayIcon != null)

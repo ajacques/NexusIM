@@ -54,10 +54,10 @@
 			<input type="password" class="validatable" id="txtRegisterPassword" style="width: 210px" /><br />
 			<label for="gender">Gender</label><br />
 			<span id="gender">
-				<input type="radio" name="gender" id="genderMale" value="2" /><label for="genderMale">Male</label> 
-				<input type="radio" name="gender" id="genderFemale" value="3" /><label for="genderFemale">Female</label><br />
+				<input type="radio" name="gender" id="genderMale" value="2" /><label for="genderMale" style="margin-left: 2px">Male</label> 
+				<input type="radio" name="gender" id="genderFemale" value="3" /><label for="genderFemale" style="margin-left: 2px">Female</label><br />
 			</span>
-			<label>Birthday</label>&nbsp;<span id="ageTooYoung" class="errorhint">You must be at-least 16 years old to register.</span><br />
+			<label>Birthday</label>&nbsp;<span id="ageTooYoung" class="errorhint">You must be at least 16 years old to register.</span><br />
 			<span id="dobSpan" style="padding-bottom: 2px">
 				<select id="dobMonth">
 					<option value="1">January</option>
@@ -74,7 +74,7 @@
 					<option value="12">December</option>
 				</select>
 				<input type="text" id="dobDay" maxlength="2" style="width: 20px; padding-left: 5px" placeholder="01" />
-				<input type="text" id="dobYear" maxlength="4" style="width: 35px; padding-left: 5px;" placeholder="1989" />
+				<input type="text" id="dobYear" maxlength="4" style="width: 35px; padding-left: 4px;" placeholder="1989" />
 			</span><br /><br />
 			<input type="button" value="Register" onclick="LoginPage.DoRegisterAccount();" />&nbsp;<span id="registerInProgress" style="font-size: 10pt; color: #3333CC; display: none">Please Wait...</span>
 		</td>

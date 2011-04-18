@@ -269,11 +269,6 @@ namespace InstantMessage.Events
 	}
 	public class IMChatRoomGenericEventArgs : EventArgs
 	{
-		public IChatRoom ChatRoom
-		{
-			get;
-			set;
-		}
 		public string Username
 		{
 			get;

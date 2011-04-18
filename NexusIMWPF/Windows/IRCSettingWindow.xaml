@@ -29,7 +29,7 @@
 			<Run x:Name="HeaderAccountUsername">[placeholder]</Run>
 			<Run> - IRC</Run>
 		</TextBlock>
-		<Grid VerticalAlignment="Top" Margin="0,29,0,0" Height="35">
+		<Grid x:Name="ConnectedWarning" VerticalAlignment="Top" Margin="0,29,0,0" Height="35" Visibility="Collapsed">
 			<Rectangle Fill="#FFFFBC78" Stroke="#FFFF6900" />
 			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap" Text="This account is currently connected. Some settings may not take effect until you reconnect." />
 		</Grid>

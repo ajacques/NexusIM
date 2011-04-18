@@ -30,6 +30,9 @@ namespace NexusIM.Windows
 
 			Dispatcher.BeginInvoke(new GenericEvent(() => {
 				AutoExecuteBox.Text = autoexecute;
+
+				if (mExtraData.Enabled)
+					ConnectedWarning.Visibility = Visibility.Visible;
 			}));
 		}
 

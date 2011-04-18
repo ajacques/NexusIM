@@ -193,14 +193,13 @@
     <Compile Include="Managers\ChatWindowCollection.cs" />
     <Compile Include="Managers\IMMessageProcessor.cs" />
     <Compile Include="Managers\MessageLogger.cs" />
-    <Compile Include="Managers\NotificationQueue.cs" />
+    <Compile Include="Managers\User Interface\NotificationQueue.cs" />
     <Compile Include="Managers\Protocol\NexusCoreManager.cs" />
-    <Compile Include="Managers\SafeUrlTester.cs" />
     <Compile Include="Managers\StopwatchManager.cs" />
     <Compile Include="Managers\User Interface\SensorManager.cs" />
     <Compile Include="Managers\User Interface\SpeechManager.cs" />
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
-    <Compile Include="Managers\WindowSystem.cs" />
+    <Compile Include="Managers\User Interface\WindowSystem.cs" />
     <Compile Include="MiscFuncs.cs" />
     <Compile Include="Protocol\GroupOfContacts.cs" />
     <Compile Include="Service References\NexusCore\Reference.cs">

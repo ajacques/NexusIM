@@ -6,11 +6,12 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using InstantMessage;
 using InstantMessage.Protocols.Irc;
 using Microsoft.WindowsAPICodePack.Net;
-using System.Text;
+using InstantMessage.Events;
 
 namespace NexusIM.Managers
 {
@@ -89,7 +90,12 @@ namespace NexusIM.Managers
 						extraData.PropertyChanged += new PropertyChangedEventHandler(IndividualProtocol_PropertyChanged);
 
 						if (extraData.Protocol is IRCProtocol)
+						{
 							extraData.Protocol.LoginCompleted += new EventHandler(IrcProtocol_LoginCompleted);
+
+							IRCProtocol protocol = (IRCProtocol)extraData.Protocol;
+							protocol.OnForceJoinChannel += new EventHandler<IMChatRoomEventArgs>(IrcProtocol_OnForceJoinChannel);
+						}
 
 						ConnectIfNeeded(extraData);
 					}
@@ -119,6 +125,10 @@ namespace NexusIM.Managers
 				if (sb.Length >= 1)
 					protocol.SendRawMessage(sb.ToString());
 			}
+		}
+		private static void IrcProtocol_OnForceJoinChannel(object sender, IMChatRoomEventArgs e)
+		{
+			
 		}
 
 		private static void ConnectIfNeeded(IMProtocolExtraData extraData)
