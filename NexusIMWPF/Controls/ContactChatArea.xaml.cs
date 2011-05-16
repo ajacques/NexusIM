@@ -117,8 +117,8 @@ namespace NexusIM.Controls
 			if (e.NewValue == null)
 				return;
 
-			Contact.onReceiveMessage += new EventHandler<IMMessageEventArgs>(OnReceiveMessage);
-			Contact.PropertyChanged += new PropertyChangedEventHandler(Contact_PropertyChanged);
+			//Contact.onReceiveMessage += new EventHandler<IMMessageEventArgs>(OnReceiveMessage);
+			//Contact.PropertyChanged += new PropertyChangedEventHandler(Contact_PropertyChanged);
 		}
 		private void OnReceiveMessage(object sender, IMMessageEventArgs e)
 		{
@@ -215,13 +215,14 @@ namespace NexusIM.Controls
 			MessageBody.Focus();
 		}
 
-		private IMBuddy Contact
+		private IContact Contact
 		{
 			get {
-				return DataContext as IMBuddy;
+				return contact;
 			}
 		}
 
-		private Regex mYoutubeLinkMatch = new Regex(@"^/watch\?v=([a-zA-Z0-9_-]*)");
+		private Regex mYoutubeLinkMatch = new Regex(@"^/watch\?v=([a-zA-Z0-9_-]*)");		
+		private IContact contact;
 	}
 }

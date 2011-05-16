@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ServiceModel;
 using NexusCore.DataContracts;
-using System;
+using System.ServiceModel.Web;
 
 namespace NexusCore.Services
 {

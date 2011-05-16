@@ -49,8 +49,8 @@ A, A:link, A:visited
 {
 	color: #0000ff;
 	text-decoration: none;
-	-webkit-transition: color 0.3s ease-out;
-	-moz-transition: color 0.3s ease-out;
+	-webkit-transition: color 0.2s ease-out;
+	-moz-transition: color 0.2s ease-out;
 }
 
 A:hover

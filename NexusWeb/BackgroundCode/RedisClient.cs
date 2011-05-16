@@ -71,7 +71,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 		public void Add(byte[] item)
 		{
-			using (MemoryStream stream = mDataStream.BuildUnifiedCommand(RedisListCommands.RPush, mListKey, item))
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.RPush, mListKey, item))
 			{
 				if (mBatchStream != null)
 				{
@@ -108,7 +108,7 @@ namespace NexusWeb.Infrastructure.Redis
 		public int Count
 		{
 			get	{
-				using (MemoryStream stream = mDataStream.BuildUnifiedCommand(RedisListCommands.LLen, mListKey))
+				using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.LLen, mListKey))
 				{
 					lock (mSyncObject)
 					{
@@ -124,7 +124,7 @@ namespace NexusWeb.Infrastructure.Redis
 			get	{
 				byte[] keyBytes = RedisStream.Encoder.GetBytes(id.ToString());
 
-				using (MemoryStream stream = mDataStream.BuildUnifiedCommand(RedisListCommands.LIndex, mListKey, keyBytes))
+				using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.LIndex, mListKey, keyBytes))
 				{
 					lock (mSyncObject)
 					{
@@ -140,7 +140,7 @@ namespace NexusWeb.Infrastructure.Redis
 			throw new NotImplementedException();
 		}
 
-		private class BulkReplyEnumerator :IEnumerator<byte[]>
+		private class BulkReplyEnumerator : IEnumerator<byte[]>
 		{
 			public BulkReplyEnumerator(byte[][] source)
 			{
@@ -178,7 +178,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			byte[][] blocks;
 
-			using (MemoryStream stream = mDataStream.BuildUnifiedCommand(RedisListCommands.LRange, mListKey, startBytes, endBytes))
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.LRange, mListKey, startBytes, endBytes))
 			{
 				lock (mSyncObject)
 				{
@@ -216,6 +216,130 @@ namespace NexusWeb.Infrastructure.Redis
 		private MemoryStream mBatchStream;
 	}
 
+	internal class RedisSet : ICollection<byte[]>
+	{
+		internal RedisSet(string listkey, RedisStream serverStream, object syncObject)
+		{
+			mListKey = RedisStream.Encoder.GetBytes(listkey);
+			mDataStream = serverStream;
+			mSyncObject = syncObject;
+		}
+		
+		public void Add(byte[] item)
+		{
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.SAdd, mListKey, item))
+			{
+				lock (mSyncObject)
+				{
+					stream.WriteTo(mDataStream);
+
+					mDataStream.ExpectInt();
+				}			
+			}
+		}
+		public void Clear()
+		{
+			throw new NotImplementedException();
+		}
+		public bool Contains(byte[] item)
+		{
+			throw new NotImplementedException();
+		}
+		public void CopyTo(byte[][] array, int arrayIndex)
+		{
+			throw new NotImplementedException();
+		}
+		public bool IsReadOnly
+		{
+			get {
+				return false;
+			}
+		}
+		public int Count
+		{
+			get	{
+				using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.SCard, mListKey))
+				{
+					lock (mSyncObject)
+					{
+						stream.WriteTo(mDataStream);
+
+						return mDataStream.ExpectInt();
+					}
+				}
+			}
+		}
+		
+		public bool Remove(byte[] item)
+		{
+			throw new NotImplementedException();
+		}
+
+		private class BulkReplyEnumerator : IEnumerator<byte[]>
+		{
+			public BulkReplyEnumerator(byte[][] source)
+			{
+				mSource = source;
+			}
+
+			public byte[] Current
+			{
+				get {
+					return mSource[mCursor];
+				}
+			}
+			public void Dispose() {}
+			object IEnumerator.Current
+			{
+				get {
+					return Current;
+				}
+			}
+			public bool MoveNext()
+			{
+				mCursor++;
+
+				return mCursor < mSource.Length;
+			}
+			public void Reset() {}
+			private byte[][] mSource;
+			private uint mCursor;
+		}
+
+		public IEnumerator<byte[]> GetEnumerator()
+		{
+			byte[][] blocks;
+
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisListCommands.SMembers, mListKey))
+			{
+				lock (mSyncObject)
+				{
+					stream.WriteTo(mDataStream);
+
+					blocks = mDataStream.ExpectMultiBulkReply();
+				}
+			}
+
+			return blocks != null ? new BulkReplyEnumerator(blocks) : null;
+		}
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		private static class RedisListCommands
+		{
+			public static readonly byte[] SAdd = new byte[] { 0x53, 0x41, 0x44, 0x44 };
+			public static readonly byte[] SMembers = new byte[] { 0x53, 0x4d, 0x45, 0x4d, 0x42, 0x45, 0x52, 0x53 };
+			public static readonly byte[] SCard = new byte[] { 0x53, 0x43, 0x41, 0x52, 0x44 };
+		}
+
+		// Variables
+		private RedisStream mDataStream;
+		private object mSyncObject;
+		private byte[] mListKey;
+	}
+
 	internal class RedisStream : Stream
 	{
 		static RedisStream()
@@ -228,12 +352,12 @@ namespace NexusWeb.Infrastructure.Redis
 			mSocket = socket;
 		}
 
-		private void ThrowRedisError()
+		private void ThrowRedisError(string prefix = "")
 		{
 			byte[] errormsg = new byte[100];
 			int bytes = mDataStream.Read(errormsg, 0, errormsg.Length);
 
-			throw new RedisException(mEncoder.GetString(errormsg, 0, bytes), mSocket.RemoteEndPoint);
+			throw new RedisException(prefix + mEncoder.GetString(errormsg, 0, bytes), mSocket.RemoteEndPoint);
 		}
 
 		/// <summary>
@@ -250,8 +374,11 @@ namespace NexusWeb.Infrastructure.Redis
 		}
 		public int ExpectInt()
 		{
-			byte[] result = new byte[16];
+			byte[] result = new byte[8];
 			int bytesRead = mDataStream.Read(result, 0, result.Length);
+
+			if (result[0] == 45)
+				ThrowRedisError(mEncoder.GetString(result, 5, result.Length - 5));
 
 			string number = mEncoder.GetString(result, 1, bytesRead - 3);
 
@@ -313,7 +440,7 @@ namespace NexusWeb.Infrastructure.Redis
 		/// </summary>
 		/// <param name="commands">A collection of byte arrays for each parameter</param>
 		/// <returns>A memory stream representing the constructed message</returns>
-		public MemoryStream BuildUnifiedCommand(params byte[][] commands)
+		public static MemoryStream BuildUnifiedCommand(params byte[][] commands)
 		{
 			MemoryStream ms = new MemoryStream(100);
 			ms.WriteByte(0x2a);
@@ -334,12 +461,12 @@ namespace NexusWeb.Infrastructure.Redis
 
 			return ms;
 		}
-		private void WriteStringNumber(int number, Stream stream)
+		private static void WriteStringNumber(int number, Stream stream)
 		{
 			byte[] lenbytes = mEncoder.GetBytes(number.ToString());
 			stream.Write(lenbytes, 0, lenbytes.Length);
 		}
-		private void WriteNewlines(Stream stream)
+		private static void WriteNewlines(Stream stream)
 		{
 			stream.WriteByte(0x0d);
 			stream.WriteByte(0x0a);
@@ -474,7 +601,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 		public void FlushDatabase()
 		{
-			using (MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.FlushDb))
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.FlushDb))
 			{
 				lock (mSocketOperationLock)
 				{
@@ -494,7 +621,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
 
-			MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.Get, keyBytes);
+			MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.Get, keyBytes);
 
 			lock (mSocketOperationLock)
 			{
@@ -514,7 +641,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
 			
-			MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.Set, keyBytes, data);
+			MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.Set, keyBytes, data);
 			
 			lock (mSocketOperationLock)
 			{
@@ -536,7 +663,7 @@ namespace NexusWeb.Infrastructure.Redis
 			byte[] keyBytes = mEncoder.GetBytes(key);
 			byte[] expireBytes = mEncoder.GetBytes(expireIn.TotalSeconds.ToString("F0"));
 			
-			MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.SetEx, keyBytes, expireBytes, data);
+			MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.SetEx, keyBytes, expireBytes, data);
 
 			lock (mSocketOperationLock)
 			{
@@ -554,7 +681,18 @@ namespace NexusWeb.Infrastructure.Redis
 			if (key == null)
 				throw new ArgumentNullException("key");
 
+			EnsureSocketConnected();
+
 			return new RedisList(key, mRedisStream, mSocketOperationLock);
+		}
+		public RedisSet GetSet(string key)
+		{
+			if (key == null)
+				throw new ArgumentNullException("key");
+
+			EnsureSocketConnected();
+
+			return new RedisSet(key, mRedisStream, mSocketOperationLock);
 		}
 		/// <summary>
 		/// Removes a single key from the database. No action if the key does not exist
@@ -571,7 +709,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
 
-			using (MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.Delete, keyBytes))
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.Delete, keyBytes))
 			{
 				lock (mSocketOperationLock)
 				{
@@ -590,7 +728,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			byte[] keyBytes = mEncoder.GetBytes(key);
 
-			using (MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.Exists, keyBytes))
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.Exists, keyBytes))
 			{
 				lock (mSocketOperationLock)
 				{
@@ -614,6 +752,47 @@ namespace NexusWeb.Infrastructure.Redis
 		{
 			return Delete((IEnumerable<string>)keys);
 		}
+		public IDictionary<string, byte[]> Get(params string[] keys)
+		{
+			return Get(keys);
+		}
+		public IDictionary<string, byte[]> Get(IEnumerable<string> keys)
+		{
+			if (keys == null)
+				throw new ArgumentNullException("keys");
+
+			List<byte[]> keysBytes = new List<byte[]>(2);
+			keysBytes.Add(RedisCommands.MGet);
+
+			foreach (string key in keys)
+				keysBytes.Add(mEncoder.GetBytes(key));
+
+			byte[][] result = null;
+			MemoryStream stream = null;
+			try {
+				stream = RedisStream.BuildUnifiedCommand(keysBytes.ToArray());
+				Monitor.Enter(mSocketOperationLock);
+
+				EnsureSocketConnected();
+				stream.WriteTo(mRedisStream);
+				result = mRedisStream.ExpectMultiBulkReply();
+			} finally {
+				Monitor.Exit(mSocketOperationLock);
+				if (stream != null)
+					stream.Dispose();
+			}
+
+			Dictionary<string, byte[]> final = new Dictionary<string, byte[]>(result.Length);
+			IEnumerator<string> keyEnumr = keys.GetEnumerator();
+
+			for (int i = 0; i < result.Length; i++)
+			{
+				keyEnumr.MoveNext();
+				final.Add(keyEnumr.Current, result[i]);
+			}
+
+			return final;
+		}
 		/// <summary>
 		/// Removes the specified keys. A key is ignored if it does not exist.
 		/// </summary>
@@ -625,7 +804,7 @@ namespace NexusWeb.Infrastructure.Redis
 		public int Delete(IEnumerable<string> keys)
 		{
 			if (keys == null)
-				throw new ArgumentNullException("key");
+				throw new ArgumentNullException("keys");
 
 			List<byte[]> keysBytes = new List<byte[]>(2);
 			keysBytes.Add(RedisCommands.Delete);
@@ -635,7 +814,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			MemoryStream stream = null;
 			try {
-				stream = mRedisStream.BuildUnifiedCommand(keysBytes.ToArray());
+				stream = RedisStream.BuildUnifiedCommand(keysBytes.ToArray());
 				Monitor.Enter(mSocketOperationLock);
 
 				EnsureSocketConnected();
@@ -656,10 +835,10 @@ namespace NexusWeb.Infrastructure.Redis
 			MemoryStream stream;
 
 			if (step == 1)
-				stream = mRedisStream.BuildUnifiedCommand(RedisCommands.Increment, keyBytes);
+				stream = RedisStream.BuildUnifiedCommand(RedisCommands.Increment, keyBytes);
 			else {
 				byte[] stepBytes = mEncoder.GetBytes(step.ToString());
-				stream = mRedisStream.BuildUnifiedCommand(RedisCommands.IncrementBy, keyBytes, stepBytes);
+				stream = RedisStream.BuildUnifiedCommand(RedisCommands.IncrementBy, keyBytes, stepBytes);
 			}
 
 			lock (mSocketOperationLock)
@@ -680,7 +859,7 @@ namespace NexusWeb.Infrastructure.Redis
 				if (mSocket != null && mSocket.Connected)
 				{
 					byte[] dbbytes = mEncoder.GetBytes(dbid.ToString());
-					MemoryStream sourceStream = mRedisStream.BuildUnifiedCommand(RedisCommands.Select, dbbytes);
+					MemoryStream sourceStream = RedisStream.BuildUnifiedCommand(RedisCommands.Select, dbbytes);
 					lock (mSocketOperationLock)
 					{
 						sourceStream.WriteTo(mRedisStream);
@@ -699,7 +878,7 @@ namespace NexusWeb.Infrastructure.Redis
 
 			int expDate;
 
-			using (MemoryStream stream = mRedisStream.BuildUnifiedCommand(RedisCommands.TTL, keyBytes))
+			using (MemoryStream stream = RedisStream.BuildUnifiedCommand(RedisCommands.TTL, keyBytes))
 			{
 				lock (mSocketOperationLock)
 				{
@@ -730,6 +909,11 @@ namespace NexusWeb.Infrastructure.Redis
 			/// Format: GET {key}
 			/// </summary>
 			public static readonly byte[] Get = new byte[] { 0x47, 0x45, 0x54 };
+			/// <summary>
+			/// Retrieve the value of several pairs stored on the server
+			/// Format: GET {key1} {key2} .. {keyN}
+			/// </summary>
+			public static readonly byte[] MGet = new byte[] { 0x4d, 0x47, 0x45, 0x54 };
 			public static readonly byte[] Set = new byte[] { 0x53, 0x45, 0x54 };
 			/// <summary>
 			/// Delete one or more keys
@@ -753,7 +937,7 @@ namespace NexusWeb.Infrastructure.Redis
 			/// Determines if a key exists
 			/// Format: Exists {key}
 			/// </summary>
-			public static readonly byte[] Exists = new byte[] { 0x45, 0x58, 0x49, 0x53, 0x54 };
+			public static readonly byte[] Exists = new byte[] { 0x45, 0x58, 0x49, 0x53, 0x54, 0x53 };
 			/// <summary>
 			/// Delete all keys in the currently selected database
 			/// Format: FLUSHDB

@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using NexusCore.DataContracts;
+using NexusWeb.Services;
 
-namespace NexusCore
+namespace NexusWeb
 {
 	internal class LocationAsyncResult : IAsyncResult
 	{
@@ -263,16 +263,16 @@ namespace NexusCore
 				double latitude = (double)coordinates[1];
 				double longitude = (double)coordinates[0];
 				UserLocationData location = new UserLocationData();
-				location.Latitude = latitude;
-				location.Longitude = longitude;
+				location.mLatitude = latitude;
+				location.mLongitude = longitude;
 
 				Hashtable properties = feature["properties"] as Hashtable;
-				location.Accuracy = (int)(Convert.ToInt32(properties["accuracyInMeters"]) * 3.281);
-				location.mGeocode = (string)properties["reverseGeocode"];
+				location.mAccuracy = (int)(Convert.ToInt32(properties["accuracyInMeters"]) * 3.281);
+				//location.mGeocode = (string)properties["reverseGeocode"];
 
 				int timestamp = Convert.ToInt32(properties["timeStamp"]);
 				DateTime epoch = new DateTime(1970, 1, 1);
-				location.TimeChanged = epoch.AddSeconds(timestamp);
+				location.mChange = epoch.AddSeconds(timestamp);
 
 				result.Location.Add(properties["id"] as string, location);
 			}

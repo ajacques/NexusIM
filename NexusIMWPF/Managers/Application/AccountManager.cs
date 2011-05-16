@@ -114,10 +114,15 @@ namespace NexusIM.Managers
 
 				for (int i = 0; i < autoexecute.Length; i++)
 				{
-					if ((autoexecute[i] == '\r' || autoexecute[i] == '\n') && sb.Length >= 1)
+					if ((autoexecute[i] == '\r' || autoexecute[i] == '\n'))
 					{
-						protocol.SendRawMessage(sb.ToString());
-						sb.Clear();
+						if (sb.Length >= 1)
+						{
+							string command = sb.ToString();
+
+							protocol.SendRawMessage(command);
+							sb.Clear();
+						}
 					} else
 						sb.Append(autoexecute[i]);
 				}

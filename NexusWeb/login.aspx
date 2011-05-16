@@ -37,6 +37,25 @@
 			 color: #E00500;
 			 display: none;
 		}
+		#dobMonth
+		{
+			padding-left: 7px;
+		}
+		
+		#dobMonth option
+		{
+			padding-left: 7px;
+		}
+		
+		button
+		{
+			padding: 5px;
+		}
+		
+		input[type='text'], input[type='password']
+		{
+			-webkit-border-radius: 2px;
+		}
 	</style>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="body" runat="server">
@@ -52,6 +71,7 @@
 			<input type="text" class="validatable" id="txtEmail" placeholder="user@example.com" style="width: 210px" onblur="LoginPage.ValidateEmail();" /><br />
 			<label for="txtRegisterPassword" style="width: 210px">Password</label><br />
 			<input type="password" class="validatable" id="txtRegisterPassword" style="width: 210px" /><br />
+			<input type="checkbox" id="showPwdChars" /><label for="showPwdChars" style="font-size: 10pt; margin-left: 5px;">Show characters</label><br />
 			<label for="gender">Gender</label><br />
 			<span id="gender">
 				<input type="radio" name="gender" id="genderMale" value="2" /><label for="genderMale" style="margin-left: 2px">Male</label> 
@@ -73,8 +93,8 @@
 					<option value="11">November</option>
 					<option value="12">December</option>
 				</select>
-				<input type="text" id="dobDay" maxlength="2" style="width: 20px; padding-left: 5px" placeholder="01" />
-				<input type="text" id="dobYear" maxlength="4" style="width: 35px; padding-left: 4px;" placeholder="1989" />
+				<input type="text" id="dobDay" maxlength="2" style="width: 20px; padding-left: 5px" placeholder="01" onkeyup="LoginPage.DobChange();" />
+				<input type="text" id="dobYear" maxlength="4" style="width: 35px; padding-left: 4px;" placeholder="1989" onkeyup="LoginPage.DobChange();" />
 			</span><br /><br />
 			<input type="button" value="Register" onclick="LoginPage.DoRegisterAccount();" />&nbsp;<span id="registerInProgress" style="font-size: 10pt; color: #3333CC; display: none">Please Wait...</span>
 		</td>

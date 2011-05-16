@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.Specialized;
-using InstantMessage;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using InstantMessage;
 
 namespace NexusIM.Managers
 {
@@ -44,11 +42,15 @@ namespace NexusIM.Managers
 			{
 				foreach (IContact contact in e.NewItems)
 				{
-					GroupOfContacts group = Groups.FirstOrDefault(g => g.GroupName == contact.Group);
+					string groupname = contact.Group;
+					if (String.IsNullOrEmpty(contact.Group))
+						groupname = "Friends";
+
+					GroupOfContacts group = Groups.FirstOrDefault(g => g.GroupName == groupname);
 					if (group == null)
 					{
 						group = new GroupOfContacts();
-						group.GroupName = contact.Group;
+						group.GroupName = groupname;
 						Groups.Add(group);
 					}
 					ContactList.Add(contact);

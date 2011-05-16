@@ -6,6 +6,7 @@
 	<link rel="Stylesheet" href="css/main.css" />
 	<script type="text/javascript" src="js/Silverlight.supportedUserAgent.js"></script>
 	<script type="text/javascript" src="js/Silverlight.debug.js"></script>
+	<script type="text/javascript" src="js/script.min.js"></script>
 	<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.js"></script>
 	<script type="text/javascript">
 	function onSLError(sender, args)
@@ -17,11 +18,15 @@
 	{
 		$("#silverlightHost").height("auto");
 	}
-	function loadMapControl()
+	function recomputeHeight()
 	{
-		var height = (innerHeight - 33) + "px"
+		var height = (innerHeight - 33) + "px";
+		$("div#mapHost").height(height);
+	}
+	function loadMapControl()
+	{		
 		Silverlight.createObjectEx({
-			source: "/ClientBin/SilverlightContactMap.xap",
+			source: "ClientBin/SilverlightContactMap.xap",
 			parentElement: document.getElementById('silverlightHost'),
 			id: "slPlugin",
 			properties: {
@@ -33,7 +38,7 @@
 			},
 			events: { onError: onSLError, onLoad: onSLLoad }
 		});
-		$("div#silverlightHost").height(height);
+		recomputeHeight();
 	}
 	</script>
 	<style type="text/css">
@@ -59,8 +64,9 @@
 	<div id="slError" style="display: none; margin-left: auto; margin-right: auto; text-align: center; padding-top: 20%; height: 10px">
 		<div id="slErrorDetail"></div>
 		<a id="slInstallLink" href="http://go.microsoft.com/fwlink/?LinkId=149156" target="_blank">Install Silverlight now</a>
+		<div style="font-size: 11pt;">Silverlight is required to display the map.</div>
 	</div>
-	<div id="silverlightHost" style="height: 0px">
+	<div id="mapHost" style="height: 0px">
 		<script type="text/javascript">
 			function logger(data)
 			{
@@ -74,6 +80,7 @@
 					$("div#slErrorDetail").html("Silverlight does not currently support running in 64-bit browsers.<br />Please try again using a 32-bit browser.");
 					$("a#slInstallLink").html("Install anyway");
 				}
+				$script('js/noslcontactmap.js');
 			} else {
 				loadMapControl();
 			}

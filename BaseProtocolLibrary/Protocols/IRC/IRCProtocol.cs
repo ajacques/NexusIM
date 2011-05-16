@@ -187,6 +187,11 @@ namespace InstantMessage.Protocols.Irc
 				builder.Append("v");
 				modeCount++;
 			}
+			if (modes.HasFlag(IRCUserModes.HalfOperator))
+			{
+				builder.Append("h");
+				modeCount++;
+			}
 
 			numModes = modeCount;
 

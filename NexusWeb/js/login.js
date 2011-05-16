@@ -104,3 +104,43 @@ LoginPage.DoRegisterAccount = function()
 		alert("something bad happened" + data);
 	});
 }
+
+function daysInMonth(month, year)
+{
+	var m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	if (month != 2)
+		return m[month - 1];
+	if (year%4 != 0)
+		return m[1];
+	if (year%100 == 0 && year%400 != 0)
+		return m[1];
+	return m[1] + 1;
+}
+
+LoginPage.DobChange = function()
+{
+	var txtMonth = parseInt($("#dobMonth").val());
+	var txtDay = parseInt($("#dobDay").val());
+	var txtYear = parseInt($("#dobYear").val());
+
+	if (txtYear == NaN)
+		return;
+
+	var today = new Date();
+
+	if (txtDay <= 0 || txtYear <= 1900 || txtYear > today.getFullYear())
+	{
+		$("#dobSpan").addClass("badinput");
+		return;
+	}
+
+	var maxDay = daysInMonth(txtMonth, txtYear);
+
+	if (txtDay > maxDay)
+	{
+		$("#dobSpan").addClass("badinput");
+		return;
+	}
+
+	$("#dobSpan").removeClass("badinput");
+}

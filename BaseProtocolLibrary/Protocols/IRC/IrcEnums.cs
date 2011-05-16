@@ -23,7 +23,8 @@ namespace InstantMessage.Protocols.Irc
 		/// </summary>
 		Voice = 8, // v
 		Banned = 16, // b
-		Unknown = 32
+		HalfOperator = 32, // h
+		Unknown = 64
 	}
 	[Flags]
 	public enum IRCChannelModes
