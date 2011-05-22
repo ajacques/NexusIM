@@ -456,14 +456,14 @@ namespace NexusIM
 
 			private string mConnectionString;
 		}
-		private class SqlAccountList : IList<IMProtocolExtraData>
+		private class SqlAccountList : IList<IMProtocolWrapper>
 		{
 			public SqlAccountList(string connectionString)
 			{
 				mConnectionString = connectionString;
 			}
 
-			private class SqlAccountEnumerator : IEnumerator<IMProtocolExtraData>
+			private class SqlAccountEnumerator : IEnumerator<IMProtocolWrapper>
 			{
 				public SqlAccountEnumerator(Table<Account> source)
 				{
@@ -473,7 +473,7 @@ namespace NexusIM
 
 				#region IEnumerator<IMProtocolExtraData> Members
 
-				public IMProtocolExtraData Current
+				public IMProtocolWrapper Current
 				{
 					get {
 						Account current = mEnumerator.Current;
@@ -494,7 +494,14 @@ namespace NexusIM
 								break;
 						}
 
-						IMProtocolExtraData extraData = new IMProtocolExtraData();
+						if (protocol == null)
+						{
+							string message = "Failed to find protocol class to handle protocol of type '" + current.AccountType + "'";
+							Trace.WriteLine(message);
+							throw new NotImplementedException(message);
+						}
+
+						IMProtocolWrapper extraData = new IMProtocolWrapper();
 						extraData.Protocol = protocol;
 						extraData.DatabaseId = current.Id;
 						extraData.Enabled = extraData.AutoConnect = current.AutoConnect;
@@ -554,7 +561,7 @@ namespace NexusIM
 
 			#region IEnumerable<IMProtocolExtraData> Members
 
-			public IEnumerator<IMProtocolExtraData> GetEnumerator()
+			public IEnumerator<IMProtocolWrapper> GetEnumerator()
 			{
 				UserProfile db = UserProfile.Create(mConnectionString);
 				return new SqlAccountEnumerator(db.Accounts);
@@ -573,11 +580,11 @@ namespace NexusIM
 
 			#region IList<IMProtocolExtraData> Members
 
-			public int IndexOf(IMProtocolExtraData item)
+			public int IndexOf(IMProtocolWrapper item)
 			{
 				throw new NotImplementedException();
 			}
-			public void Insert(int index, IMProtocolExtraData item)
+			public void Insert(int index, IMProtocolWrapper item)
 			{
 				throw new NotImplementedException();
 			}
@@ -585,7 +592,7 @@ namespace NexusIM
 			{
 				throw new NotImplementedException();
 			}
-			public IMProtocolExtraData this[int index]
+			public IMProtocolWrapper this[int index]
 			{
 				get	{
 					throw new NotImplementedException();
@@ -599,7 +606,7 @@ namespace NexusIM
 
 			#region ICollection<IMProtocolExtraData> Members
 
-			public void Add(IMProtocolExtraData item)
+			public void Add(IMProtocolWrapper item)
 			{
 				UserProfile db = UserProfile.Create(mConnectionString);
 
@@ -629,11 +636,11 @@ namespace NexusIM
 			{
 				throw new NotImplementedException();
 			}
-			public bool Contains(IMProtocolExtraData item)
+			public bool Contains(IMProtocolWrapper item)
 			{
 				throw new NotImplementedException();
 			}
-			public void CopyTo(IMProtocolExtraData[] array, int arrayIndex)
+			public void CopyTo(IMProtocolWrapper[] array, int arrayIndex)
 			{
 				throw new NotImplementedException();
 			}
@@ -649,7 +656,7 @@ namespace NexusIM
 					return false;
 				}
 			}
-			public bool Remove(IMProtocolExtraData item)
+			public bool Remove(IMProtocolWrapper item)
 			{
 				if (item == null)
 					return false;
@@ -708,7 +715,7 @@ namespace NexusIM
 		}
 
 		// Properties
-		public IList<IMProtocolExtraData> Accounts
+		public IList<IMProtocolWrapper> Accounts
 		{
 			get	{
 				if (mAccountList == null)

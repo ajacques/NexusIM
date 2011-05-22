@@ -38,7 +38,7 @@ function ContactPoint(data)
 
 function pinClick(point)
 {
-	alert(point);
+	
 }
 
 function dlComplete(data, textStatus, jgXHR)

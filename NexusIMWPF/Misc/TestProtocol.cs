@@ -10,6 +10,8 @@ namespace NexusIM
 		{
 			base.BeginLogin();
 			
+			Trace.WriteLine("TestProtocol: Beginning Login");
+
 			ContactList.Add(new IMBuddy(this, "Test User") { Status = IMBuddyStatus.Available });
 			ContactList.Add(new IMBuddy(this, "Offline User") { Status = IMBuddyStatus.Offline });
 			ContactList.Add(new IMBuddy(this, "Away User") { Status = IMBuddyStatus.Away });

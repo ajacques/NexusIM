@@ -79,7 +79,7 @@ namespace NexusIMWPF
 		{
 			StopwatchManager.Start("AccDBLoad");
 
-			IEnumerable<IMProtocolExtraData> accounts;
+			IEnumerable<IMProtocolWrapper> accounts;
 
 			try	{
 				accounts = IMSettings.Accounts;
@@ -89,7 +89,7 @@ namespace NexusIMWPF
 				return;
 			}
 
-			IEnumerator<IMProtocolExtraData> accEnumer = accounts.GetEnumerator();
+			IEnumerator<IMProtocolWrapper> accEnumer = accounts.GetEnumerator();
 
 			while (accEnumer.MoveNext())
 				AccountManager.Accounts.Add(accEnumer.Current);

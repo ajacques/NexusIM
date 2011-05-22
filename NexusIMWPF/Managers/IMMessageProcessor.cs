@@ -20,7 +20,7 @@ namespace NexusIM.Managers
 		{
 			if (e.NewItems != null)
 			{
-				foreach (IMProtocolExtraData extraData in e.NewItems)
+				foreach (IMProtocolWrapper extraData in e.NewItems)
 				{
 					extraData.Protocol.onMessageReceive += new EventHandler<IMMessageEventArgs>(IMProtocol_OnMessageReceived);
 				}

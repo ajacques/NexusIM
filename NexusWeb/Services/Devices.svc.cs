@@ -8,7 +8,6 @@ using System.Net;
 using System.Web;
 using System.Text.RegularExpressions;
 using System.Web.SessionState;
-using NexusWeb.AdminChannel;
 using NexusCore.Databases;
 
 namespace NexusWeb.Services
@@ -105,15 +104,10 @@ namespace NexusWeb.Services
 
 			if (devices.Count() >= 1)
 			{
-				AdminChannelClient client = new AdminChannelClient();
-				client.DisconnectSwarmMember(deviceid);
-
 				var device = devices.First();
 				device.lastseen = DateTime.UtcNow;
 
 				db.SubmitChanges();
-
-				client.Close();
 			} else {
 				response.StatusCode = (int)HttpStatusCode.Forbidden;
 				response.StatusDescription = "Invalid Device Id";

@@ -649,6 +649,23 @@ namespace InstantMessage.Protocols.Irc
 #endif
 		private void CompleteLogin()
 		{
+			if (client.Available >= 3) // Check to see if the server has an error message for us..
+			{
+				// ERROR :Closing Link: [192.168.2.35] (Throttled: Reconnecting too fast) -Email adam@adrensoftware.com for more information.
+
+				byte[] buffer = new byte[1024];
+				mTextStream.ReadTimeout = 100;
+				int bytesRead = mTextStream.Read(buffer, 0, buffer.Length);
+
+				string line = mTextEncoder.GetString(buffer, 0, bytesRead);
+
+				if (line.StartsWith("ERROR"))
+				{
+					triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, line));
+					return;
+				}
+			}
+
 			if (!String.IsNullOrEmpty(Password))
 				sendData("PASS " + Password);
 

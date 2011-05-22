@@ -56,7 +56,7 @@ namespace NexusIM.Controls
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
 
-		public void PopulateUIControls(IMProtocolExtraData extraData)
+		public void PopulateUIControls(IMProtocolWrapper extraData)
 		{
 			mProtocol = extraData;
 			mProtocolType = mProtocol.Protocol.GetType();
@@ -166,7 +166,7 @@ namespace NexusIM.Controls
 		}
 
 		// Variables
-		private IMProtocolExtraData mProtocol;
+		private IMProtocolWrapper mProtocol;
 		private Type mProtocolType;
 	}
 }

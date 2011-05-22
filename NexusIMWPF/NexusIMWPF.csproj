@@ -92,10 +92,12 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\..\wpf-notifyicon\NotifyIconWpf\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Effects" />
     <Reference Include="Microsoft.Expression.Interactions" />
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -127,7 +129,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
-    <Compile Include="CEConnectionPool.cs" />
+    <Compile Include="Configuration\IMProtocolWrapper.cs" />
+    <Compile Include="Configuration\ISettings.cs" />
+    <Compile Include="Configuration\SettingsManager.cs" />
+    <Compile Include="Misc\BrokenProtocol.cs" />
+    <Compile Include="Configuration\CEConnectionPool.cs" />
     <Compile Include="ChatHistory.cs">
       <DependentUpon>ChatHistory.dbml</DependentUpon>
     </Compile>
@@ -182,13 +188,14 @@
       <DependentUpon>DataCache.dbml</DependentUpon>
     </Compile>
     <Compile Include="FirstRunSetup.cs" />
-    <Compile Include="IPAddressExtensions.cs" />
+    <Compile Include="Misc\IPAddressExtensions.cs" />
     <Compile Include="ITabbedArea.cs" />
-    <Compile Include="LazyWeak.cs" />
+    <Compile Include="Misc\LazyWeak.cs" />
     <Compile Include="Managers\AggregateContactList.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
     <Compile Include="Managers\Application\IPCHandler.cs" />
+    <Compile Include="Managers\Application\IPYHost.cs" />
     <Compile Include="Managers\Application\RestartManager.cs" />
     <Compile Include="Managers\ChatWindowCollection.cs" />
     <Compile Include="Managers\IMMessageProcessor.cs" />
@@ -200,16 +207,17 @@
     <Compile Include="Managers\User Interface\SpeechManager.cs" />
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
     <Compile Include="Managers\User Interface\WindowSystem.cs" />
-    <Compile Include="MiscFuncs.cs" />
+    <Compile Include="Misc\MiscFuncs.cs" />
+    <Compile Include="Misc\ProtocolErrorBackoff.cs" />
     <Compile Include="Protocol\GroupOfContacts.cs" />
     <Compile Include="Service References\NexusCore\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="SocketTraceListener.cs" />
-    <Compile Include="SQLCESettings.cs" />
-    <Compile Include="TestProtocol.cs" />
+    <Compile Include="Misc\SocketTraceListener.cs" />
+    <Compile Include="Configuration\SQLCESettings.cs" />
+    <Compile Include="Misc\TestProtocol.cs" />
     <Compile Include="UserProfile.cs">
       <DependentUpon>UserProfile.dbml</DependentUpon>
     </Compile>

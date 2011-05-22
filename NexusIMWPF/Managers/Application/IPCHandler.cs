@@ -139,7 +139,7 @@ namespace NexusIM.Managers
 				}
 			}
 
-			IEnumerable<IMProtocolExtraData> actualAccounts = null;
+			IEnumerable<IMProtocolWrapper> actualAccounts = null;
 			if (account != null)
 			{
 				int keyvalsep = account.IndexOf(':');

@@ -249,12 +249,12 @@ namespace NexusWeb
 			Hashtable table = JSON.JsonDecode(jsondata) as Hashtable;
 			ArrayList features = table["features"] as ArrayList;
 
-			if (features.Count == 0)
+			/*if (features.Count == 0)
 			{
 				result.mError = new LocationUnavailableException();
 				result.Trigger();
 				return;
-			}
+			}*/
 
 			foreach (Hashtable feature in features)
 			{

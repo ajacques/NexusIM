@@ -10,7 +10,6 @@ using System.ServiceModel.Activation;
 using System.Web;
 using System.Web.SessionState;
 using Microsoft.ApplicationServer.Caching;
-using NexusWeb.AdminChannel;
 using NexusCore.Databases;
 using System.Runtime.Serialization;
 using System.IO;
@@ -240,26 +239,6 @@ namespace NexusWeb.Services
 		[FaultContract(typeof(ArgumentException))]
 		public void ChangeAllUsersProtocolStatuses(string newStatus)
 		{
-			IMStatus status;
-			try	{
-				status = (IMStatus)Enum.Parse(typeof(IMStatus), newStatus, true);
-			} catch (ArgumentException) { // We catch this exception to prevent any unwanted data from returning to the client
-				throw new FaultException(new FaultReason("Failed to parse " + newStatus + " into type IMStatus"));
-			}
-
-			HttpSessionState session = HttpContext.Current.Session;
-			HttpResponse response = HttpContext.Current.Response;
-			if (session["userid"] == null) // Make sure the user is logged-in
-			{
-				response.StatusCode = (int)HttpStatusCode.Forbidden;
-				response.Close();
-			}
-
-			int userid = (int)session["userid"];
-
-			AdminChannelClient client = new AdminChannelClient();
-			client.ChangeAllProtocolsStatusForAccount(userid, status);
-			client.Close();
 		}
 
 		[OperationContract]
@@ -284,10 +263,6 @@ namespace NexusWeb.Services
 
 			db.Accounts.InsertOnSubmit(row);
 			db.SubmitChanges();
-
-			AdminChannelClient client = new AdminChannelClient();
-			client.BroadcastNewAccount(row.id);
-			client.Close();
 		}
 
 		/// <summary>

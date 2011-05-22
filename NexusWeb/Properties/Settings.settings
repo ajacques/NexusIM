@@ -51,7 +51,7 @@
       <Value Profile="(Default)">(localhost|im.adrensoftware.com|5.64.115.83|dev.nexus-im.com|pub.nexus-im.com)</Value>
     </Setting>
     <Setting Name="RedisServer" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">192.168.56.102</Value>
+      <Value Profile="(Default)">192.168.2.217</Value>
     </Setting>
   </Settings>
 </SettingsFile>

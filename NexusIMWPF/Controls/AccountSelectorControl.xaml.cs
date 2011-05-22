@@ -20,7 +20,7 @@ namespace NexusIM.Controls
 			mQueryClause = (e) => true;
 		}
 
-		public Func<IMProtocolExtraData, bool> QueryClause
+		public Func<IMProtocolWrapper, bool> QueryClause
 		{
 			get	{
 				return mQueryClause;
@@ -34,7 +34,7 @@ namespace NexusIM.Controls
 
 		public void PopulateDropdownList()
 		{
-			IEnumerable<IMProtocolExtraData> accounts = AccountManager.Accounts.Where(mQueryClause);
+			IEnumerable<IMProtocolWrapper> accounts = AccountManager.Accounts.Where(mQueryClause);
 
 			foreach (var account in accounts)
 			{
@@ -50,13 +50,13 @@ namespace NexusIM.Controls
 			}
 		}
 
-		public IMProtocolExtraData SelectedProtocol
+		public IMProtocolWrapper SelectedProtocol
 		{
 			get	{
-				return (IMProtocolExtraData)((ListViewItem)Selector.SelectedItem).Tag;
+				return (IMProtocolWrapper)((ListViewItem)Selector.SelectedItem).Tag;
 			}
 		}
 
-		private Func<IMProtocolExtraData, bool> mQueryClause;
+		private Func<IMProtocolWrapper, bool> mQueryClause;
 	}
 }

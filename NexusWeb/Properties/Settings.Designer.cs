@@ -179,7 +179,7 @@ namespace NexusWeb.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.56.102")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.2.217")]
         public string RedisServer {
             get {
                 return ((string)(this["RedisServer"]));

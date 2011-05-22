@@ -7,7 +7,7 @@ using System.ServiceModel.Activation;
 using System.ServiceModel.Web;
 using System.Text;
 using NexusCore.Databases;
-using NexusWeb.Infrastructure.Redis;
+using Redis;
 using NexusWeb.Services.DataContracts;
 
 namespace NexusWeb.Services

@@ -21,7 +21,7 @@ namespace NexusIM.Windows
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			IMProtocolExtraData extraData = AccountSelector.SelectedProtocol;
+			IMProtocolWrapper extraData = AccountSelector.SelectedProtocol;
 
 			IHasMUCRooms muc = (IHasMUCRooms)extraData.Protocol;
 			IChatRoom chatRoom = muc.JoinChatRoom(RoomName.Text);

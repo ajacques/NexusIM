@@ -11,29 +11,29 @@ namespace InstantMessage.Events
 		Unknown,
 		NetworkProblem
 	}
+	public enum IMProtocolErrorReason
+	{
+		CONNERROR,
+		INVALID_USERNAME,
+		INVALID_PASSWORD,
+		LIMIT_REACHED,
+		Unknown
+	}
 	/// <summary>
 	/// Used to pass information about a protocol error back to event handlers for higher-level error processing
 	/// </summary>
 	public class IMErrorEventArgs : EventArgs
 	{
-		public IMErrorEventArgs(ErrorReason reason)
+		public IMErrorEventArgs(IMProtocolErrorReason reason)
 		{
 			mReason = reason;
 		}
-		public IMErrorEventArgs(ErrorReason reason, string message)
+		public IMErrorEventArgs(IMProtocolErrorReason reason, string message)
 		{
 			mReason = reason;
 			mMessage = message;
 		}
-		public enum ErrorReason
-		{
-			CONNERROR,
-			INVALID_USERNAME,
-			INVALID_PASSWORD,
-			LIMIT_REACHED,
-			Unknown
-		}
-		public ErrorReason Reason
+		public IMProtocolErrorReason Reason
 		{
 			get	{
 				return mReason;
@@ -45,7 +45,7 @@ namespace InstantMessage.Events
 				return mMessage;
 			}
 		}
-		private ErrorReason mReason;
+		private IMProtocolErrorReason mReason;
 		private string mMessage;
 	}
 	/// <summary>

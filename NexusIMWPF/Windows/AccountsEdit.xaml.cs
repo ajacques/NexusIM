@@ -24,7 +24,7 @@ namespace NexusIM.Windows
 		{
 			this.InitializeComponent();
 
-			mNewAccounts = new List<IMProtocolExtraData>();
+			mNewAccounts = new List<IMProtocolWrapper>();
 		}
 	
 		private void DeselectAllExcept(UIElementCollection source, SetupAccountItem exception)
@@ -79,7 +79,7 @@ namespace NexusIM.Windows
 
 			SetupAccountItem item = new SetupAccountItem();
 
-			IMProtocolExtraData extraData = new IMProtocolExtraData() { Protocol = protocol, Enabled = false };
+			IMProtocolWrapper extraData = new IMProtocolWrapper() { Protocol = protocol, Enabled = false };
 			item.PopulateUIControls(extraData);
 
 			item.Margin = (Thickness)FindResource("ItemMargin");
@@ -107,7 +107,7 @@ namespace NexusIM.Windows
 		{
 			if (e.NewItems != null)
 			{
-				foreach (IMProtocolExtraData extraData in e.NewItems)
+				foreach (IMProtocolWrapper extraData in e.NewItems)
 				{
 					if (mNewAccounts.Contains(extraData))
 						continue;
@@ -121,7 +121,7 @@ namespace NexusIM.Windows
 
 			if (e.OldItems != null)
 			{
-				foreach (IMProtocolExtraData extraData in e.OldItems)
+				foreach (IMProtocolWrapper extraData in e.OldItems)
 				{
 					foreach (UserControl element in AccountsListBox.Children)
 					{
@@ -136,7 +136,7 @@ namespace NexusIM.Windows
 		}
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			foreach (IMProtocolExtraData protocol in AccountManager.Accounts)
+			foreach (IMProtocolWrapper protocol in AccountManager.Accounts)
 			{
 				SetupAccountItem accItem = new SetupAccountItem();
 				accItem.PopulateUIControls(protocol);
@@ -149,7 +149,7 @@ namespace NexusIM.Windows
 
 		private static void SaveNewAccounts(object accounts)
 		{
-			IList<IMProtocolExtraData> mNewAccounts = (IList<IMProtocolExtraData>)accounts;
+			IList<IMProtocolWrapper> mNewAccounts = (IList<IMProtocolWrapper>)accounts;
 		}
 
 		protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -172,6 +172,6 @@ namespace NexusIM.Windows
 			AccountManager.Accounts.CollectionChanged -= new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
 
-		private List<IMProtocolExtraData> mNewAccounts;
+		private List<IMProtocolWrapper> mNewAccounts;
 	}
 }

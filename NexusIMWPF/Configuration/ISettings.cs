@@ -31,7 +31,7 @@ namespace InstantMessage
 	/// </remarks>
 	public interface ISettings
 	{
-		IList<IMProtocolExtraData> Accounts
+		IList<IMProtocolWrapper> Accounts
 		{
 			get;
 		}

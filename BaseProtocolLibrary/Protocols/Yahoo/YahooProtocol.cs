@@ -455,7 +455,7 @@ namespace InstantMessage.Protocols.Yahoo
 			try	{
 				bytesRead = nsStream.EndRead(e);
 			} catch (InvalidOperationException f) {
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR, f.Message));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR, f.Message));
 				return;
 			}
 
@@ -846,7 +846,7 @@ namespace InstantMessage.Protocols.Yahoo
 				entry = Dns.EndGetHostEntry(r);
 			} catch (SocketException e) {
 				Debug.WriteLine("YahooProtocol: Dns lookup failed - Reason: " + e.Message);
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR));
 				return;
 			}
 
@@ -855,7 +855,7 @@ namespace InstantMessage.Protocols.Yahoo
 			try	{
 				request.BeginGetResponse(new AsyncCallback(OnGetYIPAddress), request);
 			} catch (WebException e) {
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR, e.Message));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR, e.Message));
 			}
 		}
 		// Begin Packet Stuff
@@ -941,7 +941,7 @@ namespace InstantMessage.Protocols.Yahoo
 				reader.Close();
 			} else {
 				Trace.WriteLine("Yahoo: Http server returned " + response.StatusCode.ToString() + " while getting CS_IP (" + response.StatusDescription + ")");
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.Unknown));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown));
 				return;
 			}
 
@@ -1020,13 +1020,13 @@ namespace InstantMessage.Protocols.Yahoo
 				triggerBadCredentialsError();
 				return;
 			} else if (result == 1213) { // Security lock from too many invalid logins
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
 				return;
 			} else if (result == 1235) {
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.INVALID_USERNAME));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.INVALID_USERNAME));
 				return;
 			} else if (result == 1236) {
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.LIMIT_REACHED));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED));
 				return;
 			}
 
@@ -1273,7 +1273,7 @@ namespace InstantMessage.Protocols.Yahoo
 				}
 				
 				authenticated = false;
-				triggerOnError(new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.CONNERROR));
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR));
 			}
 		}
 		private void receivePacket(AsyncCallback callback)

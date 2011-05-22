@@ -396,7 +396,8 @@ namespace InstantMessage
 		// Events
 		public static event EventHandler AnyLoginCompleted;
 		public event EventHandler LoginCompleted;
-		public static event EventHandler<IMErrorEventArgs> onError;
+		public static event EventHandler<IMErrorEventArgs> AnyErrorOccurred;
+		public event EventHandler<IMErrorEventArgs> ErrorOccurred;
 		public event EventHandler<IMDisconnectEventArgs> onDisconnect;
 		public static event EventHandler<IMFriendRequestEventArgs> onFriendRequest;
 		public static event EventHandler<IMRoomInviteEventArgs> onChatRoomInvite;
@@ -423,8 +424,10 @@ namespace InstantMessage
 		protected void triggerOnError(IMErrorEventArgs e)
 		{
 			Debug.WriteLine("Protocol Error: " + e.Message + " - " + e.Reason.ToString());
-			if (onError != null)
-				onError(this, e);
+			if (ErrorOccurred != null)
+				ErrorOccurred(this, e);
+			if (IMProtocol.AnyErrorOccurred != null)
+				IMProtocol.AnyErrorOccurred(this, e);
 		}
 		protected void triggerOnDisconnect(IMDisconnectEventArgs e)
 		{
@@ -463,8 +466,8 @@ namespace InstantMessage
 		}
 		protected void triggerBadCredentialsError()
 		{
-			if (onError != null)
-				onError(this, new IMErrorEventArgs(IMErrorEventArgs.ErrorReason.INVALID_USERNAME, "Invalid login credentials"));
+			if (ErrorOccurred != null)
+				ErrorOccurred(this, new IMErrorEventArgs(IMProtocolErrorReason.INVALID_USERNAME, "Invalid login credentials"));
 
 			mLoginWaitHandle.Set();
 		}

@@ -31,7 +31,7 @@ namespace NexusIM.Managers
 		{
 			if (e.NewItems != null)
 			{
-				foreach (IMProtocolExtraData protocol in e.NewItems)
+				foreach (IMProtocolWrapper protocol in e.NewItems)
 					protocol.Protocol.ContactList.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_CollectionChanged);
 			}
 			

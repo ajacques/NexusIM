@@ -9,7 +9,7 @@ using System.Text;
 using System.Web;
 using System.Web.SessionState;
 using NexusCore.Databases;
-using NexusWeb.Infrastructure.Redis;
+using Redis;
 using NexusWeb.Properties;
 
 namespace NexusWeb.Services
@@ -117,10 +117,10 @@ namespace NexusWeb.Services
 					
 					UserLocationData locdata = new UserLocationData();
 					locdata.mLatitude = BitConverter.ToDouble(block, 0);
-					locdata.mLongitude = BitConverter.ToDouble(block, 4);
-					locdata.mAccuracy = BitConverter.ToInt32(block, 8);
-					locdata.mChange = DateTime.FromBinary(BitConverter.ToInt64(block, 12));
-					locdata.mRowId = BitConverter.ToInt32(block, 20);
+					locdata.mLongitude = BitConverter.ToDouble(block, 8);
+					locdata.mAccuracy = BitConverter.ToInt32(block, 16);
+					locdata.mChange = DateTime.FromBinary(BitConverter.ToInt64(block, 20));
+					locdata.mRowId = BitConverter.ToInt32(block, 28);
 
 					answer.Add(locdata);
 				}
@@ -148,13 +148,13 @@ namespace NexusWeb.Services
 			{
 				result.Value.mRowId = data.Where(p => p.Identifier == result.Key).Select(p => p.RowId).First();
 
-				byte[] block = new byte[24];
+				byte[] block = new byte[32];
 
-				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mLatitude), 0, block, 0, 4);
-				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mLongitude), 0, block, 4, 4);
-				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mAccuracy), 0, block, 8, 4);
-				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mChange.ToBinary()), 0, block, 12, 8);
-				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mRowId), 0, block, 20, 4);
+				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mLatitude), 0, block, 0, 8);
+				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mLongitude), 0, block, 8, 8);
+				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mAccuracy), 0, block, 16, 4);
+				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mChange.ToBinary()), 0, block, 20, 8);
+				Buffer.BlockCopy(BitConverter.GetBytes(result.Value.mRowId), 0, block, 28, 4);
 
 				mRedisClient.Set("CLPointCache_" + result.Value.mRowId, block, TimeSpan.FromMinutes(5));
 			}

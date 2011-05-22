@@ -18,7 +18,7 @@ namespace NexusIM.Windows
 			// Insert code required on object creation below this point.
 		}
 
-		public void PopulateUIControls(IMProtocolExtraData extraData)
+		public void PopulateUIControls(IMProtocolWrapper extraData)
 		{
 			mExtraData = extraData;
 			HeaderAccountUsername.Text = extraData.Protocol.Username;
@@ -53,6 +53,6 @@ namespace NexusIM.Windows
 				configTable[key] = value;
 		}
 
-		private IMProtocolExtraData mExtraData;
+		private IMProtocolWrapper mExtraData;
 	}
 }

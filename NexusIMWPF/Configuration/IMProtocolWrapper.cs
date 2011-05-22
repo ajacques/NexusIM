@@ -7,7 +7,7 @@ namespace InstantMessage
 		LocalSettingFile,
 		NexusCore
 	}
-	public sealed class IMProtocolExtraData : INotifyPropertyChanged
+	public sealed class IMProtocolWrapper : INotifyPropertyChanged
 	{
 		public IMProtocol Protocol
 		{
@@ -53,6 +53,11 @@ namespace InstantMessage
 			}
 		}
 		public ProtocolSource Source
+		{
+			get;
+			set;
+		}
+		public bool InErrorState
 		{
 			get;
 			set;

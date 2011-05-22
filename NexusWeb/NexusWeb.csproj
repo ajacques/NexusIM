@@ -107,6 +107,9 @@
     <Reference Include="Microsoft.ApplicationServer.Caching.Client" />
     <Reference Include="Microsoft.ApplicationServer.Caching.Core" />
     <Reference Include="Microsoft.SqlServer.Types" />
+    <Reference Include="RedisClient">
+      <HintPath>..\..\RedisClient\RedisClient\bin\Debug\RedisClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -183,23 +186,6 @@
     <Content Include="App_Browsers\tablets\tablets.browser">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Service References\AdminChannel\AdminChannel1.wsdl" />
-    <None Include="Service References\AdminChannel\AdminChannel3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AdminChannel\AdminChannel31.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AdminChannel\AdminChannel32.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\AdminChannel\configuration91.svcinfo" />
-    <None Include="Service References\AdminChannel\configuration.svcinfo" />
-    <None Include="Service References\AdminChannel\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\AdminChannel\AdminChannel1.disco" />
     <Content Include="w3c\p3p.xml" />
     <Content Include="w3c\p3p_policy.xml" />
     <Content Include="Web.config">
@@ -214,7 +200,7 @@
   <ItemGroup>
     <Compile Include="BackgroundCode\BingMapsBTree.cs" />
     <Compile Include="BackgroundCode\CounterCSRF.cs" />
-    <Compile Include="BackgroundCode\RedisClient.cs" />
+    <Compile Include="BackgroundCode\RedisSessionStateProvider.cs" />
     <Compile Include="BackgroundCode\ServiceAuthorizationManager.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -246,11 +232,6 @@
     </Compile>
     <Compile Include="search.aspx.designer.cs">
       <DependentUpon>search.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\AdminChannel\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Services\ArticleFeed.svc.cs">
       <DependentUpon>ArticleFeed.svc</DependentUpon>
@@ -485,9 +466,6 @@
     <Content Include="config\myaccounts.aspx" />
     <Content Include="logout.aspx" />
     <Content Include="user.aspx" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\AdminChannel\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DatabaseReferences\DatabaseReferences.csproj">

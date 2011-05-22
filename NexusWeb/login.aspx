@@ -75,7 +75,7 @@
 			<label for="gender">Gender</label><br />
 			<span id="gender">
 				<input type="radio" name="gender" id="genderMale" value="2" /><label for="genderMale" style="margin-left: 2px">Male</label> 
-				<input type="radio" name="gender" id="genderFemale" value="3" /><label for="genderFemale" style="margin-left: 2px">Female</label><br />
+				<input type="radio" name="gender" id="genderFemale" value="3" style="margin-left: 15px" /><label for="genderFemale" style="margin-left: 2px">Female</label><br />
 			</span>
 			<label>Birthday</label>&nbsp;<span id="ageTooYoung" class="errorhint">You must be at least 16 years old to register.</span><br />
 			<span id="dobSpan" style="padding-bottom: 2px">

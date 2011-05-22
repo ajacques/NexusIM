@@ -16,11 +16,11 @@ namespace NexusIM.Converters
 			if (value == null)
 				return new ArrayList();
 
-			IList<IMProtocolExtraData> source = (IList<IMProtocolExtraData>)value;
+			IList<IMProtocolWrapper> source = (IList<IMProtocolWrapper>)value;
 
 			ArrayList output = new ArrayList();
 
-			foreach (IMProtocolExtraData protocol in source.Where(i => i.Enabled))
+			foreach (IMProtocolWrapper protocol in source.Where(i => i.Enabled))
 			{
 				ListViewItem item = new ListViewItem();
 				item.Content = protocol.Protocol.Username;
