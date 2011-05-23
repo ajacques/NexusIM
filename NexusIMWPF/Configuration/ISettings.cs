@@ -8,7 +8,7 @@ namespace InstantMessage
 	/// Contains all the special processing instructions that can be used on settings
 	/// </summary>
 	[Flags]
-	public enum SettingAttributes
+	internal enum SettingAttributes
 	{
 		/// <summary>
 		/// No special processing instructions should be applied to this setting
@@ -29,7 +29,7 @@ namespace InstantMessage
 	/// <remarks>
 	/// This is the new abstraction style settings system. This will allow different configuration types for special platforms.
 	/// </remarks>
-	public interface ISettings
+	internal interface ISettings
 	{
 		IList<IMProtocolWrapper> Accounts
 		{

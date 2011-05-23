@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using NexusIM.Misc;
 
 namespace InstantMessage
 {
@@ -57,7 +58,7 @@ namespace InstantMessage
 			get;
 			set;
 		}
-		public bool InErrorState
+		internal ProtocolErrorBackoff ErrorBackoff
 		{
 			get;
 			set;

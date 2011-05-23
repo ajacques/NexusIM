@@ -7,6 +7,8 @@ using System.Threading;
 using InstantMessage.Events;
 using InstantMessage.Protocols;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace InstantMessage
 {
@@ -229,30 +231,35 @@ namespace InstantMessage
 		public string Password
 		{
 			get {
-				/*byte[] passArr = Encoding.Default.GetBytes(mPassword);
+				if (mPasswordEnc == null)
+					return null;
 
-				ProtectedMemory.Unprotect(passArr, MemoryProtectionScope.SameProcess);
+				ProtectedMemory.Unprotect(mPasswordEnc, MemoryProtectionScope.SameProcess);
 
-				return Encoding.Default.GetString(passArr).TrimEnd(new char[] { ' ' });*/
-				return mPassword;
+				return Encoding.Default.GetString(mPasswordEnc, 0, mPasswordEnc.Length - mPaddingAmount);
+				//return mPassword;
 			}
 			set {
 				if (mPassword != value)
 				{
 					mPassword = value;
 
+					string input = value;
+
+					if (input.Length % 16 != 0)
+					{
+						mPaddingAmount = (byte)(input.Length + (16 - (input.Length % 16)));
+						input = input.PadRight(mPaddingAmount);
+					}
+
+					mPasswordEnc = Encoding.Default.GetBytes(input);
+
+					ProtectedMemory.Protect(mPasswordEnc, MemoryProtectionScope.SameProcess);
+
+					//mPassword = Encoding.Default.GetString(passArr);
+
 					NotifyPropertyChanged("Password");
-				}
-				/*string input = value;
-
-				if (input.Length % 16 != 0)
-					input = input.PadRight(input.Length + (16 - (input.Length % 16)));
-
-				byte[] passArr = Encoding.Default.GetBytes(input);
-
-				ProtectedMemory.Protect(passArr, MemoryProtectionScope.SameProcess);
-
-				mPassword = Encoding.Default.GetString(passArr);*/
+				}		
 			}
 		}
 		/// <summary>
@@ -478,6 +485,8 @@ namespace InstantMessage
 		protected ContactCollection buddylist = new ContactCollection();
 		protected string mUsername;
 		protected string mPassword;
+		protected byte[] mPasswordEnc;
+		protected byte mPaddingAmount;
 		protected string protocolType = "Default";
 		protected string mProtocolTypeShort = "default";
 		protected bool mEnabled;

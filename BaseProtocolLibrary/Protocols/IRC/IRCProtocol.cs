@@ -563,6 +563,15 @@ namespace InstantMessage.Protocols.Irc
 
 				// Check to see if there was a command that was cutoff at the end of the previous buffer read.
 				IEnumerable<string> readableLines = lines;
+
+				if (streamBuf.StartsWith("\r\n")) // Uncommon - The line was completed, but the newlines fell right after the 1024 mark
+				{
+					string[] last = new string[] { mBufferCutoffMessage.ToString() };
+					mBufferCutoffMessage = null;
+
+					readableLines = last.Union(readableLines);
+				}
+
 				if (mBufferCutoffMessage != null)
 				{
 					mBufferCutoffMessage.Append(lines.First());

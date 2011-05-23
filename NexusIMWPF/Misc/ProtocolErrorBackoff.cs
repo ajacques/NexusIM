@@ -5,6 +5,7 @@ using System.Timers;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
+using System.Windows;
 
 namespace NexusIM.Misc
 {
@@ -16,7 +17,6 @@ namespace NexusIM.Misc
 			mInterval = TimeSpan.FromSeconds(3);
 			protocol.Protocol.LoginCompleted += new EventHandler(Protocol_LoginSuccess);
 			protocol.Protocol.ErrorOccurred += new EventHandler<IMErrorEventArgs>(Protocol_ErrorOccurred);
-			protocol.InErrorState = true;
 
 			mProtocol = protocol;
 			mTimer = new Timer();
@@ -26,6 +26,11 @@ namespace NexusIM.Misc
 			mTimer.Start();
 
 			Trace.WriteLine("Protocol encountered an error. Re-attempting login in " + mInterval.TotalSeconds + " seconds");
+		}
+
+		public void Cancel()
+		{
+			Cleanup();
 		}
 
 		public void Dispose()
@@ -40,7 +45,7 @@ namespace NexusIM.Misc
 		{
 			mTimer.Stop();
 			mTimer.Elapsed -= new ElapsedEventHandler(Timer_Tick);
-			mProtocol.InErrorState = false;
+			mProtocol.ErrorBackoff = null;
 
 			Dispose();
 		}
@@ -68,6 +73,7 @@ namespace NexusIM.Misc
 				message.AppendLine();
 				message.Append("Click for more information.");
 
+				WindowSystem.SysTrayIcon.TrayBalloonTipClicked += new RoutedEventHandler(SysTrayIcon_TrayBalloonTipClicked);
 				WindowSystem.SysTrayIcon.ShowBalloonTip("Account Error", message.ToString(), Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Warning);
 
 				return;
@@ -82,6 +88,12 @@ namespace NexusIM.Misc
 			mAttempts++;
 			mTimer.Interval = mInterval.TotalMilliseconds;
 			mProtocol.Protocol.BeginLogin();
+		}
+		private void SysTrayIcon_TrayBalloonTipClicked(object sender, RoutedEventArgs e)
+		{
+			WindowSystem.SysTrayIcon.TrayBalloonTipClicked -= new RoutedEventHandler(SysTrayIcon_TrayBalloonTipClicked);
+
+			MessageBox.Show("hi");
 		}
 
 		private Timer mTimer;

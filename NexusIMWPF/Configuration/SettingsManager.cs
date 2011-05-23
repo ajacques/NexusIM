@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace InstantMessage
 {
-	public static class IMSettings
+	internal static class IMSettings
 	{
 		public static void Setup(ISettings controller)
 		{

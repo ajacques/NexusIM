@@ -188,8 +188,8 @@ namespace NexusIM.Managers
 			
 			IMProtocolWrapper wrapper = Accounts.First(p => p.Protocol == protocol);
 
-			if (!wrapper.InErrorState)
-				new ProtocolErrorBackoff(wrapper);
+			if (wrapper.ErrorBackoff != null)
+				wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
 		}
 
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;
