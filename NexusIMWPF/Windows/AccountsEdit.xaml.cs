@@ -105,6 +105,13 @@ namespace NexusIM.Windows
 		}
 		private void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
+			if (!Dispatcher.CheckAccess())
+				Dispatcher.BeginInvoke(new GenericEvent(() => DoCollectionChanged(e)));
+			else
+				DoCollectionChanged(e);
+		}
+		private void DoCollectionChanged(NotifyCollectionChangedEventArgs e)
+		{
 			if (e.NewItems != null)
 			{
 				foreach (IMProtocolWrapper extraData in e.NewItems)
