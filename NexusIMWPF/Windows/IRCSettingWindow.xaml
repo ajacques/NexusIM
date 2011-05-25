@@ -33,21 +33,37 @@
 			<Rectangle Fill="#FFFFBC78" Stroke="#FFFF6900" />
 			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap" Text="This account is currently connected. Some settings may not take effect until you reconnect." />
 		</Grid>
-		<Grid Margin="0,65,0,0" MaxHeight="170" VerticalAlignment="Top">
-			<StackPanel Margin="3,3,0,0">
-				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
-					<TextBox Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
-				</Grid>
-				<Grid Height="5" />
-				<TextBlock Text="Auto Execute Commands" ToolTip="{StaticResource AutoExecuteTooltip}" />
-				<TextBox x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
-			</StackPanel>
+		<Grid Margin="0,35,0,0" MaxHeight="180" VerticalAlignment="Top">
+			<TabControl>
+				<TabItem Header="General">
+					<StackPanel Margin="3,3,0,0">
+						<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition />
+							</Grid.ColumnDefinitions>
+							<TextBlock Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
+							<TextBox Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
+						</Grid>
+						<Grid Height="5" />
+						<TextBlock Text="Auto Execute Commands" ToolTip="{StaticResource AutoExecuteTooltip}" />
+						<TextBox x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
+					</StackPanel>
+				</TabItem>
+				<TabItem Header="Operators">
+					<StackPanel>
+						<GroupBox Header="Global Notices">
+							<GroupItem>
+								<StackPanel>
+									<CheckBox Content="Show global notices in a separate window" />
+									<TextBlock Text="Filter: " />
+								</StackPanel>
+							</GroupItem>
+						</GroupBox>
+					</StackPanel>
+				</TabItem>
+			</TabControl>
 		</Grid>
 		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="SaveButton_Click" />
 	</Grid>

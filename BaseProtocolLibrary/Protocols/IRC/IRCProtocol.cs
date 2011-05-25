@@ -627,7 +627,7 @@ namespace InstantMessage.Protocols.Irc
 			if (SslEnabled)
 			{
 				SslStream sslstream = new SslStream(mTextStream, true, new RemoteCertificateValidationCallback(VerifyServerCertificate));
-				sslstream.BeginAuthenticateAsClient("pub.nexus-im.com", new AsyncCallback(CompleteSslNegotiation), sslstream);
+				sslstream.BeginAuthenticateAsClient(Server, new AsyncCallback(CompleteSslNegotiation), sslstream);
 			} else
 				SetupStreams();
 		}
