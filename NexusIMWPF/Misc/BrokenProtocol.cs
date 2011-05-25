@@ -11,7 +11,7 @@ namespace NexusIM
 		{
 			base.BeginLogin();
 			
-			triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR));
+			triggerOnError(new BadCredentialsEventArgs());
 		}
 	}
 }

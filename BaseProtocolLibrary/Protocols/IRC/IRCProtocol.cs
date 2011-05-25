@@ -9,6 +9,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using InstantMessage.Events;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace InstantMessage.Protocols.Irc
 {
@@ -22,7 +24,7 @@ namespace InstantMessage.Protocols.Irc
 			needPassword = false;
 			Port = 6667;
 		}
-		public IRCProtocol(string hostname, int port = 6667) : this()
+		public IRCProtocol(string hostname, int port = 6667, bool useSsl = false) : this()
 		{
 			if ((port <= 0) && (port > 0xffff))
 				throw new ArgumentOutOfRangeException("port", "The port number " + port + " is not a valid port number");
@@ -31,6 +33,7 @@ namespace InstantMessage.Protocols.Irc
 
 			Server = hostname;
 			Port = port;
+			SslEnabled = useSsl;
 		}
 		public void Dispose()
 		{
@@ -56,14 +59,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-#if SILVERLIGHT
-			SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-			args.RemoteEndPoint = new DnsEndPoint(Server, Port);
-			args.Completed += new EventHandler<SocketAsyncEventArgs>(OnSocketConnect);
-			client.ConnectAsync(args);
-#else
 			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);			
-#endif
 			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
 		}
 		public override void Disconnect()
@@ -72,11 +68,7 @@ namespace InstantMessage.Protocols.Irc
 				sendData("QUIT");
 			} catch (IOException) {}
 
-#if SILVERLIGHT
-			client.Close();
-#else
 			client.Disconnect(false);
-#endif	
 
 			triggerOnDisconnect(null);
 			status = IMProtocolStatus.Offline;
@@ -330,6 +322,11 @@ namespace InstantMessage.Protocols.Irc
 		{
 			get;
 			set;
+		}
+		public bool SslEnabled
+		{
+			get;
+			private set;
 		}
 
 		// Protocol Handlers
@@ -594,7 +591,6 @@ namespace InstantMessage.Protocols.Irc
 				return readableLines;
 			}
 		}
-#if !SILVERLIGHT
 		private void readDataAsync(IAsyncResult args)
 		{
 			if (client == null || !client.Connected)
@@ -627,6 +623,25 @@ namespace InstantMessage.Protocols.Irc
 		{
 			client.EndConnect(e);
 			mTextStream = new NetworkStream(client);
+
+			if (SslEnabled)
+			{
+				SslStream sslstream = new SslStream(mTextStream, true, new RemoteCertificateValidationCallback(VerifyServerCertificate));
+				sslstream.BeginAuthenticateAsClient("pub.nexus-im.com", new AsyncCallback(CompleteSslNegotiation), sslstream);
+			} else
+				SetupStreams();
+		}
+		private void CompleteSslNegotiation(IAsyncResult e)
+		{
+			SslStream sslstream = (SslStream)e.AsyncState;
+			sslstream.EndAuthenticateAsClient(e);
+
+			mTextStream = sslstream;
+
+			SetupStreams();
+		}
+		private void SetupStreams()
+		{
 			mWriter = new StreamWriter(mTextStream);
 			mWriter.AutoFlush = true;
 
@@ -635,27 +650,6 @@ namespace InstantMessage.Protocols.Irc
 			mDataQueue = new byte[mBufferSize];
 			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
-#else
-		private void OnSocketReceive(object sender, SocketAsyncEventArgs e)
-		{
-			mDataQueue = e.Buffer;
-			int bytesRead = e.BytesTransferred;
-
-			SocketReadHandleWraparound(bytesRead);
-
-			client.ReceiveAsync(e);
-		}
-		private void OnSocketConnect(object sender, SocketAsyncEventArgs e)
-		{
-			CompleteLogin();
-			
-			mDataQueue = new byte[mBufferSize];
-			SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-			args.Completed += new EventHandler<SocketAsyncEventArgs>(OnSocketReceive);
-			args.SetBuffer(mDataQueue, 0, mDataQueue.Length);
-			client.ReceiveAsync(args);
-		}
-#endif
 		private void CompleteLogin()
 		{
 			if (client.Available >= 3) // Check to see if the server has an error message for us..
@@ -689,18 +683,15 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void sendData(string data)
 		{
-#if SILVERLIGHT
-			SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-			byte[] bdata = mTextEncoder.GetBytes(data);
-			args.SetBuffer(bdata, 0, bdata.Length);
-			client.SendAsync(args);
-#else			
 			mWriter.WriteLine(data);
-#endif
 		}
 		private string ExtractNickname(string hostmask)
 		{
 			return hostmask.Substring(0, hostmask.IndexOf("!"));
+		}
+		private bool VerifyServerCertificate(object sender, X509Certificate certificates, X509Chain chain, SslPolicyErrors errors)
+		{
+			return true; // Ignore all Ssl errors
 		}
 
 		// Events

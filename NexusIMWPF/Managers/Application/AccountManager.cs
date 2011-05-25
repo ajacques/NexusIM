@@ -3,18 +3,18 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Net;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Windows;
 using InstantMessage;
 using InstantMessage.Events;
 using InstantMessage.Protocols.Irc;
 using Microsoft.WindowsAPICodePack.Net;
 using NexusIM.Misc;
+using NexusIM.Windows;
 
 namespace NexusIM.Managers
 {
@@ -185,11 +185,20 @@ namespace NexusIM.Managers
 		private static void IMProtocol_AnyErrorOccurred(object sender, IMErrorEventArgs e)
 		{
 			IMProtocol protocol = (IMProtocol)sender;
-			
 			IMProtocolWrapper wrapper = Accounts.First(p => p.Protocol == protocol);
 
-			if (wrapper.ErrorBackoff != null)
-				wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
+			if (e is BadCredentialsEventArgs)
+			{
+				Trace.WriteLine(string.Format("Error: Protocol {0} [{1}] reported bad credentials for account.", protocol.Username, protocol.Protocol));
+
+				UserCredentialsWindow window = new UserCredentialsWindow();
+				window.Show();
+			} else {
+				
+
+				if (wrapper.ErrorBackoff != null)
+					wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
+			}
 		}
 
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;

@@ -57,6 +57,11 @@ namespace NexusIM.Misc
 		}
 		private void Protocol_ErrorOccurred(object sender, IMErrorEventArgs e)
 		{
+			if (e.GetType() == typeof(AccountThrottledEventArgs))
+			{
+
+			}
+
 			if (mAttempts >= 5)
 			{
 				// Quit after 5 attempts

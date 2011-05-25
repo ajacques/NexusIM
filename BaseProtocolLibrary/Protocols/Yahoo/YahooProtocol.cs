@@ -1020,10 +1020,12 @@ namespace InstantMessage.Protocols.Yahoo
 				triggerBadCredentialsError();
 				return;
 			} else if (result == 1213) { // Security lock from too many invalid logins
-				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
+				triggerOnError(new AccountThrottledEventArgs() { RetryTime = TimeSpan.FromMinutes(1) });
+				//triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
 				return;
 			} else if (result == 1235) {
-				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.INVALID_USERNAME));
+				triggerOnError(new BadCredentialsEventArgs());
+				//triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.INVALID_USERNAME));
 				return;
 			} else if (result == 1236) {
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED));

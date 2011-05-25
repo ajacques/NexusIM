@@ -45,9 +45,49 @@ namespace InstantMessage.Events
 				return mMessage;
 			}
 		}
+		public bool IsUserError
+		{
+			get	{
+				return mUserError;
+			}
+			protected set {
+				mUserError = value;
+			}
+		}
+		public bool IsUserCorrectable
+		{
+			get;
+			protected set;
+		}
+
+		private bool mUserError;
 		private IMProtocolErrorReason mReason;
 		private string mMessage;
 	}
+
+	public class BadCredentialsEventArgs : IMErrorEventArgs
+	{
+		public BadCredentialsEventArgs() : base(IMProtocolErrorReason.INVALID_USERNAME)
+		{
+			base.IsUserCorrectable = true;
+			base.IsUserError = true;
+		}
+	}
+
+	public class AccountThrottledEventArgs : IMErrorEventArgs
+	{
+		public AccountThrottledEventArgs() : base (IMProtocolErrorReason.LIMIT_REACHED)
+		{
+			
+		}
+
+		public TimeSpan? RetryTime
+		{
+			get;
+			internal set;
+		}
+	}
+
 	/// <summary>
 	/// Used to pass information about the protocol disconnect back to event handlers for higher-level error processing
 	/// </summary>
