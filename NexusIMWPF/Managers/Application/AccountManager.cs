@@ -191,8 +191,10 @@ namespace NexusIM.Managers
 			{
 				Trace.WriteLine(string.Format("Error: Protocol {0} [{1}] reported bad credentials for account.", protocol.Username, protocol.Protocol));
 
-				UserCredentialsWindow window = new UserCredentialsWindow();
-				window.Show();
+				WindowSystem.DispatcherInvoke(() => {
+					UserCredentialsWindow window = new UserCredentialsWindow();
+					window.Show();
+				});
 			} else {
 				
 

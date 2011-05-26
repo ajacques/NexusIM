@@ -12,12 +12,8 @@ namespace NexusWeb.BackgroundCode
 		public RedisSessionStateProvider()
 		{
 			mRedisClient = new RedisClient(Settings.Default.RedisServer);
-			try {
-				mRedisClient.Connect();
-				mRedisClient.ChangeDatabase(2);
-			} catch (Exception e) {
-
-			}
+			mRedisClient.Connect();
+			mRedisClient.ChangeDatabase(2);
 		}
 
 		public override void Dispose()
@@ -35,6 +31,8 @@ namespace NexusWeb.BackgroundCode
 			RedisHash hash = mRedisClient.GetHash(id);
 			hash.Set("Flags", new byte[] { 1 }); // Not initialized yet
 			hash.Set("Timeout", BitConverter.GetBytes(timeout));
+			hash.Set("LockDate", BitConverter.GetBytes(DateTime.UtcNow.ToBinary()));
+			hash.Set("LockId", new byte[] { 0, 0, 0, 0 });
 
 			mRedisClient.SetExpiration(id, TimeSpan.FromMinutes(timeout));
 		}		
@@ -60,6 +58,7 @@ namespace NexusWeb.BackgroundCode
 			
 			hash.Delete("Locked");
 			hash.Delete("LockDate");
+
 			mRedisClient.SetExpiration(id, TimeSpan.FromMinutes(20));
 		}
 		public override void RemoveItem(HttpContext context, string id, object lockId, SessionStateStoreData item)
@@ -116,7 +115,9 @@ namespace NexusWeb.BackgroundCode
 					locked = true;
 					DateTime lockdate = DateTime.FromBinary(BitConverter.ToInt64(config.Get("LockDate"), 0));
 					lockAge = DateTime.UtcNow - lockdate;
-					lockId = BitConverter.ToInt32(config.Get("LockId"), 0);
+					byte[] lid = config.Get("LockId");
+					if (lid != null)
+						lockId = BitConverter.ToInt32(lid, 0);
 				} else {
 					config.Set("Locked", new byte[] { 1 });
 					config.Set("LockDate", BitConverter.GetBytes(DateTime.UtcNow.ToBinary()));
@@ -146,9 +147,6 @@ namespace NexusWeb.BackgroundCode
 		{
 			RedisHash hash = mRedisClient.GetHash(id);
 			byte[] data = hash.Get("Items");
-
-			if (data == null)
-				return null;
 
 			MemoryStream ms = new MemoryStream(data);
 			SessionStateItemCollection collection = new SessionStateItemCollection();

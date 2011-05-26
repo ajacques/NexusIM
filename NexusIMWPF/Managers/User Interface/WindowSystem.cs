@@ -94,6 +94,13 @@ namespace NexusIM.Managers
 
 			Application = app;
 		}
+		public static void DispatcherInvoke(GenericEvent target)
+		{
+			if (!Application.Dispatcher.CheckAccess())
+				Application.Dispatcher.BeginInvoke(target);
+			else
+				target();
+		}
 
 		// Event Handlers
 		private static void ContactListWindow_Closed(object sender, EventArgs e)
