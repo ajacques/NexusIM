@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
 using InstantMessage;
+using InstantMessage.Protocols.Irc;
+using System.Threading;
 
 namespace NexusIM.Windows
 {
@@ -14,32 +16,34 @@ namespace NexusIM.Windows
 		public IRCSettingWindow()
 		{
 			this.InitializeComponent();
-			
-			// Insert code required on object creation below this point.
 		}
 
 		public void PopulateUIControls(IMProtocolWrapper extraData)
 		{
 			mExtraData = extraData;
-			HeaderAccountUsername.Text = extraData.Protocol.Username;
+			IRCProtocol protocol = (IRCProtocol)extraData.Protocol;
 
-			IDictionary<string, string> configTable = mExtraData.Protocol.ConfigurationSettings;
+			IDictionary<string, string> configTable = protocol.ConfigurationSettings;
 
 			string autoexecute;
 			configTable.TryGetValue("autoexecute", out autoexecute);
 
 			Dispatcher.BeginInvoke(new GenericEvent(() => {
+				HeaderAccountUsername.Text = extraData.Protocol.Username;
 				AutoExecuteBox.Text = autoexecute;
 
 				if (mExtraData.Enabled)
 					ConnectedWarning.Visibility = Visibility.Visible;
+
+				Hostname.Text = protocol.Server;
+				Port.Text = protocol.Port.ToString();
 			}));
 		}
 
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
 			Reconcile("autoexecute", AutoExecuteBox.Text);
-
+			
 			this.Close();
 		}
 

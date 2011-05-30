@@ -24,6 +24,11 @@ namespace NexusIM
 			triggerOnLogin(null);
 		}
 
+		public override void Disconnect()
+		{
+			ContactList.Clear();
+		}
+
 		public override void SendMessage(string friendName, string message)
 		{
 			base.SendMessage(friendName, message);

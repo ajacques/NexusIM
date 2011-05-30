@@ -33,31 +33,80 @@
 			<Rectangle Fill="#FFFFBC78" Stroke="#FFFF6900" />
 			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap" Text="This account is currently connected. Some settings may not take effect until you reconnect." />
 		</Grid>
-		<Grid Margin="0,35,0,0" MaxHeight="180" VerticalAlignment="Top">
-			<TabControl>
+		<Grid Margin="0,35,0,0" Height="190" VerticalAlignment="Top">
+			<TabControl TabStripPlacement="Left">
 				<TabItem Header="General">
-					<StackPanel Margin="3,3,0,0">
-						<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Information" VerticalAlignment="Top"/>
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition />
-							</Grid.ColumnDefinitions>
-							<TextBlock Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
-							<TextBox Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
-						</Grid>
-						<Grid Height="5" />
-						<TextBlock Text="Auto Execute Commands" ToolTip="{StaticResource AutoExecuteTooltip}" />
-						<TextBox x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
+					<StackPanel Margin="3,3,0,0" Height="190">
+						<GroupBox Header="Connection Details" Padding="0,3,0,0">
+							<GroupItem>
+								<StackPanel>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition />
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition Width="Auto" />
+										</Grid.ColumnDefinitions>
+										<TextBlock Grid.Column="0" Text="Host" VerticalAlignment="Center" Margin="2,0,7,0" />
+										<TextBox Grid.Column="1" TabIndex="1" Name="Hostname" />
+										<TextBlock Grid.Column="2" Text="Port" VerticalAlignment="Center" Margin="7,0,7,0" />
+										<TextBox Grid.Column="3" Width="40" Text="6667" TextAlignment="Center" MaxLength="5" MaxLines="1" TabIndex="2" Name="Port" />
+									</Grid>
+									<CheckBox Content="Use secure connection (SSL)" Margin="5,0,0,0" />
+								</StackPanel>
+							</GroupItem>
+						</GroupBox>
+						<GroupBox Header="Information" Padding="0,3,0,0">
+							<GroupItem>
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition />
+									</Grid.ColumnDefinitions>
+									<Grid.RowDefinitions>
+										<RowDefinition />
+										<RowDefinition />
+									</Grid.RowDefinitions>
+									<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Username:" FontSize="11"/>
+									<TextBox Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
+									<TextBlock Grid.Row="1" Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
+									<TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
+								</Grid>
+							</GroupItem>
+						</GroupBox>
+						<TextBlock Margin="5,0,0,0" Text="Auto Execute Commands" ToolTip="{StaticResource AutoExecuteTooltip}" />
+						<TextBox Margin="10,0,0,0" x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
 					</StackPanel>
 				</TabItem>
 				<TabItem Header="Operators">
 					<StackPanel>
-						<GroupBox Header="Global Notices">
+						<GroupBox Header="Global Notices" Padding="0,3,0,0">
 							<GroupItem>
 								<StackPanel>
-									<CheckBox Content="Show global notices in a separate window" />
-									<TextBlock Text="Filter: " />
+									<CheckBox Content="Show in a separate window" />
+									<Grid Margin="0,5,0,0">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" />
+											<ColumnDefinition />
+										</Grid.ColumnDefinitions>
+										<TextBlock Grid.Column="0" Text="Filter: " />
+										<TextBox Grid.Column="1">
+											<TextBox.ToolTip>
+												<ToolTip>
+													<StackPanel>
+														<TextBlock Text="Specify a filter in RegEx format that will hide any notice from the server that does not match the expression." />
+														<TextBlock Text="Example:" FontWeight="Bold" />
+														<TextBlock>
+															<TextBlock.Inlines>
+																<Run FontStyle="Italic">\[secure [a-zA-z-0-9]*\]$</Run>
+																<Run>- Only match clients connecting using SSL.</Run>
+															</TextBlock.Inlines>
+														</TextBlock>
+													</StackPanel>
+												</ToolTip>
+											</TextBox.ToolTip>
+										</TextBox>
+									</Grid>
 								</StackPanel>
 							</GroupItem>
 						</GroupBox>

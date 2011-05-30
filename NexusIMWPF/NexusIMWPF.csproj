@@ -132,7 +132,7 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
-    <Compile Include="Misc\BrokenProtocol.cs" />
+    <Compile Include="Protocol\BrokenProtocol.cs" />
     <Compile Include="Configuration\CEConnectionPool.cs" />
     <Compile Include="ChatHistory.cs">
       <DependentUpon>ChatHistory.dbml</DependentUpon>
@@ -217,7 +217,7 @@
     </Compile>
     <Compile Include="Misc\SocketTraceListener.cs" />
     <Compile Include="Configuration\SQLCESettings.cs" />
-    <Compile Include="Misc\TestProtocol.cs" />
+    <Compile Include="Protocol\TestProtocol.cs" />
     <Compile Include="UserProfile.cs">
       <DependentUpon>UserProfile.dbml</DependentUpon>
     </Compile>
