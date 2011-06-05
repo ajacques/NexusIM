@@ -46,10 +46,12 @@ namespace NexusIM.Windows
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
 			Reconcile("autoexecute", AutoExecuteBox.Text);
-			
+
+			mExtraData.Protocol.Server = Hostname.Text;
+
+
 			this.Close();
 		}
-
 		private void Reconcile(string key, string value)
 		{
 			IDictionary<string, string> configTable = mExtraData.Protocol.ConfigurationSettings;

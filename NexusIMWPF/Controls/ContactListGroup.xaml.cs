@@ -79,7 +79,7 @@ namespace NexusIM.Controls
 					item.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
 					ContactList.Children.Add(item);
 				}
-			}));	
+			}));
 		}
 
 		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)

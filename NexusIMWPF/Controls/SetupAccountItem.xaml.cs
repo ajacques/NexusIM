@@ -154,6 +154,7 @@ namespace NexusIM.Controls
 		{
 			if (mProtocolType == typeof(IRCProtocol))
 			{
+				ApplyChanges();
 				IRCSettingWindow window = new IRCSettingWindow();
 				window.PopulateUIControls(mProtocol);
 				window.Show();

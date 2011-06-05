@@ -132,6 +132,7 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
+    <Compile Include="Controls\HostValidationTextbox.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />
     <Compile Include="Configuration\CEConnectionPool.cs" />
     <Compile Include="ChatHistory.cs">

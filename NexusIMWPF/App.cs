@@ -13,7 +13,8 @@ using NexusIM.Windows;
 namespace NexusIMWPF
 {
 	/// <summary>
-	/// Interaction logic for App.xaml
+	/// The entry point for NexusIM
+	/// Initializes all required managers and classes
 	/// </summary>
 	public partial class App : Application, IDisposable
 	{
@@ -113,6 +114,7 @@ namespace NexusIMWPF
 			Trace.WriteLineIf(Debugger.IsAttached, "Debugger is attached");
 			Trace.WriteLineIf(!Debugger.IsAttached, "No debugger attached");
 
+			// Load the configuration file
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserProfile.sdf");
 			Trace.WriteLine("Configuration File: " + configuri);
 
