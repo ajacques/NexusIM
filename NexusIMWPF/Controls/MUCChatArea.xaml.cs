@@ -6,6 +6,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using InstantMessage.Events;
 using InstantMessage.Protocols;
+using NexusIM.Protocol;
+using InstantMessage;
 
 namespace NexusIM.Controls
 {
@@ -19,9 +21,10 @@ namespace NexusIM.Controls
 			InitializeComponent();
 		}
 
-		public void PopulateUIControls(object context)
+		public void PopulateUIControls(IChatRoom room, IMProtocol protocol)
 		{
-			mChatRoom = (IChatRoom)context;
+			mChatRoom = room;
+			mProtocol = protocol;
 
 			mChatRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(mChatRoom_OnMessageReceived);
 		}
@@ -53,6 +56,8 @@ namespace NexusIM.Controls
 				MessageBody.Text = String.Empty;
 
 				mChatRoom.SendMessage(message);
+
+				ProcessChatMessage(new IMMessageEventArgs(new SelfContact(mProtocol), message));
 			}
 		}
 		private void mChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
@@ -61,5 +66,15 @@ namespace NexusIM.Controls
 		}
 
 		private IChatRoom mChatRoom;
+		private IMProtocol mProtocol;
+
+		#region ITabbedArea Members
+
+		public void PopulateUIControls(object context)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 	}
 }

@@ -489,17 +489,18 @@ namespace InstantMessage.Protocols.Irc
 					IRCChannel channel = new IRCChannel(name, this);
 					mChannels.Add(channel);
 
-					if (OnForceJoinChannel != null)
-						OnForceJoinChannel(this, new IMChatRoomEventArgs() { ChatRoom = channel });
+					if (OnJoinChannel != null)
+						OnJoinChannel(this, new IMChatRoomEventArgs() { ChatRoom = channel });
 				} else{
 					IRCChannel channel = mChannels.First(chan => chan.Name == name);
 
 					if (channel.Joined)
 						return;
 					channel.Joined = true;
-				}
 
-				
+					if (OnJoinChannel != null)
+						OnJoinChannel(this, new IMChatRoomEventArgs() { ChatRoom = channel });
+				}				
 			}
 
 		}
@@ -695,7 +696,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 
 		// Events
-		public event EventHandler<IMChatRoomEventArgs> OnForceJoinChannel;
+		public event EventHandler<IMChatRoomEventArgs> OnJoinChannel;
 		public event EventHandler<ChatRoomJoinFailedEventArgs> OnChannelJoinFailed;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 

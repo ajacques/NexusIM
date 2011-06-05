@@ -92,7 +92,7 @@ namespace NexusIM.Managers
 							extraData.Protocol.LoginCompleted += new EventHandler(IrcProtocol_LoginCompleted);
 
 							IRCProtocol protocol = (IRCProtocol)extraData.Protocol;
-							protocol.OnForceJoinChannel += new EventHandler<IMChatRoomEventArgs>(IrcProtocol_OnForceJoinChannel);
+							protocol.OnJoinChannel += new EventHandler<IMChatRoomEventArgs>(IrcProtocol_OnJoinChannel);
 						}
 
 						ConnectIfNeeded(extraData);
@@ -177,7 +177,7 @@ namespace NexusIM.Managers
 					protocol.SendRawMessage(sb.ToString());
 			}
 		}
-		private static void IrcProtocol_OnForceJoinChannel(object sender, IMChatRoomEventArgs e)
+		private static void IrcProtocol_OnJoinChannel(object sender, IMChatRoomEventArgs e)
 		{
 			
 		}

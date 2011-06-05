@@ -47,10 +47,10 @@ namespace NexusIM.Controls
 			Content = mArea = area;
 			mListenString = "DisplayName";
 		}
-		public ChatAreaHost(IChatRoom context) : this()
+		public ChatAreaHost(IChatRoom context, IMProtocol protocol) : this()
 		{
 			MUCChatArea area = new MUCChatArea();
-			area.PopulateUIControls(context);
+			area.PopulateUIControls(context, protocol);
 
 			Content = mArea = area;
 			mListenString = "Name";

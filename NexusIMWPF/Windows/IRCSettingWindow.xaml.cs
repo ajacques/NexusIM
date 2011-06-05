@@ -33,7 +33,10 @@ namespace NexusIM.Windows
 				AutoExecuteBox.Text = autoexecute;
 
 				if (mExtraData.Enabled)
+				{
 					ConnectedWarning.Visibility = Visibility.Visible;
+					ContainerGrid.Margin = new Thickness(0, 65, 0, 0);
+				}
 
 				Hostname.Text = protocol.Server;
 				Port.Text = protocol.Port.ToString();

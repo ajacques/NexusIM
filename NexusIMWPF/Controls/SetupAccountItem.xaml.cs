@@ -20,6 +20,7 @@ namespace NexusIM.Controls
 			this.InitializeComponent();
 
 			EnabledCheckBox.Checked += new RoutedEventHandler(EnabledCheckBox_Checked);
+			EnabledCheckBox.Unchecked += new RoutedEventHandler(EnabledCheckBox_Checked);
 			PasswordBox.PasswordChanged += new RoutedEventHandler(PasswordBox_PasswordChanged);
 			ServerBox.TextChanged += new TextChangedEventHandler(ServerBox_TextChanged);
 			ServerBox.LostFocus += new RoutedEventHandler(ServerBox_LostFocus);

@@ -11,7 +11,11 @@
 			<RowDefinition />
 			<RowDefinition Height="50"/>
 		</Grid.RowDefinitions>
-		<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+		<Grid HorizontalAlignment="Left">
 			<Rectangle Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<RichTextBox x:Name="ChatHistoryContainer" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" MaxHeight="397" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
 				<FlowDocument>
@@ -20,7 +24,16 @@
 				</FlowDocument>
 			</RichTextBox>
 		</Grid>
-		<Grid Grid.Row="2">
+		<Grid Grid.Column="1" Width="100">
+			<StackPanel>
+				<TextBlock>Private_Harlock</TextBlock>
+				<TextBlock>Penguizzle</TextBlock>
+				<TextBlock>Arcaaadia</TextBlock>
+				<TextBlock>Bart_Crazy</TextBlock>
+				<TextBlock>Inspector_Wizard</TextBlock>
+			</StackPanel>
+		</Grid>
+		<Grid Grid.Row="2" Grid.ColumnSpan="2">
 			<Grid.Background>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 					<GradientStop Offset="0"/>

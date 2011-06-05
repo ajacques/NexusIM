@@ -210,6 +210,7 @@
     <Compile Include="Misc\MiscFuncs.cs" />
     <Compile Include="Misc\ProtocolErrorBackoff.cs" />
     <Compile Include="Protocol\GroupOfContacts.cs" />
+    <Compile Include="Protocol\SelfContact.cs" />
     <Compile Include="Service References\NexusCore\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

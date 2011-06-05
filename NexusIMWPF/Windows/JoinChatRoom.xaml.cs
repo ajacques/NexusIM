@@ -27,7 +27,7 @@ namespace NexusIM.Windows
 			IChatRoom chatRoom = muc.JoinChatRoom(RoomName.Text);
 
 			ChatWindow window = new ChatWindow();
-			window.AttachAreaAndShow(new ChatAreaHost(chatRoom));
+			window.AttachAreaAndShow(new ChatAreaHost(chatRoom, extraData.Protocol));
 			window.Show();
 			this.Close();
 		}
