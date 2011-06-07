@@ -165,6 +165,12 @@ namespace NexusIM.Windows
 
 			mActiveDialog = window;
 		}
+		private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+		{
+			AboutWindow about = new AboutWindow();
+			about.Owner = this;
+			about.Show();
+		}
 
 		protected override void OnInitialized(EventArgs e)
 		{

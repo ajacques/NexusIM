@@ -146,13 +146,13 @@ namespace NexusIMWPF
 		[Conditional("DEBUG")]
 		private static void SetupTraceListeners()
 		{
-			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
-			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
-
 			try	{
 				Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate | FileMode.Truncate, FileAccess.Write);
 				Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
 			} catch (IOException) { }
+
+			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
+			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
 		}
 
 		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

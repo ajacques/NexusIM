@@ -19,12 +19,12 @@
 				<GradientStop/>
 			</LinearGradientBrush>
 		</Grid.Background>
-		<ScrollViewer Margin="23,28,52,99" VerticalScrollBarVisibility="Auto">
+		<ScrollViewer Margin="20,20,25,45" VerticalScrollBarVisibility="Auto" Padding="0,0,20,0">
 			<StackPanel x:Name="AccountsListBox" VerticalAlignment="Top">
 			</StackPanel>
 		</ScrollViewer>
 		<Button Content="Accept" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="AcceptButton_Click" />
-		<ComboBox Margin="0,0,53,73" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" SelectedIndex="0" SelectionChanged="AddAccount_Select">
+		<ComboBox Margin="0,0,89,8" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" SelectedIndex="0" SelectionChanged="AddAccount_Select">
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="SelectionChanged">
 					<ei:ChangePropertyAction TargetObject="{Binding Self}" PropertyName="SelectedIndex" Value="0" />

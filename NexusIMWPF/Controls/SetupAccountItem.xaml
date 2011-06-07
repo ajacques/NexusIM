@@ -6,7 +6,8 @@
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	xmlns:imc="clr-namespace:InstantMessage;assembly=Common"
 	xmlns:nx="clr-namespace:NexusIM"
-	xmlns:nxc="clr-namespace:NexusIM.Converters" 
+	xmlns:nxc="clr-namespace:NexusIM.Converters"
+	xmlns:nxcc="clr-namespace:NexusIM.Controls"
 	x:Name="UserControl"
 	mc:Ignorable="d"
 	x:FieldModifier="private"
@@ -43,12 +44,12 @@
 		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap">
 			<Run Foreground="#FF007474" x:Name="MainAccountUsername"></Run> - <Run x:Name="MainAccountTypeLabel"></Run>
 		</TextBlock>
-		<Grid x:Name="BehindGrid" Opacity="0">
+		<Grid x:Name="BehindGrid" Opacity="0" Visibility="Collapsed">
 			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Width="120" />
 			<TextBlock VerticalAlignment="Top" Margin="194,8,0,0" HorizontalAlignment="Left" />
 			<Grid x:Name="ServerGrid" Margin="194,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
 				<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="@" />
-				<TextBox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" Width="100" />
+				<nxcc:HostValidationTextbox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" Width="100" />
 				<TextBlock x:Name="ServerBoxHint" Foreground="#FF787878" Text="Server" Margin="48,0,33,0" VerticalAlignment="Center" IsHitTestVisible="False" />
 			</Grid>
 			<PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,31,0,0" Width="120" />

@@ -9,7 +9,8 @@
 	Title="NexusIM" Height="700" Width="300" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
 	Icon="/NexusIMWPF;component/Resources/nexusim.ico">
 	<Grid>
-		<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="32,23,0,0" HorizontalAlignment="Left" Width="100" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
+		<Image Width="36" Height="36" Margin="12,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+		<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="56,23,0,0" HorizontalAlignment="Left" Width="100" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
 			<Grid>
 				<nxc:StatusOrb HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" />
 				<!--Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" /-->
@@ -28,9 +29,9 @@
 				<ListBoxItem Content="Invisible" Margin="18,0,0,0" Foreground="Black" />
 			</Grid>
 		</ComboBox>
-		<Rectangle Stroke="#FF6A6A6A" Margin="0,56,0,0" RadiusX="3" RadiusY="3" />
-		<TextBox Margin="8,58,8,0" TextWrapping="Wrap" Text="Search for a contact..." VerticalAlignment="Top" Height="20" FontSize="11"/>
-		<ScrollViewer Margin="0,82,0,0" VerticalScrollBarVisibility="Auto">
+		<!-- Box around the contact list -->
+		<Rectangle Stroke="#FF6A6A6A" Margin="0,70,0,0" RadiusX="3" RadiusY="3" />
+		<ScrollViewer Margin="0,70,0,0" VerticalScrollBarVisibility="Auto">
 			<StackPanel x:Name="ContactListControl" />
 		</ScrollViewer>
 		<Grid x:Name="NoEnabledAccountsWarning" Width="200" Height="120" Visibility="Collapsed">
@@ -64,9 +65,22 @@
 					<GradientStop Color="White" Offset="1"/>
 				</LinearGradientBrush>
 			</Menu.Background>
+			<MenuItem Header="Messenger">
+				<MenuItem Header="My Availability">
+					<MenuItem Header="Available" />
+					<MenuItem Header="Busy" />
+					<MenuItem Header="Invisible" />
+				</MenuItem>
+				<MenuItem Header="Silent Mode" IsCheckable="True" />
+				<Line />
+				<MenuItem Header="Exit" />
+			</MenuItem>
 			<MenuItem Header="Tools">
 				<MenuItem Header="Join a Chat Room" Click="JoinRoom_Click" />
 				<MenuItem Header="My Accounts" Click="EditAccounts_Click" />
+			</MenuItem>
+			<MenuItem Header="Help">
+				<MenuItem Header="About" Click="AboutMenuItem_Click" />
 			</MenuItem>
 		</Menu>
 	</Grid>
