@@ -6,73 +6,132 @@
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	xmlns:converters="clr-namespace:NexusIM.Converters"
 	x:Class="NexusIM.Windows.ContactListWindow"
-	Title="NexusIM" Height="700" Width="300" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
+	Title="NexusIM" Height="500" Width="250" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
 	Icon="/NexusIMWPF;component/Resources/nexusim.ico">
+	<Window.Resources>
+		<Storyboard x:Key="ShareMessageOpen">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="StatusMessageGrid">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="StatusMessageGrid" From="0" To="100" Duration="0:0:0.2" />
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="TopBlock" From="100" To="0" Duration="0:0:0.2" />
+		</Storyboard>
+		<Storyboard x:Key="ShareMessageClose">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="StatusMessageGrid">
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Collapsed}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="StatusMessageGrid" From="100" To="0" Duration="0:0:0.2" />
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="TopBlock" From="0" To="100" Duration="0:0:0.2" />
+		</Storyboard>
+	</Window.Resources>
 	<Grid>
-		<Image Width="36" Height="36" Margin="12,24,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-		<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="56,23,0,0" HorizontalAlignment="Left" Width="100" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
-			<Grid>
-				<nxc:StatusOrb HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" />
-				<!--Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" /-->
-				<ListBoxItem Content="Available" Margin="18,0,0,0" Foreground="Black" />
+		<StackPanel Margin="0,20,0,0" Height="Auto">
+			<Grid x:Name="StatusMessageGrid" Visibility="Collapsed" Height="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+				<Grid.Background>
+					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#FFDCD9D9" Offset="0" />
+						<GradientStop Color="White" Offset="0.91" />
+						<GradientStop Color="#FFCACACA" Offset="1"/>
+					</LinearGradientBrush>
+				</Grid.Background>
+				<TextBlock FontWeight="Bold" Margin="10,6,0,0" Text="Apply for:" />
+				<ComboBox Margin="87,4,0,0" SelectedIndex="0" HorizontalAlignment="Left" Width="130">
+					<ComboBoxItem Content="All Accounts" />
+					<Separator />
+					<ComboBoxItem>
+						<CheckBox Content="penguinnavy - Yahoo" />
+					</ComboBoxItem>
+				</ComboBox>
+				<TextBox Grid.Row="1" Height="50" />
+				<TextBlock Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5,0,5" Foreground="#FF935656">
+					<Hyperlink TextDecorations="None" Foreground="#FF5E5EFF">Cancel</Hyperlink>
+				</TextBlock>
+				<Button Grid.Row="2" Content="Set Status" HorizontalAlignment="Right" Padding="5,2,5,02" />
 			</Grid>
-			<Grid>
-				<Image Source="/NexusIMWPF;component/Resources/away_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Away" Margin="18,0,0,0" Foreground="Black" />
+			<Grid x:Name="TopBlock">
+				<Grid.Background>
+					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#FFDCD9D9" Offset="0" />
+						<GradientStop Color="White" Offset="1" />
+					</LinearGradientBrush>
+				</Grid.Background>
+				<Image Width="36" Height="36" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+				<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="56,6,0,0" HorizontalAlignment="Left" Width="95" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
+					<Grid>
+						<nxc:StatusOrb HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" />
+						<!--Image Source="/NexusIMWPF;component/Resources/available_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" /-->
+						<ListBoxItem Content="Available" Margin="18,0,0,0" Foreground="Black" />
+					</Grid>
+					<Grid>
+						<Image Source="/NexusIMWPF;component/Resources/away_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
+						<ListBoxItem Content="Away" Margin="18,0,0,0" Foreground="Black" />
+					</Grid>
+					<Grid>
+						<Image Source="/NexusIMWPF;component/Resources/busy_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
+						<ListBoxItem Content="Busy" Margin="18,0,0,0" Foreground="Black" />
+					</Grid>
+					<Grid>
+						<Image Source="/NexusIMWPF;component/Resources/invisible_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
+						<ListBoxItem Content="Invisible" Margin="18,0,0,0" Foreground="Black" />
+					</Grid>
+				</ComboBox>
+				<TextBlock VerticalAlignment="Top" Margin="65,30,0,0" HorizontalAlignment="Left">
+					<Hyperlink TextDecorations="None" Click="SetStatusMessage_Click">Share a message</Hyperlink>
+				</TextBlock>
 			</Grid>
-			<Grid>
-				<Image Source="/NexusIMWPF;component/Resources/busy_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Busy" Margin="18,0,0,0" Foreground="Black" />
-			</Grid>
-			<Grid>
-				<Image Source="/NexusIMWPF;component/Resources/invisible_icon.ico" Width="16" Height="16" HorizontalAlignment="Left" />
-				<ListBoxItem Content="Invisible" Margin="18,0,0,0" Foreground="Black" />
-			</Grid>
-		</ComboBox>
-		<!-- Box around the contact list -->
-		<Rectangle Stroke="#FF6A6A6A" Margin="0,70,0,0" RadiusX="3" RadiusY="3" />
-		<ScrollViewer Margin="0,70,0,0" VerticalScrollBarVisibility="Auto">
-			<StackPanel x:Name="ContactListControl" />
-		</ScrollViewer>
-		<Grid x:Name="NoEnabledAccountsWarning" Width="200" Height="120" Visibility="Collapsed">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="50" />
-				<RowDefinition />
-			</Grid.RowDefinitions>
-			<Rectangle Fill="#FFDADADA" RadiusX="4" RadiusY="4" Grid.RowSpan="2" />
-			<TextBlock TextWrapping="Wrap" Margin="2" Grid.Row="0">
+			<Grid Height="Auto" Margin="0,0,0,0">
+				<!-- Box around the contact list -->
+				<!-- Rectangle Stroke="#FF6A6A6A" RadiusX="3" RadiusY="3" Height="Auto" /-->
+				<ScrollViewer VerticalScrollBarVisibility="Auto">
+					<StackPanel x:Name="ContactListControl" />
+				</ScrollViewer>
+				<Grid x:Name="NoEnabledAccountsWarning" Width="200" Height="120" Visibility="Collapsed">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="50" />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<Rectangle Fill="#FFDADADA" RadiusX="4" RadiusY="4" Grid.RowSpan="2" />
+					<TextBlock TextWrapping="Wrap" Margin="2" Grid.Row="0">
 				<Run>You currently have no enabled accounts.</Run>
 				<LineBreak />
 				<Hyperlink TextDecorations="None" Click="EditAccounts_Click">Edit your accounts</Hyperlink>
-			</TextBlock>
-			<StackPanel Grid.Row="1">
-				<Grid>
-					<Grid.DataContext>
-						<im:IMProtocol Username="penguinnavy" />
-					</Grid.DataContext>
-					<TextBlock><Run Text="{Binding Username}" /><Run Text=" - " /><Hyperlink TextDecorations="None"><Run Text="Enable" /></Hyperlink></TextBlock>
+					</TextBlock>
+					<StackPanel Grid.Row="1">
+						<Grid>
+							<Grid.DataContext>
+								<im:IMProtocol Username="penguinnavy" />
+							</Grid.DataContext>
+							<TextBlock><Run Text="{Binding Username}" /><Run Text=" - " /><Hyperlink TextDecorations="None"><Run Text="Enable" /></Hyperlink></TextBlock>
+						</Grid>
+					</StackPanel>
 				</Grid>
-			</StackPanel>
-		</Grid>
-		<Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="Collapsed">
-			<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Margin="0,0,0,-3" Stroke="#FFFFA12E" />
-		</Grid>
+			</Grid>
+			<Grid Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="Collapsed">
+				<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Margin="0,0,0,-3" Stroke="#FFFFA12E" />
+			</Grid>
+		</StackPanel>
+		<!-- Menu Bar-->
 		<Menu VerticalAlignment="Top">
 			<Menu.Background>
 				<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
 					<GradientStop Color="#FFF6F6F6" Offset="0.25"/>
 					<GradientStop Color="#FFDCD9D9" Offset="0.8"/>
-					<GradientStop Color="White" Offset="1"/>
+					<!--GradientStop Color="White" Offset="1"/-->
 				</LinearGradientBrush>
 			</Menu.Background>
 			<MenuItem Header="Messenger">
-				<MenuItem Header="My Availability">
+				<!--MenuItem Header="My Availability">
 					<MenuItem Header="Available" />
 					<MenuItem Header="Busy" />
 					<MenuItem Header="Invisible" />
-				</MenuItem>
+				</MenuItem-->
 				<MenuItem Header="Silent Mode" IsCheckable="True" />
-				<Line />
+				<Separator />
 				<MenuItem Header="Exit" />
 			</MenuItem>
 			<MenuItem Header="Tools">

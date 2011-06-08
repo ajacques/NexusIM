@@ -11,6 +11,7 @@ using System.Windows.Media;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Windows
 {
@@ -170,6 +171,12 @@ namespace NexusIM.Windows
 			AboutWindow about = new AboutWindow();
 			about.Owner = this;
 			about.Show();
+		}
+		private void SetStatusMessage_Click(object sender, RoutedEventArgs e)
+		{
+			Storyboard story = FindResource("ShareMessageOpen") as Storyboard;
+
+			story.Begin();
 		}
 
 		protected override void OnInitialized(EventArgs e)
