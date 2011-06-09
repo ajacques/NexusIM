@@ -10,14 +10,18 @@
 	x:Name="Window"
 	Width="250" Height="70" IsHitTestVisible="False" IsTabStop="False" UseLayoutRounding="True">
 	<Grid x:Name="LayoutRoot">
+		<TextBlock HorizontalAlignment="Center">
+			<Run FontSize="25">NexusIM</Run>
+			<Run FontSize="12" Foreground="#FF7C7C7C">v0.1</Run>
+		</TextBlock>
 		<TextBlock Text="Online" Foreground="Green" HorizontalAlignment="Right" Height="15" VerticalAlignment="Bottom" Margin="0,0,3,3" />
 		<nx:StatusOrb HorizontalAlignment="Left" Width="12" Height="12" Margin="6,0,0,5" VerticalAlignment="Bottom" />
 		<TextBlock HorizontalAlignment="Left" Margin="20,0,0,4" TextWrapping="Wrap" Text="Available" VerticalAlignment="Bottom" />
 	</Grid>
 	<UserControl.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FFCACACA" Offset="0" />
-			<GradientStop Color="#FF8F8F8F" Offset="1" />
+			<GradientStop Color="White" Offset="0" />
+			<GradientStop Color="#FFEBEBEB" Offset="1" />
 		</LinearGradientBrush>
 	</UserControl.Background>
 </UserControl>
