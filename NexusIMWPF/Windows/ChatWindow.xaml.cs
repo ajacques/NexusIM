@@ -6,7 +6,8 @@ using NexusIM.Controls;
 namespace NexusIM.Windows
 {
 	/// <summary>
-	/// Interaction logic for ChatWindow.xaml
+	/// A container window that hosts the actual areas (ContactChatArea, etc).
+	/// Can use tabs, or the tabs can be hidden.
 	/// </summary>
 	public partial class ChatWindow : Window
 	{
@@ -39,6 +40,11 @@ namespace NexusIM.Windows
 
 			if (ChatAreas.Items.Count == 0)
 				this.Close();
+		}
+
+		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+
 		}
 
 		public IEnumerable<ITabbedArea> TabAreas

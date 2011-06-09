@@ -215,10 +215,13 @@ namespace NexusIM.Controls
 			MessageBody.Focus();
 		}
 
-		private IContact Contact
+		public IContact Contact
 		{
 			get {
 				return contact;
+			}
+			set {
+				DataContext = contact = value;
 			}
 		}
 

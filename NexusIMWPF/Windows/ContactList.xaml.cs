@@ -178,6 +178,12 @@ namespace NexusIM.Windows
 
 			story.Begin();
 		}
+		private void CancelStatusMessage_Click(object sender, RoutedEventArgs e)
+		{
+			Storyboard story = FindResource("ShareMessageClose") as Storyboard;
+
+			story.Begin();
+		}
 
 		protected override void OnInitialized(EventArgs e)
 		{

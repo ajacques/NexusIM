@@ -16,6 +16,7 @@ namespace NexusIM.Controls
 			mHeaderString = new TextBlock();
 			mHeaderString.HorizontalAlignment = HorizontalAlignment.Left;
 			mHeaderString.VerticalAlignment = VerticalAlignment.Center;
+			mHeaderString.Padding = new Thickness(0, 0, 10, 0);
 
 			Button closeButton = new Button();
 			closeButton.Content = new TextBlock() { Text = "x", VerticalAlignment = VerticalAlignment.Center, TextAlignment = TextAlignment.Center };
@@ -23,7 +24,7 @@ namespace NexusIM.Controls
 			closeButton.VerticalAlignment = VerticalAlignment.Center;
 			closeButton.Height = 14;
 			closeButton.Padding = new Thickness(0);
-			closeButton.Margin = new Thickness(0, 0, -8, 0);
+			closeButton.Margin = new Thickness(0, 0, -4, 0);
 			closeButton.Click += new RoutedEventHandler(CloseButton_Click);
 			
 			StackPanel closeButtontt = new StackPanel();
@@ -38,6 +39,12 @@ namespace NexusIM.Controls
 		public ChatAreaHost(ITabbedArea area) : this()
 		{
 			Content = mArea = area;
+
+			if (mArea is ContactChatArea)
+			{
+				ContactChatArea chatArea = (ContactChatArea)mArea;
+				mHeaderString.Text = chatArea.Contact.Username;
+			}
 		}
 		public ChatAreaHost(IContact context) : this()
 		{

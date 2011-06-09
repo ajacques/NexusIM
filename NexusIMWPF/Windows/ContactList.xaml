@@ -14,14 +14,14 @@
 				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
 			</ObjectAnimationUsingKeyFrames>
 			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="StatusMessageGrid" From="0" To="100" Duration="0:0:0.2" />
-			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="TopBlock" From="100" To="0" Duration="0:0:0.2" />
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="TopBlock" From="46" To="0" Duration="0:0:0.2" />
 		</Storyboard>
 		<Storyboard x:Key="ShareMessageClose">
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="StatusMessageGrid">
-				<DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Collapsed}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Collapsed}"/>
 			</ObjectAnimationUsingKeyFrames>
-			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="StatusMessageGrid" From="100" To="0" Duration="0:0:0.2" />
-			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="TopBlock" From="0" To="100" Duration="0:0:0.2" />
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="StatusMessageGrid" From="100" To="0" Duration="0:0:0.1" />
+			<DoubleAnimation Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="TopBlock" From="0" To="46" Duration="0:0:0.1" />
 		</Storyboard>
 	</Window.Resources>
 	<Grid>
@@ -49,7 +49,7 @@
 				</ComboBox>
 				<TextBox Grid.Row="1" Height="50" />
 				<TextBlock Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5,0,5" Foreground="#FF935656">
-					<Hyperlink TextDecorations="None" Foreground="#FF5E5EFF">Cancel</Hyperlink>
+					<Hyperlink TextDecorations="None" Foreground="#FF5E5EFF" Click="CancelStatusMessage_Click">Cancel</Hyperlink>
 				</TextBlock>
 				<Button Grid.Row="2" Content="Set Status" HorizontalAlignment="Right" Padding="5,2,5,02" />
 			</Grid>

@@ -101,6 +101,27 @@ namespace NexusIM.Managers
 			else
 				target();
 		}
+		public static void PlaceInCorrectWindowPool(IMProtocol protocol, string poolObjectId, ITabbedArea area)
+		{
+			int? poolId = IMSettings.ChatAreaPool.GetPool(protocol, poolObjectId);
+
+			ChatWindow window = null;
+			if (poolId.HasValue) // If it has an assigned pool
+			{
+				if (ChatWindows.TryGetValue(poolId.Value, out window)) // If the required window is already open
+				{
+					window.AttachAreaAndShow(new ChatAreaHost(area));
+				} else {
+					window = new ChatWindow();
+					window.AttachAreaAndShow(new ChatAreaHost(area));
+					ChatWindows.Add(poolId.Value, window);
+				}
+			} else {
+				window = new ChatWindow();
+				window.AttachAreaAndShow(new ChatAreaHost(area));
+			}
+			window.Show();
+		}
 
 		// Event Handlers
 		private static void ContactListWindow_Closed(object sender, EventArgs e)
@@ -144,6 +165,9 @@ namespace NexusIM.Managers
 			get;
 			private set;
 		}
+		/// <summary>
+		/// Contains any other windows that the WindowSystem might have to handle.
+		/// </summary>
 		public static List<Window> OtherWindows
 		{
 			get;

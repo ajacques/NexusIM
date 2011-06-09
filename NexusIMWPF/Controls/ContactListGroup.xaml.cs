@@ -90,7 +90,9 @@ namespace NexusIM.Controls
 			ContactListItem item = sender as ContactListItem;
 			IMBuddy contact = item.DataContext as IMBuddy;
 
-			WindowSystem.OpenContactWindow(contact);
+			ContactChatArea area = new ContactChatArea();
+			area.Contact = contact;
+			WindowSystem.PlaceInCorrectWindowPool(contact.Protocol, contact.Username, area);
 		}
 
 		private void Contacts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

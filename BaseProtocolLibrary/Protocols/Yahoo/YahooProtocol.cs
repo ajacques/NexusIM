@@ -837,7 +837,7 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			logincookies.Clear(); // Just in-case this is the second time we are signing in
 
-			Dns.BeginGetHostEntry("vcs.msg.yahoo.com", new AsyncCallback(OnCapacityHostResolve), null); // BeginGetResponse actually uses a non-async Dns resolve method causing un-necessary delays
+			Dns.BeginGetHostEntry("vcs1.msg.yahoo.com", new AsyncCallback(OnCapacityHostResolve), null); // BeginGetResponse actually uses a non-async Dns resolve method causing un-necessary delays
 		}
 		private void OnCapacityHostResolve(IAsyncResult r)
 		{
