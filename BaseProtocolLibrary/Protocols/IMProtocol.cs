@@ -111,7 +111,10 @@ namespace InstantMessage
 		/// <summary>
 		/// Disconnects from the server
 		/// </summary>
-		public virtual void Disconnect() {}
+		public virtual void Disconnect()
+		{
+			triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.User));
+		}
 		/// <summary>
 		/// Adds a person to the user's contact list
 		/// </summary>

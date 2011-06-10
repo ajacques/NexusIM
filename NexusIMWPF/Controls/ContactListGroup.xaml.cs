@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
 using NexusIM.Managers;
+using System.Threading;
 
 namespace NexusIM.Controls
 {
@@ -90,9 +91,9 @@ namespace NexusIM.Controls
 			ContactListItem item = sender as ContactListItem;
 			IMBuddy contact = item.DataContext as IMBuddy;
 
-			ContactChatArea area = new ContactChatArea();
-			area.Contact = contact;
-			WindowSystem.PlaceInCorrectWindowPool(contact.Protocol, contact.Username, area);
+			ThreadPool.QueueUserWorkItem((state) => {
+				WindowSystem.OpenContactWindow(contact, true);
+			});
 		}
 
 		private void Contacts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

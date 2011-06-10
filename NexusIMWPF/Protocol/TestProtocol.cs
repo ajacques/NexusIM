@@ -26,6 +26,8 @@ namespace NexusIM
 
 		public override void Disconnect()
 		{
+			base.Disconnect();
+
 			ContactList.Clear();
 		}
 

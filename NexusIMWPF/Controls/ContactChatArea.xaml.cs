@@ -185,6 +185,8 @@ namespace NexusIM.Controls
 					LinkPreviewPopup.Placement = PlacementMode.MousePoint;
 					LinkPreviewPopup.IsOpen = true;
 				}
+
+				mLinkLinkPopup = true;
 			} else {
 				ToolTip tip = new ToolTip();
 				StackPanel panel = new StackPanel();
@@ -196,23 +198,55 @@ namespace NexusIM.Controls
 		}
 		private void IMHyperlink_MouseLeave(object sender, MouseEventArgs e)
 		{
-			Storyboard fadeOut = new Storyboard();
-			DoubleAnimation anim1 = new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(1)));
-			anim1.EasingFunction = new QuinticEase();
-			anim1.SetValue(Storyboard.TargetProperty, LinkPreviewPopup.Child);
-			anim1.SetValue(Storyboard.TargetPropertyProperty, new PropertyPath(FrameworkElement.OpacityProperty));
-			fadeOut.Children.Add(anim1);
+			if (mLinkLinkPopup)
+			{
+				Storyboard fadeOut = new Storyboard();
+				DoubleAnimation anim1 = new DoubleAnimation(0, new Duration(TimeSpan.FromSeconds(1)));
+				anim1.EasingFunction = new QuinticEase();
+				anim1.SetValue(Storyboard.TargetProperty, LinkPreviewPopup.Child);
+				anim1.SetValue(Storyboard.TargetPropertyProperty, new PropertyPath(FrameworkElement.OpacityProperty));
+				fadeOut.Children.Add(anim1);
 
-			EventHandler onComplete = null;
-			onComplete = new EventHandler((send, args) => {
-				fadeOut.Completed -= onComplete;
-			});
-			fadeOut.Completed += onComplete;
-			fadeOut.Begin();
+				EventHandler onComplete = null;
+				onComplete = new EventHandler((send, args) => {
+					fadeOut.Completed -= onComplete;
+				});
+				fadeOut.Completed += onComplete;
+				fadeOut.Begin();
+				mLinkLinkPopup = false;
+			}			
 		}
 		private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
 		{
 			MessageBody.Focus();
+		}
+
+		// Protocol Events
+		private void Protocol_OnDisconnect(object sender, IMDisconnectEventArgs e)
+		{
+			Dispatcher.BeginInvoke(new GenericEvent(() => {
+				Run description = new Run();
+				description.Text = "Account Disconnected ";
+
+				Hyperlink reconnect = new Hyperlink();
+				reconnect.Inlines.Add(new Run("Reconnect"));
+				reconnect.Cursor = Cursors.Hand;
+				reconnect.MouseLeftButtonDown += new MouseButtonEventHandler(Protocol_DoReconnect);
+
+				ChatHistoryBox.Inlines.Add(description);
+				ChatHistoryBox.Inlines.Add(reconnect);
+			}));
+		}
+		private void Protocol_DoReconnect(object sender, MouseButtonEventArgs e)
+		{
+			Contact.Protocol.BeginLogin();
+			ChatHistoryBox.Inlines.Remove(ChatHistoryBox.Inlines.LastInline);
+
+			ChatHistoryBox.Inlines.Add(new Run("- Reconnecting... Please wait"));
+		}
+		private void Protocol_LoginCompleted(object sender, EventArgs e)
+		{
+			
 		}
 
 		public IContact Contact
@@ -222,10 +256,13 @@ namespace NexusIM.Controls
 			}
 			set {
 				DataContext = contact = value;
+				contact.Protocol.onDisconnect += new EventHandler<IMDisconnectEventArgs>(Protocol_OnDisconnect);
+				contact.Protocol.LoginCompleted += new EventHandler(Protocol_LoginCompleted);
 			}
 		}
-
+		
 		private Regex mYoutubeLinkMatch = new Regex(@"^/watch\?v=([a-zA-Z0-9_-]*)");		
 		private IContact contact;
+		private bool mLinkLinkPopup;
 	}
 }

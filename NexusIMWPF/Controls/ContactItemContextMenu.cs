@@ -20,7 +20,13 @@ namespace NexusIM.Controls
 			SendIMItem = new MenuItem();
 			SendIMItem.Header = "Instant Message...";
 			SendIMItem.FontWeight = FontWeight.FromOpenTypeWeight(700);
+			SendIMItem.Click += new RoutedEventHandler(SendIMItem_Click);
 			base.Items.Add(SendIMItem);
+		}
+
+		private void SendIMItem_Click(object sender, RoutedEventArgs e)
+		{
+			
 		}
 
 		public MenuItem SendIMItem

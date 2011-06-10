@@ -18,8 +18,10 @@ namespace NexusIM
 			mWriter = new StringWriter();
 		}
 
-		public void Dispose()
+		public new void Dispose()
 		{
+			base.Dispose();
+
 			Trace.Listeners.Remove(this);
 			if (mWriter != null)
 				mWriter.Close();

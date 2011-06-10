@@ -21,12 +21,18 @@ namespace NexusIM.Controls
 			InitializeComponent();
 		}
 
-		public void PopulateUIControls(IChatRoom room, IMProtocol protocol)
+		internal void PopulateUIControls(IChatRoom room, IMProtocol protocol, ContactChatAreaHost host)
 		{
 			mChatRoom = room;
 			mProtocol = protocol;
 
 			mChatRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(mChatRoom_OnMessageReceived);
+			host.TabClosed += new EventHandler(Host_TabClosed);
+		}
+
+		private void Host_TabClosed(object sender, EventArgs e)
+		{
+			ChatRoom.Leave(String.Empty);
 		}
 
 		public void ProcessChatMessage(IMMessageEventArgs e)
@@ -63,6 +69,13 @@ namespace NexusIM.Controls
 		private void mChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
 		{
 			ProcessChatMessage(e);
+		}
+
+		public IChatRoom ChatRoom
+		{
+			get	{
+				return mChatRoom;
+			}
 		}
 
 		private IChatRoom mChatRoom;

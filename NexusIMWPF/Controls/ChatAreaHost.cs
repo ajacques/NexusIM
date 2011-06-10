@@ -8,75 +8,46 @@ using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {
-	class ChatAreaHost : TabItem
+	class ContactChatAreaHost : TabItem
 	{
-		private ChatAreaHost()
+		private ContactChatAreaHost()
 		{
-			Grid a = new Grid();
-			mHeaderString = new TextBlock();
-			mHeaderString.HorizontalAlignment = HorizontalAlignment.Left;
-			mHeaderString.VerticalAlignment = VerticalAlignment.Center;
-			mHeaderString.Padding = new Thickness(0, 0, 10, 0);
+			Grid headerGrid = new Grid();
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(18) });
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(16) });
 
-			Button closeButton = new Button();
-			closeButton.Content = new TextBlock() { Text = "x", VerticalAlignment = VerticalAlignment.Center, TextAlignment = TextAlignment.Center };
-			closeButton.HorizontalAlignment = HorizontalAlignment.Right;
-			closeButton.VerticalAlignment = VerticalAlignment.Center;
-			closeButton.Height = 14;
-			closeButton.Padding = new Thickness(0);
-			closeButton.Margin = new Thickness(0, 0, -4, 0);
-			closeButton.Click += new RoutedEventHandler(CloseButton_Click);
+			mHeaderString = new TextBlock();
+			mHeaderString.Padding = new Thickness(2, 0, 5, 0);
+			Grid.SetColumn(mHeaderString, 1);
+
+			TextBlock closeButton = new TextBlock();
+			closeButton.Text = "×";
+			closeButton.HorizontalAlignment = HorizontalAlignment.Right;			
+			Grid.SetColumn(closeButton, 2);
 			
 			StackPanel closeButtontt = new StackPanel();
 			closeButtontt.Children.Add(new TextBlock() { Text = "Close Tab", FontWeight = FontWeight.FromOpenTypeWeight(700)});
 			closeButton.ToolTip = closeButtontt;
 
-			a.Children.Add(mHeaderString);
-			a.Children.Add(closeButton);
+			headerGrid.Children.Add(mHeaderString);
+			headerGrid.Children.Add(closeButton);
 
-			Header = a;
-		}
-		public ChatAreaHost(ITabbedArea area) : this()
-		{
-			Content = mArea = area;
+			Header = headerGrid;
 
-			if (mArea is ContactChatArea)
-			{
-				ContactChatArea chatArea = (ContactChatArea)mArea;
-				mHeaderString.Text = chatArea.Contact.Username;
-			}
+			ResourceDictionary dict = new ResourceDictionary();
+			dict.Source = new Uri("/NexusIMWPF;component/Windows/ChatWindowResources.xaml", UriKind.RelativeOrAbsolute);
+			Style = (Style)dict["CustomTabItem"];
 		}
-		public ChatAreaHost(IContact context) : this()
+		public ContactChatAreaHost(IContact context) : this()
 		{
 			ContactChatArea area = new ContactChatArea();
-			area.PopulateUIControls(context);
+			area.Contact = context;
+			mHeaderString.Text = area.Contact.Username;
 
 			Content = mArea = area;
-			mListenString = "DisplayName";
-		}
-		public ChatAreaHost(IChatRoom context, IMProtocol protocol) : this()
-		{
-			MUCChatArea area = new MUCChatArea();
-			area.PopulateUIControls(context, protocol);
-
-			Content = mArea = area;
-			mListenString = "Name";
 		}
 
-		public PropertyChangedEventHandler GetHeaderChangeSink(string listenString, Func<string> nameSelector)
-		{
-			mListenString = listenString;
-			mNameSelector = nameSelector;
-			return new PropertyChangedEventHandler(listenSource_PropertyChanged);
-		}
-
-		private void listenSource_PropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == mListenString)
-			{
-				mHeaderString.Text = mNameSelector();
-			}
-		}
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
@@ -87,7 +58,7 @@ namespace NexusIM.Controls
 
 		public event EventHandler TabClosed;
 
-		public ITabbedArea HostedArea
+		public ContactChatArea HostedArea
 		{
 			get	{
 				return mArea;
@@ -105,8 +76,6 @@ namespace NexusIM.Controls
 
 		private ChatWindow mWindow;
 		private TextBlock mHeaderString;
-		private ITabbedArea mArea;
-		private string mListenString;
-		private Func<string> mNameSelector;
+		private ContactChatArea mArea;
 	}
 }

@@ -25,11 +25,6 @@ namespace NexusIM.Windows
 
 			IHasMUCRooms muc = (IHasMUCRooms)extraData.Protocol;
 			IChatRoom chatRoom = muc.JoinChatRoom(RoomName.Text);
-
-			ChatWindow window = new ChatWindow();
-			window.AttachAreaAndShow(new ChatAreaHost(chatRoom, extraData.Protocol));
-			window.Show();
-			this.Close();
 		}
 
 		private void RoomName_KeyUp(object sender, KeyEventArgs e)

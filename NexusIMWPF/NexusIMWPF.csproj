@@ -92,12 +92,10 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\..\wpf-notifyicon\NotifyIconWpf\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
-    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Expression.Controls" />
     <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Effects" />
     <Reference Include="Microsoft.Expression.Interactions" />
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -107,6 +105,7 @@
     <Reference Include="Microsoft.WindowsAPICodePack.Shell">
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -128,11 +127,13 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aero.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
+    <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />
     <Compile Include="Configuration\CEConnectionPool.cs" />
     <Compile Include="ChatHistory.cs">
@@ -196,16 +197,12 @@
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
     <Compile Include="Managers\Application\IPCHandler.cs" />
-    <Compile Include="Managers\Application\IPYHost.cs" />
     <Compile Include="Managers\Application\RestartManager.cs" />
-    <Compile Include="Managers\ChatWindowCollection.cs" />
     <Compile Include="Managers\IMMessageProcessor.cs" />
     <Compile Include="Managers\MessageLogger.cs" />
     <Compile Include="Managers\User Interface\NotificationQueue.cs" />
     <Compile Include="Managers\Protocol\NexusCoreManager.cs" />
     <Compile Include="Managers\StopwatchManager.cs" />
-    <Compile Include="Managers\User Interface\SensorManager.cs" />
-    <Compile Include="Managers\User Interface\SpeechManager.cs" />
     <Compile Include="Managers\User Interface\SuperTaskbarManager.cs" />
     <Compile Include="Managers\User Interface\WindowSystem.cs" />
     <Compile Include="Misc\MiscFuncs.cs" />
@@ -416,6 +413,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Windows\ChatWindowResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Windows\ContactList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -520,6 +521,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Images\cataduck.jpg" />
+    <Resource Include="Resources\default_profile_pic.png" />
     <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

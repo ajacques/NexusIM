@@ -21,11 +21,10 @@ namespace NexusIM.Windows
 
 		public void AttachAreaAndShow(TabItem tabPage)
 		{
-			if (tabPage is ChatAreaHost)
+			if (tabPage is ContactChatAreaHost)
 			{
-				ChatAreaHost host = (ChatAreaHost)tabPage;
-				lock (mTabAreaSyncObject)
-					mTabAreas.Add(host.HostedArea);
+				ContactChatAreaHost host = (ContactChatAreaHost)tabPage;
+				
 				host.HostWindow = this;
 			}
 			Dispatcher.BeginInvoke(new GenericEvent(() =>
@@ -44,7 +43,7 @@ namespace NexusIM.Windows
 
 		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-
+			
 		}
 
 		public IEnumerable<ITabbedArea> TabAreas
@@ -53,6 +52,11 @@ namespace NexusIM.Windows
 				lock (mTabAreaSyncObject)
 					return mTabAreas;
 			}
+		}
+
+		protected override void OnClosed(System.EventArgs e)
+		{
+			base.OnClosed(e);
 		}
 
 		private List<ITabbedArea> mTabAreas;

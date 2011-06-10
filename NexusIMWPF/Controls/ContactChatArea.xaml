@@ -55,8 +55,7 @@
 			<Grid Grid.Column="1" Margin="0,50,0,0">
 				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" FontFamily="Calibri">
 					<FlowDocument>
-						<Paragraph x:Name="ChatHistoryBox">
-						</Paragraph>
+						<Paragraph x:Name="ChatHistoryBox" />
 					</FlowDocument>
 				</RichTextBox>
 			</Grid>

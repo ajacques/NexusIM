@@ -151,8 +151,8 @@ namespace NexusIMWPF
 				Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
 			} catch (IOException) { }
 
-			Trace.Listeners.Add(new SocketTraceListener("5.64.115.83", 6536));
-			Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
+			Trace.Listeners.Add(new SocketTraceListener("pub.nexus-im.com", 6536));
+			//Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
 		}
 
 		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

@@ -45,35 +45,6 @@ namespace NexusIM
 			QUNS_QUIET_TIME = 6
 		}
 
-		public enum DWM_BB
-		{
-			Enable = 1,
-			BlurRegion = 2,
-			TransitionMaximized = 4
-		}
-		[StructLayout(LayoutKind.Sequential)]
-		public struct DWM_BLURBEHIND
-		{
-			public DWM_BB dwFlags;
-			public bool fEnable;
-			public IntPtr hRgnBlur;
-			public bool fTransitionOnMaximized;
-		}
-		[StructLayout(LayoutKind.Sequential)]
-		public struct MARGINS
-		{
-			public int leftWidth;
-			public int rightWidth;
-			public int topHeight;
-			public int bottomHeight;
-		}
-		[DllImport("dwmapi.dll")]
-		public static extern void DwmEnableBlurBehindWindow(IntPtr hwnd, ref DWM_BLURBEHIND blurBehind);
-		[DllImport("dwmapi.dll")]
-		public static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
-		[DllImport("dwmapi.dll", PreserveSig = false)]
-		public static extern bool DwmIsCompositionEnabled();
-
 		public static int WM_DISPLAYCHANGE = 0x007E;
 		public static int WM_POWERBROADCAST = 0x0218;
 		public static int WM_SIZING = 0x0214;

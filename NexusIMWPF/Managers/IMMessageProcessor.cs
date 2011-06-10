@@ -75,20 +75,7 @@ namespace NexusIM.Managers
 
 		private static void IMProtocol_OnMessageReceived(object sender, IMMessageEventArgs e)
 		{
-			ContactChatArea area;
-			bool showNotification = false;
-			if (!WindowSystem.ContactChatAreas.TryGetValue(e.Sender, out area))
-			{
-				area = WindowSystem.OpenContactWindow(e.Sender, false);
-				showNotification = true;
-			}
 			
-			area.ProcessChatMessage(e);
-
-			if (false && showNotification)
-			{
-				ThreadPool.QueueUserWorkItem(new WaitCallback((object s) => NotificationQueue.EnqueueChatMessageArea(e.Sender, e.Message)), null);
-			}
 		}
 	}
 }
