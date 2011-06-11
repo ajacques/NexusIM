@@ -21,6 +21,10 @@ namespace ProtocolTests
 		{
 			get { throw new NotImplementedException(); }
 		}
+		public IMProtocol Protocol
+		{
+			get { throw new NotImplementedException(); }
+		}
 		public IEnumerable<string> Participants
 		{
 			get { throw new NotImplementedException(); }

@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
 using NexusIM.Managers;
-using System.Threading;
 
 namespace NexusIM.Controls
 {
@@ -20,6 +21,8 @@ namespace NexusIM.Controls
 		public ContactListGroup()
 		{
 			this.InitializeComponent();
+
+			this.MouseDoubleClick += new MouseButtonEventHandler(ContactListGroup_MouseDoubleClick);
 		}
 
 		public GroupOfContacts SourceGroup
@@ -49,6 +52,8 @@ namespace NexusIM.Controls
 					animStory.Begin();
 
 					mIsExpanded = value;
+
+					ContactList.Height = mIsExpanded ? Double.NaN : 0;
 
 					NotifyPropertyChanged("IsExpanded");
 				}
@@ -105,6 +110,11 @@ namespace NexusIM.Controls
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+		private void ContactListGroup_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			IsExpanded = !IsExpanded;
+		}
+
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);

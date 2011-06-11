@@ -3,6 +3,7 @@ using System.Windows.Input;
 using InstantMessage;
 using InstantMessage.Protocols;
 using NexusIM.Controls;
+using NexusIM.Managers;
 
 namespace NexusIM.Windows
 {
@@ -25,6 +26,8 @@ namespace NexusIM.Windows
 
 			IHasMUCRooms muc = (IHasMUCRooms)extraData.Protocol;
 			IChatRoom chatRoom = muc.JoinChatRoom(RoomName.Text);
+
+			WindowSystem.OpenGroupChatWindow(chatRoom);
 		}
 
 		private void RoomName_KeyUp(object sender, KeyEventArgs e)

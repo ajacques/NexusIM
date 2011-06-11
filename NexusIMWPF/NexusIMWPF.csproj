@@ -132,6 +132,7 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
+    <Compile Include="Controls\GroupChatAreaHost.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />

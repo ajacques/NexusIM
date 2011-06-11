@@ -6,8 +6,14 @@ using InstantMessage.Events;
 
 namespace InstantMessage.Protocols
 {
+	/// <summary>
+	/// Represents a system that allows multiple people to chat.
+	/// </summary>
 	public interface IChatRoom : IMessagable
 	{
+		/// <summary>
+		/// Gets the name of chat room
+		/// </summary>
 		string Name
 		{
 			get;
@@ -17,6 +23,10 @@ namespace InstantMessage.Protocols
 			get;
 		}
 		IEnumerable<string> Participants
+		{
+			get;
+		}
+		IMProtocol Protocol
 		{
 			get;
 		}

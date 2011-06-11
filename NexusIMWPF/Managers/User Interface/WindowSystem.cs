@@ -9,6 +9,7 @@ using NexusIM.Controls;
 using NexusIM.Misc;
 using NexusIM.Windows;
 using NexusIMWPF;
+using InstantMessage.Protocols;
 
 namespace NexusIM.Managers
 {
@@ -46,7 +47,15 @@ namespace NexusIM.Managers
 			if (getFocus && !tuple.Item1.IsVisible)
 				DispatcherInvoke(() => tuple.Item1.Show());
 			else if (!tuple.Item1.IsVisible)
-				tuple.Item1.Show();
+				DispatcherInvoke(() => tuple.Item1.Show());
+		}
+		public static void OpenGroupChatWindow(IChatRoom chatRoom)
+		{
+			Func<TabItem> generator = () => { return new GroupChatAreaHost(chatRoom); };
+			Tuple<ChatWindow, TabItem> tuple = PlaceInCorrectWindowPool(chatRoom.Protocol, chatRoom.Name, generator);
+
+			if (!tuple.Item1.IsVisible)
+				DispatcherInvoke(() => tuple.Item1.Show());
 		}
 		public static void ShowSysTrayIcon()
 		{
@@ -76,6 +85,13 @@ namespace NexusIM.Managers
 			} else
 				target();
 		}
+		/// <summary>
+		/// Places a TabItem in the correct window pool or returns the window if it's already open.
+		/// </summary>
+		/// <param name="protocol">Specifies which window pool to search.</param>
+		/// <param name="poolObjectId">Specifies the object id that defines which window pool the TabItem goes in.</param>
+		/// <param name="mutator">Specifies a factory function that will return a newly created ChatArea (ex. ContactChatArea). Will be called if the ChatArea isn't already open.</param>
+		/// <returns>A tuple containing the ChatWindow and ChatArea.</returns>
 		public static Tuple<ChatWindow, TabItem> PlaceInCorrectWindowPool(IMProtocol protocol, string poolObjectId, Func<TabItem> mutator)
 		{
 			AreaSortPoolKey key = new AreaSortPoolKey(protocol, poolObjectId); // Used to sort the binary tree

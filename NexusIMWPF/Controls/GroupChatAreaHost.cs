@@ -8,9 +8,9 @@ using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {
-	class ContactChatAreaHost : TabItem
+	class GroupChatAreaHost : TabItem
 	{
-		private ContactChatAreaHost()
+		private GroupChatAreaHost()
 		{
 			Grid headerGrid = new Grid();
 			headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(18) });
@@ -45,11 +45,9 @@ namespace NexusIM.Controls
 			dict.Source = new Uri("/NexusIMWPF;component/Windows/ChatWindowResources.xaml", UriKind.RelativeOrAbsolute);
 			Style = (Style)dict["CustomTabItem"];
 		}
-		public ContactChatAreaHost(IContact context) : this()
+		public GroupChatAreaHost(IChatRoom context) : this()
 		{
-			ContactChatArea area = new ContactChatArea();
-			area.Contact = context;
-			mHeaderString.Text = area.Contact.Username;
+			MUCChatArea area = new MUCChatArea();
 
 			Content = mArea = area;
 		}
@@ -64,7 +62,7 @@ namespace NexusIM.Controls
 
 		public event EventHandler TabClosed;
 
-		public ContactChatArea HostedArea
+		public MUCChatArea HostedArea
 		{
 			get	{
 				return mArea;
@@ -82,6 +80,6 @@ namespace NexusIM.Controls
 
 		private ChatWindow mWindow;
 		private TextBlock mHeaderString;
-		private ContactChatArea mArea;
+		private MUCChatArea mArea;
 	}
 }

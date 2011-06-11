@@ -39,6 +39,6 @@
 			</Path.RenderTransform>
 		</Path>
 		<TextBlock Grid.Row="0" Margin="15,0,0,0" TextWrapping="Wrap" Text="{Binding GroupName}" VerticalAlignment="Center" HorizontalAlignment="Left" />
-		<StackPanel x:Name="ContactList" Grid.Row="1" />
+		<StackPanel x:Name="ContactList" Grid.Row="1" Height="Auto" />
 	</Grid>
 </UserControl>

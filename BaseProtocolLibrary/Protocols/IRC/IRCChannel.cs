@@ -148,6 +148,12 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			private set;
 		}
+		public IMProtocol Protocol
+		{
+			get {
+				return mProtocol;
+			}
+		}
 
 		// Events
 		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
