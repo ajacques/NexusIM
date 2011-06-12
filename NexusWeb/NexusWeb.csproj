@@ -134,6 +134,7 @@
     <Content Include="clientaccesspolicy.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="ClientBin\SilverlightContactMap.xap" />
     <Content Include="controls\FriendRequest.html" />
     <Content Include="js\crypto-sha256.js" />
     <Content Include="js\jquery-ui-1.8.custom.min.js" />
@@ -436,6 +437,7 @@
     <Content Include="css\location.css" />
     <Content Include="css\main.css" />
     <Content Include="demologin.aspx" />
+    <Content Include="ClientBin\System.Windows.Controls.zip" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

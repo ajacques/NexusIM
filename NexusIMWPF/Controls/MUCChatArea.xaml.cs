@@ -21,10 +21,10 @@ namespace NexusIM.Controls
 			InitializeComponent();
 		}
 
-		internal void PopulateUIControls(IChatRoom room, IMProtocol protocol, ContactChatAreaHost host)
+		internal void PopulateUIControls(IChatRoom room, GroupChatAreaHost host)
 		{
 			mChatRoom = room;
-			mProtocol = protocol;
+			mProtocol = room.Protocol;
 
 			mChatRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(mChatRoom_OnMessageReceived);
 			host.TabClosed += new EventHandler(Host_TabClosed);

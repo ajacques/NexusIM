@@ -39,6 +39,18 @@ namespace InstantMessage.Protocols.Yahoo
 			if (disposed)
 				throw new ObjectDisposedException("this");
 
+			if (String.IsNullOrEmpty(Username))
+			{
+				triggerOnError(new BadCredentialsEventArgs("Username cannot be empty"));
+				return;
+			}
+
+			if (!HasPassword())
+			{
+				triggerOnError(new BadCredentialsEventArgs("Password cannot be empty"));
+				return;
+			}
+
 			status = IMProtocolStatus.Connecting;
 			base.BeginLogin();
 			mLoginWaitHandle.Reset();
@@ -901,10 +913,12 @@ namespace InstantMessage.Protocols.Yahoo
 			authpkt.AddParameter(277, authtoken);
 			authpkt.AddParameter(278, authtoken2);
 			authpkt.AddParameter(307, generateAuthHash(crumb, challenge));
-			authpkt.AddParameter(244, "8388543"); // This *might* be a features list
+			authpkt.AddParameter(244, "16777151"); // Build number
 			authpkt.AddParameter(2, mUsername);
-			byte[] unknownbyte = new byte[] { 0x42, 0x09, 0x30, 0x6c, 0x37, 0x64, 0x61, 0x32, 0x74, 0x35, 0x34, 0x37, 0x63, 0x75, 0x32, 0x26, 0x62, 0x3d, 0x33, 0x26, 0x73, 0x3d, 0x38, 0x6e };
-			authpkt.AddParameter(59, dEncoding.GetString(unknownbyte, 0, unknownbyte.Length));
+
+			// This is an optional token that is include in the Set-Cookie header on certain HTTP responses.. Still trying to find it
+			//byte[] unknownbyte = new byte[] { 0x42, 0x09, 0x30, 0x6c, 0x37, 0x64, 0x61, 0x32, 0x74, 0x35, 0x34, 0x37, 0x63, 0x75, 0x32, 0x26, 0x62, 0x3d, 0x33, 0x26, 0x73, 0x3d, 0x38, 0x6e };
+			//authpkt.AddParameter(59, dEncoding.GetString(unknownbyte, 0, unknownbyte.Length));
 			authpkt.AddParameter(98, "us");
 			authpkt.AddParameter(135, "11.0.0.1751"); // Version Info
 
@@ -970,24 +984,34 @@ namespace InstantMessage.Protocols.Yahoo
 			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
 			Stream stream = response.GetResponseStream();
 			StreamReader reader = new StreamReader(stream);
-			string streamBuf = reader.ReadToEnd();
+
+			int status = Convert.ToInt32(reader.ReadLine());
+			
+			//string streamBuf = reader.ReadToEnd();
 			int validfor = 0;
 
 			// Parsing
-			int result = Convert.ToInt32(Regex.Match(streamBuf, @"^([0-9]*)").Groups[1].Value);
-			if (result == 0)
+			if (status == 0)
 			{
-				Match key = Regex.Match(streamBuf, @"(v=[^;]*)");
-				Match key2 = Regex.Match(streamBuf, @"(z=[^;]*)");
-				Match key3 = Regex.Match(streamBuf, @"crumb=([\S]*)");
-				authtoken = key.Groups[1].Value.ToString();
-				authtoken2 = key2.Groups[1].Value.ToString();
-				crumb = key3.Groups[1].Value.ToString();
-				Match valid = Regex.Match(streamBuf, "cookievalidfor=([0-9]*)");
-				validfor = Convert.ToInt32(valid.Groups[1].Value);
-			} else if (result == 100) {
-				beginAuthenticate();
-				return;
+				//      [          ]
+				// crumb=iavJ...Prm
+				crumb = reader.ReadLine().Substring(7);
+
+				//  [               ]
+				// Y=v=1&n=8...&np=1; path=/; domain=.yahoo.com
+				authtoken = reader.ReadLine();
+				authtoken = authtoken.Substring(2, authtoken.IndexOf(';') - 2);
+
+				//  [                   ]
+				// T=z=noQ9NB...cnA3Qg--; path=/; domain=.yahoo.com
+				authtoken2 = reader.ReadLine();
+				authtoken2 = authtoken2.Substring(2, authtoken2.IndexOf(';') - 2);
+				
+				//               [     ]
+				// cookievalidfor=86400
+				
+			} else if (status == 100) {
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "An unknown error occurred while requesting secondary login tokens. YMSG Error Code: " + status.ToString()));
 			}
 
 			mConfig["authtoken1"] = authtoken;

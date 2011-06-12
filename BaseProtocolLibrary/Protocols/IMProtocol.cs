@@ -160,6 +160,11 @@ namespace InstantMessage
 		/// <param name="uname">Who to send the notification to</param>
 		public virtual void BuzzFriend(string uname) {}
 
+		protected bool HasPassword()
+		{
+			return mPasswordEnc != null && !String.IsNullOrEmpty(mPassword);
+		}
+
 		public override string ToString()
 		{
 			if (mUsername != "")
@@ -234,6 +239,8 @@ namespace InstantMessage
 		public string Password
 		{
 			get {
+				return mPassword;
+
 				if (mPasswordEnc == null)
 					return null;
 
@@ -477,7 +484,7 @@ namespace InstantMessage
 		protected void triggerBadCredentialsError()
 		{
 			if (ErrorOccurred != null)
-				ErrorOccurred(this, new IMErrorEventArgs(IMProtocolErrorReason.INVALID_USERNAME, "Invalid login credentials"));
+				ErrorOccurred(this, new BadCredentialsEventArgs());
 
 			mLoginWaitHandle.Set();
 		}

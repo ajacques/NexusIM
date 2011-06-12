@@ -22,6 +22,7 @@ namespace NexusIM
 			mLoginWaitHandle.Set();
 
 			triggerOnLogin(null);
+			status = IMProtocolStatus.Online;
 		}
 
 		public override void Disconnect()

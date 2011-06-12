@@ -28,6 +28,8 @@ namespace NexusIM.Windows
 			IChatRoom chatRoom = muc.JoinChatRoom(RoomName.Text);
 
 			WindowSystem.OpenGroupChatWindow(chatRoom);
+
+			this.Close();
 		}
 
 		private void RoomName_KeyUp(object sender, KeyEventArgs e)

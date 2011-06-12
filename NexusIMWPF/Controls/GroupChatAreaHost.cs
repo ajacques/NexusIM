@@ -48,6 +48,7 @@ namespace NexusIM.Controls
 		public GroupChatAreaHost(IChatRoom context) : this()
 		{
 			MUCChatArea area = new MUCChatArea();
+			area.PopulateUIControls(context, this);
 
 			Content = mArea = area;
 		}

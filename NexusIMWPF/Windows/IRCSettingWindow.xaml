@@ -8,7 +8,7 @@
 	x:Name="Window"
 	Title="Account Settings"
 	Width="400" Height="300"
-	x:FieldModifier="private" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" ShowInTaskbar="False" UseLayoutRounding="True">
+	x:FieldModifier="private" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" UseLayoutRounding="True">
 	<Window.Resources>
 		<ToolTip x:Key="AutoExecuteTooltip">
 			<StackPanel>

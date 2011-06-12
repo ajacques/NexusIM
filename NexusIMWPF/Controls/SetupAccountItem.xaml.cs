@@ -157,7 +157,8 @@ namespace NexusIM.Controls
 				ApplyChanges();
 				IRCSettingWindow window = new IRCSettingWindow();
 				window.PopulateUIControls(mProtocol);
-				window.Show();
+				window.Owner = Window.GetWindow(this);
+				window.ShowDialog();
 			}
 		}
 

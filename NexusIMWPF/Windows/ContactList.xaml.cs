@@ -12,6 +12,8 @@ using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
 using System.Windows.Media.Animation;
+using System.Windows.Documents;
+using System.Linq;
 
 namespace NexusIM.Windows
 {
@@ -170,19 +172,59 @@ namespace NexusIM.Windows
 		{
 			AboutWindow about = new AboutWindow();
 			about.Owner = this;
-			about.Show();
+			about.ShowDialog();
 		}
+
+		// Status Message Related Event handlers
 		private void SetStatusMessage_Click(object sender, RoutedEventArgs e)
 		{
 			Storyboard story = FindResource("ShareMessageOpen") as Storyboard;
 
 			story.Begin();
+
+			for (int i = StatusTargetSelector.Items.Count - 1; i >= 3; i--)
+				StatusTargetSelector.Items.RemoveAt(i);
+
+			int count = 0;
+			foreach (IMProtocolWrapper protocol in AccountManager.Accounts/*.Where(a => a.Enabled && a.Protocol.ProtocolStatus == IMProtocolStatus.Online)*/)
+			{
+				CheckBox check = new CheckBox();
+				TextBlock label = new TextBlock();
+				
+				label.Inlines.Add(new Run(protocol.Protocol.Username));
+
+				check.Content = label;
+				check.IsChecked = true;
+				check.Checked += new RoutedEventHandler(ChangeStatusTargets_Click);
+				check.Unchecked += new RoutedEventHandler(ChangeStatusTargets_Click);
+
+				mStatusMsgAccountsYes = ++mStatusMsgMaxAccounts;
+
+				StatusTargetSelector.Items.Add(check);
+				StatusTargetSelector.Items.Add(new CheckBox() { Content = (++count).ToString() + " Account" + (count == 1 ? "" : "s"), Height = 0 });
+			}
 		}
 		private void CancelStatusMessage_Click(object sender, RoutedEventArgs e)
 		{
 			Storyboard story = FindResource("ShareMessageClose") as Storyboard;
 
 			story.Begin();
+		}
+		private void ChangeStatusTargets_Click(object sender, RoutedEventArgs e)
+		{
+			CheckBox source = (CheckBox)sender;
+
+			if (source.IsChecked.GetValueOrDefault())
+				mStatusMsgAccountsYes++;
+			else
+				mStatusMsgAccountsYes--;
+
+			if (mStatusMsgAccountsYes == mStatusMsgMaxAccounts)
+				StatusTargetSelector.Text = "All Accounts";
+			else if (mStatusMsgAccountsYes == 0)
+				StatusTargetSelector.Text = "No Accounts";
+			else
+				StatusTargetSelector.Text = mStatusMsgAccountsYes.ToString() + " Accounts";
 		}
 
 		protected override void OnInitialized(EventArgs e)
@@ -245,6 +287,8 @@ namespace NexusIM.Windows
 		}
 
 		// Variables
+		private int mStatusMsgMaxAccounts;
+		private int mStatusMsgAccountsYes;
 		private bool mIgnoreThisStatusChange = true; // Ignore the first change
 		private Window mActiveDialog;
 	}

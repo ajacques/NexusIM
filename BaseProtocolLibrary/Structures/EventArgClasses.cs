@@ -14,8 +14,7 @@ namespace InstantMessage.Events
 	public enum IMProtocolErrorReason
 	{
 		CONNERROR,
-		INVALID_USERNAME,
-		INVALID_PASSWORD,
+		Invalid_Credentials,
 		LIMIT_REACHED,
 		Unknown
 	}
@@ -44,6 +43,9 @@ namespace InstantMessage.Events
 			get	{
 				return mMessage;
 			}
+			protected set {
+				mMessage = value;
+			}
 		}
 		public bool IsUserError
 		{
@@ -67,10 +69,15 @@ namespace InstantMessage.Events
 
 	public class BadCredentialsEventArgs : IMErrorEventArgs
 	{
-		public BadCredentialsEventArgs() : base(IMProtocolErrorReason.INVALID_USERNAME)
+		public BadCredentialsEventArgs() : base(IMProtocolErrorReason.Invalid_Credentials)
 		{
 			base.IsUserCorrectable = true;
 			base.IsUserError = true;
+		}
+
+		public BadCredentialsEventArgs(string message) : this()
+		{
+			Message = message;
 		}
 	}
 

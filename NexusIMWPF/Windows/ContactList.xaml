@@ -40,12 +40,10 @@
 					</LinearGradientBrush>
 				</Grid.Background>
 				<TextBlock FontWeight="Bold" Margin="10,6,0,0" Text="Apply for:" />
-				<ComboBox Margin="87,4,0,0" SelectedIndex="0" HorizontalAlignment="Left" Width="130">
+				<ComboBox x:Name="StatusTargetSelector" Margin="87,4,0,0" SelectedIndex="0" HorizontalAlignment="Left" Width="130">
 					<ComboBoxItem Content="All Accounts" />
+					<ComboBoxItem Content="No Accounts" Height="0" />
 					<Separator />
-					<ComboBoxItem>
-						<CheckBox Content="penguinnavy - Yahoo" />
-					</ComboBoxItem>
 				</ComboBox>
 				<TextBox Grid.Row="1" Height="50" />
 				<TextBlock Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5,5,0,5" Foreground="#FF935656">
@@ -60,7 +58,7 @@
 						<GradientStop Color="White" Offset="1" />
 					</LinearGradientBrush>
 				</Grid.Background>
-				<Image Width="36" Height="36" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+				<Image Width="36" Height="36" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Source="/NexusIMWPF;component/Images/cataduck.jpg" />
 				<ComboBox x:Name="StatusComboBox" Height="23" VerticalAlignment="Top" Margin="56,6,0,0" HorizontalAlignment="Left" Width="95" SelectedIndex="0" SelectionChanged="StatusComboBox_SelectionChanged">
 					<Grid>
 						<nxc:StatusOrb HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,0,0" />
