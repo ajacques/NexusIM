@@ -12,6 +12,7 @@ namespace InstantMessage.Protocols.Irc
 			mChannelName = channelName;
 			mProtocol = protocol;
 			mInChannel = true;
+			mParticipants = new SortedSet<string>();
 
 			if (OnJoin != null)
 				OnJoin(this, null);
@@ -81,7 +82,9 @@ namespace InstantMessage.Protocols.Irc
 		}
 		internal void SetParticipants(IList<string> participants)
 		{
-			mParticipants = participants;
+			foreach (string participant in participants)
+				mParticipants.Add(participant);
+
 			if (OnUserListReceived != null)
 				OnUserListReceived(this, null);
 		}
@@ -166,7 +169,7 @@ namespace InstantMessage.Protocols.Irc
 
 		//Variables
 		private bool mInChannel;
-		private IList<string> mParticipants;
+		private SortedSet<string> mParticipants;
 		private IRCProtocol mProtocol;
 		private string mChannelName;
 	}

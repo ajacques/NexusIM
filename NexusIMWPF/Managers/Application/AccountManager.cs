@@ -220,11 +220,11 @@ namespace NexusIM.Managers
 		/// <summary>
 		/// Returns a list of protocols currently setup by the user
 		/// </summary>
-		public static ObservableCollection<IMProtocolWrapper> Accounts
+		public static ProtocolCollection Accounts
 		{
 			get {
 				if (accounts == null)
-					accounts = new ObservableCollection<IMProtocolWrapper>();
+					accounts = new ProtocolCollection();
 				return accounts;
 			}
 		}
@@ -295,7 +295,7 @@ namespace NexusIM.Managers
 		}
 
 		private static IMStatus mGeneralStatus = IMStatus.Available;
-		private static ObservableCollection<IMProtocolWrapper> accounts;
+		private static ProtocolCollection accounts;
 		private static bool mConnected;
 	}
 }

@@ -135,6 +135,7 @@
     <Compile Include="Controls\GroupChatAreaHost.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
+    <Compile Include="Misc\ProtocolCollection.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />
     <Compile Include="Configuration\CEConnectionPool.cs" />
     <Compile Include="ChatHistory.cs">

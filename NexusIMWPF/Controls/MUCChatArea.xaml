@@ -25,7 +25,7 @@
 			</RichTextBox>
 		</Grid>
 		<Grid Grid.Column="1" Width="100">
-			<StackPanel>
+			<StackPanel x:Name="OccupantList">
 				<TextBlock>Private_Harlock</TextBlock>
 				<TextBlock>Penguizzle</TextBlock>
 				<TextBlock>Arcaaadia</TextBlock>
