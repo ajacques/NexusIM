@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using InstantMessage;
 using InstantMessage.Protocols;
 using NexusIM.Windows;
 
@@ -56,12 +54,7 @@ namespace NexusIM.Controls
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
-
-			if (TabClosed != null)
-				TabClosed(this, null);
 		}
-
-		public event EventHandler TabClosed;
 
 		public MUCChatArea HostedArea
 		{

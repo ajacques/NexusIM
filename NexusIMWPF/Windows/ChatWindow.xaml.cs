@@ -54,11 +54,6 @@ namespace NexusIM.Windows
 			}
 		}
 
-		protected override void OnClosed(System.EventArgs e)
-		{
-			base.OnClosed(e);
-		}
-
 		private List<ITabbedArea> mTabAreas;
 		private object mTabAreaSyncObject;
 	}

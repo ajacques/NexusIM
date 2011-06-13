@@ -7,17 +7,29 @@
 	xmlns:nxmgr="clr-namespace:NexusIM.Managers"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Windows.SysTrayPeekWindow"
-	x:Name="Window"
+	x:Name="Window" x:FieldModifier="private"
 	Width="250" Height="70" IsHitTestVisible="False" IsTabStop="False" UseLayoutRounding="True" BorderBrush="Black" BorderThickness="1">
 	<Grid x:Name="LayoutRoot">
 		<TextBlock HorizontalAlignment="Center" VerticalAlignment="Top">
 			<Run FontSize="25">NexusIM</Run>
 			<Run FontSize="12" Foreground="#FF7C7C7C">v0.1</Run>
 		</TextBlock>
-		<TextBlock Text="Silent Mode" HorizontalAlignment="Center" Margin="0,0,0,4" VerticalAlignment="Bottom" FontSize="10.667" Foreground="#FFFF8000" />
-		<TextBlock Text="Online" Foreground="Green" HorizontalAlignment="Right" Height="15" VerticalAlignment="Bottom" Margin="0,0,3,3" />
-		<nx:StatusOrb HorizontalAlignment="Left" Width="12" Height="12" Margin="6,0,0,5" VerticalAlignment="Bottom" />
-		<TextBlock HorizontalAlignment="Left" Margin="20,0,0,4" TextWrapping="Wrap" Text="Available" VerticalAlignment="Bottom" />
+		<TextBlock x:Name="SilentModeAlert" Text="Silent Mode" HorizontalAlignment="Center" Margin="0,0,0,4" VerticalAlignment="Bottom" FontSize="10.667" Foreground="#FFFF8000" Visibility="Collapsed" />
+		<TextBlock x:Name="ConnStatus" Text="Online" HorizontalAlignment="Right" Height="15" VerticalAlignment="Bottom" Margin="0,0,3,3" />
+		<nx:StatusOrb x:Name="StatusOrb" HorizontalAlignment="Left" Width="12" Height="12" Margin="6,0,0,5" VerticalAlignment="Bottom" />
+		<TextBlock x:Name="StatusString" HorizontalAlignment="Left" Margin="20,0,0,4" TextWrapping="Wrap" Text="Available" VerticalAlignment="Bottom" />
+		<Grid Margin="5,5,0,0" Height="14" HorizontalAlignment="Left" VerticalAlignment="Top">
+			<StackPanel Orientation="Horizontal">
+				<Grid Width="11" Height="14" Margin="0,0,2,0">
+					<Rectangle Fill="#FF592C71" RadiusY="1" RadiusX="1" />
+					<TextBlock Margin="0,-1.5,0,0" Text="Y" FontSize="11" Foreground="White" HorizontalAlignment="Center" UseLayoutRounding="False" FontFamily="/NexusIMWPF;component/Resources/#Yahoo" />
+				</Grid>
+				<Grid Width="11">
+					<Rectangle Fill="#FF592C71" RadiusY="1" RadiusX="1" />
+					<TextBlock Margin="0,-1.5,0,0" Text="Y" FontSize="11" Foreground="White" HorizontalAlignment="Center" UseLayoutRounding="False" FontFamily="/NexusIMWPF;component/Resources/#Yahoo" />
+				</Grid>
+			</StackPanel>
+		</Grid>
 	</Grid>
 	<UserControl.Background>
 		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

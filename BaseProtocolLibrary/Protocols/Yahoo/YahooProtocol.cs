@@ -1009,7 +1009,9 @@ namespace InstantMessage.Protocols.Yahoo
 				
 				//               [     ]
 				// cookievalidfor=86400
-				
+				string validTime = reader.ReadLine();
+				validTime = validTime.Substring(15);
+				validfor = Convert.ToInt32(validTime);;
 			} else if (status == 100) {
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "An unknown error occurred while requesting secondary login tokens. YMSG Error Code: " + status.ToString()));
 			}
@@ -1027,32 +1029,35 @@ namespace InstantMessage.Protocols.Yahoo
 			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
 			Stream stream = response.GetResponseStream();
 			StreamReader reader = new StreamReader(stream);
-			string streamBuf = reader.ReadToEnd();
+
+			int status = Convert.ToInt32(reader.ReadLine());
 
 			// Parsing
-			int result = Convert.ToInt32(Regex.Match(streamBuf, @"^([0-9]*)").Groups[1].Value);
-			if (result == 0)
+			if (status == 0)
 			{
-				Match key = Regex.Match(streamBuf, @"ymsgr=([\S]*)");
-				token = key.Groups[1].Value.ToString();
-
+				token = reader.ReadLine();
+				token = token.Substring(6);
+				
 				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
 
 				mConfig.Add("token", token);
-			} else if (result == 1212) { // Invalid Credentials
+			} else if (status == 1212) { // Invalid Credentials
 				Trace.WriteLine("Yahoo: OnGetYToken got Invalid credentials Error. Handling");
 				triggerBadCredentialsError();
 				return;
-			} else if (result == 1213) { // Security lock from too many invalid logins
+			} else if (status == 1213) { // Security lock from too many invalid logins
 				triggerOnError(new AccountThrottledEventArgs() { RetryTime = TimeSpan.FromMinutes(1) });
 				//triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED, "Security Lock from too many invalid login attempts."));
 				return;
-			} else if (result == 1235) {
+			} else if (status == 1235) {
 				triggerOnError(new BadCredentialsEventArgs());
 				//triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.INVALID_USERNAME));
 				return;
-			} else if (result == 1236) {
+			} else if (status == 1236) {
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.LIMIT_REACHED));
+				return;
+			} else {
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "Unknown error occurred"));
 				return;
 			}
 

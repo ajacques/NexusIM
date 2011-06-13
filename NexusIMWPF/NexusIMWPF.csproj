@@ -492,6 +492,10 @@
     <Resource Include="Resources\text_bold.png" />
     <Resource Include="Resources\text_letter_omega.png" />
     <Resource Include="Resources\yahoo.png" />
+    <BlendEmbeddedFont Include="Resources\Yahoo.ttf">
+      <All>True</All>
+      <AutoFill>True</AutoFill>
+    </BlendEmbeddedFont>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">

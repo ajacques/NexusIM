@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NexusIM.Windows;
+using System.Linq;
 
 namespace NexusIM.Misc
 {
-	class ChatWindowCollection : Dictionary<int, ChatWindow>
+	class ChatWindowCollection : SortedDictionary<int, ChatWindow>, IEnumerable<KeyValuePair<int, ChatWindow>>
 	{
 		public ChatWindowCollection()
 		{
-			mUnboundWindows = new LinkedList<Tuple<int, ChatWindow>>();
+			mUnboundWindows = new LinkedList<KeyValuePair<int, ChatWindow>>();
 		}
 
 		public new void Add(int key, ChatWindow value)
@@ -18,9 +17,14 @@ namespace NexusIM.Misc
 			if (key >= 0)
 				base.Add(key, value);
 			else
-				mUnboundWindows.AddFirst(Tuple.Create(key, value));
+				mUnboundWindows.AddFirst(new KeyValuePair<int, ChatWindow>(key, value));
 		}
 
-		private LinkedList<Tuple<int, ChatWindow>> mUnboundWindows;
+		public new IEnumerator<KeyValuePair<int, ChatWindow>> GetEnumerator()
+		{
+			return Enumerable.Concat(this, mUnboundWindows).GetEnumerator();
+		}
+
+		private LinkedList<KeyValuePair<int, ChatWindow>> mUnboundWindows;
 	}
 }

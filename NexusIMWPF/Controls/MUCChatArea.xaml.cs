@@ -27,7 +27,6 @@ namespace NexusIM.Controls
 			mProtocol = room.Protocol;
 
 			mChatRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(mChatRoom_OnMessageReceived);
-			host.TabClosed += new EventHandler(Host_TabClosed);
 		}
 
 		private void Host_TabClosed(object sender, EventArgs e)
