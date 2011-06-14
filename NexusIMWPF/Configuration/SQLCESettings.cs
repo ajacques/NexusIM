@@ -487,7 +487,11 @@ namespace NexusIM
 								protocol = new IMYahooProtocol();
 								break;
 							case "irc":
-								protocol = new IRCProtocol();
+								IRCProtocol irc = new IRCProtocol();
+								irc.Nickname = current.AccountSettings.Where(ac => ac.Key == "nickname").Select(ac => ac.Value).FirstOrDefault();
+								irc.RealName = current.AccountSettings.Where(ac => ac.Key == "realname").Select(ac => ac.Value).FirstOrDefault();
+
+								protocol = irc;
 								break;
 							default:
 								protocol = IMProtocol.FromString(current.AccountType);
@@ -511,6 +515,12 @@ namespace NexusIM
 						protocol.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
 							current.Username = protocol.Username;
 							current.Password = protocol.Password;
+
+							if (e.PropertyName == "Nickname")
+								protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
+							else if (e.PropertyName == "RealName")
+								protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
+
 							mContext.SubmitChanges();
 						});
 						extraData.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {

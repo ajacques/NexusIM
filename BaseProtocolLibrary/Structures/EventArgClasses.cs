@@ -1,5 +1,6 @@
 ﻿using System;
 using InstantMessage.Protocols;
+using System.Net.Sockets;
 
 namespace InstantMessage.Events
 {
@@ -83,7 +84,7 @@ namespace InstantMessage.Events
 
 	public class AccountThrottledEventArgs : IMErrorEventArgs
 	{
-		public AccountThrottledEventArgs() : base (IMProtocolErrorReason.LIMIT_REACHED)
+		public AccountThrottledEventArgs() : base(IMProtocolErrorReason.LIMIT_REACHED)
 		{
 			
 		}
@@ -92,6 +93,19 @@ namespace InstantMessage.Events
 		{
 			get;
 			internal set;
+		}
+	}
+	public class SocketErrorEventArgs : IMErrorEventArgs
+	{
+		public SocketErrorEventArgs(SocketException exception) : base(IMProtocolErrorReason.CONNERROR)
+		{
+			Exception = exception;
+		}
+
+		public SocketException Exception
+		{
+			get;
+			private set;
 		}
 	}
 

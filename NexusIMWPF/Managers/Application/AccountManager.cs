@@ -102,26 +102,8 @@ namespace NexusIM.Managers
 		}
 		private static void ConnectIfNeeded(IMProtocolWrapper extraData)
 		{
-			bool connectAllowed = false;
-
 			if (!Connected)
 				return;
-
-			if (!String.IsNullOrEmpty(extraData.Protocol.Server))
-			{
-				ConnectivityStates status = NetworkListManager.Connectivity;
-				IPAddress tryTest;
-				if (IPAddress.TryParse(extraData.Protocol.Server, out tryTest))
-				{
-					if (tryTest.AddressFamily == AddressFamily.InterNetwork)
-					{
-						if (status.HasFlag(ConnectivityStates.IPv4Internet) || (status.HasFlag(ConnectivityStates.IPv4LocalNetwork) && tryTest.IsPrivateNetwork()))
-							connectAllowed = true;
-					}
-				} else { // Dns Record
-
-				}
-			}
 
 			if (Connected && IsConnectedToInternet())
 			{
@@ -179,7 +161,9 @@ namespace NexusIM.Managers
 		}
 		private static void IrcProtocol_OnJoinChannel(object sender, IMChatRoomEventArgs e)
 		{
+			IRCChannel channel = (IRCChannel)e.ChatRoom;
 			
+			WindowSystem.OpenGroupChatWindow(channel);
 		}
 
 		private static void IMProtocol_AnyErrorOccurred(object sender, IMErrorEventArgs e)
@@ -195,9 +179,29 @@ namespace NexusIM.Managers
 					UserCredentialsWindow window = new UserCredentialsWindow();
 					window.Show();
 				});
-			} else {
+			} else if (e is SocketErrorEventArgs) {
+				SocketErrorEventArgs socketErrors = (SocketErrorEventArgs)e;
+				SocketException exception = socketErrors.Exception;
 				
+				StringBuilder traceString = new StringBuilder();
+				traceString.AppendFormat("Error: Protocol {0} [{1}] reported a socket error. ", protocol.Username, protocol.Protocol);
+				traceString.Append(exception.SocketErrorCode);
+				traceString.AppendLine();
 
+				switch (exception.SocketErrorCode)
+				{
+					case SocketError.ConnectionRefused:
+						traceString.Append("Response: Alert User");
+
+						string errorMsg = String.Format("The account {0} has failed to connect to the server.\r\nThe server actively refused the connection.", protocol.ToString());
+
+						WindowSystem.SysTrayIcon.ShowBalloonTip("NexusIM Error", errorMsg, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+
+						break;
+				}
+
+				Trace.WriteLine(traceString);
+			} else {
 				if (wrapper.ErrorBackoff != null)
 					wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
 			}
@@ -214,7 +218,7 @@ namespace NexusIM.Managers
 
 		public static bool IsConnectedToInternet()
 		{
-			return NetworkListManager.IsConnectedToInternet;
+			return true; // NetworkListManager.IsConnectedToInternet;
 		}
 
 		/// <summary>

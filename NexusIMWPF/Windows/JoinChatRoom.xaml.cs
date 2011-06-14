@@ -25,9 +25,7 @@ namespace NexusIM.Windows
 			IMProtocolWrapper extraData = AccountSelector.SelectedProtocol;
 
 			IHasMUCRooms muc = (IHasMUCRooms)extraData.Protocol;
-			IChatRoom chatRoom = muc.JoinChatRoom(RoomName.Text);
-
-			WindowSystem.OpenGroupChatWindow(chatRoom);
+			muc.JoinChatRoom(RoomName.Text);
 
 			this.Close();
 		}

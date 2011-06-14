@@ -8,6 +8,7 @@ using InstantMessage.Events;
 using InstantMessage.Protocols;
 using NexusIM.Protocol;
 using InstantMessage;
+using System.Collections.Generic;
 
 namespace NexusIM.Controls
 {
@@ -27,6 +28,7 @@ namespace NexusIM.Controls
 			mProtocol = room.Protocol;
 
 			mChatRoom.OnMessageReceived += new EventHandler<IMMessageEventArgs>(mChatRoom_OnMessageReceived);
+			mChatRoom.OnUserListReceived += new EventHandler(mChatRoom_OnUserListReceived);
 		}
 
 		private void Host_TabClosed(object sender, EventArgs e)
@@ -51,6 +53,19 @@ namespace NexusIM.Controls
 			}));
 		}
 
+		private void ProcessUserList()
+		{
+			IEnumerator<string> partEnumer =mChatRoom.Participants.GetEnumerator();
+
+			Dispatcher.BeginInvoke(new GenericEvent(() => {
+				while (partEnumer.MoveNext())
+				{
+					OccupantList.Items.Add(partEnumer.Current);
+				}
+			}));
+		}
+
+		// User Interface Event Handlers
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Key == Key.Enter && Keyboard.IsKeyUp(Key.LeftCtrl) && Keyboard.IsKeyUp(Key.RightCtrl))
@@ -65,9 +80,15 @@ namespace NexusIM.Controls
 				ProcessChatMessage(new IMMessageEventArgs(new SelfContact(mProtocol), message));
 			}
 		}
+
+		// Chat Room Event Handlers
 		private void mChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
 		{
 			ProcessChatMessage(e);
+		}
+		private void mChatRoom_OnUserListReceived(object sender, EventArgs e)
+		{
+			ProcessUserList();
 		}
 
 		public IChatRoom ChatRoom

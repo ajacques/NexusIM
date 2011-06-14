@@ -134,6 +134,9 @@
     <Compile Include="Configuration\SettingsManager.cs" />
     <Compile Include="Controls\GroupChatAreaHost.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
+    <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
+      <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Misc\ProtocolCollection.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />
@@ -387,6 +390,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\SocketErrorTrayTip.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\StatusOrb.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -494,8 +501,13 @@
     <Resource Include="Resources\text_letter_omega.png" />
     <Resource Include="Resources\yahoo.png" />
     <BlendEmbeddedFont Include="Resources\Yahoo.ttf">
-      <All>True</All>
-      <AutoFill>True</AutoFill>
+      <All>False</All>
+      <AutoFill>False</AutoFill>
+      <Characters>Y</Characters>
+      <Uppercase>False</Uppercase>
+      <Lowercase>False</Lowercase>
+      <Numbers>False</Numbers>
+      <Punctuation>False</Punctuation>
     </BlendEmbeddedFont>
   </ItemGroup>
   <ItemGroup>

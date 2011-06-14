@@ -13,18 +13,18 @@
 		<c:IMBuddyStatusToSmallIconConverter x:Key="StatusConverter" />
 		<Storyboard x:Key="SelectAnimation">
 			<DoubleAnimation Storyboard.TargetName="UserControl" Storyboard.TargetProperty="(FrameworkElement.Height)" Duration="0:0:0.2" To="48" />
-			<ColorAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0:0:0.2" To="#CCD1FFCB" />
+			<ColorAnimation Storyboard.TargetName="BackgroundRect" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0:0:0.2" To="#CCD1FFCB" />
 		</Storyboard>
 		<Storyboard x:Key="DeselectAnimation">
 			<DoubleAnimation Storyboard.TargetName="UserControl" Storyboard.TargetProperty="(FrameworkElement.Height)" Duration="0:0:0.2" To="20" />
-			<ColorAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0:0:0.2" To="Transparent" />
+			<ColorAnimation Storyboard.TargetName="BackgroundRect" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Duration="0:0:0.2" To="Transparent" />
 		</Storyboard>
 	</UserControl.Resources>
 	<!--UserControl.DataContext>
 		<im:IMBuddy Username="Test Username" StatusMessage="Test Message" />
 	</UserControl.DataContext-->
 	<Grid x:Name="LayoutRoot" DragOver="LayoutRoot_DragOver">
-		<Rectangle x:Name="Background" Fill="Transparent" RadiusX="2" RadiusY="2" Margin="1,0,1,0" />
+		<Rectangle x:Name="BackgroundRect" Fill="Transparent" RadiusX="2" RadiusY="2" Margin="1,0,1,0" />
 		<Image Source="{Binding Status, Converter={StaticResource StatusConverter}}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="16" Width="16" Margin="4,0,0,0" />
 		<Grid Margin="21,2,0,0" Height="Auto" VerticalAlignment="Top">
 			<Grid.ColumnDefinitions>

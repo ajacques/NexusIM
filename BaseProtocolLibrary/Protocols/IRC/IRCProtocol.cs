@@ -57,6 +57,8 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public override void BeginLogin()
 		{
+			Trace.WriteLine(String.Format("IRC: Beginning Login (Nickname: {0}, Server: {1})", Username, Server));
+
 			client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);			
@@ -491,7 +493,7 @@ namespace InstantMessage.Protocols.Irc
 
 					if (OnJoinChannel != null)
 						OnJoinChannel(this, new IMChatRoomEventArgs() { ChatRoom = channel });
-				} else{
+				} else {
 					IRCChannel channel = mChannels.First(chan => chan.Name == name);
 
 					if (channel.Joined)
@@ -521,6 +523,8 @@ namespace InstantMessage.Protocols.Irc
 
 			if (channel == null)
 				channel = (IRCChannel)JoinChatRoom(channelName);
+
+			list = list.Trim(' ');
 
 			channel.SetParticipants(list.Split(' '));
 		}
@@ -622,7 +626,15 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{
-			client.EndConnect(e);
+			try {
+				client.EndConnect(e);
+			} catch (SocketException x) {
+				Trace.WriteLine("IRC: SocketException: " + x.Message);
+				triggerOnError(new SocketErrorEventArgs(x)); // We aren't equipped enough to handle this problem. Pass it up to the supervisor
+
+				return;
+			}
+
 			mTextStream = new NetworkStream(client);
 
 			if (SslEnabled)

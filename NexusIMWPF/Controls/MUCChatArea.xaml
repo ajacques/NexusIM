@@ -5,7 +5,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	mc:Ignorable="d" 
 	x:Name="UserControl"
-	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private">
+	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private" UseLayoutRounding="True">
 	<Grid x:Name="LayoutRoot">
 		<Grid.RowDefinitions>
 			<RowDefinition />
@@ -13,7 +13,7 @@
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
-			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="100" />
 		</Grid.ColumnDefinitions>
 		<Grid HorizontalAlignment="Left">
 			<Rectangle Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
@@ -24,15 +24,15 @@
 				</FlowDocument>
 			</RichTextBox>
 		</Grid>
-		<Grid Grid.Column="1" Width="100">
-			<StackPanel x:Name="OccupantList">
+		<Grid Grid.Column="1">
+			<ListBox x:Name="OccupantList" Background="{x:Null}">
 				<TextBlock>Private_Harlock</TextBlock>
 				<TextBlock>Penguizzle</TextBlock>
 				<TextBlock>Arcaaadia</TextBlock>
 				<TextBlock>Bart_Crazy</TextBlock>
 				<TextBlock>Inspector_Wizard</TextBlock>
 				<TextBlock>Professor_Insanity</TextBlock>
-			</StackPanel>
+			</ListBox>
 		</Grid>
 		<Grid Grid.Row="2" Grid.ColumnSpan="2">
 			<Grid.Background>

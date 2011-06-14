@@ -945,24 +945,25 @@ namespace InstantMessage.Protocols.Yahoo
 		private void OnGetYIPAddress(IAsyncResult e)
 		{
 			HttpWebRequest request = e.AsyncState as HttpWebRequest;
-			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;
-			string streamBuf;
+			HttpWebResponse response = request.EndGetResponse(e) as HttpWebResponse;			
 
-			if (response.StatusCode == HttpStatusCode.OK)
+			if (response.StatusCode != HttpStatusCode.OK) // Check to see if an error occurred
 			{
-				StreamReader reader = new StreamReader(response.GetResponseStream());
-				streamBuf = reader.ReadToEnd();
-				reader.Close();
-			} else {
 				Trace.WriteLine("Yahoo: Http server returned " + response.StatusCode.ToString() + " while getting CS_IP (" + response.StatusDescription + ")");
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown));
 				return;
 			}
 
-			int start = streamBuf.IndexOf("CS_IP_ADDRESS") + 14;
-			int end = (streamBuf.Length - start) - 2;
+			using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+			{
+				reader.ReadLine(); // COLO_CAPACITY=1 - Ignore it for now.. I've never seen it set to 0
 
-			connectServer = IPAddress.Parse(streamBuf.Substring(start, end));
+				string csip = reader.ReadLine();
+				csip = csip.Substring(14);
+
+				connectServer = IPAddress.Parse(csip);
+			}
+
 			Trace.WriteLine("Yahoo: YMSG Communication Server: " + connectServer);
 
 			if (String.IsNullOrEmpty(token))
@@ -1012,9 +1013,11 @@ namespace InstantMessage.Protocols.Yahoo
 				string validTime = reader.ReadLine();
 				validTime = validTime.Substring(15);
 				validfor = Convert.ToInt32(validTime);;
-			} else if (status == 100) {
+			} else {
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "An unknown error occurred while requesting secondary login tokens. YMSG Error Code: " + status.ToString()));
 			}
+
+			reader.Close();
 
 			mConfig["authtoken1"] = authtoken;
 			mConfig["authtoken2"] = authtoken2;

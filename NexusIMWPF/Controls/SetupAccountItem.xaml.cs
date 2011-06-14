@@ -62,8 +62,14 @@ namespace NexusIM.Controls
 			mProtocol = extraData;
 			mProtocolType = mProtocol.Protocol.GetType();
 
+			if (mProtocolType == typeof(IRCProtocol))
+			{
+				IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
+				UsernameBox.Text = ircprot.Nickname;
+			} else
+				UsernameBox.Text = extraData.Protocol.Username;
+
 			// Setup stuff
-			UsernameBox.Text = extraData.Protocol.Username;
 			AutoConnectCheckbox.IsChecked = extraData.AutoConnect;
 			MainAccountUsername.Text = extraData.Protocol.Username;
 			MainAccountTypeLabel.Text = extraData.Protocol.Protocol;

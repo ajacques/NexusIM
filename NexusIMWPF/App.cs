@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
@@ -79,6 +80,16 @@ namespace NexusIMWPF
 		private static void LoadAccounts(object state)
 		{
 			StopwatchManager.Start("AccDBLoad");
+
+			try {
+				Assembly.Load("System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91");
+			} catch (FileNotFoundException) {
+				if (MessageBox.Show("Failed to load System.Data.SqlServerCe (v4.0).\r\nWould you like to download it now?", "NexusIM", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+					Process.Start("http://www.microsoft.com/downloads/en/details.aspx?FamilyID=033cfb76-5382-44fb-bc7e-b3c8174832e2");
+				Trace.WriteLine("Failed to load System.Data.SqlServerCe. User does not appear to have SQLCE 4.0 installed");
+				Environment.Exit(-1);
+				return;
+			}
 
 			IEnumerable<IMProtocolWrapper> accounts;
 
