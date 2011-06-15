@@ -37,7 +37,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public void Dispose()
 		{
-			if (status != IMProtocolStatus.Offline)
+			if (mProtocolStatus != IMProtocolStatus.Offline)
 				Disconnect();
 
 			Debug.WriteLine("Dispose Requested... Cleaning-up resources");
@@ -57,6 +57,8 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public override void BeginLogin()
 		{
+			base.BeginLogin();
+
 			Trace.WriteLine(String.Format("IRC: Beginning Login (Nickname: {0}, Server: {1})", Username, Server));
 
 			client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -73,7 +75,7 @@ namespace InstantMessage.Protocols.Irc
 			client.Disconnect(false);
 
 			triggerOnDisconnect(null);
-			status = IMProtocolStatus.Offline;
+			mProtocolStatus = IMProtocolStatus.Offline;
 		}
 		IChatRoom IHasMUCRooms.JoinChatRoom(string room)
 		{
@@ -303,7 +305,7 @@ namespace InstantMessage.Protocols.Irc
 
 					NotifyPropertyChanged("Nickname");
 
-					if (status == IMProtocolStatus.Online)
+					if (mProtocolStatus == IMProtocolStatus.Online)
 						sendData("NICK " + mNickname);
 				}
 			}
@@ -689,10 +691,9 @@ namespace InstantMessage.Protocols.Irc
 				sendData("NICK " + mNickname);
 			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, "localhost", mServer, mRealName));
 
-			status = IMProtocolStatus.Online;
+			mProtocolStatus = IMProtocolStatus.Online;
 
-			LoginWaitHandle.Set();
-			triggerOnLogin(null);
+			OnLogin();
 		}
 		private void sendData(string data)
 		{

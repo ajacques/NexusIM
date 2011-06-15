@@ -83,7 +83,7 @@ namespace InstantMessage
 	{
 		public IMProtocol()
 		{
-			status = IMProtocolStatus.Offline;
+			mProtocolStatus = IMProtocolStatus.Offline;
 			mEnabled = false;
 		}
 		/// <summary>
@@ -91,7 +91,7 @@ namespace InstantMessage
 		/// </summary>
 		public virtual void BeginLogin()
 		{
-			status = IMProtocolStatus.Connecting;
+			mProtocolStatus = IMProtocolStatus.Connecting;
 			mLoginWaitHandle = new ManualResetEvent(false);
 		}
 		/// <summary>
@@ -114,6 +114,8 @@ namespace InstantMessage
 		public virtual void Disconnect()
 		{
 			triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.User));
+
+			mProtocolStatus = IMProtocolStatus.Offline;
 		}
 		/// <summary>
 		/// Adds a person to the user's contact list
@@ -298,19 +300,6 @@ namespace InstantMessage
 			}
 		}
 		/// <summary>
-		/// True if this account's password will be saved to the user's config file
-		/// </summary>
-		[Obsolete("This library should not be involved in configuration saving", false)]
-		public bool SavePassword
-		{
-			get {
-				return savepassword;
-			}
-			set {
-				savepassword = value;
-			}
-		}
-		/// <summary>
 		/// Server string to connect to when logging in
 		/// </summary>
 		public string Server
@@ -325,15 +314,6 @@ namespace InstantMessage
 
 					NotifyPropertyChanged("Server");
 				}
-			}
-		}
-		public Guid Guid
-		{
-			get {
-				return mGuid;
-			}
-			set {
-				mGuid = value;
 			}
 		}
 		public object Tag
@@ -353,7 +333,7 @@ namespace InstantMessage
 		public IMProtocolStatus ProtocolStatus
 		{
 			get {
-				return status;
+				return mProtocolStatus;
 			}
 		}
 #if !SILVERLIGHT
@@ -425,23 +405,24 @@ namespace InstantMessage
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		// Internal Event Triggers
-		protected void triggerOnLogin(EventArgs e)
+		protected void OnLogin()
 		{
+			LoginWaitHandle.Set();
+
 			try	{
 				if (IMProtocol.AnyLoginCompleted != null)
-					IMProtocol.AnyLoginCompleted(this, e);
+					IMProtocol.AnyLoginCompleted(this, null);
 			} catch (Exception) {}
 
-			try
-			{
+			try	{
 				if (this.LoginCompleted != null)
-					this.LoginCompleted(this, e);
-			} catch (Exception) { }
+					this.LoginCompleted(this, null);
+			} catch (Exception) {}
 		}
 		protected void triggerOnError(IMErrorEventArgs e)
 		{
 			Debug.WriteLine("Protocol Error: " + e.Message + " - " + e.Reason.ToString());
-			this.status = IMProtocolStatus.Offline;
+			this.mProtocolStatus = IMProtocolStatus.Offline;
 
 			if (ErrorOccurred != null)
 				ErrorOccurred(this, e);
@@ -519,7 +500,7 @@ namespace InstantMessage
 		protected bool mIsIdle;
 		protected Guid mGuid;
 		protected string mAvatar;
-		protected IMProtocolStatus status;
+		protected IMProtocolStatus mProtocolStatus;
 		protected Exception mLoginException;
 	}
 }

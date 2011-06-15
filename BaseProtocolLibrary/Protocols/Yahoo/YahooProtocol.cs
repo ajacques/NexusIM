@@ -33,7 +33,7 @@ namespace InstantMessage.Protocols.Yahoo
 		// Basic State Functions
 		public override void BeginLogin()
 		{
-			if (status != IMProtocolStatus.Offline)
+			if (mProtocolStatus != IMProtocolStatus.Offline)
 				return;
 
 			if (disposed)
@@ -51,7 +51,7 @@ namespace InstantMessage.Protocols.Yahoo
 				return;
 			}
 
-			status = IMProtocolStatus.Connecting;
+			mProtocolStatus = IMProtocolStatus.Connecting;
 			base.BeginLogin();
 			mLoginWaitHandle.Reset();
 
@@ -71,7 +71,7 @@ namespace InstantMessage.Protocols.Yahoo
 			CleanupBuddyList();
 			CleanupTransientData();
 
-			if (status == IMProtocolStatus.Online) // Check to see if we were even connected.
+			if (mProtocolStatus == IMProtocolStatus.Online) // Check to see if we were even connected.
 			{
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_pager_logoff;
@@ -79,9 +79,9 @@ namespace InstantMessage.Protocols.Yahoo
 				if (authenticated)
 					sendPacket(packet);
 
-				status = IMProtocolStatus.Offline;
+				mProtocolStatus = IMProtocolStatus.Offline;
 				mConnected = false;
-			} else if (status == IMProtocolStatus.Connecting) {
+			} else if (mProtocolStatus == IMProtocolStatus.Connecting) {
 
 			}
 
@@ -533,11 +533,11 @@ namespace InstantMessage.Protocols.Yahoo
 					HandlePicturePacket(packet);
 			}
 
-			if (status == IMProtocolStatus.Connecting)
+			if (mProtocolStatus == IMProtocolStatus.Connecting)
 			{
-				status = IMProtocolStatus.Online;
+				mProtocolStatus = IMProtocolStatus.Online;
 				Connected = true;
-				triggerOnLogin(null);
+				OnLogin();
 				mLoginWaitHandle.Set();
 			}
 
@@ -650,7 +650,7 @@ namespace InstantMessage.Protocols.Yahoo
 					triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.OtherClient));
 				else
 					triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.Unknown));
-				status = IMProtocolStatus.Offline;
+				mProtocolStatus = IMProtocolStatus.Offline;
 				CleanupBuddyList();
 				Disconnect();
 			} else {
@@ -661,7 +661,7 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		private void HandleListv15Packet(YPacket packet)
 		{
-			status = IMProtocolStatus.Connecting; // Make sure we are still in a connecting state to prevent triggering the notification
+			mProtocolStatus = IMProtocolStatus.Connecting; // Make sure we are still in a connecting state to prevent triggering the notification
 
 			string currentgroup = "";
 			IMBuddy buddy = null;

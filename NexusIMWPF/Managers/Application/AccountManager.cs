@@ -15,6 +15,7 @@ using InstantMessage.Protocols.Irc;
 using Microsoft.WindowsAPICodePack.Net;
 using NexusIM.Misc;
 using NexusIM.Windows;
+using NexusIM.Controls;
 
 namespace NexusIM.Managers
 {
@@ -193,13 +194,11 @@ namespace NexusIM.Managers
 					case SocketError.ConnectionRefused:
 						traceString.Append("Response: Alert User");
 
-						string errorMsg = String.Format("The account {0} has failed to connect to the server.\r\nThe server actively refused the connection.", protocol.ToString());
-
-						WindowSystem.SysTrayIcon.ShowBalloonTip("NexusIM Error", errorMsg, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+						WindowSystem.DispatcherInvoke(() => WindowSystem.SysTrayIcon.ShowCustomBalloon(new SocketErrorTrayTip(), System.Windows.Controls.Primitives.PopupAnimation.Slide, null));
 
 						break;
 				}
-
+				
 				Trace.WriteLine(traceString);
 			} else {
 				if (wrapper.ErrorBackoff != null)

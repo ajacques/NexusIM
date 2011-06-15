@@ -83,6 +83,9 @@ namespace NexusIM
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
 		public static extern int GetLastError();
 
+		[DllImport("user32.dll", ExactSpelling = true)]
+		private static extern int GetDoubleClickTime();
+
 		public static QUERY_USER_NOTIFICATION_STATE SHQueryUserNotificationState()
 		{
 			QUERY_USER_NOTIFICATION_STATE returnState = 0;
@@ -90,6 +93,11 @@ namespace NexusIM
 			SHQueryUserNotificationState(ref returnState);
 
 			return returnState;
+		}
+
+		public static TimeSpan GetDoubleClickSpeed()
+		{
+			return TimeSpan.FromMilliseconds(GetDoubleClickTime());
 		}
 
 		public static bool IsWinVistaAndUp()

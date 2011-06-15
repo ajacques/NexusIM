@@ -103,7 +103,16 @@ namespace NexusIM.Controls
 
 		private void Contacts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			AddContacts(e.NewItems);
+			if (e.NewItems != null)
+				AddContacts(e.NewItems);
+
+			if (e.OldItems != null)
+			{
+				foreach (IContact contact in e.OldItems)
+				{
+
+				}
+			}
 		}
 		private void NotifyPropertyChanged(string propertyName)
 		{
@@ -112,7 +121,10 @@ namespace NexusIM.Controls
 		}
 		private void ContactListGroup_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			IsExpanded = !IsExpanded;
+			Point p = e.GetPosition(ClickArea);
+
+			if (p.Y < ClickArea.ActualHeight)
+				IsExpanded = !IsExpanded;
 		}
 
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
@@ -123,5 +135,6 @@ namespace NexusIM.Controls
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private bool mIsExpanded;
+		private DateTime mLastClick;
 	}
 }

@@ -47,7 +47,6 @@ namespace NexusCore.Controllers
 				protocol.Server = accountInfo.Server;
 
 			protocol.Guid = accountInfo.Guid;
-			protocol.SavePassword = true;
 			SettingDbSerializer.Register(protocol);
 			protocol.LoadSettings();
 

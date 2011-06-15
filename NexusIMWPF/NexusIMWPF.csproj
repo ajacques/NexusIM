@@ -137,6 +137,7 @@
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
       <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Misc\AdvancedSet.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Misc\ProtocolCollection.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />

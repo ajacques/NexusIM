@@ -54,6 +54,11 @@ namespace NexusIM.Controls
 			Content = mArea = area;
 		}
 
+		public override string ToString()
+		{
+			return "testusername";
+		}
+
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
