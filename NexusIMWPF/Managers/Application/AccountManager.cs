@@ -47,6 +47,7 @@ namespace NexusIM.Managers
 
 			Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 			IMProtocol.AnyErrorOccurred += new EventHandler<IMErrorEventArgs>(IMProtocol_AnyErrorOccurred);
+			IMProtocol.AnyLoginCompleted += new EventHandler(IMProtocol_AnyLoginCompleted);
 		}
 
 		[Obsolete("Use Accounts.Add instead", false)]
@@ -130,6 +131,13 @@ namespace NexusIM.Managers
 					break;
 			}
 		}
+		private static void IMProtocol_AnyLoginCompleted(object sender, EventArgs e)
+		{
+			IMProtocol protocol = (IMProtocol)sender;
+			IMProtocolWrapper wrapper = Accounts.First(p => p.Protocol == protocol);
+
+			wrapper.ErrorBackoff = null;
+		}
 
 		// IRC Protocol custom event handlers
 		private static void IrcProtocol_LoginCompleted(object sender, EventArgs e)
@@ -187,21 +195,33 @@ namespace NexusIM.Managers
 				StringBuilder traceString = new StringBuilder();
 				traceString.AppendFormat("Error: Protocol {0} [{1}] reported a socket error. ", protocol.Username, protocol.Protocol);
 				traceString.Append(exception.SocketErrorCode);
-				traceString.AppendLine();
+				traceString.Append(' ');
 
 				switch (exception.SocketErrorCode)
 				{
-					case SocketError.ConnectionRefused:
+					case SocketError.TimedOut:
+						traceString.Append("Response: Internalize; Could be a connectivity problem.");
+
+						if (wrapper.ErrorBackoff == null)
+							wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
+
+						break;
+					default:
 						traceString.Append("Response: Alert User");
 
-						WindowSystem.DispatcherInvoke(() => WindowSystem.SysTrayIcon.ShowCustomBalloon(new SocketErrorTrayTip(), System.Windows.Controls.Primitives.PopupAnimation.Slide, null));
+						WindowSystem.DispatcherInvoke(() => {
+							SocketErrorTrayTip tip = new SocketErrorTrayTip();
+							tip.PopulateControls(exception, protocol);
+							WindowSystem.SysTrayIcon.ShowCustomBalloon(tip, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+						});
 
 						break;
 				}
-				
+				traceString.AppendLine();
+
 				Trace.WriteLine(traceString);
 			} else {
-				if (wrapper.ErrorBackoff != null)
+				if (wrapper.ErrorBackoff == null)
 					wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
 			}
 		}

@@ -135,6 +135,5 @@ namespace NexusIM.Controls
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private bool mIsExpanded;
-		private DateTime mLastClick;
 	}
 }

@@ -6,7 +6,7 @@
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.SocketErrorTrayTip"
 	x:Name="UserControl" x:FieldModifier="private"
-	Width="250" Height="75" UseLayoutRounding="True" BorderBrush="Black" BorderThickness="1">
+	Width="250" UseLayoutRounding="True" BorderBrush="Black" BorderThickness="1">
 	<UserControl.Resources>
 		<Storyboard x:Key="Test" RepeatBehavior="Forever">
 			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(TranslateTransform.X)" Storyboard.TargetName="AccentRect">
@@ -18,11 +18,6 @@
 			<GradientStop Color="#FFF4D3CC" Offset="0"/>
 			<GradientStop Color="#FFB8432C" Offset="0.4"/>
 			<GradientStop Color="#FFD58576" Offset="1"/>
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="CloseButtonHover" EndPoint="0,1" StartPoint="0,0">
-			<GradientStop Color="White" Offset="0"/>
-			<GradientStop Color="#FFDCA79C" Offset="0.4"/>
-			<GradientStop Color="#FFC8ACA7" Offset="1"/>
 		</LinearGradientBrush>
 	</UserControl.Resources>
 	<UserControl.Triggers>		
@@ -56,7 +51,7 @@
 				</RadialGradientBrush>
 			</Rectangle.Fill>
 		</Rectangle>
-		<Rectangle Grid.Row="1" >
+		<Rectangle Grid.Row="1">
 			<Rectangle.Fill>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 					<GradientStop Color="#FFFFCBCB" Offset="0"/>
@@ -65,17 +60,17 @@
 			</Rectangle.Fill>
 		</Rectangle>
 		<Grid HorizontalAlignment="Right" Width="12" Height="12" Margin="0,0,4,0">
-			<Button BorderBrush="#FF451322" Foreground="#FF5A2222" Background="{DynamicResource CloseButtonNoHover}" />
-			<TextBlock Text="x" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-3,0,0" FontSize="10.667" Height="15" Width="4.954" UseLayoutRounding="False" />
+			<Button BorderBrush="#FF451322" Foreground="#FF5A2222" Background="{DynamicResource CloseButtonNoHover}" Click="CloseButton_Click" />
+			<TextBlock Text="x" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,-3,0,0" FontSize="10.667" Height="15" Width="4.954" UseLayoutRounding="False" IsHitTestVisible="False" />
 		</Grid>
 		<TextBlock Margin="3,3,0,0" TextWrapping="Wrap" HorizontalAlignment="Left">
 			<Run>NexusIM</Run>
 			<Run x:Name="ErrorType" Foreground="Red" FontSize="9">Network Error</Run>
 		</TextBlock>
-		<TextBlock Grid.Row="1" TextWrapping="WrapWithOverflow" Margin="5" FontSize="10">
-			<Run FontSize="11" Foreground="#FF4D4D4D">penguinnavy - Yahoo</Run>
+		<TextBlock Grid.Row="1" TextWrapping="WrapWithOverflow" Margin="5,5,5,20" FontSize="10">
+			<Run x:Name="AccountDetails" FontSize="11" Foreground="#FF4D4D4D">[username] - [Protocol]</Run>
 			<LineBreak />
-			<Run>The server actively refused the connection.</Run>
+			<Run x:Name="ErrorDetail">A short message outlining the problem and possible reasons.</Run>
 		</TextBlock>
 		<TextBlock Grid.Row="1" VerticalAlignment="Bottom" Margin="5,0,0,0">
 			<Hyperlink x:Name="VerifyLink" FontSize="11" Foreground="#FF148AFF" TextDecorations="None" MouseEnter="Hyperlink_MouseEnter" MouseLeave="Hyperlink_MouseLeave" Click="Hyperlink_Click">Verify your connection details.</Hyperlink>

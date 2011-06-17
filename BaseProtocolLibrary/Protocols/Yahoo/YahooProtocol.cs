@@ -60,7 +60,6 @@ namespace InstantMessage.Protocols.Yahoo
 			// Do this the proper way.. thread it so the entire app doesn't lag when loading because of us
 			beginAuthenticate();
 
-			mEnabled = true;
 			dataqueue = new byte[2048];
 		}
 		public override void Disconnect()
@@ -110,11 +109,6 @@ namespace InstantMessage.Protocols.Yahoo
 			authtoken2 = null;
 			crumb = null;
 			sessionByte = null;
-
-			if (queuedpackets != null)
-				queuedpackets.Clear();
-			if (logincookies != null)
-				logincookies.Clear();
 			if (addbuddygroups != null)
 				addbuddygroups.Clear();
 		}
@@ -123,8 +117,6 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			CleanupTransientData();
 
-			queuedpackets = null;
-			logincookies = null;
 			addbuddygroups = null;
 			mCarriers = null;
 
@@ -847,8 +839,6 @@ namespace InstantMessage.Protocols.Yahoo
 		/// </summary>
 		private void beginAuthenticate()
 		{
-			logincookies.Clear(); // Just in-case this is the second time we are signing in
-
 			Dns.BeginGetHostEntry("vcs1.msg.yahoo.com", new AsyncCallback(OnCapacityHostResolve), null); // BeginGetResponse actually uses a non-async Dns resolve method causing un-necessary delays
 		}
 		private void OnCapacityHostResolve(IAsyncResult r)
@@ -910,8 +900,8 @@ namespace InstantMessage.Protocols.Yahoo
 				authpkt.StatusByte = new byte[] { 0x5A, 0x55, 0xAA, 0x55 };
 			authpkt.AddParameter(1, mUsername);
 			authpkt.AddParameter(0, mUsername);
-			authpkt.AddParameter(277, authtoken);
-			authpkt.AddParameter(278, authtoken2);
+			authpkt.AddParameter(277, authtoken + "; path=/; domain=.yahoo.com");
+			authpkt.AddParameter(278, authtoken2 + "; path=/; domain=.yahoo.com");
 			authpkt.AddParameter(307, generateAuthHash(crumb, challenge));
 			authpkt.AddParameter(244, "16777151"); // Build number
 			authpkt.AddParameter(2, mUsername);
@@ -931,16 +921,12 @@ namespace InstantMessage.Protocols.Yahoo
 			Timer keepalive = new Timer(new TimerCallback(this.sendKeepAlive), null, 60 * 1000, 60 * 1000);
 			authenticated = true;
 
-			Trace.WriteLine("Yahoo: YMSG Authentication should be complete");
+			// Force these variables to be garbage collected
+			// This will prevent them from laying around collecting electric dust and reduces the amount of confidential data in memory
+			crumb = token = null;
+			connectServer = null;
 
-			lock (queuedpackets) // We have to add this here because for some reason, the queuepackets list got modified one time while it was connecting.. How?
-			{
-				foreach (YPacket packet in queuedpackets)
-				{
-					sendPacket(packet);
-				}
-				queuedpackets.Clear();
-			}
+			Trace.WriteLine("Yahoo: YMSG Authentication should be complete");
 		}
 		private void OnGetYIPAddress(IAsyncResult e)
 		{
@@ -1093,13 +1079,6 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		private void FinishAuth()
 		{
-			// These tokens are later used for address book downloading and other yahoo specific details
-			logincookies.Add("Y", authtoken);
-			logincookies.Add("T", authtoken2);
-
-			authtoken += "; path=/; domain=.yahoo.com";
-			authtoken2 += "; path=/; domain=.yahoo.com";
-
 			client = new TcpClient();
 
 			Trace.WriteLine("Yahoo: Attempting connection to YMSG server");
@@ -1193,8 +1172,8 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(mAddressBookUrl);
 			request.CookieContainer = new CookieContainer();
-			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("Y", logincookies["Y"], "/", ".yahoo.com"));
-			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("T", logincookies["T"], "/", ".yahoo.com"));
+			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("Y", authtoken, "/", ".yahoo.com"));
+			request.CookieContainer.Add(new Uri("http://yahoo.com"), new Cookie("T", authtoken2, "/", ".yahoo.com"));
 			request.BeginGetResponse(new AsyncCallback(OnAfterYAddressBookDl), request);
 		}
 
@@ -1212,12 +1191,17 @@ namespace InstantMessage.Protocols.Yahoo
 		
 		private void updateMobileCarrierInfo()
 		{
+			return;
+
 			if (!mCompletedCarrierSetup)
 				return;
 
 			foreach (IMBuddy buddy in buddylist)
 			{
-				var carrier = (from CarrierInfo c in mCarriers let y = buddy.Options["smscarrierid"] where c.carrierid == y select new { CompanyName = c.humanname, MaxChars = c.maxchars }).First();
+				var carrier = (from CarrierInfo c in mCarriers 
+							   let y = buddy.Options["smscarrierid"] 
+							   where c.carrierid == y 
+							   select new { CompanyName = c.humanname, MaxChars = c.maxchars }).First();
 				if (carrier != null)
 				{
 					buddy.MaxMessageLength = carrier.MaxChars;
@@ -1300,12 +1284,7 @@ namespace InstantMessage.Protocols.Yahoo
 
 			try	{
 				nsStream.Write(packetdata, 0, packetdata.Length);
-			} catch (IOException) {
-				lock (queuedpackets)
-				{
-					//queuedpackets.Add(packet);
-				}
-				
+			} catch (IOException) {				
 				authenticated = false;
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR));
 			}
@@ -1337,12 +1316,10 @@ namespace InstantMessage.Protocols.Yahoo
 		private string crumb;
 		
 		// SMS Carrier Information
-		private List<CarrierInfo> mCarriers = new List<CarrierInfo>();
+		private List<CarrierInfo> mCarriers;// = new List<CarrierInfo>();
 		private bool mCompletedCarrierSetup = false;
 		
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
-		private Dictionary<string, string> logincookies = new Dictionary<string, string>();
-		private List<YPacket> queuedpackets = new List<YPacket>();
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
 		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
 		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";

@@ -84,7 +84,6 @@ namespace InstantMessage
 		public IMProtocol()
 		{
 			mProtocolStatus = IMProtocolStatus.Offline;
-			mEnabled = false;
 		}
 		/// <summary>
 		/// Connects and authenticates with the server
@@ -482,7 +481,6 @@ namespace InstantMessage
 		protected byte mPaddingAmount;
 		protected string protocolType = "Default";
 		protected string mProtocolTypeShort = "default";
-		protected bool mEnabled;
 		protected string mServer;
 		protected bool blistChange;
 		protected bool mConnected;
@@ -495,10 +493,8 @@ namespace InstantMessage
 		protected bool supportsUserInvisiblity;
 		protected bool needUsername;
 		protected bool needPassword;
-		protected bool savepassword;
 		protected bool enableSaving;
 		protected bool mIsIdle;
-		protected Guid mGuid;
 		protected string mAvatar;
 		protected IMProtocolStatus mProtocolStatus;
 		protected Exception mLoginException;

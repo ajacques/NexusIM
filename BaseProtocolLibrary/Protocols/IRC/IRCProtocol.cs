@@ -333,6 +333,11 @@ namespace InstantMessage.Protocols.Irc
 			private set;
 		}
 
+		public new string ToString()
+		{
+			return String.Format("{0}@{1} - IRC", Nickname, Server);
+		}
+
 		// Protocol Handlers
 		private void ParseLine(string line)
 		{
@@ -498,8 +503,6 @@ namespace InstantMessage.Protocols.Irc
 				} else {
 					IRCChannel channel = mChannels.First(chan => chan.Name == name);
 
-					if (channel.Joined)
-						return;
 					channel.Joined = true;
 
 					if (OnJoinChannel != null)

@@ -6,14 +6,13 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using InstantMessage;
 using NexusIM.Controls;
 using NexusIM.Managers;
-using System.Windows.Media.Animation;
-using System.Windows.Documents;
-using System.Linq;
 
 namespace NexusIM.Windows
 {
@@ -164,15 +163,20 @@ namespace NexusIM.Windows
 		private void JoinRoom_Click(object sender, RoutedEventArgs e)
 		{
 			JoinChatRoom window = new JoinChatRoom();
-			window.Show();
-
-			mActiveDialog = window;
+			window.Owner = this;
+			window.ShowDialog();
 		}
 		private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
 		{
 			AboutWindow about = new AboutWindow();
 			about.Owner = this;
 			about.ShowDialog();
+		}
+		private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			DisplayImageWindow window = new DisplayImageWindow();
+			window.Owner = this;
+			window.ShowDialog();
 		}
 
 		// Status Message Related Event handlers
@@ -249,13 +253,6 @@ namespace NexusIM.Windows
 
 			this.Hide();
 		}
-		protected override void OnActivated(EventArgs e)
-		{
-			base.OnActivated(e);
-
-			if (mActiveDialog != null)
-				mActiveDialog.Activate();
-		}
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
@@ -290,6 +287,5 @@ namespace NexusIM.Windows
 		private int mStatusMsgMaxAccounts;
 		private int mStatusMsgAccountsYes;
 		private bool mIgnoreThisStatusChange = true; // Ignore the first change
-		private Window mActiveDialog;
 	}
 }

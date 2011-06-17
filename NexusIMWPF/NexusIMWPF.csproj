@@ -132,6 +132,9 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
+    <Compile Include="Controls\CLErrorBox.xaml.cs">
+      <DependentUpon>CLErrorBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GroupChatAreaHost.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
@@ -139,6 +142,7 @@
     </Compile>
     <Compile Include="Misc\AdvancedSet.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
+    <Compile Include="Misc\MiscExtensions.cs" />
     <Compile Include="Misc\ProtocolCollection.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />
     <Compile Include="Configuration\CEConnectionPool.cs" />
@@ -250,6 +254,9 @@
     </Compile>
     <Compile Include="Windows\ContactList.xaml.cs">
       <DependentUpon>ContactList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\DisplayImageWindow.xaml.cs">
+      <DependentUpon>DisplayImageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
@@ -371,6 +378,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\CLErrorBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ContactChatArea.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -430,6 +441,10 @@
     <Page Include="Windows\ContactList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\DisplayImageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\InitialSetup.xaml">
       <Generator>MSBuild:Compile</Generator>

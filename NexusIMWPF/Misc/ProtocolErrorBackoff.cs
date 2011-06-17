@@ -6,6 +6,8 @@ using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
 using System.Windows;
+using NexusIM.Controls;
+using System.Net.Sockets;
 
 namespace NexusIM.Misc
 {
@@ -57,14 +59,20 @@ namespace NexusIM.Misc
 		}
 		private void Protocol_ErrorOccurred(object sender, IMErrorEventArgs e)
 		{
-			if (e.GetType() == typeof(AccountThrottledEventArgs))
-			{
-
-			}
+			if (e.GetType() != typeof(SocketErrorEventArgs))
+				return;
 
 			if (mAttempts >= 5)
 			{
 				// Quit after 5 attempts
+				Trace.WriteLine("Protocol failed reconnect test. Alerting user");
+
+				WindowSystem.DispatcherInvoke(() =>
+				{
+					SocketErrorTrayTip tip = new SocketErrorTrayTip();
+					//tip.PopulateControls(exception, protocol);
+					WindowSystem.SysTrayIcon.ShowCustomBalloon(tip, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+				});
 
 				StringBuilder message = new StringBuilder();
 				message.AppendFormat("The account {0} ({1}) is currently experiencing problems.", mProtocol.Protocol.Username, mProtocol.Protocol.Protocol);
@@ -93,6 +101,8 @@ namespace NexusIM.Misc
 			mAttempts++;
 			mTimer.Interval = mInterval.TotalMilliseconds;
 			mProtocol.Protocol.BeginLogin();
+
+			mTimer.Stop();
 		}
 		private void SysTrayIcon_TrayBalloonTipClicked(object sender, RoutedEventArgs e)
 		{
