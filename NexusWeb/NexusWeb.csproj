@@ -19,7 +19,6 @@
     </UpgradeBackupLocation>
     <SilverlightApplicationList>{4FA9EF63-76D1-480C-8928-26EB0E21D18E}|..\SilverlightContactMap\SilverlightContactMap.csproj|ClientBin|False,{B1E3638D-F7B1-47A4-A9A4-9F7C2C231542}|..\SilverIM\SilverIM.csproj|ClientBin|False</SilverlightApplicationList>
     <TargetFrameworkProfile />
-    <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
     <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -27,67 +26,9 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsContainerAnalysis>False</CodeContractsContainerAnalysis>
-    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>False</CodeContractsShowSquigglies>
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
-    <CodeContractsCustomRewriterAssembly />
-    <CodeContractsCustomRewriterClass />
-    <CodeContractsLibPaths />
-    <CodeContractsExtraRewriteOptions />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
-    <PublishDatabaseSettings>
-      <Objects>
-        <ObjectGroup Name="NexusCoreConnectionString-Deployment" Order="1">
-          <Destination Path="" />
-          <Object Type="dbFullSql">
-            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=NexusCore%3bIntegrated Security=True%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
-            <Source Path="obj\Debug\AutoScripts\NexusCoreConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
-          </Object>
-        </ObjectGroup>
-        <ObjectGroup Name="SqlDependencyConnectionString-Deployment" Order="2" Enabled="False">
-          <Destination Path="" />
-          <Object Type="dbFullSql">
-            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=NexusCore%3bUser ID=root%3bPassword=bob%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
-            <Source Path="obj\Debug\AutoScripts\SqlDependencyConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
-          </Object>
-        </ObjectGroup>
-        <ObjectGroup Name="GeoDataConnectionString-Deployment" Order="3">
-          <Destination Path="" />
-          <Object Type="dbFullSql">
-            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=GeoData%3bIntegrated Security=True%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
-            <Source Path="obj\Debug\AutoScripts\GeoDataConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
-          </Object>
-        </ObjectGroup>
-        <ObjectGroup Name="NexusAuditLogConnectionString-Deployment" Order="4">
-          <Destination Path="" />
-          <Object Type="dbFullSql">
-            <PreSource Path="Data Source=.\SQLEXPRESS%3bInitial Catalog=NexusAuditLog%3bIntegrated Security=True%3bApplication Name=NexusWeb" ScriptSchema="True" ScriptData="False" CopyAllFullTextCatalogs="False" />
-            <Source Path="obj\Debug\AutoScripts\NexusAuditLogConnectionString-Deployment_SchemaOnly.sql" Transacted="True" />
-          </Object>
-        </ObjectGroup>
-      </Objects>
-    </PublishDatabaseSettings>
-    <IncludeIisSettings>true</IncludeIisSettings>
-    <DeployIisAppPath>NexusWeb</DeployIisAppPath>
-    <IncludeAppPool>true</IncludeAppPool>
-    <DeployIisAppPhysicalPath>%25WINDIR%25\inetpub\NexusWeb</DeployIisAppPhysicalPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -493,6 +434,8 @@
           <DevelopmentServerPort>26193</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://dev.nexus-im.com/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://dev.nexus-im.com/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
