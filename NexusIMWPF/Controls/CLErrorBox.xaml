@@ -5,12 +5,17 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	mc:Ignorable="d" d:DesignWidth="244">
 	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="15" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="18" />
+		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="28"/>
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
-		<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Stroke="#FFFFA12E" Grid.ColumnSpan="2" />
-		<Grid Width="16" Height="16" Margin="2,0,0,0">
+		<Rectangle Fill="#FFFFECAA" RadiusX="3" RadiusY="3" Stroke="#FFFFA12E" Grid.ColumnSpan="2" Grid.RowSpan="3" />
+		<Grid Width="16" Height="16" Margin="7,2,5,2" Grid.RowSpan="3">
 			<Ellipse Stroke="#FF930000">
 				<Ellipse.Fill>
 					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -21,12 +26,20 @@
 			</Ellipse>
 			<Line X1="3" X2="13" Y1="8" Y2="8" Stroke="White" StrokeThickness="2" />
 		</Grid>
-		<TextBlock Margin="5" Grid.Column="1" TextWrapping="WrapWithOverflow">
-			<Run x:Name="ProtocolString" FontSize="10" FontWeight="SemiBold">[Username] - [Protocol]</Run>
-			<LineBreak />
-			<Run FontSize="8" />
-			<LineBreak />
-			<Run FontSize="9">Failed to connect: Connection timed out</Run>
+		<TextBlock x:Name="ProtocolString" Text="[Username] - [Protocol]" Margin="2,2,2,0" Grid.Column="1" FontSize="11" FontWeight="SemiBold" Grid.Row="0" TextTrimming="CharacterEllipsis" />
+		<TextBlock x:Name="ErrorString" Text="Failed to connect: Connection timed out" Margin="4,0,0,0" Grid.Column="1" Grid.Row="1" FontSize="9" TextWrapping="WrapWithOverflow" />
+		<TextBlock Grid.Column="1" FontSize="11" VerticalAlignment="Bottom" Grid.Row="2" Margin="2,0,0,2">
+			<Hyperlink TextDecorations="None" Click="ReconnectLink_Click">
+				<Run>Reconnect</Run>
+			</Hyperlink>
+			<Run>▪</Run>
+			<Hyperlink TextDecorations="None" Click="EditLink_Click">
+				<Run>Edit</Run>
+			</Hyperlink>
+			<Run>▪</Run>
+			<Hyperlink TextDecorations="None" Click="DisableLink_Click">
+				<Run>Disable</Run>
+			</Hyperlink>
 		</TextBlock>
 	</Grid>
 </UserControl>

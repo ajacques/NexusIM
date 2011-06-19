@@ -49,11 +49,26 @@ namespace NexusIM.Controls
 			area.PopulateUIControls(context, this);
 
 			Content = mArea = area;
+			mRoom = context;
 		}
 
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
+		}
+
+		protected override void OnVisualParentChanged(DependencyObject oldParent)
+		{
+			base.OnVisualParentChanged(oldParent);
+
+			ChatWindow window = (ChatWindow)Window.GetWindow(this);
+			window.Closed += new EventHandler(ParentWindow_Closed);
+			mWindow = window;
+		}
+
+		private void ParentWindow_Closed(object sender, EventArgs e)
+		{
+			mRoom.Leave(String.Empty);
 		}
 
 		public MUCChatArea HostedArea
@@ -67,13 +82,11 @@ namespace NexusIM.Controls
 			get	{
 				return mWindow;
 			}
-			set	{
-				mWindow = value;
-			}
 		}
 
 		private ChatWindow mWindow;
 		private TextBlock mHeaderString;
 		private MUCChatArea mArea;
+		private IChatRoom mRoom;
 	}
 }

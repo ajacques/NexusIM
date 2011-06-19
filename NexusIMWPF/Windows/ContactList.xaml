@@ -1,13 +1,13 @@
-﻿<Window
+﻿<Window x:Class="NexusIM.Windows.ContactListWindow"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:nxc="clr-namespace:NexusIM.Controls"
 	xmlns:mgr="clr-namespace:NexusIM.Managers"
-	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
-	xmlns:converters="clr-namespace:NexusIM.Converters"
-	x:Class="NexusIM.Windows.ContactListWindow"
-	Title="NexusIM" Height="500" Width="250" WindowStyle="SingleBorderWindow" Loaded="Window_Loaded" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
-	Icon="/NexusIMWPF;component/Resources/nexusim.ico">
+	xmlns:converters="clr-namespace:NexusIM.Converters"	
+	Title="NexusIM" Height="500" Width="250" 
+	WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
+	Icon="/NexusIMWPF;component/Resources/nexusim.ico"
+	Loaded="Window_Loaded" >
 	<Window.Resources>
 		<Storyboard x:Key="ShareMessageOpen">
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="StatusMessageGrid">
@@ -25,11 +25,11 @@
 		</Storyboard>
 	</Window.Resources>
 	<Grid>
-		<Grid>
+		<Grid Grid.Row="0">
 			<Grid.RowDefinitions>
 				<RowDefinition />
 				<RowDefinition Height="Auto" MaxHeight="100" />
-			</Grid.RowDefinitions>			
+			</Grid.RowDefinitions>
 			<StackPanel Margin="0,20,0,0" Height="Auto" Grid.RowSpan="2">
 				<Grid x:Name="StatusMessageGrid" Visibility="Collapsed" Height="0">
 					<Grid.RowDefinitions>
@@ -118,10 +118,9 @@
 							</Grid>
 						</StackPanel>
 					</Grid>
-				</Grid>				
+				</Grid>
 			</StackPanel>
-			<StackPanel Grid.Row="1">
-			</StackPanel>
+			<StackPanel x:Name="BottomFillPanel" Grid.Row="1" />
 		</Grid>
 		<!-- Menu Bar-->
 		<Menu VerticalAlignment="Top">

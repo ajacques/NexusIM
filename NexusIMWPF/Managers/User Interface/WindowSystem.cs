@@ -85,6 +85,30 @@ namespace NexusIM.Managers
 			} else
 				target();
 		}
+		public static Window OpenSingletonWindow(Type windowType)
+		{
+			foreach (Window window in OtherWindows)
+			{
+				if (window.GetType() == windowType)
+				{
+					window.Activate();
+					return window;
+				}
+			}
+
+			Window newWin = (Window)Activator.CreateInstance(windowType);
+			EventHandler closeHandler = null;
+			closeHandler = (sender, args) => {
+				newWin.Closed -= closeHandler;
+				OtherWindows.Remove(newWin);
+			};
+
+			newWin.Closed += closeHandler;
+			OtherWindows.Add(newWin);
+			newWin.Show();
+
+			return newWin;
+		}
 		/// <summary>
 		/// Places a TabItem in the correct window pool or returns the window if it's already open.
 		/// </summary>

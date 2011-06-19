@@ -48,12 +48,13 @@ namespace NexusIM.Controls
 		}
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)
 		{
-			AccountsEdit window = new AccountsEdit();
-			window.Show();
+			WindowSystem.OpenSingletonWindow(typeof(AccountsEdit));
+			//AccountsEdit window = new AccountsEdit();
+			//window.Show();
 
-			WindowSystem.OtherWindows.Add(window);
+			//WindowSystem.OtherWindows.Add(window);
 
-			WindowSystem.SysTrayIcon.HideBalloonTip();
+			WindowSystem.SysTrayIcon.CloseBalloon();
 		}
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{

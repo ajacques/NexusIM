@@ -23,6 +23,10 @@ namespace InstantMessage.Protocols.Irc
 			mProtocolTypeShort = "irc";
 			needPassword = false;
 			Port = 6667;
+
+			mWatchThread = new Thread(new ThreadStart(PingThreadLoop));
+			mWatchThread.Priority = ThreadPriority.BelowNormal;
+			mWatchThread.Name = "IRC Ping Watch Thread";
 		}
 		public IRCProtocol(string hostname, int port = 6667, bool useSsl = false) : this()
 		{
@@ -338,6 +342,18 @@ namespace InstantMessage.Protocols.Irc
 			return String.Format("{0}@{1} - IRC", Nickname, Server);
 		}
 
+		/// <summary>
+		/// A thread that will periodically wake up and send a ping to verify that the server is still alive
+		/// </summary>
+		private void PingThreadLoop()
+		{
+			while (true)
+			{
+				sendData(String.Format("PING :{0}", DateTime.UtcNow.));
+				Thread.Sleep(mMaxIdlePeriod);
+			}
+		}
+
 		// Protocol Handlers
 		private void ParseLine(string line)
 		{
@@ -626,6 +642,7 @@ namespace InstantMessage.Protocols.Irc
 			}
 
 			SocketProcessByteQueue(bytesRead);
+			mLastCommunication = DateTime.UtcNow;
 
 			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
@@ -695,8 +712,11 @@ namespace InstantMessage.Protocols.Irc
 			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, "localhost", mServer, mRealName));
 
 			mProtocolStatus = IMProtocolStatus.Online;
+			mConnectTime = DateTime.UtcNow;
 
 			OnLogin();
+
+			mWatchThread.Start();
 		}
 		private void sendData(string data)
 		{
@@ -716,17 +736,23 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<ChatRoomJoinFailedEventArgs> OnChannelJoinFailed;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 
-		// Variables
-		private object mSocketProcessLock = new object();
+		// Variables		
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
 		private string mNickname;
-		private StringBuilder mBufferCutoffMessage;
 		private IList<IRCChannel> mChannels = new List<IRCChannel>();
+		private Thread mWatchThread;
+		private DateTime mLastCommunication;
+		private DateTime mConnectTime;
+		private static TimeSpan mMaxIdlePeriod = TimeSpan.FromSeconds(30);
+
+		// Socket-related Variables
+		private object mSocketProcessLock = new object();
 		private byte[] mDataQueue;
 		private Socket client;
 		private StreamWriter mWriter;
 		private Stream mTextStream;
+		private StringBuilder mBufferCutoffMessage;
 		private const int mBufferSize = 1024;
 		private static Encoding mTextEncoder = Encoding.UTF8;
 	}

@@ -11,13 +11,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
+using InstantMessage.Events;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using NexusIM.Misc;
 
 namespace NexusIM.Windows
 {
 	/// <summary>
-	/// Interaction logic for frmMain.xaml
+	/// Contains the interaction logic for the Contact List Window.
 	/// </summary>
 	public partial class ContactListWindow : Window
 	{
@@ -28,7 +30,28 @@ namespace NexusIM.Windows
 			AccountManager.PropertyChanged += new PropertyChangedEventHandler(AccountManager_PropertyChanged);
 			AggregateContactList.Groups.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_Changed);
 		}
-		
+
+		public void InsertErrorBox(IMProtocolWrapper protocol, SocketErrorEventArgs e)
+		{
+			Dispatcher.InvokeIfRequired(() => {
+				CLErrorBox box = new CLErrorBox();
+				box.PopulateControls(protocol, e.Exception);
+
+				Storyboard anim = new Storyboard();
+				DoubleAnimation dblAnim = new DoubleAnimation();
+				dblAnim.Duration = new Duration(TimeSpan.FromMilliseconds(250));
+				dblAnim.From = 0;
+				dblAnim.To = 50;
+				anim.Children.Add(dblAnim);
+
+				Storyboard.SetTarget(anim, box);
+				Storyboard.SetTargetProperty(anim, new PropertyPath("(FrameworkElement.Height)"));
+				
+				BottomFillPanel.Children.Add(box);
+				//anim.Begin();
+			});
+		}
+
 		private void DeselectAllExcept(ICollection source, UIElement exception)
 		{
 			foreach (UIElement elem in source)
@@ -46,7 +69,6 @@ namespace NexusIM.Windows
 				
 			}
 		}
-
 		private void HandleStatusChange()
 		{
 			int selectedIndex = -1;
@@ -83,25 +105,6 @@ namespace NexusIM.Windows
 		}
 
 		// Event Handlers
-		private void Window_Loaded(object sender, RoutedEventArgs e)
-		{
-			if (!SuperTaskbarManager.IsSetup)
-				ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => SuperTaskbarManager.Setup()));
-
-			AddGroups(AggregateContactList.Groups);
-
-			//if (!AccountManager.Accounts.Any(i => i.Enabled))
-			//	NoEnabledAccountsWarning.Visibility = Visibility.Visible;
-
-			try	{
-				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");
-			} catch (KeyNotFoundException) { }
-		}
-		private void EditAccounts_Click(object sender, RoutedEventArgs e)
-		{
-			AccountsEdit window = new AccountsEdit();
-			window.Show();
-		}
 		private void AccountManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			switch (e.PropertyName)
@@ -116,6 +119,26 @@ namespace NexusIM.Windows
 					mIgnoreThisStatusChange = true;
 					break;
 			}
+		}
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			if (!SuperTaskbarManager.IsSetup)
+				ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => SuperTaskbarManager.Setup()));
+
+			AddGroups(AggregateContactList.Groups);
+
+			//if (!AccountManager.Accounts.Any(i => i.Enabled))
+			//	NoEnabledAccountsWarning.Visibility = Visibility.Visible;
+
+			try	{
+				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");
+			} catch (KeyNotFoundException) { }
+		}
+
+		// User Interface Event Handlers
+		private void EditAccounts_Click(object sender, RoutedEventArgs e)
+		{
+			WindowSystem.OpenSingletonWindow(typeof(AccountsEdit));
 		}
 		private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{

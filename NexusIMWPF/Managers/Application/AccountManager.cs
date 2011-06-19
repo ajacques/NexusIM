@@ -16,6 +16,7 @@ using Microsoft.WindowsAPICodePack.Net;
 using NexusIM.Misc;
 using NexusIM.Windows;
 using NexusIM.Controls;
+using Microsoft.Win32;
 
 namespace NexusIM.Managers
 {
@@ -48,6 +49,8 @@ namespace NexusIM.Managers
 			Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 			IMProtocol.AnyErrorOccurred += new EventHandler<IMErrorEventArgs>(IMProtocol_AnyErrorOccurred);
 			IMProtocol.AnyLoginCompleted += new EventHandler(IMProtocol_AnyLoginCompleted);
+
+			SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
 		}
 
 		[Obsolete("Use Accounts.Add instead", false)]
@@ -70,15 +73,32 @@ namespace NexusIM.Managers
 			}
 		}
 
+		// System Event Handlers
+		private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+		{
+			Trace.WriteLine("AccountManager: SessionSwitch - " + e.Reason);
+
+			switch (e.Reason)
+			{
+				case SessionSwitchReason.SessionLock:
+				case SessionSwitchReason.RemoteDisconnect:
+					Status = IMStatus.Away;
+					break;
+				case SessionSwitchReason.SessionUnlock:
+					Status = IMStatus.Available;
+					break;
+			}
+		}
+		private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
+		{
+			Trace.WriteLine("AccountManager: Network Availability Change (is available: " + e.IsAvailable + ")");
+		}
+
 		// Account Status Management Functions
 		private static void Nic_AvailabilityChange(object sender, NetworkAvailabilityEventArgs e)
 		{
 			Trace.WriteLine("AccountManager: NIC Availability Change (is available: " + e.IsAvailable + ")");
 		}
-		private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
-		{
-			Trace.WriteLine("AccountManager: Network Availability Change (is available: " + e.IsAvailable + ")");
-		}	
 		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback((object obj) => {
@@ -196,6 +216,8 @@ namespace NexusIM.Managers
 				traceString.AppendFormat("Error: Protocol {0} [{1}] reported a socket error. ", protocol.Username, protocol.Protocol);
 				traceString.Append(exception.SocketErrorCode);
 				traceString.Append(' ');
+
+				WindowSystem.ContactListWindow.InsertErrorBox(wrapper, socketErrors);
 
 				switch (exception.SocketErrorCode)
 				{
