@@ -349,7 +349,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			while (true)
 			{
-				sendData(String.Format("PING :{0}", DateTime.UtcNow.));
+				sendData(String.Format("PING :{0}", Math.Round((DateTime.UtcNow - mConnectTime).TotalSeconds, 0)));
 				Thread.Sleep(mMaxIdlePeriod);
 			}
 		}
@@ -709,6 +709,10 @@ namespace InstantMessage.Protocols.Irc
 
 			if (!String.IsNullOrEmpty(mNickname))
 				sendData("NICK " + mNickname);
+
+			if (String.IsNullOrEmpty(mRealName))
+				mRealName = mUsername;
+
 			sendData(String.Format("USER {0} {1} {2} :{3}", mUsername, "localhost", mServer, mRealName));
 
 			mProtocolStatus = IMProtocolStatus.Online;

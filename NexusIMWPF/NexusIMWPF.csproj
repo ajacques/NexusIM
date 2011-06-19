@@ -258,6 +258,9 @@
     <Compile Include="Windows\DisplayImageWindow.xaml.cs">
       <DependentUpon>DisplayImageWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\EditDisplayImage.xaml.cs">
+      <DependentUpon>EditDisplayImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
     </Compile>
@@ -443,6 +446,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\DisplayImageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EditDisplayImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

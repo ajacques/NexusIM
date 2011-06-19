@@ -1,0 +1,26 @@
+﻿<Window x:Class="NexusIM.Windows.EditDisplayImage"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Title="EditDisplayImage" Height="300" Width="300" UseLayoutRounding="True">
+	<Grid>
+		<Image Width="150" Source="/NexusIMWPF;component/Images/cataduck.jpg" />
+		<Polygon Width="150" Height="160" Points="0,0 160,0 160,160 0,160 0,0 40,40 40,109 109,109" Fill="#76000000" />
+		<Image Width="150" Source="/NexusIMWPF;component/Images/cataduck.jpg">
+			<Image.Clip>
+				<RectangleGeometry Rect="40, 45, 64, 64" />
+			</Image.Clip>
+		</Image>
+		<Grid Width="64" Height="64" Visibility="Collapsed">
+			<Rectangle Stroke="#FF3C3C3C" StrokeThickness="1" />
+			<Rectangle Width="8" Height="8" Margin="-4,-4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#FF3C3C3C" Cursor="SizeNWSE" />
+			<Rectangle Width="8" Height="8" Margin="0,-4,-4,0" HorizontalAlignment="Right" VerticalAlignment="Top" Fill="#FF3C3C3C" Cursor="SizeNESW" />
+			<Rectangle Width="8" Height="8" Margin="0,0,-4,-4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#FF3C3C3C" Cursor="SizeNWSE" />
+			<Rectangle Width="8" Height="8" Margin="-4,0,0,-4" HorizontalAlignment="Left" VerticalAlignment="Bottom" Fill="#FF3C3C3C" Cursor="SizeNESW" />
+			
+			<Rectangle Width="8" Height="8" Margin="-4,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Fill="#FF3C3C3C" Cursor="SizeWE" />
+			<Rectangle Width="8" Height="8" Margin="0,0,-4,0" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="#FF3C3C3C" Cursor="SizeWE" />
+			<Rectangle Width="8" Height="8" Margin="0,0,0,-4" HorizontalAlignment="Center" VerticalAlignment="Bottom" Fill="#FF3C3C3C" Cursor="SizeWE" />
+			<Rectangle Width="8" Height="8" Margin="0,-4,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Fill="#FF3C3C3C" Cursor="SizeWE" />
+		</Grid>
+	</Grid>
+</Window>
