@@ -51,6 +51,7 @@ namespace NexusIM.Managers
 			IMProtocol.AnyLoginCompleted += new EventHandler(IMProtocol_AnyLoginCompleted);
 
 			SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+			SystemEvents.PowerModeChanged += new PowerModeChangedEventHandler(SystemEvents_PowerModeChanged);
 		}
 
 		[Obsolete("Use Accounts.Add instead", false)]
@@ -92,6 +93,18 @@ namespace NexusIM.Managers
 		private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
 		{
 			Trace.WriteLine("AccountManager: Network Availability Change (is available: " + e.IsAvailable + ")");
+		}
+		private static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+		{
+			switch (e.Mode)
+			{
+				case PowerModes.Suspend:
+					AccountManager.Connected = false;
+					break;
+				case PowerModes.Resume:
+					AccountManager.Connected = true;
+					break;
+			}
 		}
 
 		// Account Status Management Functions
@@ -242,10 +255,21 @@ namespace NexusIM.Managers
 				traceString.AppendLine();
 
 				Trace.WriteLine(traceString);
-			} else {
-				if (wrapper.ErrorBackoff == null)
-					wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
-			}
+			} else if (e is CertErrorEventArgs) { // Certificate Errors warn us about problems with the transport layer authentication
+				CertErrorEventArgs certError = (CertErrorEventArgs)e;
+				StringBuilder error = new StringBuilder();
+				error.Append("AccountManager: X.509 Certificate Chain Error");
+				error.AppendFormat(" ({0}) ", certError.PolicyErrors.ToString());
+				error.AppendLine("Certificate Chain:");
+
+				foreach (var cert in certError.Chain.ChainElements)
+					error.AppendLine("\t" + cert.Certificate.SubjectName.Name);
+
+				Trace.Write(error);
+
+				certError.Continue = true;
+			} else
+				Trace.WriteLine("AccountManager: An IMProtocol.Error event was thrown that the AccountManager can not handle (Type: " + e.GetType().FullName + ")");
 		}
 
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;

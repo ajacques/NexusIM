@@ -94,6 +94,9 @@
 					<TextBlock VerticalAlignment="Top" Margin="65,30,0,0" HorizontalAlignment="Left">
 						<Hyperlink TextDecorations="None" Click="SetStatusMessage_Click">Share a message</Hyperlink>
 					</TextBlock>
+					<Grid Margin="0,5,5,0" Width="64" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top">
+						<WrapPanel x:Name="ProtocolGroup" HorizontalAlignment="Right" />
+					</Grid>
 				</Grid>
 				<Grid Height="Auto" Margin="0,0,0,0">
 					<!-- Box around the contact list -->

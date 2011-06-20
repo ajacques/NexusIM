@@ -53,6 +53,7 @@ namespace ProtocolTests
 		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
 		public event EventHandler OnUserListReceived;
 		public event EventHandler OnJoin;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
 	}
 
 	[TestClass]

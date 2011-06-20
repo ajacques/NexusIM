@@ -34,6 +34,7 @@ namespace InstantMessage.Protocols
 		void Leave(string reason);
 
 		event EventHandler<IMMessageEventArgs> OnMessageReceived;
+		event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
 		event EventHandler OnUserListReceived;
 		event EventHandler OnJoin;
 	}

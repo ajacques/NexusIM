@@ -24,9 +24,7 @@ namespace InstantMessage.Protocols.Irc
 			needPassword = false;
 			Port = 6667;
 
-			mWatchThread = new Thread(new ThreadStart(PingThreadLoop));
-			mWatchThread.Priority = ThreadPriority.BelowNormal;
-			mWatchThread.Name = "IRC Ping Watch Thread";
+			CreatePingThread();
 		}
 		public IRCProtocol(string hostname, int port = 6667, bool useSsl = false) : this()
 		{
@@ -347,10 +345,18 @@ namespace InstantMessage.Protocols.Irc
 		/// </summary>
 		private void PingThreadLoop()
 		{
+			TimeSpan mMaxIdle = TimeSpan.FromSeconds(mIdlePeriod.TotalSeconds * 2);
+
 			while (true)
 			{
+				Thread.Sleep(mIdlePeriod);
 				sendData(String.Format("PING :{0}", Math.Round((DateTime.UtcNow - mConnectTime).TotalSeconds, 0)));
-				Thread.Sleep(mMaxIdlePeriod);
+
+				if (DateTime.UtcNow - mLastCommunication > mMaxIdle)
+				{
+					triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR, "Ping timeout"));
+					break;
+				}
 			}
 		}
 
@@ -369,6 +375,9 @@ namespace InstantMessage.Protocols.Irc
 				{
 					switch (numericReply)
 					{
+						case 001: // Connection setup stuff
+							mActualServer = parameters[0];
+							break;
 						case 353: // Users in the channel
 							HandleChannelNamesList(parameters.First(s => s.StartsWith("#") | s.StartsWith("&")), line.Substring(line.LastIndexOf(':') + 1));
 							break;
@@ -406,6 +415,9 @@ namespace InstantMessage.Protocols.Irc
 							break;
 						case "NOTICE":
 							HandleNotice(line.Substring(line.IndexOf(':', 1) + 1));
+							break;
+						case "PONG":
+							HandlePongPacket(line.Substring(line.IndexOf(':', 1) + 1));
 							break;
 					}
 				}
@@ -566,6 +578,17 @@ namespace InstantMessage.Protocols.Irc
 				} catch (Exception) { } // Do not allow any bug in the client code to kill us
 			}
 		}
+		private void HandlePongPacket(string pingdata)
+		{
+			DateTime stamp = DateTime.UtcNow;
+			
+			TimeSpan clientDiff = TimeSpan.FromSeconds(Convert.ToInt32(pingdata));
+			TimeSpan respDiff = stamp - mConnectTime;
+
+			TimeSpan offset = respDiff - clientDiff;
+
+			Trace.WriteLineIf(offset.TotalSeconds > 5, "IRC: Latency Alert: " + offset.ToString());
+		}
 
 		// Socket Support Methods
 		private void SocketProcessByteQueue(int bytesRead)
@@ -720,6 +743,7 @@ namespace InstantMessage.Protocols.Irc
 
 			OnLogin();
 
+			CreatePingThread();
 			mWatchThread.Start();
 		}
 		private void sendData(string data)
@@ -732,7 +756,17 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private bool VerifyServerCertificate(object sender, X509Certificate certificates, X509Chain chain, SslPolicyErrors errors)
 		{
-			return true; // Ignore all Ssl errors
+			CertErrorEventArgs args = new CertErrorEventArgs(certificates, chain, errors);
+
+			triggerOnError(args);
+
+			return args.Continue; // Ignore all Ssl errors
+		}
+		private void CreatePingThread()
+		{
+			mWatchThread = new Thread(new ThreadStart(PingThreadLoop));
+			mWatchThread.Priority = ThreadPriority.BelowNormal;
+			mWatchThread.Name = "IRC Ping Watch Thread";
 		}
 
 		// Events
@@ -748,9 +782,10 @@ namespace InstantMessage.Protocols.Irc
 		private Thread mWatchThread;
 		private DateTime mLastCommunication;
 		private DateTime mConnectTime;
-		private static TimeSpan mMaxIdlePeriod = TimeSpan.FromSeconds(30);
+		private static TimeSpan mIdlePeriod = TimeSpan.FromSeconds(30);
 
 		// Socket-related Variables
+		private string mActualServer;
 		private object mSocketProcessLock = new object();
 		private byte[] mDataQueue;
 		private Socket client;

@@ -1,73 +1,8 @@
 ﻿using System;
 using InstantMessage.Protocols;
-using System.Net.Sockets;
 
 namespace InstantMessage.Events
 {
-	public enum DisconnectReason
-	{
-		OtherClient,
-		ServerError,
-		User,
-		Unknown,
-		NetworkProblem
-	}
-	public enum IMProtocolErrorReason
-	{
-		CONNERROR,
-		Invalid_Credentials,
-		LIMIT_REACHED,
-		Unknown
-	}
-	/// <summary>
-	/// Used to pass information about a protocol error back to event handlers for higher-level error processing
-	/// </summary>
-	public class IMErrorEventArgs : EventArgs
-	{
-		public IMErrorEventArgs(IMProtocolErrorReason reason)
-		{
-			mReason = reason;
-		}
-		public IMErrorEventArgs(IMProtocolErrorReason reason, string message)
-		{
-			mReason = reason;
-			mMessage = message;
-		}
-		public IMProtocolErrorReason Reason
-		{
-			get	{
-				return mReason;
-			}
-		}
-		public string Message
-		{
-			get	{
-				return mMessage;
-			}
-			protected set {
-				mMessage = value;
-			}
-		}
-		public bool IsUserError
-		{
-			get	{
-				return mUserError;
-			}
-			protected set {
-				mUserError = value;
-			}
-		}
-		public bool IsUserCorrectable
-		{
-			get;
-			protected set;
-		}
-
-		private bool mUserError;
-		private IMProtocolErrorReason mReason;
-		private string mMessage;
-	}
-
 	public class BadCredentialsEventArgs : IMErrorEventArgs
 	{
 		public BadCredentialsEventArgs() : base(IMProtocolErrorReason.Invalid_Credentials)
@@ -81,7 +16,6 @@ namespace InstantMessage.Events
 			Message = message;
 		}
 	}
-
 	public class AccountThrottledEventArgs : IMErrorEventArgs
 	{
 		public AccountThrottledEventArgs() : base(IMProtocolErrorReason.LIMIT_REACHED)
@@ -93,19 +27,6 @@ namespace InstantMessage.Events
 		{
 			get;
 			internal set;
-		}
-	}
-	public class SocketErrorEventArgs : IMErrorEventArgs
-	{
-		public SocketErrorEventArgs(SocketException exception) : base(IMProtocolErrorReason.CONNERROR)
-		{
-			Exception = exception;
-		}
-
-		public SocketException Exception
-		{
-			get;
-			private set;
 		}
 	}
 
@@ -253,36 +174,6 @@ namespace InstantMessage.Events
 		private string mDisplayName = "";
 		private string mSubject = "";
 	}
-	public class IMRoomInviteEventArgs : EventArgs
-	{
-		public IMRoomInviteEventArgs(string sender, string roomname, string message)
-		{
-			mSender = sender;
-			mRoomName = roomname;
-			mMessage = message;
-		}
-		public string Sender
-		{
-			get	{
-				return mSender;
-			}
-		}
-		public string RoomName
-		{
-			get	{
-				return mRoomName;
-			}
-		}
-		public string Message
-		{
-			get	{
-				return mMessage;
-			}
-		}
-		private string mSender = "";
-		private string mRoomName = "";
-		private string mMessage = "";
-	}
 	public class IMSendMessageEventArgs : EventArgs
 	{
 		public IMSendMessageEventArgs(IMProtocol fromProtocol, IMBuddy buddy, string message)
@@ -327,31 +218,5 @@ namespace InstantMessage.Events
 		private bool mHandled = false;
 		private IMBuddy mBuddy;
 		private string mMessage = "";
-	}
-	public class IMChatRoomGenericEventArgs : EventArgs
-	{
-		public string Username
-		{
-			get;
-			internal set;
-		}
-		public string Message
-		{
-			get;
-			internal set;
-		}
-		public bool UserRequested
-		{
-			get;
-			internal set;
-		}
-	}
-	public class IMChatRoomEventArgs : EventArgs
-	{
-		public IChatRoom ChatRoom
-		{
-			get;
-			internal set;
-		}
 	}
 }

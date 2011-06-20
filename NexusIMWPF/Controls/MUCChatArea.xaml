@@ -25,14 +25,7 @@
 			</RichTextBox>
 		</Grid>
 		<Grid Grid.Column="1">
-			<ListBox x:Name="OccupantList" Background="{x:Null}">
-				<TextBlock>Private_Harlock</TextBlock>
-				<TextBlock>Penguizzle</TextBlock>
-				<TextBlock>Arcaaadia</TextBlock>
-				<TextBlock>Bart_Crazy</TextBlock>
-				<TextBlock>Inspector_Wizard</TextBlock>
-				<TextBlock>Professor_Insanity</TextBlock>
-			</ListBox>
+			<ListBox x:Name="OccupantList" Background="{x:Null}" />
 		</Grid>
 		<Grid Grid.Row="2" Grid.ColumnSpan="2">
 			<Grid.Background>

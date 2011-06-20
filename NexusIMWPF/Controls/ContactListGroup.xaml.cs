@@ -16,13 +16,18 @@ namespace NexusIM.Controls
 	/// <summary>
 	/// Interaction logic for ContactListGroup.xaml
 	/// </summary>
-	public partial class ContactListGroup : UserControl, INotifyPropertyChanged
+	public partial class ContactListGroup : UserControl, INotifyPropertyChanged, IDisposable
 	{
 		public ContactListGroup()
 		{
 			this.InitializeComponent();
 
 			this.MouseDoubleClick += new MouseButtonEventHandler(ContactListGroup_MouseDoubleClick);
+		}
+
+		public void Dispose()
+		{
+			SourceGroup.Contacts.CollectionChanged -= new NotifyCollectionChangedEventHandler(Contacts_CollectionChanged);
 		}
 
 		public GroupOfContacts SourceGroup

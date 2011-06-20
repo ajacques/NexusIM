@@ -515,6 +515,7 @@ namespace NexusIM
 						protocol.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
 							current.Username = protocol.Username;
 							current.Password = protocol.Password;
+							current.Server = protocol.Server;
 
 							if (e.PropertyName == "Nickname")
 								protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;

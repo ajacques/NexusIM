@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using InstantMessage.Protocols;
 using NexusIM.Windows;
+using InstantMessage.Events;
 
 namespace NexusIM.Controls
 {
@@ -50,11 +51,31 @@ namespace NexusIM.Controls
 
 			Content = mArea = area;
 			mRoom = context;
+
+			context.OnMessageReceived += new EventHandler<IMMessageEventArgs>(ChatRoom_OnMessageReceived);
+
+			mHeaderString.Text = context.Name;
 		}
 
+		public override string ToString()
+		{
+			return mRoom.Name;
+		}
+
+		private void ChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
+		{
+			if (HostWindow != null)
+				HostWindow.IncrementUnread();
+		}
+
+		// User Interface Event Handlers
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
+		}
+		private void ParentWindow_Closed(object sender, EventArgs e)
+		{
+			mRoom.Leave(String.Empty);
 		}
 
 		protected override void OnVisualParentChanged(DependencyObject oldParent)
@@ -64,11 +85,6 @@ namespace NexusIM.Controls
 			ChatWindow window = (ChatWindow)Window.GetWindow(this);
 			window.Closed += new EventHandler(ParentWindow_Closed);
 			mWindow = window;
-		}
-
-		private void ParentWindow_Closed(object sender, EventArgs e)
-		{
-			mRoom.Leave(String.Empty);
 		}
 
 		public MUCChatArea HostedArea

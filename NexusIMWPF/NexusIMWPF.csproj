@@ -137,6 +137,11 @@
     </Compile>
     <Compile Include="Controls\GroupChatAreaHost.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
+    <Compile Include="Controls\IRCBanMaskValidation.xaml.cs">
+      <DependentUpon>IRCBanMaskValidation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IrcChanUserContextMenu.cs" />
+    <Compile Include="Controls\IRCProtocolMenu.cs" />
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
       <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
     </Compile>
@@ -396,6 +401,10 @@
     <Page Include="Controls\ContactListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\IRCBanMaskValidation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MUCChatArea.xaml">
       <SubType>Designer</SubType>
