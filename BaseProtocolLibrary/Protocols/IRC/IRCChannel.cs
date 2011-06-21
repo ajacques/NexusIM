@@ -93,7 +93,7 @@ namespace InstantMessage.Protocols.Irc
 			mInChannel = false;
 			try {
 				if (OnKickedFromChannel != null)
-					OnKickedFromChannel(this, new IMChatRoomGenericEventArgs() { Username = kicker, Message = reason });
+					OnKickedFromChannel(this, new IMChatRoomGenericEventArgs() { Username = new IRCUserMask(mProtocol, kicker), Message = reason });
 			} catch (Exception e) {
 				Debug.WriteLine(e.Message);
 			}
@@ -102,7 +102,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			try {
 				if (OnUserJoin != null)
-					OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = username});
+					OnUserJoin(this, new IMChatRoomGenericEventArgs() { Username = new IRCUserMask(mProtocol, username) });
 			} catch (Exception e) {
 				Debug.WriteLine(e.Message);
 			}

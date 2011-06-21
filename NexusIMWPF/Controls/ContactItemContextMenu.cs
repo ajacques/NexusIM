@@ -10,13 +10,18 @@ namespace NexusIM.Controls
 {
 	class ContactItemContextMenu : ContextMenu
 	{
-		public ContactItemContextMenu(IContact source)
+		public ContactItemContextMenu()
 		{
 			SetupMenuItems();
 		}
 
 		private void SetupMenuItems()
 		{
+			ContactNameHint = new MenuItem();
+			ContactNameHint.IsEnabled = false;
+			base.Items.Add(ContactNameHint);
+			base.Items.Add(new Separator());
+
 			SendIMItem = new MenuItem();
 			SendIMItem.Header = "Instant Message...";
 			SendIMItem.FontWeight = FontWeight.FromOpenTypeWeight(700);
@@ -30,6 +35,11 @@ namespace NexusIM.Controls
 		}
 
 		public MenuItem SendIMItem
+		{
+			get;
+			private set;
+		}
+		public MenuItem ContactNameHint
 		{
 			get;
 			private set;

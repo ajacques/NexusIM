@@ -8,7 +8,7 @@ namespace InstantMessage.Events
 {
 	public class IMChatRoomGenericEventArgs : EventArgs
 	{
-		public string Username
+		public IContact Username
 		{
 			get;
 			internal set;

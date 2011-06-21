@@ -3,28 +3,49 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using InstantMessage;
+using NexusIM.Misc;
+using System.Collections.Generic;
 
 namespace NexusIM.Managers
 {
-	public static class AggregateContactList
+	internal static class AggregateContactList
 	{
 		public static void Setup()
 		{
 			AccountManager.Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 
-			ContactList = new ObservableCollection<IContact>();
-			Groups = new ObservableCollection<GroupOfContacts>();
+			ContactList = new AdvancedSet<IContact>(new ContactComparer());
+			Groups = new AdvancedSet<GroupOfContacts>(new GroupComparer()); //new AdvancedSet<GroupOfContacts>();
 		}
 
-		public static ObservableCollection<IContact> ContactList
+		public static AdvancedSet<IContact> ContactList
 		{
 			get;
 			private set;
 		}
-		public static ObservableCollection<GroupOfContacts> Groups
+		public static AdvancedSet<GroupOfContacts> Groups
 		{
 			get;
 			private set;
+		}
+
+		// Nested Classes
+		private class ContactComparer : IComparer<IContact>
+		{
+			public int Compare(IContact x, IContact y)
+			{
+				if (x.Protocol != y.Protocol)
+					return x.Protocol.CompareTo(y.Protocol);
+
+				return x.Username.CompareTo(y.Username);
+			}
+		}
+		private class GroupComparer : IComparer<GroupOfContacts>
+		{
+			public int Compare(GroupOfContacts x, GroupOfContacts y)
+			{
+				return x.GroupName.CompareTo(y.GroupName);
+			}
 		}
 
 		private static void Accounts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

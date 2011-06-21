@@ -17,15 +17,14 @@
 		</Grid.ColumnDefinitions>
 		<Grid HorizontalAlignment="Left">
 			<Rectangle Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
-			<RichTextBox x:Name="ChatHistoryContainer" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" MaxHeight="397" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
+			<RichTextBox x:Name="ChatHistoryContainer" IsReadOnly="True" IsDocumentEnabled="True" Background="{x:Null}" BorderThickness="0" MaxHeight="397" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
 				<FlowDocument>
-					<Paragraph x:Name="ChatHistoryBox">
-					</Paragraph>
+					<Paragraph x:Name="ChatHistoryBox" />
 				</FlowDocument>
 			</RichTextBox>
 		</Grid>
 		<Grid Grid.Column="1">
-			<ListBox x:Name="OccupantList" Background="{x:Null}" />
+			<ListBox x:Name="OccupantList" Background="{x:Null}" MouseRightButtonDown="OccupantList_MouseRightButtonDown" SelectionChanged="OccupantList_SelectionChanged" />
 		</Grid>
 		<Grid Grid.Row="2" Grid.ColumnSpan="2">
 			<Grid.Background>

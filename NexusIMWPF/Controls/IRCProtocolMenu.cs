@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using InstantMessage.Protocols.Irc;
 using NexusIM.Managers;
+using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {
@@ -13,6 +14,14 @@ namespace NexusIM.Controls
 		public IRCProtocolMenu()
 		{
 			
+		}
+
+		// Event handlers
+		private void joinItem_Click(object sender, RoutedEventArgs e)
+		{
+			JoinChatRoom window = new JoinChatRoom();
+			window.Owner = Window.GetWindow(this);
+			window.ShowDialog();
 		}
 
 		protected override void OnOpened(RoutedEventArgs e)
@@ -42,6 +51,7 @@ namespace NexusIM.Controls
 
 			MenuItem joinItem = new MenuItem();
 			joinItem.Header = "Join Chat Room";
+			joinItem.Click += new RoutedEventHandler(joinItem_Click);
 
 			coll.Add(joinItem);
 		}

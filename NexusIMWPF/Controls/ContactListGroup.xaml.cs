@@ -80,17 +80,17 @@ namespace NexusIM.Controls
 
 		private void AddContacts(IEnumerable contacts)
 		{
-			Dispatcher.BeginInvoke(new GenericEvent(() =>
+			Dispatcher.InvokeIfRequired(() =>
 			{
 				foreach (IContact contact in contacts)
 				{
 					ContactListItem item = new ContactListItem();
 					item.DataContext = contact;
-					item.ContextMenu = new ContactItemContextMenu(contact);
+					item.ContextMenu = new ContactItemContextMenu();
 					item.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
 					ContactList.Children.Add(item);
 				}
-			}));
+			}, false); // Don't use async because we have a reader lock right now and we can't let it go because another thread might try to write to it
 		}
 
 		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)

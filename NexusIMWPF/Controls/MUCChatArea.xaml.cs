@@ -11,13 +11,14 @@ using InstantMessage;
 using System.Collections.Generic;
 using NexusIM.Misc;
 using InstantMessage.Protocols.Irc;
+using System.Windows;
 
 namespace NexusIM.Controls
 {
 	/// <summary>
 	/// Interaction logic for MUCChatArea.xaml
 	/// </summary>
-	public partial class MUCChatArea : UserControl, ITabbedArea
+	public partial class MUCChatArea : UserControl, IDisposable
 	{
 		public MUCChatArea()
 		{
@@ -36,14 +37,29 @@ namespace NexusIM.Controls
 			if (mProtocol is IRCProtocol)
 			{
 				IRCProtocol ircProtocol = (IRCProtocol)mProtocol;
+				IRCChannel ircChannel = (IRCChannel)room;
 				ircProtocol.OnNoticeReceive += new EventHandler<IMChatRoomGenericEventArgs>(IrcProtocol_OnNoticeReceive);
+				ircChannel.OnKickedFromChannel += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnKicked);
+
 				mUserContextMenu = new IrcChanUserContextMenu();
 			}
 		}
-		
-		private void Host_TabClosed(object sender, EventArgs e)
+
+		public void Dispose()
 		{
-			ChatRoom.Leave(String.Empty);
+
+			// Clean up all event handlers
+			mChatRoom.OnMessageReceived -= new EventHandler<IMMessageEventArgs>(ChatRoom_OnMessageReceived);
+			mChatRoom.OnUserListReceived -= new EventHandler(ChatRoom_OnUserListReceived);
+			mChatRoom.OnUserJoin -= new EventHandler<IMChatRoomGenericEventArgs>(ChatRoom_OnUserJoin);
+
+			if (mProtocol is IRCProtocol)
+			{
+				IRCProtocol ircProtocol = (IRCProtocol)mProtocol;
+				IRCChannel ircChannel = (IRCChannel)mChatRoom;
+				ircProtocol.OnNoticeReceive -= new EventHandler<IMChatRoomGenericEventArgs>(IrcProtocol_OnNoticeReceive);
+				ircChannel.OnKickedFromChannel -= new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnKicked);
+			}
 		}
 
 		public void ProcessChatMessage(IMMessageEventArgs e)
@@ -55,11 +71,7 @@ namespace NexusIM.Controls
 				inline.UsernameColor = Color.FromRgb(0, 0, 255);
 				inline.MessageBody = e.Message;
 
-				if (ChatHistoryBox.Inlines.Any())
-					ChatHistoryBox.Inlines.Add(new LineBreak());
-
-				ChatHistoryBox.Inlines.Add(inline);
-				ChatHistoryContainer.ScrollToEnd();
+				AppendChatInline(inline);
 			}));
 		}
 
@@ -78,6 +90,14 @@ namespace NexusIM.Controls
 					OccupantList.Items.Add(user);
 				}
 			}));
+		}
+		private void AppendChatInline(Inline inline)
+		{
+			if (ChatHistoryBox.Inlines.Any())
+				ChatHistoryBox.Inlines.Add(new LineBreak());
+
+			ChatHistoryBox.Inlines.Add(inline);
+			ChatHistoryContainer.ScrollToEnd();
 		}
 
 		// User Interface Event Handlers
@@ -101,6 +121,35 @@ namespace NexusIM.Controls
 				ProcessChatMessage(new IMMessageEventArgs(new SelfContact(mProtocol), message));
 			}
 		}
+		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
+		{
+			Hyperlink hyperlink = (Hyperlink)sender;
+			if (hyperlink.IsMouseOver)
+				hyperlink.TextDecorations = TextDecorations.Underline;
+			else
+				hyperlink.TextDecorations = null;
+		}
+		private void RejoinLink_Click(object sender, RoutedEventArgs e)
+		{
+			ChatHistoryBox.Inlines.Remove(ChatHistoryBox.Inlines.LastInline); // Remove the message
+
+			if (!ChatRoom.Joined)
+				((IHasMUCRooms)mProtocol).JoinChatRoom(ChatRoom.Name);
+		}
+		private void OccupantList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			if (OccupantList.SelectedItem != null)
+			{
+				mUserContextMenu.PopulateMenu(OccupantList.SelectedItem.ToString());
+			}
+		}
+		private void OccupantList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			if (OccupantList.SelectedItem != null)
+			{
+				mUserContextMenu.PopulateMenu(OccupantList.SelectedItem.ToString());
+			}
+		}
 
 		// Chat Room Event Handlers
 		private void ChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
@@ -115,16 +164,52 @@ namespace NexusIM.Controls
 		{
 			ChatHistoryBox.Dispatcher.InvokeIfRequired(() => {
 				Span span = new Span();
-				Run user = new Run(e.Username);
+				Run user = new Run(e.Username.Nickname);
 				Run message = new Run(" has entered the room.");
+
+				span.FontStyle = FontStyles.Italic;
+				span.Foreground = Brushes.Green;
 
 				span.Inlines.Add(user);
 				span.Inlines.Add(message);
-				ChatHistoryBox.Inlines.Add(new LineBreak());
-				ChatHistoryBox.Inlines.Add(span);
+				AppendChatInline(span);
 			});
 		}
+		private void IrcChannel_OnKicked(object sender, IMChatRoomGenericEventArgs e)
+		{
+			// Build and display a block of text to show the user who kicked them and why
+			// And allow them to rejoin
+			Dispatcher.InvokeIfRequired(() => {
+				Span span = new Span();
+				Run messageRun = new Run();
+				messageRun.Text = String.Format("You have been kicked by {0} (Reason: {1})", e.Username, e.Message);
+				messageRun.Foreground = Brushes.Red;
 
+				span.Inlines.Add(messageRun);
+				span.Inlines.Add(new LineBreak());
+
+				Hyperlink rejoinLink = new Hyperlink(new Run("Rejoin"));
+				span.Inlines.Add(rejoinLink);
+				span.Inlines.Add(new Run("   ")); // Spacer
+				
+				rejoinLink.TextDecorations = null;
+				rejoinLink.BaselineAlignment = BaselineAlignment.Top; // Align the text with the checkbox - It looks weird when it's offset
+				rejoinLink.MouseEnter += new MouseEventHandler(Hyperlink_MouseEnter);
+				rejoinLink.MouseLeave += new MouseEventHandler(Hyperlink_MouseEnter);
+				rejoinLink.Click += new RoutedEventHandler(RejoinLink_Click);
+
+				InlineUIContainer container = new InlineUIContainer();
+				span.Inlines.Add(container);
+
+				CheckBox autoRejoin = new CheckBox();
+				autoRejoin.Content = new TextBlock() { Text = "Automatically rejoin"};
+				container.Child = autoRejoin;
+
+				AppendChatInline(span);
+			});
+		}
+		
+		// Protocol Event Handlers
 		private void IrcProtocol_OnNoticeReceive(object sender, IMChatRoomGenericEventArgs e)
 		{
 			IRCProtocol ircProtocol = (IRCProtocol)sender;
@@ -135,9 +220,11 @@ namespace NexusIM.Controls
 				Run notice = new Run();
 				notice.Text = e.Message;
 
+				span.Foreground = Brushes.Gray;
+
 				span.Inlines.Add(notice);
 
-				ChatHistoryBox.Inlines.Add(span);
+				AppendChatInline(span);
 			});
 		}
 
@@ -148,18 +235,8 @@ namespace NexusIM.Controls
 			}
 		}
 
+		private IrcChanUserContextMenu mUserContextMenu;
 		private IChatRoom mChatRoom;
 		private IMProtocol mProtocol;
-
-		#region ITabbedArea Members
-
-		public void PopulateUIControls(object context)
-		{
-			throw new NotImplementedException();
-		}
-
-		#endregion
-
-		private IrcChanUserContextMenu mUserContextMenu;
 	}
 }

@@ -5,11 +5,15 @@ using System.Collections.Specialized;
 using System.Reflection;
 using System.Threading;
 
-namespace NexusIM.Misc
+namespace InstantMessage
 {
-	internal class AdvancedSet2<T> : SortedSet<T>, INotifyCollectionChanged where T : class
+	public class AdvancedSet<T> : SortedSet<T>, INotifyCollectionChanged where T : class
 	{
-		public AdvancedSet2(IComparer<T> comparer) : base(comparer)
+		public AdvancedSet() : base()
+		{
+			mLock = new ReaderWriterLockSlim();
+		}
+		public AdvancedSet(IComparer<T> comparer) : base(comparer)
 		{
 			mLock = new ReaderWriterLockSlim();
 		}
@@ -56,73 +60,58 @@ namespace NexusIM.Misc
 				mLock.ExitWriteLock();
 			}
 		}
-		
-		/// <summary>
-		/// Searches the tree for an item matching the predicate without using recursion.
-		/// </summary>
-		protected T SearchNoStack(object root, Func<T, int> predicate)
+
+		protected void RaiseItemAdded(T newItem)
 		{
-			if (root == null)
-				return null;
-
-			Type type = root.GetType();
-			FieldInfo left = type.GetField("Left");
-			FieldInfo right = type.GetField("Right");
-
-			int num;
-			mLock.EnterReadLock();
-			for (object node = root; node != null; node = (num < 0) ? left.GetValue(node) : right.GetValue(node))
+			if (CollectionChanged != null)
 			{
-				T value = (T)type.GetField("Item").GetValue(node);
+				mLock.EnterReadLock();
 
-				num = predicate(value);
-				if (num == 0)
-				{
+				try {
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItem));
+				} finally {
 					mLock.ExitReadLock();
-					return value;
 				}
 			}
-			mLock.ExitReadLock();
-			return null;
 		}
-
-		protected T Search(object node, Func<T, int> predicate)
-		{
-			if (node == null)
-				return null;
-
-			Type type = node.GetType();
-			T value = (T)type.GetField("Item").GetValue(node);
-
-			int comparison = predicate(value);
-
-			if (comparison == 0)
-				return value;
-
-			object newNode;
-
-			if (comparison < 0)
-				newNode = type.GetField("Left").GetValue(node);
-			else
-				newNode = type.GetField("Right").GetValue(node);
-			
-			return Search(newNode, predicate);
-		}
-
-		private void RaiseItemAdded(T newItem)
+		protected void RaiseItemRemoved(T oldItem)
 		{
 			if (CollectionChanged != null)
-				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItem ));
+			{
+				mLock.EnterReadLock();
+
+				try {
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, oldItem));
+				} finally {
+					mLock.ExitReadLock();
+				}
+			}
 		}
-		private void RaiseItemRemoved(T oldItem)
+		protected void RaiseItemRemoved(IList<T> oldItems)
 		{
 			if (CollectionChanged != null)
-				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, oldItem));
+			{
+				mLock.EnterReadLock();
+
+				try {
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, oldItems));
+				} finally {
+					mLock.ExitReadLock();
+				}
+			}
 		}
-		private void RaiseCollReset()
+		protected void RaiseCollReset()
 		{
 			if (CollectionChanged != null)
-				CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+			{
+				mLock.EnterReadLock();
+
+				try {
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+				} finally {
+					mLock.ExitReadLock();
+				}
+			}
 		}
 
 		public new IEnumerator<T> GetEnumerator()
@@ -187,18 +176,6 @@ namespace NexusIM.Misc
 		{
 			get {
 				return mLock;
-			}
-		}
-		protected object RootNode
-		{
-			get	{
-				Type t = base.GetType().BaseType;
-
-				//if (t == typeof(AdvancedSet<T>))
-				//	t = t.BaseType;
-
-				FieldInfo info = t.GetField("root", BindingFlags.Instance | BindingFlags.NonPublic);
-				return info.GetValue(this);
 			}
 		}
 

@@ -79,7 +79,7 @@ namespace InstantMessage
 	/// Stores information and handles communication for specific IM networks
 	/// </summary>
 	[IMNetwork("default")]
-	public class IMProtocol : INotifyPropertyChanged
+	public class IMProtocol : INotifyPropertyChanged, IComparable<IMProtocol>
 	{
 		public IMProtocol()
 		{
@@ -184,6 +184,13 @@ namespace InstantMessage
 		public override int GetHashCode()
 		{
 			return base.GetHashCode() + mUsername.GetHashCode() + mProtocolTypeShort.GetHashCode();
+		}
+		public int CompareTo(IMProtocol other)
+		{
+			if (Protocol != other.Protocol)
+				return Protocol.CompareTo(other.Protocol);
+
+			return Username.CompareTo(other.Username);
 		}
 		public ContactCollection ContactList
 		{
@@ -482,7 +489,6 @@ namespace InstantMessage
 		protected string protocolType = "Default";
 		protected string mProtocolTypeShort = "default";
 		protected string mServer;
-		protected bool blistChange;
 		protected bool mConnected;
 		protected string mStatusMessage;
 		protected IMStatus mStatus;
@@ -493,9 +499,6 @@ namespace InstantMessage
 		protected bool supportsUserInvisiblity;
 		protected bool needUsername;
 		protected bool needPassword;
-		protected bool enableSaving;
-		protected bool mIsIdle;
-		protected string mAvatar;
 		protected IMProtocolStatus mProtocolStatus;
 		protected Exception mLoginException;
 	}

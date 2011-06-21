@@ -85,8 +85,9 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public IRCChannel JoinChatRoom(string room)
 		{
-			if (mChannels.Any(chan => chan.Name == room))
-				return mChannels.First(chan => chan.Name == room);
+			IRCChannel qchannel;
+			if (mChannels.TryGetValue(room, out qchannel))
+				return qchannel;
 
 			sendData("JOIN " + room);
 
@@ -149,7 +150,7 @@ namespace InstantMessage.Protocols.Irc
 		/// <returns>Null if no results</returns>
 		public IRCChannel FindChannelByName(string channelName)
 		{
-			return mChannels.FirstOrDefault(chan => chan.Name == channelName);
+			return mChannels[channelName];
 		}
 
 		public void SendRawMessage(string message)
@@ -315,13 +316,13 @@ namespace InstantMessage.Protocols.Irc
 		public IEnumerable<IRCChannel> Channels
 		{
 			get	{
-				return mChannels;
+				return mChannels.Values;
 			}
 		}
 		IEnumerable<IChatRoom> IHasMUCRooms.Channels
 		{
 			get	{
-				return mChannels;
+				return mChannels.Values;
 			}
 		}
 		public int Port
@@ -402,7 +403,7 @@ namespace InstantMessage.Protocols.Irc
 							HandleMessagePacket(line, parameters);
 							break;
 						case "KICK":
-							HandleKickPacket(parameters);
+							HandleKickPacket(parameters, line.Substring(line.IndexOf(':', 1) + 1));
 							break;
 						case "JOIN":
 							HandleUserJoinPacket(parameters);
@@ -434,7 +435,7 @@ namespace InstantMessage.Protocols.Irc
 			try	{
 				if (OnNoticeReceive != null)
 					OnNoticeReceive(this, new IMChatRoomGenericEventArgs() { Message = message });
-			} catch (Exception e) {
+			} catch (Exception) {
 
 			}
 		}
@@ -472,7 +473,7 @@ namespace InstantMessage.Protocols.Irc
 			{
 				string channelName = parameters[2];
 
-				IRCChannel channel = mChannels.First(chan => chan.Name == channelName);
+				IRCChannel channel = FindChannelByName(channelName);
 				channel.TriggerOnPart(line.Substring(line.IndexOf(':', 5) + 1));
 			}
 		}
@@ -485,7 +486,7 @@ namespace InstantMessage.Protocols.Irc
 
 			string modes = parameters[3];
 
-			IRCChannel channel = mChannels.First(chan => chan.Name == channelName);
+			IRCChannel channel = FindChannelByName(channelName);
 			
 			bool isApply = false;
 
@@ -519,9 +520,9 @@ namespace InstantMessage.Protocols.Irc
 		{
 			string name = parameters[2].Replace(":", "");
 			if (ExtractNickname(parameters[0]) != mNickname)
-				mChannels.First(c => c.Name == name).TriggerOnUserJoin(parameters[0]);
+				FindChannelByName(name).TriggerOnUserJoin(parameters[0]);
 			else {
-				if (!mChannels.Any(chan => chan.Name == name))
+				if (!mChannels.ContainsKey(name))
 				{
 					IRCChannel channel = new IRCChannel(name, this);
 					mChannels.Add(channel);
@@ -529,7 +530,7 @@ namespace InstantMessage.Protocols.Irc
 					if (OnJoinChannel != null)
 						OnJoinChannel(this, new IMChatRoomEventArgs() { ChatRoom = channel });
 				} else {
-					IRCChannel channel = mChannels.First(chan => chan.Name == name);
+					IRCChannel channel = FindChannelByName(name);
 
 					channel.Joined = true;
 
@@ -539,11 +540,11 @@ namespace InstantMessage.Protocols.Irc
 			}
 
 		}
-		private void HandleKickPacket(string[] parameters)
+		private void HandleKickPacket(string[] parameters, string reason)
 		{
 			if (parameters[3] == mNickname) // It's us! 
 			{
-				mChannels.First(c => c.Name == parameters[2]).TriggerOnKicked(parameters[0], "");
+				FindChannelByName(parameters[2]).TriggerOnKicked(parameters[0], reason);
 			}
 		}
 		private void HandlePingPacket(string destination)
@@ -552,7 +553,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void HandleChannelNamesList(string channelName, string list)
 		{
-			IRCChannel channel = mChannels.FirstOrDefault(chan => chan.Name == channelName);
+			IRCChannel channel = FindChannelByName(channelName);
 
 			if (channel == null)
 				channel = (IRCChannel)JoinChatRoom(channelName);
@@ -567,7 +568,7 @@ namespace InstantMessage.Protocols.Irc
 
 			if (recipient[0] == '#') // IRC Channel
 			{
-				IRCChannel channel = mChannels.FirstOrDefault(chan => chan.Name == recipient);
+				IRCChannel channel = FindChannelByName(recipient);
 
 				int messageStartIndex = line.IndexOf(':', 5);
 				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
@@ -778,7 +779,7 @@ namespace InstantMessage.Protocols.Irc
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
 		private string mNickname;
-		private IList<IRCChannel> mChannels = new List<IRCChannel>();
+		private ChatRoomCollection<IRCChannel> mChannels = new ChatRoomCollection<IRCChannel>();
 		private Thread mWatchThread;
 		private DateTime mLastCommunication;
 		private DateTime mConnectTime;

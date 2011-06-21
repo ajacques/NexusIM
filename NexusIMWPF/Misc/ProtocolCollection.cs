@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using InstantMessage;
+using System.Linq;
 
 namespace NexusIM.Misc
 {
@@ -16,13 +17,14 @@ namespace NexusIM.Misc
 		}
 		public IMProtocolWrapper Find(string type, string username)
 		{
-			object val = base.RootNode;
+			return Enumerable.FirstOrDefault(this, w => w.Protocol.Protocol == type && w.Protocol.Username == username);
+			/*object val = base.RootNode;
 
 			return SearchNoStack(val, (w) => {
 				if (type != w.Protocol.Protocol)
 					return type.CompareTo(w.Protocol.Protocol);
 				return username.CompareTo(w.Protocol.Username);
-			});
+			});*/
 		}
 
 		private class WrapperComparer : IComparer<IMProtocolWrapper>

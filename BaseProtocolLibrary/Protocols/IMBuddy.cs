@@ -9,7 +9,7 @@ namespace InstantMessage
 	/// <summary>
 	/// Stores information about a single contact
 	/// </summary>
-	public sealed partial class IMBuddy : IContact, INotifyPropertyChanged
+	public sealed partial class IMBuddy : IContact, INotifyPropertyChanged, IComparable<IMBuddy>, IComparable
 	{
 		public IMBuddy()
 		{
@@ -253,6 +253,20 @@ namespace InstantMessage
 				throw new ArgumentNullException("contact");
 
 			return object.ReferenceEquals(Protocol, right.Protocol) && Username.Equals(right.Username);
+		}
+		public int CompareTo(IMBuddy other)
+		{
+			if (Protocol != other.Protocol)
+				return Protocol.CompareTo(other.Protocol);
+
+			return Username.CompareTo(other.Username);
+		}
+		public int CompareTo(object other)
+		{
+			if (other.GetType() != typeof(IMBuddy))
+				return -1;
+
+			return CompareTo((IMBuddy)other);
 		}
 
 		private void NotifyPropertyChanged(string property)

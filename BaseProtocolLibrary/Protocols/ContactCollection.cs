@@ -8,15 +8,8 @@ using System.Collections;
 
 namespace InstantMessage.Protocols
 {
-	public class ContactCollection : ObservableCollection<IContact>
+	public class ContactCollection : AdvancedSet<IContact>
 	{
-		public new void Clear()
-		{
-			OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, (IList)this.Items));
-
-			base.ClearItems();
-		}
-
 		public IContact this[string name]
 		{
 			get	{

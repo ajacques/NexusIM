@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Threading;
+﻿using System.Windows.Threading;
 
-namespace NexusIM.Misc
+namespace NexusIM
 {
 	internal static class MiscExtensions
 	{
