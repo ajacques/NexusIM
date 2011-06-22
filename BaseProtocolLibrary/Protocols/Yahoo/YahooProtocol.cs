@@ -903,14 +903,16 @@ namespace InstantMessage.Protocols.Yahoo
 			authpkt.AddParameter(277, authtoken + "; path=/; domain=.yahoo.com");
 			authpkt.AddParameter(278, authtoken2 + "; path=/; domain=.yahoo.com");
 			authpkt.AddParameter(307, generateAuthHash(crumb, challenge));
-			authpkt.AddParameter(244, "16777151"); // Build number
+			authpkt.AddParameter(59, bcookie);
 			authpkt.AddParameter(2, mUsername);
-
-			// This is an optional token that is include in the Set-Cookie header on certain HTTP responses.. Still trying to find it
-			//byte[] unknownbyte = new byte[] { 0x42, 0x09, 0x30, 0x6c, 0x37, 0x64, 0x61, 0x32, 0x74, 0x35, 0x34, 0x37, 0x63, 0x75, 0x32, 0x26, 0x62, 0x3d, 0x33, 0x26, 0x73, 0x3d, 0x38, 0x6e };
-			//authpkt.AddParameter(59, dEncoding.GetString(unknownbyte, 0, unknownbyte.Length));
+			authpkt.AddParameter(2, "1");
+			authpkt.AddParameter(244, "16777151"); // Build number
 			authpkt.AddParameter(98, "us");
-			authpkt.AddParameter(135, "11.0.0.1751"); // Version Info
+			authpkt.AddParameter(135, "11.0.0.1751"); // Version Info			
+			authpkt.AddParameter(300, "508");
+			authpkt.AddParameter(500, "000000000000"); // MAC address - We're not going to submit it
+			authpkt.AddParameter(510, "0");
+			authpkt.AddParameter(301, "508");
 
 			sendPacket(authpkt);
 			
@@ -998,7 +1000,12 @@ namespace InstantMessage.Protocols.Yahoo
 				// cookievalidfor=86400
 				string validTime = reader.ReadLine();
 				validTime = validTime.Substring(15);
-				validfor = Convert.ToInt32(validTime);;
+				validfor = Convert.ToInt32(validTime);
+
+				//  [                ]
+				// B=6c68lnh6vdmm5...tUjK; expires=Tue, 02-Jun
+				bcookie = reader.ReadLine();
+				bcookie = "B\t" + bcookie.Substring(2, authtoken.IndexOf(';') - 2);
 			} else {
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "An unknown error occurred while requesting secondary login tokens. YMSG Error Code: " + status.ToString()));
 			}
@@ -1008,6 +1015,7 @@ namespace InstantMessage.Protocols.Yahoo
 			mConfig["authtoken1"] = authtoken;
 			mConfig["authtoken2"] = authtoken2;
 			mConfig["authcrumb"] = crumb;
+			mConfig["bcookie"] = bcookie;
 			mConfig["tokenexpires"] = DateTime.UtcNow.AddSeconds(validfor).ToUnixEpoch().ToString();
 
 			FinishAuth();
@@ -1025,7 +1033,7 @@ namespace InstantMessage.Protocols.Yahoo
 			if (status == 0)
 			{
 				token = reader.ReadLine();
-				token = token.Substring(6);
+				token = token.Substring(7);
 				
 				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
 
@@ -1059,6 +1067,7 @@ namespace InstantMessage.Protocols.Yahoo
 				authtoken = mConfig["authtoken1"];
 				authtoken2 = mConfig["authtoken2"];
 				crumb = mConfig["authcrumb"];
+				bcookie = mConfig["bcookie"];
 				expires = Convert.ToInt32(mConfig["tokenexpires"]);
 			} catch (KeyNotFoundException) {}
 
@@ -1070,7 +1079,7 @@ namespace InstantMessage.Protocols.Yahoo
 				Trace.WriteLineIf(epoch > expires, "Yahoo: Saved Auth2 tokens expired... Requesting");
 				Trace.WriteLineIf(epoch < expires, "Yahoo: Saved Auth2 tokens invalid... Requesting");
 
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://login.yahoo.com/config/pwtoken_login?src=ymsgr&token=" + token);
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format(mAuthCookieGetUrl, token));
 				request.BeginGetResponse(new AsyncCallback(OnGetYCookies), request);
 			} else {
 				Trace.WriteLine("Yahoo: All Authentication tokens are ready.");
@@ -1277,7 +1286,7 @@ namespace InstantMessage.Protocols.Yahoo
 			if (client == null)
 				throw new NullReferenceException("Client is null");
 
-			if (sessionByte == null)
+			if (sessionByte != null)
 				packet.SessionByte = sessionByte;
 
 			byte[] packetdata = packet.ToBytes();
@@ -1314,6 +1323,7 @@ namespace InstantMessage.Protocols.Yahoo
 		private string authtoken;
 		private string authtoken2;
 		private string crumb;
+		private string bcookie;
 		
 		// SMS Carrier Information
 		private List<CarrierInfo> mCarriers;// = new List<CarrierInfo>();
@@ -1322,7 +1332,8 @@ namespace InstantMessage.Protocols.Yahoo
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
 		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
-		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
+		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgrb&login={0}&passwd={1}";
+		private const string mAuthCookieGetUrl = "https://login.yahoo.com/config/pwtoken_login?src=ymsgrb&token={0}";
 		private static Encoding dEncoding = Encoding.ASCII;
 		
 		public enum YahooIMVironment

@@ -123,6 +123,11 @@ namespace InstantMessage.Protocols.Irc
 			if (OnModeChange != null)
 				OnModeChange(this, new IRCModeChangeEventArgs() { UserModes = users });
 		}
+		internal void TriggerTopicChange(string topic, string username)
+		{
+			if (TopicChanged != null)
+				TopicChanged(this, new IMChatRoomGenericEventArgs() { Username = new IRCUserMask(mProtocol, username), Message = topic });
+		}
 
 		// Properties
 		public string Name
@@ -157,6 +162,15 @@ namespace InstantMessage.Protocols.Irc
 				return mProtocol;
 			}
 		}
+		public string Topic
+		{
+			get	{
+				return mTopic;
+			}
+			internal set {
+				mTopic = value;
+			}
+		}
 
 		// Events
 		public event EventHandler<IMMessageEventArgs> OnMessageReceived;
@@ -165,12 +179,14 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler OnJoin;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
 		public event EventHandler<IRCModeChangeEventArgs> OnModeChange;
-		public event EventHandler<IMChatRoomGenericEventArgs> OnLeave;		
+		public event EventHandler<IMChatRoomGenericEventArgs> OnLeave;
+		public event EventHandler<IMChatRoomGenericEventArgs> TopicChanged;
 
 		//Variables
 		private bool mInChannel;
 		private SortedSet<string> mParticipants;
 		private IRCProtocol mProtocol;
 		private string mChannelName;
+		private string mTopic;
 	}
 }

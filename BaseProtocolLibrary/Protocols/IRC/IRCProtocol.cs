@@ -83,6 +83,10 @@ namespace InstantMessage.Protocols.Irc
 		{
 			return this.JoinChatRoom(room);
 		}
+		void IHasMUCRooms.JoinChatRoom(IChatRoom room)
+		{
+			this.JoinChatRoom((IRCChannel)room);
+		}
 		public IRCChannel JoinChatRoom(string room)
 		{
 			IRCChannel qchannel;
@@ -96,6 +100,14 @@ namespace InstantMessage.Protocols.Irc
 
 			return channel;
 		}
+		public void JoinChatRoom(IRCChannel room)
+		{
+			if (mChannels.ContainsKey(room.Name))
+				return;
+
+			sendData("JOIN " + room.Name);
+		}
+
 		public override void SendMessage(string friendName, string message)
 		{
 			sendData(String.Format("PRIVMSG {0} :{1}", friendName, message));
@@ -231,7 +243,6 @@ namespace InstantMessage.Protocols.Irc
 					mResetEvent.Dispose();
 
 				mResults = null;
-				mMask = null;
 				mResetEvent = null;
 			}
 
@@ -281,7 +292,6 @@ namespace InstantMessage.Protocols.Irc
 				private set;
 			}
 
-			private string mMask;
 			private ManualResetEvent mResetEvent;
 			private IList<IRCUserMask> mResults;
 		}
@@ -367,6 +377,7 @@ namespace InstantMessage.Protocols.Irc
 			if (line[0] == ':') // Standard message type
 			{
 				string[] parameters = line.Substring(1).Split(' ');
+				string[] param = line.Substring(1).Split(mLineSplitSep, 3);
 				// First param will be the from server
 				// Second param is the command
 
@@ -379,8 +390,32 @@ namespace InstantMessage.Protocols.Irc
 						case 001: // Connection setup stuff
 							mActualServer = parameters[0];
 							break;
+						case 332: // Channel Topic
+							{
+								string[] chunks = param[2].Split(mLineSplitSep, 3);
+								string channelName = chunks[1];
+								string message = chunks[2].Substring(1);
+
+								IRCChannel channel = FindChannelByName(channelName);
+								channel.Topic = message;
+							
+								break;
+							}
+						case 333: // Channel Topic Setting
+							// Penguin #main The_Problems 1308501050
+							{
+								string[] chunks = param[2].Split(mLineSplitSep, 4);
+								string channelName = chunks[1];
+								string username = chunks[2];
+								long stamp = Convert.ToInt64(chunks[3]);
+
+								IRCChannel channel = FindChannelByName(channelName);
+								channel.TriggerTopicChange(channel.Topic, username);
+
+								break;
+							}
 						case 353: // Users in the channel
-							HandleChannelNamesList(parameters.First(s => s.StartsWith("#") | s.StartsWith("&")), line.Substring(line.LastIndexOf(':') + 1));
+							HandleChannelNamesList(parameters.First(s => s.StartsWith("#")), line.Substring(line.LastIndexOf(':') + 1));
 							break;
 						case 352:
 							HandleWhoReply(parameters.Skip(3).ToArray());
@@ -419,6 +454,8 @@ namespace InstantMessage.Protocols.Irc
 							break;
 						case "PONG":
 							HandlePongPacket(line.Substring(line.IndexOf(':', 1) + 1));
+							break;
+						case "TOPIC":
 							break;
 					}
 				}
@@ -475,6 +512,8 @@ namespace InstantMessage.Protocols.Irc
 
 				IRCChannel channel = FindChannelByName(channelName);
 				channel.TriggerOnPart(line.Substring(line.IndexOf(':', 5) + 1));
+
+				mChannels.Remove(channel.Name);
 			}
 		}
 		private void HandleModeChangePacket(string line, string[] parameters)
@@ -784,6 +823,7 @@ namespace InstantMessage.Protocols.Irc
 		private DateTime mLastCommunication;
 		private DateTime mConnectTime;
 		private static TimeSpan mIdlePeriod = TimeSpan.FromSeconds(30);
+		private char[] mLineSplitSep = new char[] { ' ' };
 
 		// Socket-related Variables
 		private string mActualServer;

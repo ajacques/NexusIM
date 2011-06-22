@@ -40,14 +40,18 @@ namespace NexusIM.Controls
 				IRCChannel ircChannel = (IRCChannel)room;
 				ircProtocol.OnNoticeReceive += new EventHandler<IMChatRoomGenericEventArgs>(IrcProtocol_OnNoticeReceive);
 				ircChannel.OnKickedFromChannel += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnKicked);
+				ircChannel.TopicChanged += new EventHandler<IMChatRoomGenericEventArgs>(ircChannel_TopicChanged);
+
+				RoomDescription.Text = ircChannel.Topic;
 
 				mUserContextMenu = new IrcChanUserContextMenu();
 			}
+
+			RoomName.Text = mChatRoom.Name;
 		}
 
 		public void Dispose()
 		{
-
 			// Clean up all event handlers
 			mChatRoom.OnMessageReceived -= new EventHandler<IMMessageEventArgs>(ChatRoom_OnMessageReceived);
 			mChatRoom.OnUserListReceived -= new EventHandler(ChatRoom_OnUserListReceived);
@@ -77,19 +81,24 @@ namespace NexusIM.Controls
 
 		private void ProcessUserList()
 		{
-			IEnumerator<string> partEnumer = mChatRoom.Participants.GetEnumerator();
+			using (IEnumerator<string> partEnumer = mChatRoom.Participants.GetEnumerator())
+			{
+				Dispatcher.BeginInvoke(new GenericEvent(() => {
+					OccupantList.Items.Clear();
+					int ct = 0;
+					while (partEnumer.MoveNext())
+					{
+						string username = partEnumer.Current;
+						TextBlock user = new TextBlock();
+						user.Text = username;
+						user.ContextMenu = mUserContextMenu;
 
-			Dispatcher.BeginInvoke(new GenericEvent(() => {
-				while (partEnumer.MoveNext())
-				{
-					string username = partEnumer.Current;
-					TextBlock user = new TextBlock();
-					user.Text = username;
-					user.ContextMenu = mUserContextMenu;
-
-					OccupantList.Items.Add(user);
-				}
-			}));
+						OccupantList.Items.Add(user);
+						ct++;
+					}
+					OccupantCount.Text = ct.ToString();
+				}));
+			}
 		}
 		private void AppendChatInline(Inline inline)
 		{
@@ -134,7 +143,7 @@ namespace NexusIM.Controls
 			ChatHistoryBox.Inlines.Remove(ChatHistoryBox.Inlines.LastInline); // Remove the message
 
 			if (!ChatRoom.Joined)
-				((IHasMUCRooms)mProtocol).JoinChatRoom(ChatRoom.Name);
+				((IHasMUCRooms)mProtocol).JoinChatRoom(ChatRoom);
 		}
 		private void OccupantList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
@@ -182,7 +191,7 @@ namespace NexusIM.Controls
 			Dispatcher.InvokeIfRequired(() => {
 				Span span = new Span();
 				Run messageRun = new Run();
-				messageRun.Text = String.Format("You have been kicked by {0} (Reason: {1})", e.Username, e.Message);
+				messageRun.Text = String.Format("You have been kicked by {0} (Reason: {1})", e.Username.Nickname, e.Message);
 				messageRun.Foreground = Brushes.Red;
 
 				span.Inlines.Add(messageRun);
@@ -208,6 +217,13 @@ namespace NexusIM.Controls
 				AppendChatInline(span);
 			});
 		}
+		private void ircChannel_TopicChanged(object sender, IMChatRoomGenericEventArgs e)
+		{
+			Dispatcher.InvokeIfRequired(() =>
+				{
+					RoomDescription.Text = e.Message;
+				});
+		}
 		
 		// Protocol Event Handlers
 		private void IrcProtocol_OnNoticeReceive(object sender, IMChatRoomGenericEventArgs e)
@@ -216,7 +232,6 @@ namespace NexusIM.Controls
 			
 			Dispatcher.InvokeIfRequired(() => {
 				Span span = new Span();
-				span.Inlines.Add(new LineBreak());
 				Run notice = new Run();
 				notice.Text = e.Message;
 

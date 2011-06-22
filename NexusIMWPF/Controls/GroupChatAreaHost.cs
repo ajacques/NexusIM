@@ -57,6 +57,15 @@ namespace NexusIM.Controls
 			mHeaderString.Text = context.Name;
 		}
 
+		private void Cleanup()
+		{
+			mArea.Dispose();
+			mArea = null;
+			mWindow = null;
+			mHeaderString = null;
+			mRoom = null;
+		}
+
 		public override string ToString()
 		{
 			return mRoom.Name;
@@ -72,10 +81,12 @@ namespace NexusIM.Controls
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
+			Cleanup();
 		}
 		private void ParentWindow_Closed(object sender, EventArgs e)
 		{
 			mRoom.Leave(String.Empty);
+			Cleanup();
 		}
 
 		protected override void OnVisualParentChanged(DependencyObject oldParent)

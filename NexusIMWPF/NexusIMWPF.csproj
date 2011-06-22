@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="Controls\IrcChanUserContextMenu.cs" />
     <Compile Include="Controls\IRCProtocolMenu.cs" />
+    <Compile Include="Controls\RoundedPolygon.cs" />
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
       <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
     </Compile>

@@ -92,7 +92,7 @@ namespace NexusIM.Managers
 		}
 		private static void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
 		{
-			Trace.WriteLine("AccountManager: Network Availability Change (is available: " + e.IsAvailable + ")");
+			Trace.WriteLine(String.Format("AccountManager: Network Availability Change (is available: {0})", e.IsAvailable));
 		}
 		private static void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
 		{

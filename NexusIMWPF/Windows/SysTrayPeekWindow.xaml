@@ -10,9 +10,30 @@
 	x:Name="Window" x:FieldModifier="private"
 	Width="250" Height="70" IsHitTestVisible="False" IsTabStop="False" UseLayoutRounding="True" BorderBrush="Black" BorderThickness="1">
 	<Grid x:Name="LayoutRoot">
+		<Grid Visibility="Collapsed" Width="60" Height="50" HorizontalAlignment="Left" VerticalAlignment="Top">
+			<nx:RoundedCornersPolygon Points="30,0 60,50 0,50 30,0 60,50" ArcRoundness="4">
+				<nx:RoundedCornersPolygon.Fill>
+					<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+						<GradientStop Color="#FFF6CC4B" Offset="0"/>
+						<GradientStop Color="#FFD08005" Offset="1"/>
+					</LinearGradientBrush>
+				</nx:RoundedCornersPolygon.Fill>
+			</nx:RoundedCornersPolygon>
+			<nx:RoundedCornersPolygon Points="31,2 60,50 0,50 30,0 58.5,47.5" ArcRoundness="4" Stroke="#FFFFE047" StrokeThickness="2"/>	
+			<Ellipse Width="24" Height="40" Margin="0,10,0,0">
+				<Ellipse.Fill>
+					<RadialGradientBrush>
+						<GradientStop Color="#FFF4C948"/>
+						<GradientStop Offset="1"/>
+					</RadialGradientBrush>
+				</Ellipse.Fill>
+			</Ellipse>
+			<Rectangle Width="4" Height="24" Fill="Black" RadiusY="1" RadiusX="1" />
+			<Rectangle Width="4" Height="4" Fill="Black" Margin="0,35,0,0" RadiusY="1" RadiusX="1" />
+		</Grid>
 		<TextBlock HorizontalAlignment="Center" VerticalAlignment="Top">
 			<Run FontSize="25">NexusIM</Run>
-			<Run FontSize="12" Foreground="#FF7C7C7C">v0.1</Run>
+			<Run FontSize="12" Foreground="#FF7C7C7C">v0.1-SVN</Run>
 		</TextBlock>
 		<TextBlock x:Name="SilentModeAlert" Text="Silent Mode" HorizontalAlignment="Center" Margin="0,0,0,4" VerticalAlignment="Bottom" FontSize="10.667" Foreground="#FFFF8000" Visibility="Collapsed" />
 		<TextBlock x:Name="ConnStatus" Text="Online" HorizontalAlignment="Right" Height="15" VerticalAlignment="Bottom" Margin="0,0,3,3" />

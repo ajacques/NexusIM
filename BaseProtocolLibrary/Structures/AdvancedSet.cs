@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace InstantMessage
 {
-	public class AdvancedSet<T> : SortedSet<T>, INotifyCollectionChanged where T : class
+	public class AdvancedSet<T> : SortedSet<T>, IEnumerable, INotifyCollectionChanged where T : class
 	{
 		public AdvancedSet() : base()
 		{
@@ -118,6 +118,10 @@ namespace InstantMessage
 		{
 			return new ConcurrentEnumerator(base.GetEnumerator(), mLock);
 		}
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
+		}
 
 		// Nested Class
 		private class ConcurrentEnumerator : IEnumerator<T>
@@ -172,7 +176,7 @@ namespace InstantMessage
 		// Events
 		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-		protected ReaderWriterLockSlim SyncRoot
+		public ReaderWriterLockSlim SyncRoot
 		{
 			get {
 				return mLock;

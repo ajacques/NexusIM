@@ -19,6 +19,8 @@ namespace NexusIM.Windows
 
 			mTabAreas = new List<ITabbedArea>();
 			mTabAreaSyncObject = new object();
+
+			this.IsVisibleChanged += new DependencyPropertyChangedEventHandler(ChatWindow_IsVisibleChanged);
 		}
 
 		public void AttachAreaAndShow(TabItem tabPage)
@@ -48,6 +50,10 @@ namespace NexusIM.Windows
 
 			UpdateWindowTitle();
 		}
+		private void ChatWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
+		}
 
 		protected override void OnActivated(EventArgs e)
 		{
@@ -55,6 +61,12 @@ namespace NexusIM.Windows
 
 			mUnread = 0;
 			UpdateWindowTitle();
+		}
+		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+		{
+			base.OnMouseLeftButtonDown(e);
+
+			//base.DragMove();
 		}
 
 		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)
