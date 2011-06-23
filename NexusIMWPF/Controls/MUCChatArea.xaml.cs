@@ -12,6 +12,9 @@ using System.Collections.Generic;
 using NexusIM.Misc;
 using InstantMessage.Protocols.Irc;
 using System.Windows;
+using System.Collections.Specialized;
+using System.Text.RegularExpressions;
+using System.Windows.Interop;
 
 namespace NexusIM.Controls
 {
@@ -41,12 +44,14 @@ namespace NexusIM.Controls
 				ircProtocol.OnNoticeReceive += new EventHandler<IMChatRoomGenericEventArgs>(IrcProtocol_OnNoticeReceive);
 				ircChannel.OnKickedFromChannel += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnKicked);
 				ircChannel.TopicChanged += new EventHandler<IMChatRoomGenericEventArgs>(ircChannel_TopicChanged);
+				ircChannel.OnModeChange += new EventHandler<IRCModeChangeEventArgs>(IrcChannel_OnModeChange);
 
 				RoomDescription.Text = ircChannel.Topic;
+				mNickSearch = new Regex(String.Format(@"(?:^|\ ){0}(?:$|\ |')", ircProtocol.Nickname));
 
 				mUserContextMenu = new IrcChanUserContextMenu();
-			}
-
+			} else
+				mNickSearch = new Regex(String.Format(@"(?:^|\ ){0}(?:$|\ |')", mProtocol.Username));
 			RoomName.Text = mChatRoom.Name;
 		}
 
@@ -72,25 +77,31 @@ namespace NexusIM.Controls
 			{
 				ChatMessageInline inline = new ChatMessageInline();
 				inline.Username = e.Sender.Nickname;
-				inline.UsernameColor = Color.FromRgb(0, 0, 255);
+				if (e.Sender is SelfContact)
+					inline.UsernameColor = Color.FromRgb(255, 100, 0);
+				else
+					inline.UsernameColor = Color.FromRgb(0, 0, 255);
 				inline.MessageBody = e.Message;
 
 				AppendChatInline(inline);
 			}));
+
+			if (!(e.Sender is SelfContact) && mNickSearch.IsMatch(e.Message))
+				Win32.FlashWindow(mWindowPointer);
 		}
 
 		private void ProcessUserList()
 		{
-			using (IEnumerator<string> partEnumer = mChatRoom.Participants.GetEnumerator())
+			using (IEnumerator<IContact> partEnumer = mChatRoom.Participants.GetEnumerator())
 			{
 				Dispatcher.BeginInvoke(new GenericEvent(() => {
 					OccupantList.Items.Clear();
 					int ct = 0;
 					while (partEnumer.MoveNext())
 					{
-						string username = partEnumer.Current;
+						IContact username = partEnumer.Current;
 						TextBlock user = new TextBlock();
-						user.Text = username;
+						user.Text = username.Nickname;
 						user.ContextMenu = mUserContextMenu;
 
 						OccupantList.Items.Add(user);
@@ -107,6 +118,14 @@ namespace NexusIM.Controls
 
 			ChatHistoryBox.Inlines.Add(inline);
 			ChatHistoryContainer.ScrollToEnd();
+		}
+
+		protected override void OnVisualParentChanged(DependencyObject oldParent)
+		{
+			base.OnVisualParentChanged(oldParent);
+
+			mWindow = Window.GetWindow(this);
+			mWindowPointer = new WindowInteropHelper(mWindow).Handle;
 		}
 
 		// User Interface Event Handlers
@@ -224,6 +243,14 @@ namespace NexusIM.Controls
 					RoomDescription.Text = e.Message;
 				});
 		}
+		private void IrcChannel_OnModeChange(object sender, IRCModeChangeEventArgs e)
+		{
+			
+		}
+		private void Participants_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			ProcessUserList();
+		}
 		
 		// Protocol Event Handlers
 		private void IrcProtocol_OnNoticeReceive(object sender, IMChatRoomGenericEventArgs e)
@@ -250,8 +277,11 @@ namespace NexusIM.Controls
 			}
 		}
 
+		private Window mWindow;
+		private IntPtr mWindowPointer;
 		private IrcChanUserContextMenu mUserContextMenu;
 		private IChatRoom mChatRoom;
 		private IMProtocol mProtocol;
+		private Regex mNickSearch;
 	}
 }

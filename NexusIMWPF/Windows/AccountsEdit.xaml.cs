@@ -27,6 +27,11 @@ namespace NexusIM.Windows
 			mNewAccounts = new List<IMProtocolWrapper>();
 		}
 	
+		public void FocusProtocol(IMProtocolWrapper wrapper)
+		{
+
+		}
+
 		private void DeselectAllExcept(UIElementCollection source, SetupAccountItem exception)
 		{
 			foreach (SetupAccountItem item in source)

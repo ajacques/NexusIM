@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using InstantMessage.Protocols.Irc;
 using NexusIM.Managers;
 using NexusIM.Windows;
+using InstantMessage;
 
 namespace NexusIM.Controls
 {
@@ -30,17 +31,35 @@ namespace NexusIM.Controls
 
 			this.Items.Clear();
 
-			IEnumerable<IRCProtocol> protocols = AccountManager.Accounts.Select(w => w.Protocol).OfType<IRCProtocol>();
-			ItemCollection target = this.Items;
+			IEnumerable<IMProtocolWrapper> protocols = AccountManager.Accounts.Where(w => w.Protocol is IRCProtocol);
 
-			foreach (IRCProtocol protocol in protocols)
+			if (protocols.Count() >= 2)
 			{
-				GenerateItemSet(protocol, target);
-			}
+				MenuItem header = new MenuItem();
+				header.Header = "Internet Relay Chat";
+				header.FontWeight = FontWeight.FromOpenTypeWeight(500);
+				header.IsEnabled = false;
+				this.Items.Add(header);
+				this.Items.Add(new Separator());
+
+				foreach (IMProtocolWrapper wrapper in protocols)
+				{
+					MenuItem main = new MenuItem();
+					this.Items.Add(main);
+					main.Header = wrapper.Protocol.ToString();
+					GenerateItemSet(wrapper, main.Items);
+				}
+			} else
+				GenerateItemSet(protocols.FirstOrDefault(), this.Items);
 		}
 
-		private void GenerateItemSet(IRCProtocol protocol, ItemCollection coll)
+		private void GenerateItemSet(IMProtocolWrapper wrapper, ItemCollection coll)
 		{
+			if (wrapper == null)
+				return;
+
+			IRCProtocol protocol = wrapper.Protocol as IRCProtocol;
+
 			MenuItem item = new MenuItem();
 			item.Header = String.Format("{0} ({1})", protocol.Nickname, protocol.Server);
 			item.FontWeight = FontWeight.FromOpenTypeWeight(500);
@@ -49,11 +68,36 @@ namespace NexusIM.Controls
 
 			coll.Add(new Separator());
 
-			MenuItem joinItem = new MenuItem();
-			joinItem.Header = "Join Chat Room";
-			joinItem.Click += new RoutedEventHandler(joinItem_Click);
+			if (wrapper.Enabled)
+			{
+				if (protocol.ProtocolStatus == IMProtocolStatus.Connecting)
+				{
+					MenuItem connError = new MenuItem();
+					connError.Header = "Account is connecting...";
+					connError.IsEnabled = false;
+					coll.Add(connError);
+				} else if (protocol.ProtocolStatus == IMProtocolStatus.Online) {
+					MenuItem joinItem = new MenuItem();
+					joinItem.Header = "Join Chat Room";
+					joinItem.Click += new RoutedEventHandler(joinItem_Click);
 
-			coll.Add(joinItem);
+					coll.Add(joinItem);
+				}
+			} else {
+				MenuItem connItem = new MenuItem();
+				connItem.Header = "Connect";
+				RoutedEventHandler handler = null;
+				handler = new RoutedEventHandler((sender, args) =>
+				{
+					wrapper.Enabled = true;
+					connItem.Click -= handler;
+					handler = null;
+				});
+
+				connItem.Click += handler;
+
+				coll.Add(connItem);
+			}
 		}
 	}
 }

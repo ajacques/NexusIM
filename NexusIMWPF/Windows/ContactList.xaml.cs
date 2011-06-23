@@ -92,16 +92,18 @@ namespace NexusIM.Windows
 		}
 		private void AddGroups(IEnumerable source)
 		{
-			foreach (GroupOfContacts contact in source)
+			//IEnumerator contact = source.GetEnumerator();
+			Dispatcher.InvokeIfRequired(() =>
 			{
-				Dispatcher.BeginInvoke(new GenericEvent(() =>
+				foreach (GroupOfContacts contact in source)
+				//while (contact.MoveNext())
 				{
 					ContactListGroup group = new ContactListGroup();
-					group.SourceGroup = contact;
+					group.SourceGroup = contact; //contact.Current as GroupOfContacts;
 					group.IsExpanded = true;
 					ContactList.Add(group);
-				}));
-			}
+				}
+			}, false);
 		}
 
 		// Event Handlers

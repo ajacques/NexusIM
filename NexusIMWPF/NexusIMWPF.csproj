@@ -132,6 +132,7 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
+    <Compile Include="Controls\ChatHistoryBox.cs" />
     <Compile Include="Controls\CLErrorBox.xaml.cs">
       <DependentUpon>CLErrorBox.xaml</DependentUpon>
     </Compile>

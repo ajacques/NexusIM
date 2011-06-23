@@ -5,10 +5,15 @@
 	x:Class="NexusIM.Windows.JoinChatRoom"
 	x:Name="Window"
 	Title="Join Chat Room"
-	Width="290" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+	Width="250" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
 	<Grid x:Name="LayoutRoot">
-		<nxc:AccountSelectorControl x:Name="AccountSelector" VerticalAlignment="Top" Height="22" Margin="10,20,10,0" />
-		<TextBox x:Name="RoomName" VerticalAlignment="Top" Height="23" Margin="10,61,10,0" KeyUp="RoomName_KeyUp" />
-		<Button x:Name="JoinButton" Width="75" Height="25" Content="Join" VerticalAlignment="Bottom" Margin="0,0,0,10" Click="Button_Click" IsEnabled="False" />
+		<Grid x:Name="NoAccountsMsg" Visibility="Collapsed">
+			<TextBlock Text="No acceptable accounts are enabled" HorizontalAlignment="Center" VerticalAlignment="Center" />
+		</Grid>
+		<Grid x:Name="MainGrid">
+			<nxc:AccountSelectorControl x:Name="AccountSelector" VerticalAlignment="Top" Height="22" Margin="10,20,10,0" />
+			<TextBox x:Name="RoomName" VerticalAlignment="Top" Height="23" Margin="10,61,10,0" KeyUp="RoomName_KeyUp" />
+			<Button x:Name="JoinButton" Width="75" Height="25" Content="Join" VerticalAlignment="Bottom" Margin="0,0,0,10" Click="Button_Click" IsEnabled="False" />
+		</Grid>
 	</Grid>
 </Window>

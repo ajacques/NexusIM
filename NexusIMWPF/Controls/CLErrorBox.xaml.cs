@@ -52,6 +52,7 @@ namespace NexusIM.Controls
 			mProtocol.Enabled = false;
 
 			AccountsEdit window = (AccountsEdit)WindowSystem.OpenSingletonWindow(typeof(AccountsEdit));
+			window.FocusProtocol(mProtocol);
 		}
 		private void DisableLink_Click(object sender, RoutedEventArgs e)
 		{

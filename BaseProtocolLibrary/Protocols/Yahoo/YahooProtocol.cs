@@ -691,7 +691,7 @@ namespace InstantMessage.Protocols.Yahoo
 			foreach (KeyValuePair<int, string> packet in inpacket.Parameters)
 			{
 				if (packet.Key == 7)
-					contact = (IMBuddy)ContactList[packet.Value];
+					contact = (IMBuddy)buddylist[packet.Value];
 				else if (packet.Key == 10)
 					HandleStatusData(contact, Convert.ToInt32(inpacket.Parameters[10]));
 				else if (packet.Key == 197)
@@ -710,7 +710,7 @@ namespace InstantMessage.Protocols.Yahoo
 		{
 			IContact buddy = null;
 			try {
-				buddy = ContactList[packet.Parameters[4]];
+				buddy = buddylist[packet.Parameters[4]];
 			} catch (Exception) {
 				buddy = new IMBuddy(this, packet.Parameters[4]);
 			}

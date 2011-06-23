@@ -34,7 +34,7 @@ namespace InstantMessage.Events
 }
 namespace InstantMessage.Protocols.Irc
 {
-	public class IRCUserMask : IContact
+	public class IRCUserMask : IContact, IComparable
 	{
 		internal IRCUserMask(IRCProtocol protocol)
 		{
@@ -63,6 +63,39 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public void SendMessage(string message)
 		{
+		}
+
+		internal static IRCUserMask FromNickname(IRCProtocol protocol, string nickname)
+		{
+			IRCUserMask mask = new IRCUserMask(protocol);
+
+			switch (nickname[0])
+			{
+				case '~':
+				case '@':
+				case '%':
+				case '+':
+					mask.UserMode = nickname[0];
+					nickname = nickname.Substring(1);
+					break;
+			}
+
+			mask.Nickname = nickname;
+
+			return mask;
+		}
+
+		public int CompareTo(object other)
+		{
+			if (other.GetType() != this.GetType())
+				throw new ArgumentException();
+
+			IContact othr = (IContact)other;
+
+			if (Protocol != othr.Protocol)
+				return Protocol.CompareTo(othr.Protocol);
+
+			return Nickname.CompareTo(othr.Nickname);
 		}
 
 		public bool Equals(IContact right)
@@ -106,9 +139,13 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			private set;
 		}
+		public char UserMode
+		{
+			get;
+			private set;
+		}
 
 		#region IContact Members
-
 
 		public string Group
 		{
@@ -118,7 +155,6 @@ namespace InstantMessage.Protocols.Irc
 		#endregion
 
 		#region IHasPresence Members
-
 
 		public string StatusMessage
 		{

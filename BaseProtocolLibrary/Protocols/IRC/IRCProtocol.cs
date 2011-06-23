@@ -720,10 +720,13 @@ namespace InstantMessage.Protocols.Irc
 				return;
 			}
 
+			Trace.WriteLine("IRC: Connected to server");
+
 			mTextStream = new NetworkStream(client);
 
 			if (SslEnabled)
 			{
+				Trace.WriteLine("IRC: SSL enabled - Beginning SSL handshake");
 				SslStream sslstream = new SslStream(mTextStream, true, new RemoteCertificateValidationCallback(VerifyServerCertificate));
 				sslstream.BeginAuthenticateAsClient(Server, new AsyncCallback(CompleteSslNegotiation), sslstream);
 			} else
@@ -733,6 +736,8 @@ namespace InstantMessage.Protocols.Irc
 		{
 			SslStream sslstream = (SslStream)e.AsyncState;
 			sslstream.EndAuthenticateAsClient(e);
+
+			Trace.WriteLine("IRC: SSL Handshake complete. Continuing");
 
 			mTextStream = sslstream;
 
@@ -762,6 +767,7 @@ namespace InstantMessage.Protocols.Irc
 
 				if (line.StartsWith("ERROR"))
 				{
+					Trace.WriteLine("IRC: Server Reported error : " + line);
 					triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, line));
 					return;
 				}

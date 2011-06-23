@@ -4,6 +4,7 @@ using InstantMessage;
 using InstantMessage.Protocols;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using System.Linq;
 
 namespace NexusIM.Windows
 {
@@ -17,7 +18,16 @@ namespace NexusIM.Windows
 			this.InitializeComponent();
 			
 			// Insert code required on object creation below this point.
-			AccountSelector.QueryClause = (extraData) => extraData.Enabled && extraData.Protocol is IHasMUCRooms;
+			AccountSelector.QueryClause = (extraData) => extraData.Enabled && extraData.Protocol is IHasMUCRooms && extraData.Protocol.ProtocolStatus == IMProtocolStatus.Online;
+
+			if (AccountManager.Accounts.Any(AccountSelector.QueryClause))
+			{
+				NoAccountsMsg.Visibility = Visibility.Collapsed;
+				MainGrid.Visibility = Visibility.Visible;
+			} else {
+				NoAccountsMsg.Visibility = Visibility.Visible;
+				MainGrid.Visibility = Visibility.Collapsed;
+			}
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)

@@ -12,7 +12,7 @@ namespace InstantMessage.Protocols.Irc
 			mChannelName = channelName;
 			mProtocol = protocol;
 			mInChannel = true;
-			mParticipants = new SortedSet<string>();
+			mParticipants = new AdvancedSet<IRCUserMask>();
 
 			if (OnJoin != null)
 				OnJoin(this, null);
@@ -83,7 +83,7 @@ namespace InstantMessage.Protocols.Irc
 		internal void SetParticipants(IList<string> participants)
 		{
 			foreach (string participant in participants)
-				mParticipants.Add(participant);
+				mParticipants.Add(IRCUserMask.FromNickname(mProtocol, participant));
 
 			if (OnUserListReceived != null)
 				OnUserListReceived(this, null);
@@ -136,9 +136,15 @@ namespace InstantMessage.Protocols.Irc
 				return mChannelName;
 			}
 		}
-		public IEnumerable<string> Participants
+		IEnumerable<IContact> IChatRoom.Participants
 		{
 			get {
+				return mParticipants;
+			}
+		}
+		public IEnumerable<IRCUserMask> Participants
+		{
+			get	{
 				return mParticipants;
 			}
 		}
@@ -184,7 +190,7 @@ namespace InstantMessage.Protocols.Irc
 
 		//Variables
 		private bool mInChannel;
-		private SortedSet<string> mParticipants;
+		private AdvancedSet<IRCUserMask> mParticipants;
 		private IRCProtocol mProtocol;
 		private string mChannelName;
 		private string mTopic;

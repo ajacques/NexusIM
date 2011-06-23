@@ -78,7 +78,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Json.cs" />
     <Compile Include="Protocols\ContactCollection.cs" />
-    <Compile Include="Protocols\ContactDetails.cs" />
     <Compile Include="Protocols\Enums.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
     <Compile Include="Protocols\IMNetworkFeatures.cs" />
@@ -135,7 +134,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

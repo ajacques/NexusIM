@@ -15,7 +15,7 @@
 			<ColumnDefinition />
 			<ColumnDefinition Width="100" />
 		</Grid.ColumnDefinitions>
-		<Grid HorizontalAlignment="Left" Background="#FFE9E9E9">
+		<Grid HorizontalAlignment="Left" Background="White">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="48" />
 				<RowDefinition />
@@ -25,7 +25,7 @@
 				<Run x:Name="OccupantCount" FontSize="9">64</Run>
 				<Run FontSize="9">people</Run>
 			</TextBlock>
-			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="5,0,0,2" FontFamily="Tahoma" FontSize="13" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" />
+			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" />
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<RichTextBox Grid.Row="1" x:Name="ChatHistoryContainer" IsReadOnly="True" IsDocumentEnabled="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
 				<FlowDocument>
@@ -36,8 +36,8 @@
 		<Grid Grid.Column="1">
 			<Grid.Background>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-					<GradientStop Color="#FFE9E9E9"/>
-					<GradientStop Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}" Offset="1"/>
+					<GradientStop Color="White"/>
+					<GradientStop Color="#FFF9F9F9" Offset="1"/>
 				</LinearGradientBrush>
 			</Grid.Background>
 			<ListBox x:Name="OccupantList" Background="{x:Null}" MouseRightButtonDown="OccupantList_MouseRightButtonDown" SelectionChanged="OccupantList_SelectionChanged" BorderBrush="{x:Null}" />

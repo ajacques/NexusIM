@@ -17,7 +17,11 @@ namespace NexusIM
 		public static void FlashWindow(Window window)
 		{
 			WindowInteropHelper helper = new WindowInteropHelper(window);
-			FlashWindow(helper.Handle, false);
+			FlashWindow(helper.Handle, true);
+		}
+		public static void FlashWindow(IntPtr handle)
+		{
+			FlashWindow(handle, false);
 		}
 
 		/// <summary>
