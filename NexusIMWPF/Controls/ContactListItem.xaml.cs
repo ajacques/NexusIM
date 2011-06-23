@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using InstantMessage;
 
 namespace NexusIM.Controls
 {
@@ -35,6 +36,15 @@ namespace NexusIM.Controls
 			get;
 			private set;
 		}
+		public IContact Contact
+		{
+			get	{
+				return mContact;
+			}
+			set	{
+				DataContext = mContact = value;
+			}
+		}
 
 		private void LayoutRoot_DragOver(object sender, DragEventArgs e)
 		{
@@ -44,5 +54,7 @@ namespace NexusIM.Controls
 		{
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
+
+		private IContact mContact;
 	}
 }

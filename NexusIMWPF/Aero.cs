@@ -15,8 +15,7 @@ namespace NexusIM
 				{
 					// Get the window handle
 					WindowInteropHelper helper = new WindowInteropHelper(window);
-					HwndSource mainWindowSrc = (HwndSource)HwndSource.
-						FromHwnd(helper.Handle);
+					HwndSource mainWindowSrc = (HwndSource)HwndSource.FromHwnd(helper.Handle);
 					mainWindowSrc.CompositionTarget.BackgroundColor = Colors.Transparent;
 
 					// Get the dpi of the screen

@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
 using NexusIM.Managers;
+using System.Collections.Generic;
 
 namespace NexusIM.Controls
 {
@@ -78,17 +79,43 @@ namespace NexusIM.Controls
 			}
 		}
 
+		private sealed class UsernameComparer : IComparer<IContact>
+		{
+			public int Compare(IContact x, IContact y)
+			{
+				return x.Username.CompareTo(y.Username);
+			}
+		}
+		private sealed class StatusComparer : IComparer<IContact>
+		{
+			public int Compare(IContact x, IContact y)
+			{
+				if (x.Status == y.Status)
+					return x.Username.CompareTo(y.Username);
+				return x.Status.CompareTo(y.Status);
+			}
+		}
+
 		private void AddContacts(IEnumerable contacts)
 		{
+			IComparer<IContact> comparer = new StatusComparer();
 			Dispatcher.InvokeIfRequired(() =>
 			{
 				foreach (IContact contact in contacts)
 				{
 					ContactListItem item = new ContactListItem();
-					item.DataContext = contact;
+					item.Contact = contact;
 					item.ContextMenu = new ContactItemContextMenu();
 					item.MouseDoubleClick += new MouseButtonEventHandler(ContactListItem_MouseDoubleClick);
-					ContactList.Children.Add(item);
+
+					int pos;
+					for (pos = 0; pos < ContactList.Children.Count; pos++)
+					{
+						ContactListItem sitem = (ContactListItem)ContactList.Children[pos];
+						if (comparer.Compare(contact, sitem.Contact) < 1)
+							break;
+					}
+					ContactList.Children.Insert(pos, item);
 				}
 			}, false); // Don't use async because we have a reader lock right now and we can't let it go because another thread might try to write to it
 		}

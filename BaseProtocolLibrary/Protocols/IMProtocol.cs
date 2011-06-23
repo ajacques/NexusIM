@@ -49,8 +49,8 @@ namespace InstantMessage
 	public enum IMBuddyStatus
 	{
 		Available,
-		Busy,
 		Away,
+		Busy,
 		Idle,
 		Offline,
 		Unknown,
