@@ -17,13 +17,24 @@ namespace NexusIM
 		public static void FlashWindow(Window window)
 		{
 			WindowInteropHelper helper = new WindowInteropHelper(window);
-			FlashWindow(helper.Handle, true);
+			FlashWindow(helper.Handle, false);
 		}
 		public static void FlashWindow(IntPtr handle)
 		{
-			FlashWindow(handle, false);
+			//FlashWindow(handle, false);
+
+			 FLASHWINFO fInfo = new FLASHWINFO();
+			fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
+			fInfo.hwnd = handle;
+			fInfo.dwFlags = (uint)WindowFlashFlags.Flash_Tray;
+			fInfo.uCount = 3;
+			fInfo.dwTimeout = 0;
+
+			FlashWindowEx(ref fInfo);
 		}
 
+		#region Window P/Invoke Declarations
+		
 		/// <summary>
 		/// Flashes the window taskbar button to get the user's attention
 		/// </summary>
@@ -32,6 +43,34 @@ namespace NexusIM
 		/// <returns></returns>
 		[DllImport("user32.dll")]
 		private static extern bool FlashWindow(IntPtr hWnd, bool bInvert);
+
+		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+
+		[Flags]
+		private enum WindowFlashFlags
+		{
+			Stop = 0,
+			Flash_Caption = 1,
+			Flash_Tray = 2,
+			Flash_Until_Stop = 4,
+			Flash_Until_Focus = 12
+		}
+
+		[StructLayout(LayoutKind.Sequential)]
+		public struct FLASHWINFO
+		{
+			public UInt32 cbSize;
+			public IntPtr hwnd;
+			public UInt32 dwFlags;
+			public UInt32 uCount;
+			public UInt32 dwTimeout;
+		}
+
+		#endregion
+
+		#region P/Invoke Declarations
 
 		[DllImport("user32.dll")]
 		public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
@@ -98,6 +137,8 @@ namespace NexusIM
 
 			return returnState;
 		}
+
+#endregion
 
 		public static TimeSpan GetDoubleClickSpeed()
 		{

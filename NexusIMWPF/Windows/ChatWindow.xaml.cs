@@ -46,12 +46,15 @@ namespace NexusIM.Windows
 		}
 		public void IncrementUnread(int step = 1)
 		{
-			if (this.IsActive)
-				return;
+			Dispatcher.InvokeIfRequired(() =>
+			{
+				if (this.IsFocused)
+					return;
 
-			mUnread += step;
+				mUnread += step;
 
-			UpdateWindowTitle();
+				UpdateWindowTitle();
+			});
 		}
 		private void ChatWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{

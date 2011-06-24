@@ -147,7 +147,10 @@ namespace NexusIM.Controls
 					switch (message.Substring(1, spaceindex - 1).ToLowerInvariant())
 					{
 						case "me":
+							if (message.Length < 4)
+								break;
 							flags = MessageFlags.UserAction;
+							message = message.Substring(4);
 							break;
 						case "mode":
 							{
@@ -198,6 +201,12 @@ namespace NexusIM.Controls
 								}
 
 								protocol.LoginAsOperator(chunks[1], chunks[2], IrcProtocol_LoginAsOperatorResult);
+
+								return true;
+							}
+						default:
+							{
+								protocol.SendRawMessage(message.Substring(1));
 
 								return true;
 							}

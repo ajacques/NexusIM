@@ -523,6 +523,8 @@ namespace InstantMessage.Protocols.Yahoo
 					HandleConferenceInvitePacket(packet);
 				else if (packet.Service == YahooServices.ymsg_picture)
 					HandlePicturePacket(packet);
+				else if (packet.Service == YahooServices.ymsg_authentication_response)
+					HandleAuthProblemPacket(packet);
 			}
 
 			if (mProtocolStatus == IMProtocolStatus.Connecting)
@@ -532,6 +534,9 @@ namespace InstantMessage.Protocols.Yahoo
 				OnLogin();
 				mLoginWaitHandle.Set();
 			}
+
+			if (mProtocolStatus == IMProtocolStatus.Offline)
+				return;
 
 			try {
 				nsStream.BeginRead(dataqueue, 0, dataqueue.Length, new AsyncCallback(readDataAsync), null);
@@ -801,6 +806,21 @@ namespace InstantMessage.Protocols.Yahoo
 				}
 			}
 		}
+		private void HandleAuthProblemPacket(YPacket packet)
+		{
+			int i = 0;
+			for (; i < 4; i++)
+			{
+				if (packet.SessionByte[i] != 0xff)
+					break;
+			}
+
+			if (i == 4) // We got disconnected
+			{
+				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "An unknown error error occurred while authenticating. Disconnected by Yahoo! servers 66:" + packet.Parameters[66]));
+				mProtocolStatus = IMProtocolStatus.Offline;
+			}
+		}
 
 		#endregion
 
@@ -1005,7 +1025,7 @@ namespace InstantMessage.Protocols.Yahoo
 				//  [                ]
 				// B=6c68lnh6vdmm5...tUjK; expires=Tue, 02-Jun
 				bcookie = reader.ReadLine();
-				bcookie = "B\t" + bcookie.Substring(2, authtoken.IndexOf(';') - 2);
+				bcookie = "B\t" + bcookie.Substring(2, bcookie.IndexOf(';') - 2);
 			} else {
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "An unknown error occurred while requesting secondary login tokens. YMSG Error Code: " + status.ToString()));
 			}
