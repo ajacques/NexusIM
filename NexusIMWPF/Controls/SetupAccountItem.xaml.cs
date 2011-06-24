@@ -47,8 +47,11 @@ namespace NexusIM.Controls
 
 			if (!mProtocol.IsReady)
 			{
-				AccountManager.Accounts.Add(mProtocol);
-				IMSettings.Accounts.Add(mProtocol);
+				if (!String.IsNullOrEmpty(mProtocol.Protocol.Username))
+				{
+					AccountManager.Accounts.Add(mProtocol);
+					IMSettings.Accounts.Add(mProtocol);
+				}
 			}
 		}
 
@@ -106,8 +109,6 @@ namespace NexusIM.Controls
 		{
 			if (!mProtocol.Enabled)
 			{
-				mProtocol.Protocol.Username = UsernameBox.Text;
-
 				string password = PasswordBox.Password;
 				if (!String.IsNullOrEmpty(password))
 				{
@@ -121,12 +122,23 @@ namespace NexusIM.Controls
 					IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
 					ircprot.Server = ServerBox.Text;
 					ircprot.Nickname = UsernameBox.Text;
-				}
+					
+					if (String.IsNullOrEmpty(ircprot.Username))
+						ircprot.Username = UsernameBox.Text;
+				} else
+					mProtocol.Protocol.Username = UsernameBox.Text;
 			}
 		}
 
 		private void DeleteAccount_Click(object sender, RoutedEventArgs e)
 		{
+			if (mProtocol.Protocol.Username == "")
+			{
+				Panel parent = (Panel)Parent;
+				parent.Children.Remove(this);
+				return;
+			}
+
 			AccountManager.Accounts.Remove(mProtocol);
 			IMSettings.Accounts.Remove(mProtocol);
 		}

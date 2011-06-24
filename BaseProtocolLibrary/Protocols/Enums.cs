@@ -9,6 +9,7 @@ namespace InstantMessage.Protocols
 	public enum MessageFlags
 	{
 		None,
-		Decrypted
+		Decrypted,
+		UserAction
 	}
 }

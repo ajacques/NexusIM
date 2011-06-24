@@ -17,8 +17,13 @@
 			</StackPanel>
 		</ToolTip>
 	</Window.Resources>
-	<Grid x:Name="LayoutRoot">
-		<Rectangle VerticalAlignment="Top" Height="24" >
+	<Grid x:Name="LayoutRoot" VerticalAlignment="Stretch">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30" />
+			<RowDefinition />
+			<RowDefinition Height="40"/>
+		</Grid.RowDefinitions>
+		<Rectangle Margin="0,0,0,7" >
 			<Rectangle.Fill>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
 					<GradientStop Color="#FF99B2FF"/>
@@ -26,19 +31,19 @@
 				</LinearGradientBrush>
 			</Rectangle.Fill>
 		</Rectangle>
-		<TextBlock HorizontalAlignment="Left" Margin="8,8,0,0" VerticalAlignment="Top" FontSize="15">
+		<TextBlock HorizontalAlignment="Left" Margin="8,8,0,3" FontSize="15" d:LayoutOverrides="Height">
 			<Run x:Name="HeaderAccountUsername">[placeholder]</Run>
 			<Run> - IRC</Run>
 		</TextBlock>
-		<Grid x:Name="ConnectedWarning" VerticalAlignment="Top" Margin="0,29,0,0" Height="35" Visibility="Collapsed">
+		<Grid x:Name="ConnectedWarning" VerticalAlignment="Top" Margin="0,-2,0,0" Height="35" Visibility="Collapsed" Grid.Row="1">
 			<Rectangle Fill="#FFFFBC78" Stroke="#FFFF6900" />
 			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap" Text="This account is currently connected. Some settings may not take effect until you reconnect." />
 		</Grid>
-		<Grid Margin="0,35,0,0" Height="190" VerticalAlignment="Top" x:Name="ContainerGrid">
+		<Grid Margin="0,4,0,0" VerticalAlignment="Top" x:Name="ContainerGrid" Grid.Row="1">
 			<TabControl TabStripPlacement="Left">
 				<TabItem Header="General">
 					<ScrollViewer>
-						<StackPanel Margin="3,3,0,0" Height="190">
+						<StackPanel Margin="3,3,0,0">
 							<GroupBox Header="Connection Details" Padding="0,3,0,0">
 								<GroupItem>
 									<StackPanel>
@@ -70,15 +75,14 @@
 											<RowDefinition />
 										</Grid.RowDefinitions>
 										<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Username:" FontSize="11"/>
-										<TextBox Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
+										<TextBox x:Name="UsernameBox" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
 										<TextBlock Grid.Row="1" Grid.Column="0" Margin="0,3,0,0" TextWrapping="Wrap" Text="Real Name:" FontSize="11"/>
-										<TextBox Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
+										<TextBox x:Name="RealNameBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" TextWrapping="Wrap" Height="22" HorizontalAlignment="Left" Width="150" />
 									</Grid>
 								</GroupItem>
 							</GroupBox>
 							<TextBlock Margin="5,0,0,0" Text="Auto Execute Commands" ToolTip="{StaticResource AutoExecuteTooltip}" />
-							<TextBox Margin="10,0,0,0" x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="75" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
-							<Rectangle Height="50" Width="1" />
+							<TextBox Margin="10,0,0,0" x:Name="AutoExecuteBox" HorizontalAlignment="Left" Width="150" Height="55" ToolTip="{StaticResource AutoExecuteTooltip}" AcceptsReturn="True" />
 						</StackPanel>
 					</ScrollViewer>
 				</TabItem>
@@ -118,6 +122,6 @@
 				</TabItem>
 			</TabControl>
 		</Grid>
-		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="SaveButton_Click" />
+		<Button Content="Save" HorizontalAlignment="Right" Margin="0,9,8,8" Width="75" Click="SaveButton_Click" Grid.Row="2" d:LayoutOverrides="Height" />
 	</Grid>
 </Window>

@@ -46,6 +46,9 @@ namespace NexusIM.Windows
 		}
 		public void IncrementUnread(int step = 1)
 		{
+			if (this.IsActive)
+				return;
+
 			mUnread += step;
 
 			UpdateWindowTitle();

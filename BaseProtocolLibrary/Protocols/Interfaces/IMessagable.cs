@@ -1,4 +1,5 @@
 ﻿using System;
+using InstantMessage.Protocols;
 
 namespace InstantMessage
 {
@@ -12,6 +13,6 @@ namespace InstantMessage
 		/// Some message content restrictions may apply depending on the protocol.
 		/// </summary>
 		/// <param name="message">The message to send</param>
-		void SendMessage(string message);
+		void SendMessage(string message, MessageFlags flags = MessageFlags.None);
 	}
 }

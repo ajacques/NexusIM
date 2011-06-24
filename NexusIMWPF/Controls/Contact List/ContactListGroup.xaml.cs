@@ -98,7 +98,7 @@ namespace NexusIM.Controls
 
 		private void AddContacts(IEnumerable contacts)
 		{
-			IComparer<IContact> comparer = new StatusComparer();
+			IComparer<IContact> comparer = new UsernameComparer();
 			Dispatcher.InvokeIfRequired(() =>
 			{
 				foreach (IContact contact in contacts)
@@ -117,7 +117,7 @@ namespace NexusIM.Controls
 					}
 					ContactList.Children.Insert(pos, item);
 				}
-			}, false); // Don't use async because we have a reader lock right now and we can't let it go because another thread might try to write to it
+			}); // Don't use async because we have a reader lock right now and we can't let it go because another thread might try to write to it
 		}
 
 		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)

@@ -19,9 +19,16 @@ namespace InstantMessage.Protocols.Irc
 		}
 
 		// Methods
-		public void SendMessage(string message)
+		public void SendMessage(string message, MessageFlags flags = MessageFlags.None)
 		{
-			mProtocol.SendRawMessage(String.Format("PRIVMSG {0} :{1}", mChannelName, message));	
+			string final;
+
+			if (flags == MessageFlags.UserAction)
+				final = String.Format("PRIVMSG {0} :\x0001ACTION {1}\x0001", mChannelName, message);
+			else
+				final = String.Format("PRIVMSG {0} :{1}", mChannelName, message);
+
+			mProtocol.SendRawMessage(final);	
 		}
 		public void KickUser(string username)
 		{
@@ -45,6 +52,10 @@ namespace InstantMessage.Protocols.Irc
 		public void ApplyUserMode(string username, IRCUserModes modes)
 		{
 			mProtocol.ApplyIRCModeToUser(username, mChannelName, modes);
+		}
+		public void ApplyUserMode(string modes)
+		{
+			mProtocol.ApplyIRCMode(mChannelName, modes);
 		}
 		public void RemoveUserMode(string username, IRCUserModes modes)
 		{
@@ -71,11 +82,11 @@ namespace InstantMessage.Protocols.Irc
 			return mProtocol.EndFindByHostMask(result);
 		}
 
-		internal void ReceiveMessage(string sender, string message)
+		internal void ReceiveMessage(IMMessageEventArgs args)
 		{
 			try {
 				if (OnMessageReceived != null)
-					OnMessageReceived(this, new IMMessageEventArgs(new IRCUserMask(mProtocol, sender), message));
+					OnMessageReceived(this, args);
 			} catch (Exception e) {
 				Debug.WriteLine(e.Message);
 			}
@@ -114,6 +125,15 @@ namespace InstantMessage.Protocols.Irc
 			try {
 				if (OnLeave != null)
 					OnLeave(this, new IMChatRoomGenericEventArgs() { Message = reason, UserRequested = UserRequestedPart });
+			} catch (Exception e) {
+				Debug.WriteLine(e.Message);
+			}
+		}
+		internal void TriggerOnPart(IRCUserMask mask, string reason)
+		{
+			try {
+				if (OnUserPart != null)
+					OnUserPart(this, new IMChatRoomGenericEventArgs() { Message = reason, Username = mask });
 			} catch (Exception e) {
 				Debug.WriteLine(e.Message);
 			}
@@ -184,6 +204,7 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<IMChatRoomGenericEventArgs> OnKickedFromChannel;
 		public event EventHandler OnJoin;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
+		public event EventHandler<IMChatRoomGenericEventArgs> OnUserPart;
 		public event EventHandler<IRCModeChangeEventArgs> OnModeChange;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnLeave;
 		public event EventHandler<IMChatRoomGenericEventArgs> TopicChanged;

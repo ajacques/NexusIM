@@ -10,19 +10,8 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<TextBlock>
-			<Run>*s</Run><Run Foreground="Gray">!</Run><Run>*</Run><Run Foreground="Gray">@</Run><Run>adrensoftware.com</Run>
-		</TextBlock>
-		<TextBlock Grid.Row="1" Text="Results:" />
 		<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,15,0,0">
-			<StackPanel>
-				<TextBlock>
-					<Run Background="LightGray">SkynetLab</Run>s!<Run Background="LightGray" Foreground="Gray">skynet2</Run>@<Run>adrensoftware.com</Run>
-				</TextBlock>
-				<TextBlock>
-					<Run Background="LightGray">SkynetSolution</Run>s!<Run Background="LightGray" Foreground="Gray">skynet</Run>@<Run>adrensoftware.com</Run>
-				</TextBlock>
-			</StackPanel>
+			<StackPanel x:Name="Results" />
 		</ScrollViewer>
 	</Grid>
 </UserControl>

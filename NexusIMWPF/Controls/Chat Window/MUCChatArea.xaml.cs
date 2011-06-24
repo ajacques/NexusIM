@@ -43,8 +43,9 @@ namespace NexusIM.Controls
 				IRCChannel ircChannel = (IRCChannel)room;
 				ircProtocol.OnNoticeReceive += new EventHandler<IMChatRoomGenericEventArgs>(IrcProtocol_OnNoticeReceive);
 				ircChannel.OnKickedFromChannel += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnKicked);
-				ircChannel.TopicChanged += new EventHandler<IMChatRoomGenericEventArgs>(ircChannel_TopicChanged);
+				ircChannel.TopicChanged += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_TopicChanged);
 				ircChannel.OnModeChange += new EventHandler<IRCModeChangeEventArgs>(IrcChannel_OnModeChange);
+				ircChannel.OnUserPart += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnUserPart);
 
 				RoomDescription.Text = ircChannel.Topic;
 				mNickSearch = new Regex(String.Format(@"(?:^|\ ){0}(?:$|\ |')", ircProtocol.Nickname));
@@ -73,18 +74,31 @@ namespace NexusIM.Controls
 
 		public void ProcessChatMessage(IMMessageEventArgs e)
 		{
-			Dispatcher.BeginInvoke(new GenericEvent(() =>
+			Dispatcher.InvokeIfRequired(() =>
 			{
-				ChatMessageInline inline = new ChatMessageInline();
-				inline.Username = e.Sender.Nickname;
-				if (e.Sender is SelfContact)
-					inline.UsernameColor = Color.FromRgb(255, 100, 0);
-				else
-					inline.UsernameColor = Color.FromRgb(0, 0, 255);
-				inline.MessageBody = e.Message;
+				if (e.Flags == MessageFlags.None)
+				{
+					ChatMessageInline inline = new ChatMessageInline();
+					inline.Username = e.Sender.Nickname;
+					if (e.Sender is SelfContact)
+						inline.UsernameColor = Color.FromRgb(255, 100, 0);
+					else
+						inline.UsernameColor = Color.FromRgb(0, 0, 255);
+					inline.MessageBody = e.Message;
 
-				AppendChatInline(inline);
-			}));
+					AppendChatInline(inline);
+				} else if (e.Flags == MessageFlags.UserAction) {
+					UserActionInline inline = new UserActionInline();
+					inline.Username = e.Sender.Nickname;
+					if (e.Sender is SelfContact)
+						inline.UsernameColor = Color.FromRgb(255, 100, 0);
+					else
+						inline.UsernameColor = Color.FromRgb(0, 0, 255);
+					inline.MessageBody = e.Message;
+
+					AppendChatInline(inline);
+				}
+			});
 
 			if (!(e.Sender is SelfContact) && mNickSearch.IsMatch(e.Message))
 				Win32.FlashWindow(mWindowPointer);
@@ -119,6 +133,83 @@ namespace NexusIM.Controls
 			ChatHistoryBox.Inlines.Add(inline);
 			ChatHistoryContainer.ScrollToEnd();
 		}
+		private bool ProcessSendMessage(string message)
+		{
+			MessageFlags flags = MessageFlags.None;
+
+			if (message[0] == '/' && mChatRoom is IRCChannel)
+			{
+				IRCChannel channel = (IRCChannel)mChatRoom;
+				IRCProtocol protocol = (IRCProtocol)mProtocol;
+				int spaceindex = message.IndexOf(' ');
+				if (spaceindex >= 2)
+				{
+					switch (message.Substring(1, spaceindex - 1).ToLowerInvariant())
+					{
+						case "me":
+							flags = MessageFlags.UserAction;
+							break;
+						case "mode":
+							{
+								// Possible options:
+								// /mode +o Penguin
+								// /mode +b Penguin!*@*
+								// /mode Penguin +X
+
+								string[] chunks = message.Split(new char[] { ' ' }, 2);
+
+								if (chunks[1][0] == '+' || chunks[1][0] == '-')
+									channel.ApplyUserMode(chunks[1]);
+
+								return true;
+							}
+						case "kick":
+							{
+								// Possible options:
+								// /kick Penguin die
+								// /kick Penguin
+								// /kick Penguin go away
+
+								string[] chunks = message.Split(new char[] { ' ' }, 3);
+
+								if (chunks.Length < 2)
+								{
+									Run errorRun = new Run("Not enough parameters (Format: /kick nickname [reason])");
+									errorRun.Foreground = Brushes.Red;
+									AppendChatInline(errorRun);
+									return false;
+								} else if (chunks.Length == 3)
+									channel.KickUser(chunks[1], chunks[2]);
+								else
+									channel.KickUser(chunks[1]);
+
+								return true;
+							}
+						case "oper":
+							{
+								string[] chunks = message.Split(new char[] { ' ' }, 3);
+
+								if (chunks.Length < 3)
+								{
+									Run errorRun = new Run("Not enough parameters (Format: /oper username password)");
+									errorRun.Foreground = Brushes.Red;
+									AppendChatInline(errorRun);
+									return false;
+								}
+
+								protocol.LoginAsOperator(chunks[1], chunks[2], IrcProtocol_LoginAsOperatorResult);
+
+								return true;
+							}
+					}
+				}
+			}
+			
+			mChatRoom.SendMessage(message, flags);
+
+			ProcessChatMessage(new IMMessageEventArgs(new SelfContact(mProtocol), message, flags));
+			return true;
+		}
 
 		protected override void OnVisualParentChanged(DependencyObject oldParent)
 		{
@@ -126,6 +217,7 @@ namespace NexusIM.Controls
 
 			mWindow = Window.GetWindow(this);
 			mWindowPointer = new WindowInteropHelper(mWindow).Handle;
+			MessageBody.Focus();
 		}
 
 		// User Interface Event Handlers
@@ -137,16 +229,8 @@ namespace NexusIM.Controls
 
 				string message = MessageBody.Text;
 
-				MessageBody.Text = String.Empty;
-
-				if (message[0] == '/')
-				{
-					return;
-				}
-
-				mChatRoom.SendMessage(message);
-
-				ProcessChatMessage(new IMMessageEventArgs(new SelfContact(mProtocol), message));
+				if (ProcessSendMessage(message))
+					MessageBody.Text = String.Empty;
 			}
 		}
 		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
@@ -178,6 +262,14 @@ namespace NexusIM.Controls
 				mUserContextMenu.PopulateMenu(OccupantList.SelectedItem.ToString());
 			}
 		}
+		private void ChatHistoryContainer_SelectionChanged(object sender, RoutedEventArgs e)
+		{
+			string selection = MessageBody.SelectedText;
+
+			MessageBody.Select(0, 0);
+
+			Clipboard.SetText(selection);
+		}
 
 		// Chat Room Event Handlers
 		private void ChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
@@ -197,6 +289,26 @@ namespace NexusIM.Controls
 
 				span.FontStyle = FontStyles.Italic;
 				span.Foreground = Brushes.Green;
+
+				span.Inlines.Add(user);
+				span.Inlines.Add(message);
+				AppendChatInline(span);
+			});
+		}
+		private void IrcChannel_OnUserPart(object sender, IMChatRoomGenericEventArgs e)
+		{
+			ChatHistoryBox.Dispatcher.InvokeIfRequired(() =>
+			{
+				Span span = new Span();
+				Run user = new Run(e.Username.Nickname);
+				Run message = new Run();
+				if (String.IsNullOrEmpty(e.Message))
+					message.Text = " has left the room.";
+				else
+					message.Text = String.Format(" has left the room. [{0}]", e.Message);
+
+				span.FontStyle = FontStyles.Italic;
+				span.Foreground = Brushes.IndianRed;
 
 				span.Inlines.Add(user);
 				span.Inlines.Add(message);
@@ -236,7 +348,7 @@ namespace NexusIM.Controls
 				AppendChatInline(span);
 			});
 		}
-		private void ircChannel_TopicChanged(object sender, IMChatRoomGenericEventArgs e)
+		private void IrcChannel_TopicChanged(object sender, IMChatRoomGenericEventArgs e)
 		{
 			Dispatcher.InvokeIfRequired(() =>
 				{
@@ -250,6 +362,23 @@ namespace NexusIM.Controls
 		private void Participants_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			ProcessUserList();
+		}
+		private void IrcProtocol_LoginAsOperatorResult(bool success, string message)
+		{
+			Dispatcher.InvokeIfRequired(() => {
+				if (success)
+				{
+					Run msg = new Run(String.Format("Login succeeded (Message: {0})", message));
+					msg.Foreground = Brushes.Green;
+
+					AppendChatInline(msg);
+				} else {
+					Run msg = new Run(String.Format("Login failed (Message: {0})", message));
+					msg.Foreground = Brushes.Red;
+
+					AppendChatInline(msg);
+				}
+			});
 		}
 		
 		// Protocol Event Handlers

@@ -84,6 +84,7 @@ namespace InstantMessage
 		public IMProtocol()
 		{
 			mProtocolStatus = IMProtocolStatus.Offline;
+			Username = "";
 		}
 		/// <summary>
 		/// Connects and authenticates with the server

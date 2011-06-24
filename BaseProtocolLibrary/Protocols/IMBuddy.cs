@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using InstantMessage.Events;
+using InstantMessage.Protocols;
 
 namespace InstantMessage
 {
@@ -29,7 +30,7 @@ namespace InstantMessage
 		/// Sends a message to this user
 		/// </summary>
 		/// <param name="message">Message contents</param>
-		public void SendMessage(string message)
+		public void SendMessage(string message, MessageFlags flags = MessageFlags.None)
 		{
 			mProtocol.SendMessage(this.Username, message);
 		}

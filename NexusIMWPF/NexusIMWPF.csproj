@@ -132,17 +132,18 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
-    <Compile Include="Controls\ChatHistoryBox.cs" />
-    <Compile Include="Controls\CLErrorBox.xaml.cs">
+    <Compile Include="Controls\Chat Window\ChatHistoryBox.cs" />
+    <Compile Include="Controls\Chat Window\UserActionInline.cs" />
+    <Compile Include="Controls\Contact List\CLErrorBox.xaml.cs">
       <DependentUpon>CLErrorBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GroupChatAreaHost.cs" />
+    <Compile Include="Controls\Chat Window\GroupChatAreaHost.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
-    <Compile Include="Controls\IRCBanMaskValidation.xaml.cs">
+    <Compile Include="Controls\Chat Window\IRCBanMaskValidation.xaml.cs">
       <DependentUpon>IRCBanMaskValidation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\IrcChanUserContextMenu.cs" />
-    <Compile Include="Controls\IRCProtocolMenu.cs" />
+    <Compile Include="Controls\Chat Window\IrcChanUserContextMenu.cs" />
+    <Compile Include="Controls\Contact List\IRCProtocolMenu.cs" />
     <Compile Include="Controls\RoundedPolygon.cs" />
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
       <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
@@ -164,22 +165,22 @@
     <Compile Include="Controls\AccountSelectorControl.xaml.cs">
       <DependentUpon>AccountSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ChatAreaHost.cs" />
-    <Compile Include="Controls\ChatMessageInline.cs" />
+    <Compile Include="Controls\Chat Window\ChatAreaHost.cs" />
+    <Compile Include="Controls\Chat Window\ChatMessageInline.cs" />
     <Compile Include="Controls\ChatMessageNotification.xaml.cs">
       <DependentUpon>ChatMessageNotification.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ContactChatArea.xaml.cs">
+    <Compile Include="Controls\Chat Window\ContactChatArea.xaml.cs">
       <DependentUpon>ContactChatArea.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ContactItemContextMenu.cs" />
-    <Compile Include="Controls\ContactListGroup.xaml.cs">
+    <Compile Include="Controls\Contact List\ContactItemContextMenu.cs" />
+    <Compile Include="Controls\Contact List\ContactListGroup.xaml.cs">
       <DependentUpon>ContactListGroup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ContactListItem.xaml.cs">
+    <Compile Include="Controls\Contact List\ContactListItem.xaml.cs">
       <DependentUpon>ContactListItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\MUCChatArea.xaml.cs">
+    <Compile Include="Controls\Chat Window\MUCChatArea.xaml.cs">
       <DependentUpon>MUCChatArea.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StatusOrb.xaml.cs">
@@ -187,7 +188,7 @@
     </Compile>
     <Compile Include="Controls\SysTrayContextMenu.cs" />
     <Compile Include="Controls\SysTrayIcon.cs" />
-    <Compile Include="Controls\YoutubePreviewPopup.xaml.cs">
+    <Compile Include="Controls\Chat Window\YoutubePreviewPopup.xaml.cs">
       <DependentUpon>YoutubePreviewPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ContactToUIContact.cs" />
@@ -388,27 +389,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\CLErrorBox.xaml">
+    <Page Include="Controls\Contact List\CLErrorBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ContactChatArea.xaml">
+    <Page Include="Controls\Chat Window\ContactChatArea.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ContactListGroup.xaml">
+    <Page Include="Controls\Contact List\ContactListGroup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ContactListItem.xaml">
+    <Page Include="Controls\Contact List\ContactListItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\IRCBanMaskValidation.xaml">
+    <Page Include="Controls\Chat Window\IRCBanMaskValidation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MUCChatArea.xaml">
+    <Page Include="Controls\Chat Window\MUCChatArea.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -424,7 +425,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\YoutubePreviewPopup.xaml">
+    <Page Include="Controls\Chat Window\YoutubePreviewPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

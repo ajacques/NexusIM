@@ -30,10 +30,6 @@ namespace InstantMessage.Protocols
 		{
 			get;
 		}
-		/// <summary>
-		/// Sends a message to the chat room. The message will be visible to all users in the chat room.
-		/// </summary>
-		void SendMessage(string message);
 		void Leave(string reason);
 
 		event EventHandler<IMMessageEventArgs> OnMessageReceived;

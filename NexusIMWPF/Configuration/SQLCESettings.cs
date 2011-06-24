@@ -229,7 +229,14 @@ namespace NexusIM
 			}
 			public bool Remove(string key)
 			{
-				throw new NotImplementedException();
+				AccountSetting setting = mSource.FirstOrDefault(a => a.Key == key);
+
+				if (setting == null)
+					return false;
+
+				mSource.Remove(setting);
+
+				return true;
 			}
 			public bool TryGetValue(string key, out string value)
 			{
@@ -522,7 +529,9 @@ namespace NexusIM
 							else if (e.PropertyName == "RealName")
 								protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
 
-							mContext.SubmitChanges();
+							try	{
+								mContext.SubmitChanges();
+							} catch (ChangeConflictException) { }
 						});
 						extraData.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
 							current.AutoConnect = extraData.AutoConnect;

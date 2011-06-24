@@ -61,7 +61,7 @@ namespace InstantMessage.Protocols.Irc
 			Username = input.Substring(exclaim + 1, at - exclaim - 1);
 			Hostname = input.Substring(at + 1);
 		}
-		public void SendMessage(string message)
+		public void SendMessage(string message, MessageFlags flags = MessageFlags.None)
 		{
 		}
 

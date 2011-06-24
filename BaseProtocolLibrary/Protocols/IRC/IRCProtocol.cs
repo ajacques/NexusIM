@@ -96,7 +96,7 @@ namespace InstantMessage.Protocols.Irc
 			sendData("JOIN " + room);
 
 			IRCChannel channel = new IRCChannel(room, this);
-			mChannels.Add(channel);
+			//mChannels.Add(channel);
 
 			return channel;
 		}
@@ -133,8 +133,25 @@ namespace InstantMessage.Protocols.Irc
 		{
 			sendData("QUIT :" + reason);
 		}
-		public void LoginAsOperator(string username, string password)
+		public void LoginAsOperator(string username, string password, Action<bool, string> callback = null)
 		{
+			if (callback != null)
+			{
+				ServerResponse resp = new ServerResponse((code, msg) =>
+					{
+						msg = msg.Substring(msg.LastIndexOf(':'));
+						if (code == 491)
+							callback(false, msg);
+						else
+							callback(true, msg);
+
+						mRespHandlers.Remove(491);
+						mRespHandlers.Remove(381);
+					});
+				mRespHandlers.Add(491, resp);
+				mRespHandlers.Add(381, resp);
+			}
+
 			sendData(String.Format("OPER {0} {1}", username, password));
 		}
 		public void ApplyIRCModeToUser(string username, string channel, IRCUserModes mode)
@@ -147,6 +164,10 @@ namespace InstantMessage.Protocols.Irc
 				userMask += username + " ";
 
 			sendData(String.Format(CultureInfo.InvariantCulture, "MODE {0} +{1} {2}", channel, modemask, userMask));
+		}
+		public void ApplyIRCMode(string mChannelName, string modes)
+		{
+			sendData(String.Format(CultureInfo.InvariantCulture, "MODE {0} {1}", mChannelName, modes));
 		}
 		public void RemoveIRCModeFromUser(string username, string channel, IRCUserModes mode)
 		{
@@ -162,7 +183,11 @@ namespace InstantMessage.Protocols.Irc
 		/// <returns>Null if no results</returns>
 		public IRCChannel FindChannelByName(string channelName)
 		{
-			return mChannels[channelName];
+			try {
+				return mChannels[channelName];
+			} catch (KeyNotFoundException) {
+				return null;
+			}
 		}
 
 		public void SendRawMessage(string message)
@@ -430,6 +455,11 @@ namespace InstantMessage.Protocols.Irc
 						case 474: // Banned
 							HandleJoinFailedPacket(IRCJoinFailedReason.Banned, parameters.Skip(3).ToArray(), line.Substring(line.IndexOf(':', 1)));
 							break;
+						default:
+							ServerResponse resp = null;
+							if (mRespHandlers.TryGetValue(numericReply, out resp))
+								resp(numericReply, line);
+							break;
 					}
 				} else {
 					switch (parameters[1].ToUpper())
@@ -514,6 +544,16 @@ namespace InstantMessage.Protocols.Irc
 				channel.TriggerOnPart(line.Substring(line.IndexOf(':', 5) + 1));
 
 				mChannels.Remove(channel.Name);
+			} else {
+				string channelName = parameters[2];
+
+				IRCChannel channel = FindChannelByName(channelName);
+
+				int index = line.IndexOf(':', 5);
+				if (index == -1)
+					channel.TriggerOnPart(mask, null);
+				else
+					channel.TriggerOnPart(mask, line.Substring(index + 1));
 			}
 		}
 		private void HandleModeChangePacket(string line, string[] parameters)
@@ -564,7 +604,11 @@ namespace InstantMessage.Protocols.Irc
 				if (!mChannels.ContainsKey(name))
 				{
 					IRCChannel channel = new IRCChannel(name, this);
-					mChannels.Add(channel);
+					try	{
+						mChannels.Add(channel);
+					} catch (ArgumentException e) {
+
+					}
 
 					if (OnJoinChannel != null)
 						OnJoinChannel(this, new IMChatRoomEventArgs() { ChatRoom = channel });
@@ -610,7 +654,23 @@ namespace InstantMessage.Protocols.Irc
 				IRCChannel channel = FindChannelByName(recipient);
 
 				int messageStartIndex = line.IndexOf(':', 5);
-				channel.ReceiveMessage(parameters[0], line.Substring(messageStartIndex + 1));
+				string message = line.Substring(messageStartIndex + 1);
+
+				MessageFlags flags = MessageFlags.None;
+
+				if (message[0] == '\x0001')
+				{
+					if (message.Substring(1, message.IndexOf(' ') - 1) == "ACTION")
+					{
+						flags = MessageFlags.UserAction;
+						message = message.Substring(8, message.Length - 9);
+					} else
+						flags = MessageFlags.None;
+				}
+
+				IMMessageEventArgs args = new IMMessageEventArgs(new IRCUserMask(this, parameters[0]), message, flags);
+
+				channel.ReceiveMessage(args);
 			} else {
 				int messageStartIndex = line.IndexOf(':', 5);
 				try	{
@@ -820,6 +880,9 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<ChatRoomJoinFailedEventArgs> OnChannelJoinFailed;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 
+		// Private Delegates
+		private delegate void ServerResponse(int id, string contents);
+
 		// Variables		
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
@@ -830,6 +893,7 @@ namespace InstantMessage.Protocols.Irc
 		private DateTime mConnectTime;
 		private static TimeSpan mIdlePeriod = TimeSpan.FromSeconds(30);
 		private char[] mLineSplitSep = new char[] { ' ' };
+		private Dictionary<int, ServerResponse> mRespHandlers = new Dictionary<int, ServerResponse>();
 
 		// Socket-related Variables
 		private string mActualServer;

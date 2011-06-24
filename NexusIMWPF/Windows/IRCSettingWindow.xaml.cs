@@ -21,15 +21,15 @@ namespace NexusIM.Windows
 		public void PopulateUIControls(IMProtocolWrapper extraData)
 		{
 			mExtraData = extraData;
-			IRCProtocol protocol = (IRCProtocol)extraData.Protocol;
+			mProtocol = (IRCProtocol)extraData.Protocol;
 
-			IDictionary<string, string> configTable = protocol.ConfigurationSettings;
+			IDictionary<string, string> configTable = mProtocol.ConfigurationSettings;
 
 			string autoexecute;
 			configTable.TryGetValue("autoexecute", out autoexecute);
 
 			Dispatcher.BeginInvoke(new GenericEvent(() => {
-				HeaderAccountUsername.Text = extraData.Protocol.Username;
+				HeaderAccountUsername.Text = mProtocol.Nickname;
 				AutoExecuteBox.Text = autoexecute;
 
 				if (mExtraData.Enabled)
@@ -38,17 +38,26 @@ namespace NexusIM.Windows
 					ContainerGrid.Margin = new Thickness(0, 65, 0, 0);
 				}
 
-				Hostname.Text = protocol.Server;
-				Port.Text = protocol.Port.ToString();
+				Hostname.Text = mProtocol.Server;
+				Port.Text = mProtocol.Port.ToString();
+
+				UsernameBox.Text = mProtocol.Username;
+				RealNameBox.Text = mProtocol.RealName;
 			}));
 		}
 
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
 			Reconcile("autoexecute", AutoExecuteBox.Text);
+			Reconcile("realname", RealNameBox.Text);
 
-			mExtraData.Protocol.Server = Hostname.Text;
-
+			mProtocol.Server = Hostname.Text;
+			mProtocol.Username = UsernameBox.Text;
+			mProtocol.RealName = RealNameBox.Text;
+			
+			int port;
+			if (Int32.TryParse(Port.Text, out port))
+				mProtocol.Port = port;
 
 			this.Close();
 		}
@@ -63,5 +72,6 @@ namespace NexusIM.Windows
 		}
 
 		private IMProtocolWrapper mExtraData;
+		private IRCProtocol mProtocol;
 	}
 }
