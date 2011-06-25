@@ -42,7 +42,7 @@
 		<Border x:Name="BackgroundRect" BorderBrush="#FF686868" BorderThickness="1" CornerRadius="5" Background="Transparent" />
 		<CheckBox x:Name="EnabledCheckBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
 		<TextBlock x:Name="UsernameLabel" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="73,0,0,0" TextWrapping="Wrap">
-			<Run Foreground="#FF007474" x:Name="MainAccountUsername"></Run> - <Run x:Name="MainAccountTypeLabel"></Run>
+			<Run Foreground="#FF007474" x:Name="MainAccountUsername">Username</Run> - <Run x:Name="MainAccountTypeLabel">AccountType</Run>
 		</TextBlock>
 		<Grid x:Name="BehindGrid" Opacity="0" Visibility="Collapsed">
 			<TextBox x:Name="UsernameBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="70,5,0,0" Width="120" />

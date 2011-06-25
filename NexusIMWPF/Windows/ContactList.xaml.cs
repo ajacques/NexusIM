@@ -105,6 +105,11 @@ namespace NexusIM.Windows
 				}
 			}, false);
 		}
+		private void AddProtocolMenus()
+		{
+			ProtocolGroup.Children.Add(new IRCProtocolMenu());
+			ProtocolGroup.Children.Add(new YahooProtocolMenu());
+		}
 
 		// Event Handlers
 		private void AccountManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -136,13 +141,7 @@ namespace NexusIM.Windows
 				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");
 			} catch (KeyNotFoundException) { }
 
-			Button b = new Button();
-			b.ContextMenu = new IRCProtocolMenu();
-			b.Width = 16;
-			b.Height = 16;
-			b.Click += new RoutedEventHandler((s, x) => b.ContextMenu.IsOpen = true);
-
-			ProtocolGroup.Children.Add(b);
+			AddProtocolMenus();
 		}
 
 		// User Interface Event Handlers

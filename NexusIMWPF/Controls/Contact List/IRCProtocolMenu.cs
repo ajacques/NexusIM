@@ -1,22 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using InstantMessage.Protocols.Irc;
-using NexusIM.Managers;
-using NexusIM.Windows;
 using InstantMessage;
+using InstantMessage.Protocols.Irc;
+using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {
-	class IRCProtocolMenu : ContextMenu
+	class IRCProtocolMenu : ProtocolMenu<IRCProtocol>
 	{
-		public IRCProtocolMenu()
-		{
-			
-		}
-
 		// Event handlers
 		private void joinItem_Click(object sender, RoutedEventArgs e)
 		{
@@ -24,40 +16,9 @@ namespace NexusIM.Controls
 			window.Owner = Window.GetWindow(this);
 			window.ShowDialog();
 		}
-
-		protected override void OnOpened(RoutedEventArgs e)
+		
+		protected override void GenerateItemSet(IMProtocolWrapper wrapper, ItemCollection coll)
 		{
-			base.OnOpened(e);
-
-			this.Items.Clear();
-
-			IEnumerable<IMProtocolWrapper> protocols = AccountManager.Accounts.Where(w => w.Protocol is IRCProtocol);
-
-			if (protocols.Count() >= 2)
-			{
-				MenuItem header = new MenuItem();
-				header.Header = "Internet Relay Chat";
-				header.FontWeight = FontWeight.FromOpenTypeWeight(500);
-				header.IsEnabled = false;
-				this.Items.Add(header);
-				this.Items.Add(new Separator());
-
-				foreach (IMProtocolWrapper wrapper in protocols)
-				{
-					MenuItem main = new MenuItem();
-					this.Items.Add(main);
-					main.Header = wrapper.Protocol.ToString();
-					GenerateItemSet(wrapper, main.Items);
-				}
-			} else
-				GenerateItemSet(protocols.FirstOrDefault(), this.Items);
-		}
-
-		private void GenerateItemSet(IMProtocolWrapper wrapper, ItemCollection coll)
-		{
-			if (wrapper == null)
-				return;
-
 			IRCProtocol protocol = wrapper.Protocol as IRCProtocol;
 
 			MenuItem item = new MenuItem();
@@ -97,6 +58,13 @@ namespace NexusIM.Controls
 				connItem.Click += handler;
 
 				coll.Add(connItem);
+			}
+		}
+
+		protected override string ProtocolName
+		{
+			get {
+				return "Internet Relay Chat";
 			}
 		}
 	}

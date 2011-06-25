@@ -138,6 +138,8 @@
       <DependentUpon>CLErrorBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Chat Window\GroupChatAreaHost.cs" />
+    <Compile Include="Controls\Contact List\ProtocolMenu.cs" />
+    <Compile Include="Controls\Contact List\YahooProtocolMenu.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
     <Compile Include="Controls\Chat Window\IRCBanMaskValidation.xaml.cs">
       <DependentUpon>IRCBanMaskValidation.xaml</DependentUpon>

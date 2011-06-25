@@ -240,6 +240,16 @@ namespace NexusIM.Controls
 
 				if (ProcessSendMessage(message))
 					MessageBody.Text = String.Empty;
+			} else if (e.Key == Key.Tab) {
+				e.Handled = true;
+				string lastword = MessageBody.Text.Substring(MessageBody.Text.LastIndexOf(' ') + 1);
+				IEnumerable<IContact> matches = mChatRoom.Participants.Where(c => c.Nickname.StartsWith(lastword));
+				if (matches.Count() == 1)
+				{
+					string match = matches.First().Nickname;
+					MessageBody.Text += match.Substring(lastword.Length);
+					MessageBody.CaretIndex = MessageBody.Text.Length;
+				}
 			}
 		}
 		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
