@@ -228,6 +228,10 @@ namespace NexusIM.Controls
 			mWindowPointer = new WindowInteropHelper(mWindow).Handle;
 			MessageBody.Focus();
 		}
+		protected override void OnInitialized(EventArgs e)
+		{
+			base.OnInitialized(e);
+		}
 
 		// User Interface Event Handlers
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)

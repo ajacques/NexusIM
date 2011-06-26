@@ -6,6 +6,9 @@
 	mc:Ignorable="d" 
 	x:Name="UserControl"
 	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private" UseLayoutRounding="True">
+	<UserControl.Resources>
+		<DropShadowEffect x:Key="SubtleShadow" BlurRadius="15" Direction="300" Color="#FFB4B4B4"/>
+	</UserControl.Resources>
 	<Grid x:Name="LayoutRoot">
 		<Grid.RowDefinitions>
 			<RowDefinition />
@@ -20,17 +23,14 @@
 				<RowDefinition Height="48" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
-			<TextBlock Margin="5,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-				<TextBlock.Effect>
-					<DropShadowEffect BlurRadius="10" Direction="300" Color="#FFB4B4B4"/>
-				</TextBlock.Effect>
+			<TextBlock Margin="5,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource SubtleShadow}">
 				<Run x:Name="RoomName" FontFamily="Tahoma" FontSize="24">#main</Run>
 				<Run x:Name="OccupantCount" FontSize="9" Foreground="Gray">64</Run>
 				<Run FontSize="9" Foreground="Gray">people</Run>
 			</TextBlock>
-			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" />
+			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" Effect="{DynamicResource SubtleShadow}" />
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
-			<RichTextBox Grid.Row="1" x:Name="ChatHistoryContainer" IsReadOnly="True" IsDocumentEnabled="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5" SelectionChanged="ChatHistoryContainer_SelectionChanged">
+			<RichTextBox Grid.Row="1" x:Name="ChatHistoryContainer" IsReadOnly="True" IsDocumentEnabled="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5" SelectionChanged="ChatHistoryContainer_SelectionChanged" FontFamily="Calibri" FontSize="13">
 				<FlowDocument>
 					<Paragraph x:Name="ChatHistoryBox" />
 				</FlowDocument>

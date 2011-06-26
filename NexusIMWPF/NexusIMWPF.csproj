@@ -154,6 +154,7 @@
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Misc\MiscExtensions.cs" />
     <Compile Include="Misc\ProtocolCollection.cs" />
+    <Compile Include="Misc\SettingCache.cs" />
     <Compile Include="Protocol\BrokenProtocol.cs" />
     <Compile Include="Configuration\CEConnectionPool.cs" />
     <Compile Include="ChatHistory.cs">

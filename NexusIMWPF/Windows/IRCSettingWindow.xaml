@@ -7,7 +7,7 @@
 	x:Class="NexusIM.Windows.IRCSettingWindow"
 	x:Name="Window"
 	Title="Account Settings"
-	Width="400" Height="300"
+	Width="400" Height="320"
 	x:FieldModifier="private" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" UseLayoutRounding="True">
 	<Window.Resources>
 		<ToolTip x:Key="AutoExecuteTooltip">
@@ -37,9 +37,12 @@
 		</TextBlock>
 		<Grid x:Name="ConnectedWarning" VerticalAlignment="Top" Margin="0,-2,0,0" Height="35" Visibility="Collapsed" Grid.Row="1">
 			<Rectangle Fill="#FFFFBC78" Stroke="#FFFF6900" />
-			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap" Text="This account is currently connected. Some settings may not take effect until you reconnect." />
+			<TextBlock Margin="3" FontSize="11" TextWrapping="Wrap">
+				<Run>This account is currently connected. Some settings may not take effect until you reconnect.</Run>
+				▪ <Hyperlink TextDecorations="None">Disconnect</Hyperlink>
+			</TextBlock>
 		</Grid>
-		<Grid Margin="0,4,0,0" VerticalAlignment="Top" x:Name="ContainerGrid" Grid.Row="1">
+		<Grid Margin="0,4,0,0" VerticalAlignment="Stretch" x:Name="ContainerGrid" Grid.Row="1">
 			<TabControl TabStripPlacement="Left">
 				<TabItem Header="General">
 					<ScrollViewer>
@@ -119,6 +122,30 @@
 							</GroupItem>
 						</GroupBox>
 					</StackPanel>
+				</TabItem>
+				<TabItem Header="Channels" Padding="0,3,0,0">
+					<StackPanel>
+						<GroupBox Header="Favorite Channels">
+							<Grid>
+								<ListView SelectionMode="Single">
+									<ListView.GroupStyle>
+										<GroupStyle HeaderStringFormat="1"/>
+										<GroupStyle HeaderStringFormat="2"/>
+									</ListView.GroupStyle>
+									<ListViewItem>
+										<Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="16"/>
+												<ColumnDefinition/>
+											</Grid.ColumnDefinitions>
+											<CheckBox VerticalAlignment="Center" />
+											<TextBlock Text="#main" Grid.Column="1"/>
+										</Grid>
+									</ListViewItem>
+								</ListView>
+							</Grid>
+						</GroupBox>
+					</StackPanel>					
 				</TabItem>
 			</TabControl>
 		</Grid>

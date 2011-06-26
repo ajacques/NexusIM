@@ -19,8 +19,6 @@ namespace NexusIM.Windows
 
 			mTabAreas = new List<ITabbedArea>();
 			mTabAreaSyncObject = new object();
-
-			this.IsVisibleChanged += new DependencyPropertyChangedEventHandler(ChatWindow_IsVisibleChanged);
 		}
 
 		public void AttachAreaAndShow(TabItem tabPage)
@@ -56,10 +54,6 @@ namespace NexusIM.Windows
 				UpdateWindowTitle();
 			});
 		}
-		private void ChatWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
-		}
 
 		protected override void OnActivated(EventArgs e)
 		{
@@ -73,6 +67,12 @@ namespace NexusIM.Windows
 			base.OnMouseLeftButtonDown(e);
 
 			//base.DragMove();
+		}
+		protected override void OnSourceInitialized(EventArgs e)
+		{
+			base.OnSourceInitialized(e);
+
+			Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
 		}
 
 		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -95,6 +95,15 @@ namespace NexusIM.Windows
 
 				Title = msg;
 			});
+		}
+		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+		{
+			if (msg == Aero.WM_DWMCOMPOSITIONCHANGED)
+			{
+				Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
+				handled = true;
+			}
+			return IntPtr.Zero;
 		}
 
 		public IEnumerable<ITabbedArea> TabAreas

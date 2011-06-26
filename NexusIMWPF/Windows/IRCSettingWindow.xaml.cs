@@ -35,7 +35,7 @@ namespace NexusIM.Windows
 				if (mExtraData.Enabled)
 				{
 					ConnectedWarning.Visibility = Visibility.Visible;
-					ContainerGrid.Margin = new Thickness(0, 65, 0, 0);
+					ContainerGrid.Margin = new Thickness(0, 35, 0, 0);
 				}
 
 				Hostname.Text = mProtocol.Server;

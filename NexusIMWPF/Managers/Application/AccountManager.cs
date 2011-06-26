@@ -86,6 +86,8 @@ namespace NexusIM.Managers
 					Status = IMStatus.Away;
 					break;
 				case SessionSwitchReason.SessionUnlock:
+				case SessionSwitchReason.RemoteConnect:
+				case SessionSwitchReason.ConsoleConnect:
 					Status = IMStatus.Available;
 					break;
 			}

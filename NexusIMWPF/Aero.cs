@@ -40,6 +40,8 @@ namespace NexusIM
 			}
 		}
 
+		public const int WM_DWMCOMPOSITIONCHANGED = 798;
+
 		private enum DWM_BB
 		{
 			Enable = 1,
