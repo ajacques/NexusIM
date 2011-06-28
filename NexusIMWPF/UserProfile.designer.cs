@@ -118,6 +118,8 @@ namespace NexusIM
 		
 		private string _Server;
 		
+		private System.Nullable<int> _Port;
+		
 		private EntitySet<AccountSetting> _AccountSettings;
 		
 		private EntityRef<ChatWindowPool> _ChatWindowPool;
@@ -136,6 +138,8 @@ namespace NexusIM
     partial void OnAutoConnectChanged();
     partial void OnServerChanging(string value);
     partial void OnServerChanged();
+    partial void OnPortChanging(System.Nullable<int> value);
+    partial void OnPortChanged();
     #endregion
 		
 		public Account()
@@ -250,6 +254,26 @@ namespace NexusIM
 					this._Server = value;
 					this.SendPropertyChanged("Server");
 					this.OnServerChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Port", DbType="smallint", UpdateCheck=UpdateCheck.WhenChanged)]
+		public System.Nullable<int> Port
+		{
+			get
+			{
+				return this._Port;
+			}
+			set
+			{
+				if ((this._Port != value))
+				{
+					this.OnPortChanging(value);
+					this.SendPropertyChanging();
+					this._Port = value;
+					this.SendPropertyChanged("Port");
+					this.OnPortChanged();
 				}
 			}
 		}

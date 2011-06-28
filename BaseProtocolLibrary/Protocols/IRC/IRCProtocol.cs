@@ -370,6 +370,12 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			private set;
 		}
+		public bool IsOperator
+		{
+			get	{
+				return mIsOperator;
+			}
+		}
 
 		public new string ToString()
 		{
@@ -449,18 +455,19 @@ namespace InstantMessage.Protocols.Irc
 							if (mPendingHostLookup != null)
 								mPendingHostLookup.Trigger();
 							break;
+						case 381: // Login as Operator Success
+							mIsOperator = true;
+							break;
 						case 473: // Invite only
 							HandleJoinFailedPacket(IRCJoinFailedReason.InviteOnly, parameters.Skip(3).ToArray(), line.Substring(line.IndexOf(':', 1)));
 							break;
 						case 474: // Banned
 							HandleJoinFailedPacket(IRCJoinFailedReason.Banned, parameters.Skip(3).ToArray(), line.Substring(line.IndexOf(':', 1)));
 							break;
-						default:
-							ServerResponse resp = null;
-							if (mRespHandlers.TryGetValue(numericReply, out resp))
-								resp(numericReply, line);
-							break;
 					}
+					ServerResponse resp = null;
+					if (mRespHandlers.TryGetValue(numericReply, out resp))
+						resp(numericReply, line);
 				} else {
 					switch (parameters[1].ToUpper())
 					{
@@ -887,6 +894,7 @@ namespace InstantMessage.Protocols.Irc
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
 		private string mNickname;
+		private bool mIsOperator;
 		private ChatRoomCollection<IRCChannel> mChannels = new ChatRoomCollection<IRCChannel>();
 		private Thread mWatchThread;
 		private DateTime mLastCommunication;

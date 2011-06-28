@@ -26,6 +26,8 @@ namespace NexusIM.Controls
 		public MUCChatArea()
 		{
 			InitializeComponent();
+
+			mMessageHistory = new LinkedList<string>();
 		}
 
 		internal void PopulateUIControls(IChatRoom room, GroupChatAreaHost host)
@@ -137,79 +139,90 @@ namespace NexusIM.Controls
 		{
 			MessageFlags flags = MessageFlags.None;
 
-			if (message[0] == '/' && mChatRoom is IRCChannel)
+			if (message[0] == '/')
 			{
-				IRCChannel channel = (IRCChannel)mChatRoom;
-				IRCProtocol protocol = (IRCProtocol)mProtocol;
 				int spaceindex = message.IndexOf(' ');
 				if (spaceindex >= 2)
 				{
-					switch (message.Substring(1, spaceindex - 1).ToLowerInvariant())
+					string cmd = message.Substring(1, spaceindex - 1).ToLowerInvariant();
+					if (mChatRoom is IRCChannel)
 					{
-						case "me":
-							if (message.Length < 4)
+						IRCChannel channel = (IRCChannel)mChatRoom;
+						IRCProtocol protocol = (IRCProtocol)mProtocol;
+						switch (cmd)
+						{
+							case "me":
+								if (message.Length < 4)
+									break;
+								flags = MessageFlags.UserAction;
+								message = message.Substring(4);
 								break;
-							flags = MessageFlags.UserAction;
-							message = message.Substring(4);
-							break;
-						case "mode":
-							{
-								// Possible options:
-								// /mode +o Penguin
-								// /mode +b Penguin!*@*
-								// /mode Penguin +X
-
-								string[] chunks = message.Split(new char[] { ' ' }, 2);
-
-								if (chunks[1][0] == '+' || chunks[1][0] == '-')
-									channel.ApplyUserMode(chunks[1]);
-
-								return true;
-							}
-						case "kick":
-							{
-								// Possible options:
-								// /kick Penguin die
-								// /kick Penguin
-								// /kick Penguin go away
-
-								string[] chunks = message.Split(new char[] { ' ' }, 3);
-
-								if (chunks.Length < 2)
+							case "mode":
 								{
-									Run errorRun = new Run("Not enough parameters (Format: /kick nickname [reason])");
-									errorRun.Foreground = Brushes.Red;
-									AppendChatInline(errorRun);
-									return false;
-								} else if (chunks.Length == 3)
-									channel.KickUser(chunks[1], chunks[2]);
-								else
-									channel.KickUser(chunks[1]);
+									// Possible options:
+									// /mode +o Penguin
+									// /mode +b Penguin!*@*
+									// /mode Penguin +X
 
-								return true;
-							}
-						case "oper":
-							{
-								string[] chunks = message.Split(new char[] { ' ' }, 3);
+									string[] chunks = message.Split(new char[] { ' ' }, 2);
 
-								if (chunks.Length < 3)
-								{
-									Run errorRun = new Run("Not enough parameters (Format: /oper username password)");
-									errorRun.Foreground = Brushes.Red;
-									AppendChatInline(errorRun);
-									return false;
+									if (chunks[1][0] == '+' || chunks[1][0] == '-')
+										channel.ApplyUserMode(chunks[1]);
+
+									return true;
 								}
+							case "kick":
+								{
+									// Possible options:
+									// /kick Penguin die
+									// /kick Penguin
+									// /kick Penguin go away
 
-								protocol.LoginAsOperator(chunks[1], chunks[2], IrcProtocol_LoginAsOperatorResult);
+									string[] chunks = message.Split(new char[] { ' ' }, 3);
 
-								return true;
-							}
-						default:
-							{
-								protocol.SendRawMessage(message.Substring(1));
+									if (chunks.Length < 2)
+									{
+										Run errorRun = new Run("Not enough parameters (Format: /kick nickname [reason])");
+										errorRun.Foreground = Brushes.Red;
+										AppendChatInline(errorRun);
+										return false;
+									} else if (chunks.Length == 3)
+										channel.KickUser(chunks[1], chunks[2]);
+									else
+										channel.KickUser(chunks[1]);
 
-								return true;
-							}
+									return true;
+								}
+							case "oper":
+								{
+									string[] chunks = message.Split(new char[] { ' ' }, 3);
+
+									if (chunks.Length < 3)
+									{
+										Run errorRun = new Run("Not enough parameters (Format: /oper username password)");
+										errorRun.Foreground = Brushes.Red;
+										AppendChatInline(errorRun);
+										return false;
+									}
+
+									protocol.LoginAsOperator(chunks[1], chunks[2], IrcProtocol_LoginAsOperatorResult);
+
+									return true;
+								}
+							default:
+								{
+									protocol.SendRawMessage(message.Substring(1));
+
+									return true;
+								}
+						}
+					}
+				} else {
+					switch (message)
+					{
+						case "clear":
+							ChatHistoryBox.Inlines.Clear();
+							return true;
 					}
 				}
 			}
@@ -242,8 +255,13 @@ namespace NexusIM.Controls
 
 				string message = MessageBody.Text;
 
+				if (String.IsNullOrEmpty(message))
+					return;
+
 				if (ProcessSendMessage(message))
 					MessageBody.Text = String.Empty;
+
+				mHistoryNode = mMessageHistory.AddFirst(message);
 			} else if (e.Key == Key.Tab) {
 				e.Handled = true;
 				string lastword = MessageBody.Text.Substring(MessageBody.Text.LastIndexOf(' ') + 1);
@@ -254,6 +272,12 @@ namespace NexusIM.Controls
 					MessageBody.Text += match.Substring(lastword.Length);
 					MessageBody.CaretIndex = MessageBody.Text.Length;
 				}
+			} else if (e.Key == Key.Up && (Keyboard.IsKeyUp(Key.LeftCtrl) || Keyboard.IsKeyUp(Key.RightCtrl))) {
+				if (mHistoryNode == null)
+					return;
+
+				MessageBody.Text = mHistoryNode.Value;
+				mHistoryNode = mHistoryNode.Next;
 			}
 		}
 		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
@@ -429,6 +453,8 @@ namespace NexusIM.Controls
 			}
 		}
 
+		private LinkedList<string> mMessageHistory;
+		private LinkedListNode<string> mHistoryNode;
 		private Window mWindow;
 		private IntPtr mWindowPointer;
 		private IrcChanUserContextMenu mUserContextMenu;

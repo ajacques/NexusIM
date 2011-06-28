@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using NexusIM.Controls;
-using NexusIM.Misc;
 
 namespace NexusIM.Windows
 {
@@ -62,17 +62,25 @@ namespace NexusIM.Windows
 			mUnread = 0;
 			UpdateWindowTitle();
 		}
-		protected override void OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs e)
+		protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
 		{
 			base.OnMouseLeftButtonDown(e);
 
-			//base.DragMove();
+			if (e.Source == this)
+				base.DragMove();
 		}
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
 
 			Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
+		}
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			base.OnPreviewKeyDown(e);
+
+			if (e.Key == Key.Escape)
+				this.Close(); // Close the window if the user presses escape
 		}
 
 		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)

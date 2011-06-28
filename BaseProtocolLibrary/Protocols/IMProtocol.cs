@@ -133,10 +133,6 @@ namespace InstantMessage
 		/// <param name="message">The contents of the message</param>
 		public virtual void SendMessage(string friendName, string message)
 		{
-			IMSendMessageEventArgs args = new IMSendMessageEventArgs(this, null, message);
-			triggerOnSendMessage(args);
-			if (args.Handled)
-				throw new Exception("SendMessage Handled()");
 		}
 		public virtual void SendMessageToRoom(string roomName, string message) {}
 		protected virtual void OnStatusChange(IMStatus oldStatus, IMStatus newStatus) {}
@@ -408,7 +404,6 @@ namespace InstantMessage
 		public event EventHandler<IMFriendEventArgs> ContactStatusChange;
 		public event EventHandler<IMMessageEventArgs> onMessageReceive;
 		public static event EventHandler<IMEmailEventArgs> onEmailReceive;
-		public static event EventHandler<IMSendMessageEventArgs> onSendMessage;
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		// Internal Event Triggers
@@ -465,11 +460,6 @@ namespace InstantMessage
 		{
 			if (onChatRoomInvite != null)
 				onChatRoomInvite(this, e);
-		}
-		protected void triggerOnSendMessage(IMSendMessageEventArgs e)
-		{
-			if (onSendMessage != null)
-				onSendMessage(this, e);
 		}
 		protected void triggerBadCredentialsError()
 		{

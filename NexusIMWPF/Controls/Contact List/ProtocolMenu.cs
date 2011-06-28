@@ -14,6 +14,10 @@ namespace NexusIM.Controls
 			this.ContextMenu = new CustomContextMenu(this);
 			this.Width = 16;
 			this.Height = 16;
+			ToolTip tip = new ToolTip();
+			tip.Content = new TextBlock() { Text = this.ProtocolName };
+
+			this.ToolTip = tip;
 		}
 
 		protected abstract string ProtocolName
@@ -35,8 +39,9 @@ namespace NexusIM.Controls
 				this.Items.Clear();
 
 				IEnumerable<IMProtocolWrapper> protocols = AccountManager.Accounts.Where(w => w.Protocol is T);
+				int count = protocols.Count();
 
-				if (protocols.Count() >= 2)
+				if (count >= 2)
 				{
 					MenuItem header = new MenuItem();
 					header.Header = mButton.ProtocolName;
@@ -55,7 +60,7 @@ namespace NexusIM.Controls
 						main.Header = wrapper.Protocol.ToString();
 						mButton.GenerateItemSet(wrapper, main.Items);
 					}
-				} else
+				} else if (count == 1)
 					mButton.GenerateItemSet(protocols.FirstOrDefault(), this.Items);
 			}
 

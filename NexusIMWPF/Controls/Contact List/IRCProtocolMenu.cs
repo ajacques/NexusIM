@@ -34,7 +34,7 @@ namespace NexusIM.Controls
 				if (protocol.ProtocolStatus == IMProtocolStatus.Connecting)
 				{
 					MenuItem connError = new MenuItem();
-					connError.Header = "Account is connecting...";
+					connError.Header = "Connecting...";
 					connError.IsEnabled = false;
 					coll.Add(connError);
 				} else if (protocol.ProtocolStatus == IMProtocolStatus.Online) {

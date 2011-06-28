@@ -10,6 +10,7 @@ using InstantMessage;
 using InstantMessage.Protocols.Irc;
 using InstantMessage.Protocols.Yahoo;
 using Microsoft.SqlServerCe.VersionManagement;
+using NexusIM.Managers;
 
 namespace NexusIM
 {
@@ -468,14 +469,73 @@ namespace NexusIM
 			public SqlAccountList(string connectionString)
 			{
 				mConnectionString = connectionString;
+				mWrapperHandler = new PropertyChangedEventHandler(IMProtocolWrapper_PropertyChanged);
+				mProtocolHandler = new PropertyChangedEventHandler(IMProtocol_PropertyChanged);
+			}
+
+			private void IMProtocolWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
+			{
+				IMProtocolWrapper wrapper = (IMProtocolWrapper)sender;
+				UserProfile profile = UserProfile.Create(mConnectionString);
+				Account account = profile.Accounts.FirstOrDefault(p => p.Id == wrapper.DatabaseId);
+
+				if (account == null)
+					return;
+
+				switch (e.PropertyName)
+				{
+					case "AutoConnect":
+						account.AutoConnect = wrapper.AutoConnect;
+						break;
+
+					default:
+						return;
+				}
+
+				profile.SubmitChanges();
+			}
+			private void IMProtocol_PropertyChanged(object sender, PropertyChangedEventArgs e)
+			{
+				IMProtocol protocol = (IMProtocol)sender;
+				UserProfile profile = UserProfile.Create(mConnectionString);
+				IMProtocolWrapper wrapper = AccountManager.Accounts.Find(protocol);
+				Account account = profile.Accounts.FirstOrDefault(p => p.Id == wrapper.DatabaseId);
+
+				if (account == null)
+					return;
+
+				switch (e.PropertyName)
+				{
+					case "Username":
+						account.Username = protocol.Username;
+						break;
+					case "Password":
+						account.Password = protocol.Password;
+						break;
+					case "Server":
+						account.Server = protocol.Server;
+						break;
+					case "Nickname":
+						protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
+						break;
+					case "RealName":
+						protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
+						break;
+					default:
+						return;
+				}
+
+				profile.SubmitChanges();
 			}
 
 			private class SqlAccountEnumerator : IEnumerator<IMProtocolWrapper>
 			{
-				public SqlAccountEnumerator(Table<Account> source)
+				public SqlAccountEnumerator(Table<Account> source, PropertyChangedEventHandler wrapperHandler, PropertyChangedEventHandler protocolHandler)
 				{
 					mEnumerator = source.GetEnumerator();
 					mContext = source.Context;
+					mWrapperHandler = wrapperHandler;
+					mProtocolHandler = protocolHandler;
 				}
 
 				#region IEnumerator<IMProtocolExtraData> Members
@@ -519,24 +579,8 @@ namespace NexusIM
 						protocol.Username = current.Username;
 						protocol.Password = current.Password;
 						protocol.Server = current.Server;
-						protocol.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
-							current.Username = protocol.Username;
-							current.Password = protocol.Password;
-							current.Server = protocol.Server;
-
-							if (e.PropertyName == "Nickname")
-								protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
-							else if (e.PropertyName == "RealName")
-								protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
-
-							try	{
-								mContext.SubmitChanges();
-							} catch (ChangeConflictException) { }
-						});
-						extraData.PropertyChanged += new PropertyChangedEventHandler((object sender, PropertyChangedEventArgs e) => {
-							current.AutoConnect = extraData.AutoConnect;
-							mContext.SubmitChanges();
-						});
+						protocol.PropertyChanged += mProtocolHandler;
+						extraData.PropertyChanged += mWrapperHandler;
 						protocol.ConfigurationSettings = new SqlAccountSettingDictionary(mContext, current.AccountSettings);
 
 						return extraData;
@@ -577,6 +621,8 @@ namespace NexusIM
 
 				private DataContext mContext;
 				private IEnumerator<Account> mEnumerator;
+				private PropertyChangedEventHandler mWrapperHandler;
+				private PropertyChangedEventHandler mProtocolHandler;
 			}
 
 			#region IEnumerable<IMProtocolExtraData> Members
@@ -584,7 +630,7 @@ namespace NexusIM
 			public IEnumerator<IMProtocolWrapper> GetEnumerator()
 			{
 				UserProfile db = UserProfile.Create(mConnectionString);
-				return new SqlAccountEnumerator(db.Accounts);
+				return new SqlAccountEnumerator(db.Accounts, mWrapperHandler, mProtocolHandler);
 			}
 
 			#endregion
@@ -696,6 +742,8 @@ namespace NexusIM
 			#endregion
 
 			private string mConnectionString;
+			private PropertyChangedEventHandler mWrapperHandler;
+			private PropertyChangedEventHandler mProtocolHandler;
 		}
 		private class SqlChatAreaPool : IChatAreaPool
 		{
