@@ -3,21 +3,26 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ChatMessageNotification"
 	x:Name="UserControl" x:FieldModifier="private"
-	d:DesignWidth="350" d:DesignHeight="70" UseLayoutRounding="True">
+	d:DesignWidth="200" d:DesignHeight="50" UseLayoutRounding="True">
 	<Grid x:Name="LayoutRoot">
-		<Grid x:Name="ContactGrid">
-			<!--Grid.DataContext>
-				<im:IMBuddy Username="penguinnavy" Nickname="Adam Jacques" />
-			</Grid.DataContext-->
-			<TextBlock HorizontalAlignment="Left" Margin="38,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" FontWeight="Bold">
-				<Run Text="{Binding DisplayName, Mode=OneWay}" />
-				<Run Text="{Binding Username, StringFormat=({0})}" Foreground="#FF373737" />
-			</TextBlock>
-		</Grid>
-		<TextBlock Margin="66,25,8,0" VerticalAlignment="Top" Height="33" FontFamily="Calibri" TextWrapping="WrapWithOverflow"><Span FontSize="15"><Run Text="‟" /></Span><Run x:Name="MessageBody" FontSize="10" BaselineAlignment="Center" /><Span FontSize="15"><Run Text="”" /></Span></TextBlock>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="22" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="37" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+		<TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="2,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" FontWeight="Bold">
+			<Run x:Name="DisplayName" Text="DisplayName" />
+			<Span Foreground="#FF373737">(<Run x:Name="Username" Text="username"/>)</Span>
+		</TextBlock>
+		<Image Source="/NexusIMWPF;component/Images/cataduck.jpg" Width="32" HorizontalAlignment="Left" Margin="3,0,0,0" Height="32" VerticalAlignment="Center" Grid.RowSpan="2" />
+		<TextBlock Margin="5,3,2,3" FontFamily="Calibri" TextWrapping="WrapWithOverflow" Grid.Column="1" Grid.Row="1">
+			<Span FontSize="13"><Run Text="‟" /></Span><Run x:Name="MessageBody" FontSize="10" BaselineAlignment="Center" /><Span FontSize="13"><Run Text="”" /></Span>
+		</TextBlock>
 	</Grid>
 </UserControl>

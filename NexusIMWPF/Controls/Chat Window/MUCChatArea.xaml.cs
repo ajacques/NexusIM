@@ -129,11 +129,7 @@ namespace NexusIM.Controls
 		}
 		private void AppendChatInline(Inline inline)
 		{
-			if (ChatHistoryBox.Inlines.Any())
-				ChatHistoryBox.Inlines.Add(new LineBreak());
-
-			ChatHistoryBox.Inlines.Add(inline);
-			ChatHistoryContainer.ScrollToEnd();
+			ChatHistory.AppendInline(inline);
 		}
 		private bool ProcessSendMessage(string message)
 		{
@@ -221,7 +217,7 @@ namespace NexusIM.Controls
 					switch (message)
 					{
 						case "clear":
-							ChatHistoryBox.Inlines.Clear();
+							ChatHistory.Clear();
 							return true;
 					}
 				}
@@ -290,7 +286,7 @@ namespace NexusIM.Controls
 		}
 		private void RejoinLink_Click(object sender, RoutedEventArgs e)
 		{
-			ChatHistoryBox.Inlines.Remove(ChatHistoryBox.Inlines.LastInline); // Remove the message
+			ChatHistory.RemoveLast(); // Remove the message
 
 			if (!ChatRoom.Joined)
 				((IHasMUCRooms)mProtocol).JoinChatRoom(ChatRoom);
@@ -329,7 +325,7 @@ namespace NexusIM.Controls
 		}
 		private void ChatRoom_OnUserJoin(object sender, IMChatRoomGenericEventArgs e)
 		{
-			ChatHistoryBox.Dispatcher.InvokeIfRequired(() => {
+			ChatHistory.Dispatcher.InvokeIfRequired(() => {
 				Span span = new Span();
 				Run user = new Run(e.Username.Nickname);
 				Run message = new Run(" has entered the room.");
@@ -344,7 +340,7 @@ namespace NexusIM.Controls
 		}
 		private void IrcChannel_OnUserPart(object sender, IMChatRoomGenericEventArgs e)
 		{
-			ChatHistoryBox.Dispatcher.InvokeIfRequired(() =>
+			ChatHistory.Dispatcher.InvokeIfRequired(() =>
 			{
 				Span span = new Span();
 				Run user = new Run(e.Username.Nickname);

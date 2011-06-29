@@ -93,7 +93,9 @@ namespace NexusIM.Windows
 			DeselectAllExcept(AccountsListBox.Children, item);
 			item.Select();
 
-			mNewAccounts.Add(extraData);			
+			mNewAccounts.Add(extraData);
+			
+			addAccount.SelectedIndex = 0;
 		}
 		private void AcceptButton_Click(object sender, RoutedEventArgs e)
 		{

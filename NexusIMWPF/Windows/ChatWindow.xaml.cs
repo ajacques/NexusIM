@@ -82,6 +82,30 @@ namespace NexusIM.Windows
 			if (e.Key == Key.Escape)
 				this.Close(); // Close the window if the user presses escape
 		}
+		protected override void OnDragEnter(DragEventArgs e)
+		{
+			base.OnDragEnter(e);
+
+			e.Effects = DragDropEffects.Move;
+		}
+		protected override void OnPreviewDragEnter(DragEventArgs e)
+		{
+			base.OnPreviewDragEnter(e);
+
+			e.Effects = DragDropEffects.Move;
+		}
+		protected override void OnDragOver(DragEventArgs e)
+		{
+			base.OnDragOver(e);
+
+			e.Effects = DragDropEffects.Move;
+		}
+		protected override void OnPreviewDragOver(DragEventArgs e)
+		{
+			base.OnPreviewDragOver(e);
+
+			e.Effects = DragDropEffects.Move;
+		}
 
 		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{

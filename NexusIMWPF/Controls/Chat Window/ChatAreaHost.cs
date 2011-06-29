@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using InstantMessage;
 using InstantMessage.Protocols;
 using NexusIM.Windows;
+using System.Windows.Input;
 
 namespace NexusIM.Controls
 {
@@ -62,12 +63,29 @@ namespace NexusIM.Controls
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
 		{
 			HostWindow.HandleTabClose(this);
-
-			if (TabClosed != null)
-				TabClosed(this, null);
 		}
 
-		public event EventHandler TabClosed;
+		protected override void OnGiveFeedback(GiveFeedbackEventArgs e)
+		{
+			base.OnGiveFeedback(e);
+
+			if (e.Effects.HasFlag(DragDropEffects.Copy))
+				Mouse.SetCursor(Cursors.Cross);
+			else if (e.Effects.HasFlag(DragDropEffects.Move))
+				Mouse.SetCursor(Cursors.Pen);
+			else
+				Mouse.SetCursor(Cursors.No);
+			e.Handled = true;
+		}
+		protected override void OnMouseMove(MouseEventArgs e)
+		{
+			base.OnMouseMove(e);
+
+			if (e.LeftButton == MouseButtonState.Pressed)
+			{
+				//DragDrop.DoDragDrop(this, this, DragDropEffects.Move);
+			}
+		}
 
 		public ContactChatArea HostedArea
 		{

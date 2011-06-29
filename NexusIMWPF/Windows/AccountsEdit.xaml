@@ -1,8 +1,6 @@
 ﻿<Window
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-	xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
 	xmlns:nexus="clr-namespace:NexusIM.Controls"
 	x:Class="NexusIM.Windows.AccountsEdit"
 	x:Name="Window"
@@ -25,11 +23,6 @@
 		</ScrollViewer>
 		<Button Content="Accept" HorizontalAlignment="Right" Margin="0,0,8,8" VerticalAlignment="Bottom" Width="75" Click="AcceptButton_Click" />
 		<ComboBox Margin="0,0,89,8" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="120" SelectedIndex="0" SelectionChanged="AddAccount_Select">
-			<i:Interaction.Triggers>
-				<i:EventTrigger EventName="SelectionChanged">
-					<ei:ChangePropertyAction TargetObject="{Binding Self}" PropertyName="SelectedIndex" Value="0" />
-				</i:EventTrigger>
-			</i:Interaction.Triggers>
 			<ComboBoxItem Content="Add Account" Visibility="Hidden" Height="0" />
 			<ComboBoxItem Content="Yahoo! IM" />
 			<ComboBoxItem Content="IRC" />

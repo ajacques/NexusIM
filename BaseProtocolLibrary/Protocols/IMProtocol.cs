@@ -395,15 +395,16 @@ namespace InstantMessage
 
 		// Events
 		public static event EventHandler AnyLoginCompleted;
-		public event EventHandler LoginCompleted;
 		public static event EventHandler<IMErrorEventArgs> AnyErrorOccurred;
-		public event EventHandler<IMErrorEventArgs> ErrorOccurred;
-		public event EventHandler<IMDisconnectEventArgs> onDisconnect;
 		public static event EventHandler<IMFriendRequestEventArgs> onFriendRequest;
 		public static event EventHandler<IMRoomInviteEventArgs> onChatRoomInvite;
+		public static event EventHandler<IMEmailEventArgs> onEmailReceive;
+		public static event EventHandler<IMMessageEventArgs> AnyMessageReceived;
+		public event EventHandler LoginCompleted;
+		public event EventHandler<IMErrorEventArgs> ErrorOccurred;
+		public event EventHandler<IMDisconnectEventArgs> onDisconnect;
 		public event EventHandler<IMFriendEventArgs> ContactStatusChange;
 		public event EventHandler<IMMessageEventArgs> onMessageReceive;
-		public static event EventHandler<IMEmailEventArgs> onEmailReceive;
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		// Internal Event Triggers
@@ -448,6 +449,8 @@ namespace InstantMessage
 		}
 		protected void triggerOnMessageReceive(IMMessageEventArgs e)
 		{
+			if (AnyMessageReceived != null)
+				AnyMessageReceived(this, e);
 			if (onMessageReceive != null)
 				onMessageReceive(this, e);
 		}

@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:nxc="clr-namespace:NexusIM.Controls"
 	mc:Ignorable="d" 
 	x:Name="UserControl"
 	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private" UseLayoutRounding="True">
@@ -30,11 +31,7 @@
 			</TextBlock>
 			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" Effect="{DynamicResource SubtleShadow}" />
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
-			<RichTextBox Grid.Row="1" x:Name="ChatHistoryContainer" IsReadOnly="True" IsDocumentEnabled="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5" SelectionChanged="ChatHistoryContainer_SelectionChanged" FontFamily="Calibri" FontSize="13">
-				<FlowDocument>
-					<Paragraph x:Name="ChatHistoryBox" />
-				</FlowDocument>
-			</RichTextBox>
+			<nxc:ChatHistoryBox Grid.Row="1" x:Name="ChatHistory" VerticalAlignment="Bottom" />
 		</Grid>
 		<Grid Grid.Column="1">
 			<Grid.Background>

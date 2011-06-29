@@ -25,6 +25,13 @@ namespace NexusIM.Controls
 		{
 			this.InitializeComponent();
 			this.DataContextChanged += new DependencyPropertyChangedEventHandler(OnDataContextChanged);
+
+			MessageBody.DragEnter += new DragEventHandler(MessageBody_DragEnter);
+		}
+
+		private void MessageBody_DragEnter(object sender, DragEventArgs e)
+		{
+			
 		}
 
 		public void PopulateUIControls(object context)
@@ -63,11 +70,7 @@ namespace NexusIM.Controls
 				}
 				//inline.MessageBody = e.Message;
 
-				if (ChatHistoryBox.Inlines.Any())
-					ChatHistoryBox.Inlines.Add(new LineBreak());
-
-				ChatHistoryBox.Inlines.Add(inline);
-				ChatHistoryContainer.ScrollToEnd();
+				ChatHistory.AppendInline(inline);
 			}));
 		}
 		private static TextBlock FormatNiceUri(Uri input)
@@ -173,7 +176,7 @@ namespace NexusIM.Controls
 
 			if (href.NavigateUri.Host == "www.youtube.com")
 			{
-				ChatHistoryContainer.ToolTip = null;
+				ChatHistory.ToolTip = null;
 				Match output = mYoutubeLinkMatch.Match(href.NavigateUri.PathAndQuery);
 
 				if (output.Success)
@@ -193,7 +196,7 @@ namespace NexusIM.Controls
 				tip.Content = panel;
 				panel.Children.Add(FormatNiceUri(href.NavigateUri));
 
-				ChatHistoryContainer.ToolTip = tip;
+				ChatHistory.ToolTip = tip;
 			}
 		}
 		private void IMHyperlink_MouseLeave(object sender, MouseEventArgs e)
@@ -233,16 +236,16 @@ namespace NexusIM.Controls
 				reconnect.Cursor = Cursors.Hand;
 				reconnect.MouseLeftButtonDown += new MouseButtonEventHandler(Protocol_DoReconnect);
 
-				ChatHistoryBox.Inlines.Add(description);
-				ChatHistoryBox.Inlines.Add(reconnect);
+				ChatHistory.AppendInline(description);
+				ChatHistory.AppendInline(reconnect);
 			}));
 		}
 		private void Protocol_DoReconnect(object sender, MouseButtonEventArgs e)
 		{
 			Contact.Protocol.BeginLogin();
-			ChatHistoryBox.Inlines.Remove(ChatHistoryBox.Inlines.LastInline);
+			ChatHistory.RemoveLast();
 
-			ChatHistoryBox.Inlines.Add(new Run("- Reconnecting... Please wait"));
+			ChatHistory.AppendInline(new Run("- Reconnecting... Please wait"));
 		}
 		private void Protocol_LoginCompleted(object sender, EventArgs e)
 		{

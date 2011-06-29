@@ -53,11 +53,7 @@
 			<Image HorizontalAlignment="Left" Margin="8,8,0,0" Width="64" Height="64" VerticalAlignment="Top" Grid.Column="0" Stretch="UniformToFill" />
 			<Rectangle Grid.Column="1" Margin="0,48,0,0" Fill="#FFF3F3F3" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<Grid Grid.Column="1" Margin="0,50,0,0">
-				<RichTextBox x:Name="ChatHistoryContainer" Grid.Column="1" IsReadOnly="True" Background="{x:Null}" BorderThickness="0" VerticalAlignment="Bottom" VerticalScrollBarVisibility="Auto" FontFamily="Calibri">
-					<FlowDocument>
-						<Paragraph x:Name="ChatHistoryBox" />
-					</FlowDocument>
-				</RichTextBox>
+				<nxc:ChatHistoryBox x:Name="ChatHistory" Grid.Column="1" VerticalAlignment="Bottom" />
 			</Grid>
 			<Grid Grid.Column="1" Margin="4,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
 				<Grid.ColumnDefinitions>

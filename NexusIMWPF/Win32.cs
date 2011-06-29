@@ -68,6 +68,27 @@ namespace NexusIM
 			public UInt32 dwTimeout;
 		}
 
+		private const int SW_SHOWNOACTIVATE = 4;
+		private const int HWND_TOPMOST = -1;
+		private const uint SWP_NOACTIVATE = 0x0010;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="hWnd">Window Handle</param>
+		/// <param name="hWndInsertAfter">Placement-order Handle</param>
+		/// <param name="X">Horizontal Position</param>
+		/// <param name="Y">Vertical Position</param>
+		/// <param name="cx">Window Width</param>
+		/// <param name="cy">Window Height</param>
+		/// <param name="uFlags">Window Positioning Flags</param>
+		/// <returns></returns>
+		[DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+		private static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+		[DllImport("user32.dll")]
+		private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
 		#endregion
 
 		#region P/Invoke Declarations

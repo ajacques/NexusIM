@@ -3,8 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
-	xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
 	xmlns:c="clr-namespace:NexusIM.Converters"
 	xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d"
 	x:Class="NexusIM.Windows.InitialSetupWindow"
@@ -82,57 +80,11 @@
 	</Window.Background>
 	<Grid x:Name="LayoutRoot">
 		<Label x:Name="LoginHeader" Content="Sign in to your NexusIM account" HorizontalAlignment="Left" Margin="63,8,0,0" VerticalAlignment="Top" FontSize="18"/>
-		<Grid x:Name="LoginGroupGrid">			
+		<Grid x:Name="LoginGroupGrid">
 			<TextBox x:Name="UsernameBox" Width="200" Height="25" Margin="121,61,153,0" VerticalAlignment="Top" IsEnabled="{DynamicResource LoginEnabled}">
-				<i:Interaction.Triggers>
-					<i:EventTrigger EventName="GotFocus">
-						<ei:ChangePropertyAction TargetName="UsernameHint" PropertyName="Visibility" >
-							<ei:ChangePropertyAction.Value>
-								<Visibility>Collapsed</Visibility>
-							</ei:ChangePropertyAction.Value>
-						</ei:ChangePropertyAction>
-					</i:EventTrigger>
-					<i:EventTrigger EventName="LostFocus">
-						<i:Interaction.Behaviors>
-							<ei:ConditionBehavior>
-								<ei:ConditionalExpression>
-									<ei:ComparisonCondition LeftOperand="{Binding Text, ElementName=UsernameBox}" Operator="Equal" RightOperand=""/>
-								</ei:ConditionalExpression>
-							</ei:ConditionBehavior>
-						</i:Interaction.Behaviors>
-						<ei:ChangePropertyAction TargetName="UsernameHint" PropertyName="Visibility" >
-							<ei:ChangePropertyAction.Value>
-								<Visibility>Visible</Visibility>
-							</ei:ChangePropertyAction.Value>
-						</ei:ChangePropertyAction>
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
 			</TextBox>
 			<TextBlock x:Name="UsernameHint" HorizontalAlignment="Left" Margin="126,65,0,0" Text="jsmith@nexus-im.com" VerticalAlignment="Top" IsHitTestVisible="False" Foreground="#FF7E7E7E" />
 			<PasswordBox x:Name="PasswordBox" Width="200" Height="25" Margin="121,100,153,0" VerticalAlignment="Top" IsEnabled="{DynamicResource LoginEnabled}">
-				<i:Interaction.Triggers>
-					<i:EventTrigger EventName="GotFocus">
-						<ei:ChangePropertyAction TargetName="PasswordHint" PropertyName="Visibility" >
-							<ei:ChangePropertyAction.Value>
-								<Visibility>Collapsed</Visibility>
-							</ei:ChangePropertyAction.Value>
-						</ei:ChangePropertyAction>
-					</i:EventTrigger>
-					<i:EventTrigger EventName="LostFocus">
-						<i:Interaction.Behaviors>
-							<ei:ConditionBehavior>
-								<ei:ConditionalExpression>
-									<ei:ComparisonCondition LeftOperand="{Binding Password, ElementName=PasswordBox}" Operator="Equal" RightOperand=""/>
-								</ei:ConditionalExpression>
-							</ei:ConditionBehavior>
-						</i:Interaction.Behaviors>
-						<ei:ChangePropertyAction TargetName="PasswordHint" PropertyName="Visibility" >
-							<ei:ChangePropertyAction.Value>
-								<Visibility>Visible</Visibility>
-							</ei:ChangePropertyAction.Value>
-						</ei:ChangePropertyAction>
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
 			</PasswordBox>
 			<TextBlock x:Name="PasswordHint" HorizontalAlignment="Left" Margin="126,105,0,0" Text="Password" VerticalAlignment="Top" IsHitTestVisible="False" Foreground="#FF7E7E7E"  />
 			<TextBlock Margin="121,129,0,0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125"><Hyperlink TextDecorations="None"><Run Text="Forgot your password?"/></Hyperlink></TextBlock>
@@ -154,15 +106,6 @@
 			<CheckBox Content="Remember my username and password" Margin="121,181,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{DynamicResource LoginEnabled}" />
 			<CheckBox Content="Sign me in automatically" Margin="121,201,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" IsEnabled="{DynamicResource LoginEnabled}" />
 			<Button x:Name="button" Content="Sign in" HorizontalAlignment="Left" Margin="122,0,0,66" VerticalAlignment="Bottom" Width="75" Click="LoginButton_Click" IsDefault="True" IsEnabled="{DynamicResource LoginEnabled}">
-				<i:Interaction.Triggers>
-					<i:EventTrigger EventName="Click">
-						<ei:ChangePropertyAction TargetObject="{DynamicResource LoginEnabled}" >
-							<ei:ChangePropertyAction.Value>
-								<System:Boolean>False</System:Boolean>
-							</ei:ChangePropertyAction.Value>
-						</ei:ChangePropertyAction>
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
 			</Button>
 			<Button Content="Cancel" Margin="211,0,188,66" VerticalAlignment="Bottom" Click="CancelButton_Click" IsCancel="True" />
 			<TextBlock Margin="121,250,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left"><Run Text="Don't have one yet? " /><Run Text=" "/><Hyperlink TextDecorations="None" Click="SignUpLink_Click"><Run Text="Sign up"/></Hyperlink></TextBlock>

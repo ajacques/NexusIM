@@ -42,6 +42,13 @@ namespace NexusIM
 		{
 			base.SendMessage(friendName, message);
 
+			if (message == "test")
+			{
+				IMBuddy buddy = (IMBuddy)ContactList[friendName];
+				buddy.InvokeReceiveMessage("working");
+				triggerOnMessageReceive(new InstantMessage.Events.IMMessageEventArgs(buddy, "working"));
+			}
+
 			Trace.WriteLine("To " + friendName + ": " + message);
 		}
 

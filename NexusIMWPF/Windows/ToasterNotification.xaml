@@ -8,7 +8,7 @@
 	x:Class="NexusIM.Windows.ToasterNotification"
 	x:Name="Window"
 	Title="ToasterNotification"
-	Width="350" Height="70" Topmost="True" Focusable="False" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" UseLayoutRounding="True" ShowInTaskbar="False">
+	Width="200" Height="50" Topmost="True" Focusable="False" AllowsTransparency="True" WindowStyle="None" ResizeMode="NoResize" UseLayoutRounding="True" ShowInTaskbar="False" IsEnabled="False" IsTabStop="False" ShowActivated="False">
 	<Window.Resources>
 		<Storyboard x:Key="CloseButtonHover">
 			<DoubleAnimation Storyboard.TargetName="CloseBorder" Storyboard.TargetProperty="(FrameworkElement.Opacity)" Duration="0:0:0.3" To="1" />

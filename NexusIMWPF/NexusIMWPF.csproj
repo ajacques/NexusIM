@@ -92,10 +92,6 @@
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\..\wpf-notifyicon\NotifyIconWpf\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Expression.Controls" />
-    <Reference Include="Microsoft.Expression.Drawing" />
-    <Reference Include="Microsoft.Expression.Effects" />
-    <Reference Include="Microsoft.Expression.Interactions" />
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>

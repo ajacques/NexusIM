@@ -41,8 +41,10 @@ namespace NexusIM.Controls
 					MenuItem joinItem = new MenuItem();
 					joinItem.Header = "Join Chat Room";
 					joinItem.Click += new RoutedEventHandler(joinItem_Click);
-
 					coll.Add(joinItem);
+
+					if (protocol.IsOperator)
+						coll.Add(GenerateAdminMenu());
 				}
 			} else {
 				MenuItem connItem = new MenuItem();
@@ -59,6 +61,16 @@ namespace NexusIM.Controls
 
 				coll.Add(connItem);
 			}
+		}
+
+		private MenuItem GenerateAdminMenu()
+		{
+			MenuItem root = new MenuItem();
+			root.Header = "Net Admin";
+
+
+
+			return root;
 		}
 
 		protected override string ProtocolName
