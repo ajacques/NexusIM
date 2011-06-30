@@ -313,6 +313,11 @@ namespace NexusIM.Controls
 
 			Clipboard.SetText(selection);
 		}
+		private void RoomOptions_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			FrameworkElement element = (FrameworkElement)sender;
+			element.ContextMenu.IsOpen = true;
+		}
 
 		// Chat Room Event Handlers
 		private void ChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)

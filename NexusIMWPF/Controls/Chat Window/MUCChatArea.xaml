@@ -29,6 +29,13 @@
 				<Run x:Name="OccupantCount" FontSize="9" Foreground="Gray">64</Run>
 				<Run FontSize="9" Foreground="Gray">people</Run>
 			</TextBlock>
+			<Polygon HorizontalAlignment="Right" Margin="0,0,10,0" Width="9" Height="9" Points="1,1 8,1 4.5,7 1,1" Fill="#FF075152" Stroke="#FF075152" ToolTip="View more options" MouseDown="RoomOptions_MouseDown" Cursor="Hand">
+				<Polygon.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Invite User" />
+					</ContextMenu>
+				</Polygon.ContextMenu>
+			</Polygon>
 			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" Effect="{DynamicResource SubtleShadow}" />
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<nxc:ChatHistoryBox Grid.Row="1" x:Name="ChatHistory" VerticalAlignment="Bottom" />
@@ -51,5 +58,17 @@
 			</Grid.Background>
 			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown"  BorderBrush="Black" />
 		</Grid>
+		<Popup Width="150" Height="120">
+			<Grid Background="#FFEBEBEB">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Grid.Effect>
+					<DropShadowEffect BlurRadius="10" ShadowDepth="3" Color="#FFBEBEBE" />
+				</Grid.Effect>
+				<TextBlock Text="Invite User" Margin="3,0,0,0" />
+			</Grid>
+		</Popup>
 	</Grid>
 </UserControl>

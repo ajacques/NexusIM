@@ -205,6 +205,8 @@ namespace NexusIM
 			{
 				mSource = source;
 				mContext = context;
+
+				GetByKey = CompiledQuery.Compile<DataContext, EntitySet<AccountSetting>, string, AccountSetting>((dcontext, entities, key) => entities.FirstOrDefault(s => s.Key == key));
 			}
 
 			#region IDictionary<string,string> Members
@@ -241,7 +243,7 @@ namespace NexusIM
 			}
 			public bool TryGetValue(string key, out string value)
 			{
-				AccountSetting setting = mSource.FirstOrDefault(ps => ps.Key == key);
+				AccountSetting setting = GetByKey(mContext, mSource, key);
 
 				if (setting == null)
 				{
@@ -261,14 +263,14 @@ namespace NexusIM
 			public string this[string key]
 			{
 				get	{
-					AccountSetting setting = mSource.FirstOrDefault(ps => ps.Key == key);
+					AccountSetting setting = GetByKey(mContext, mSource, key);
 					if (setting == null)
 						return null;
 
 					return setting.Value;
 				}
 				set	{
-					AccountSetting setting = mSource.FirstOrDefault(ps => ps.Key == key);
+					AccountSetting setting = GetByKey(mContext, mSource, key);
 
 					if (setting == null)
 					{
@@ -342,6 +344,9 @@ namespace NexusIM
 
 			private DataContext mContext;
 			private EntitySet<AccountSetting> mSource;
+
+			// Compiled Queries
+			private Func<DataContext, EntitySet<AccountSetting>, string, AccountSetting> GetByKey;
 		}
 		private class SqlProtocolDictionary : IDictionary<IMProtocol, IDictionary<string, string>>
 		{
@@ -464,33 +469,38 @@ namespace NexusIM
 
 			private string mConnectionString;
 		}
-		private class SqlAccountList : IList<IMProtocolWrapper>
+		private class SqlAccountList : ICollection<IMProtocolWrapper>
 		{
 			public SqlAccountList(string connectionString)
 			{
 				mConnectionString = connectionString;
 				mWrapperHandler = new PropertyChangedEventHandler(IMProtocolWrapper_PropertyChanged);
 				mProtocolHandler = new PropertyChangedEventHandler(IMProtocol_PropertyChanged);
+
+				StopwatchManager.Start("acc-compile");
+				FindAccById = CompiledQuery.Compile<UserProfile, int, Account>((db, accid) => db.Accounts.FirstOrDefault(acc => acc.Id == accid));
+				StopwatchManager.Stop("acc-compile", "SqlAccountList Query Precompilation ({0}) completed in {1}");
 			}
 
 			private void IMProtocolWrapper_PropertyChanged(object sender, PropertyChangedEventArgs e)
 			{
 				IMProtocolWrapper wrapper = (IMProtocolWrapper)sender;
-				UserProfile profile = UserProfile.Create(mConnectionString);
-				Account account = profile.Accounts.FirstOrDefault(p => p.Id == wrapper.DatabaseId);
-
-				if (account == null)
-					return;
 
 				switch (e.PropertyName)
 				{
 					case "AutoConnect":
-						account.AutoConnect = wrapper.AutoConnect;
 						break;
 
 					default:
 						return;
 				}
+				UserProfile profile = UserProfile.Create(mConnectionString);
+				Account account = FindAccById(profile, wrapper.DatabaseId);
+
+				if (account == null)
+					return;
+
+				account.AutoConnect = wrapper.AutoConnect;
 
 				profile.SubmitChanges();
 			}
@@ -499,7 +509,7 @@ namespace NexusIM
 				IMProtocol protocol = (IMProtocol)sender;
 				UserProfile profile = UserProfile.Create(mConnectionString);
 				IMProtocolWrapper wrapper = AccountManager.Accounts.Find(protocol);
-				Account account = profile.Accounts.FirstOrDefault(p => p.Id == wrapper.DatabaseId);
+				Account account = FindAccById(profile, wrapper.DatabaseId);
 
 				if (account == null)
 					return;
@@ -644,32 +654,6 @@ namespace NexusIM
 
 			#endregion
 
-			#region IList<IMProtocolExtraData> Members
-
-			public int IndexOf(IMProtocolWrapper item)
-			{
-				throw new NotImplementedException();
-			}
-			public void Insert(int index, IMProtocolWrapper item)
-			{
-				throw new NotImplementedException();
-			}
-			public void RemoveAt(int index)
-			{
-				throw new NotImplementedException();
-			}
-			public IMProtocolWrapper this[int index]
-			{
-				get	{
-					throw new NotImplementedException();
-				}
-				set	{
-					throw new NotImplementedException();
-				}
-			}
-
-			#endregion
-
 			#region ICollection<IMProtocolExtraData> Members
 
 			public void Add(IMProtocolWrapper item)
@@ -744,15 +728,25 @@ namespace NexusIM
 			private string mConnectionString;
 			private PropertyChangedEventHandler mWrapperHandler;
 			private PropertyChangedEventHandler mProtocolHandler;
+			
+			// Compiled Queries
+			private Func<UserProfile, int, Account> FindAccById;
 		}
 		private class SqlChatAreaPool : IChatAreaPool
 		{
+			public SqlChatAreaPool()
+			{
+				StopwatchManager.Start("pool-compile");
+				GetWindowPool = CompiledQuery.Compile<UserProfile, IMProtocol, string, ChatWindowPool>((db, protocol, objectId) => db.ChatWindowPools.Where(cwp => cwp.Account.Username == protocol.Username && cwp.Account.AccountType == protocol.ShortProtocol && cwp.Username == objectId).FirstOrDefault());
+				StopwatchManager.Stop("pool-compile", "SqlChatAreaPool Query Precompilation ({0}) completed in {1}");
+			}
+
 			#region IChatAreaPool Members
 
 			public void PutInPool(int poolid, IMProtocol protocol, string objectId)
 			{
 				UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
-				ChatWindowPool pool = db.ChatWindowPools.FirstOrDefault(cwp => cwp.Account.Username == protocol.Username && cwp.Account.AccountType == protocol.ShortProtocol && cwp.Username == objectId);
+				ChatWindowPool pool = GetWindowPool(db, protocol, objectId);
 				if (pool == null)
 				{
 					pool = new ChatWindowPool();
@@ -780,10 +774,13 @@ namespace NexusIM
 			}
 
 			#endregion
+
+			// Compiled Queries
+			Func<UserProfile, IMProtocol, string, ChatWindowPool> GetWindowPool;
 		}
 
 		// Properties
-		public IList<IMProtocolWrapper> Accounts
+		public ICollection<IMProtocolWrapper> Accounts
 		{
 			get	{
 				if (mAccountList == null)
