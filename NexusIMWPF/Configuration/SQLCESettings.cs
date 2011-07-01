@@ -205,8 +205,6 @@ namespace NexusIM
 			{
 				mSource = source;
 				mContext = context;
-
-				GetByKey = CompiledQuery.Compile<DataContext, EntitySet<AccountSetting>, string, AccountSetting>((dcontext, entities, key) => entities.FirstOrDefault(s => s.Key == key));
 			}
 
 			#region IDictionary<string,string> Members
@@ -243,7 +241,7 @@ namespace NexusIM
 			}
 			public bool TryGetValue(string key, out string value)
 			{
-				AccountSetting setting = GetByKey(mContext, mSource, key);
+				AccountSetting setting = mSource.FirstOrDefault(s => s.Key == key);
 
 				if (setting == null)
 				{
@@ -263,14 +261,14 @@ namespace NexusIM
 			public string this[string key]
 			{
 				get	{
-					AccountSetting setting = GetByKey(mContext, mSource, key);
+					AccountSetting setting = mSource.FirstOrDefault(s => s.Key == key);
 					if (setting == null)
 						return null;
 
 					return setting.Value;
 				}
 				set	{
-					AccountSetting setting = GetByKey(mContext, mSource, key);
+					AccountSetting setting = mSource.FirstOrDefault(s => s.Key == key);
 
 					if (setting == null)
 					{
@@ -344,9 +342,6 @@ namespace NexusIM
 
 			private DataContext mContext;
 			private EntitySet<AccountSetting> mSource;
-
-			// Compiled Queries
-			private Func<DataContext, EntitySet<AccountSetting>, string, AccountSetting> GetByKey;
 		}
 		private class SqlProtocolDictionary : IDictionary<IMProtocol, IDictionary<string, string>>
 		{

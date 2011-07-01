@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="js/script.min.js"></script>
 	<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.js"></script>
 	<script type="text/javascript">
+	var height;
 	function onSLError(sender, args)
 	{
 		// Display error message.
@@ -20,18 +21,19 @@
 	}
 	function recomputeHeight()
 	{
-		var height = (innerHeight - 33) + "px";
+		height = (innerHeight - 33) + "px";
 		$("div#mapHost").height(height);
 	}
 	function loadMapControl()
-	{		
+	{
+		recomputeHeight();
 		Silverlight.createObjectEx({
 			source: "ClientBin/SilverlightContactMap.xap",
 			parentElement: document.getElementById('silverlightHost'),
 			id: "slPlugin",
 			properties: {
 				width: "100%",
-				height: height,
+				height: "100%",
 				background: "white",
 				alt: " ",
 				version: "4.0.50917"

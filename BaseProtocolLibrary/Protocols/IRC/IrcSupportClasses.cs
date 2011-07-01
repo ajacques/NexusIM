@@ -12,7 +12,7 @@ namespace InstantMessage.Events
 			get;
 			internal set;
 		}
-		public IGrouping<string, IRCUserModes> ChannelModes
+		public IEnumerable<IRCChannelModeChange> ChannelModes
 		{
 			get;
 			internal set;
@@ -167,6 +167,11 @@ namespace InstantMessage.Protocols.Irc
 	{
 		public IRCUserMask UserMask;
 		public IRCUserModes Mode;
+		public bool IsAdd;
+	}
+	public struct IRCChannelModeChange
+	{
+		public IRCChannelModes Mode;
 		public bool IsAdd;
 	}
 }

@@ -17,6 +17,7 @@ using NexusIM.Misc;
 using NexusIM.Windows;
 using NexusIM.Controls;
 using Microsoft.Win32;
+using System.IO;
 
 namespace NexusIM.Managers
 {
@@ -184,23 +185,13 @@ namespace NexusIM.Managers
 			{
 				StringBuilder sb = new StringBuilder(32);
 
-				for (int i = 0; i < autoexecute.Length; i++)
+				StringReader reader = new StringReader(autoexecute);
+
+				while (reader.Peek() != -1)
 				{
-					if ((autoexecute[i] == '\r' || autoexecute[i] == '\n'))
-					{
-						if (sb.Length >= 1)
-						{
-							string command = sb.ToString();
-
-							protocol.SendRawMessage(command);
-							sb.Clear();
-						}
-					} else
-						sb.Append(autoexecute[i]);
+					string command = reader.ReadLine();
+					protocol.SendRawMessage(command);
 				}
-
-				if (sb.Length >= 1)
-					protocol.SendRawMessage(sb.ToString());
 			}
 		}
 		private static void IrcProtocol_OnJoinChannel(object sender, IMChatRoomEventArgs e)

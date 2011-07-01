@@ -15,6 +15,7 @@ using System.Windows;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Windows.Interop;
+using System.Windows.Media.Animation;
 
 namespace NexusIM.Controls
 {
@@ -241,6 +242,28 @@ namespace NexusIM.Controls
 		{
 			base.OnInitialized(e);
 		}
+		protected override void OnPreviewKeyDown(KeyEventArgs e)
+		{
+			base.OnPreviewKeyDown(e);
+
+			if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+			{
+				if (e.Key == Key.Up)
+				{
+					if (mHistoryNode == null)
+						return;
+
+					MessageBody.Text = mHistoryNode.Value;
+					mHistoryNode = mHistoryNode.Next;
+				} else if (e.Key == Key.Down) {
+					if (mHistoryNode == null)
+						return;
+
+					MessageBody.Text = mHistoryNode.Value;
+					mHistoryNode = mHistoryNode.Previous;
+				}
+			}
+		}
 
 		// User Interface Event Handlers
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
@@ -257,7 +280,7 @@ namespace NexusIM.Controls
 				if (ProcessSendMessage(message))
 					MessageBody.Text = String.Empty;
 
-				mHistoryNode = mMessageHistory.AddFirst(message);
+				mHistoryNode = mHistoryNode = mMessageHistory.AddFirst(message);
 			} else if (e.Key == Key.Tab) {
 				e.Handled = true;
 				string lastword = MessageBody.Text.Substring(MessageBody.Text.LastIndexOf(' ') + 1);
@@ -268,12 +291,6 @@ namespace NexusIM.Controls
 					MessageBody.Text += match.Substring(lastword.Length);
 					MessageBody.CaretIndex = MessageBody.Text.Length;
 				}
-			} else if (e.Key == Key.Up && (Keyboard.IsKeyUp(Key.LeftCtrl) || Keyboard.IsKeyUp(Key.RightCtrl))) {
-				if (mHistoryNode == null)
-					return;
-
-				MessageBody.Text = mHistoryNode.Value;
-				mHistoryNode = mHistoryNode.Next;
 			}
 		}
 		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
@@ -317,6 +334,18 @@ namespace NexusIM.Controls
 		{
 			FrameworkElement element = (FrameworkElement)sender;
 			element.ContextMenu.IsOpen = true;
+		}
+		private void InviteUser_Click(object sender, RoutedEventArgs e)
+		{
+			Storyboard animIn = (Storyboard)FindResource("InviteUserOpen");
+
+			animIn.Begin();
+
+			InviteUsername.Focus();
+		}
+		private void InviteUserButton_Click(object sender, RoutedEventArgs e)
+		{
+			InvitePopup.Visibility = Visibility.Collapsed;
 		}
 
 		// Chat Room Event Handlers
@@ -405,7 +434,26 @@ namespace NexusIM.Controls
 		}
 		private void IrcChannel_OnModeChange(object sender, IRCModeChangeEventArgs e)
 		{
-			
+			foreach (var mode in e.UserModes)
+			{
+				switch (mode.Mode)
+				{
+					case IRCUserModes.Operator:
+						Dispatcher.InvokeIfRequired(() => {
+							Span span = new Span();
+							span.Inlines.Add(new Run(mode.UserMask.Nickname));
+
+							span.Foreground = Brushes.Green;
+							if (mode.IsAdd)
+								span.Inlines.Add(new Run(" is now a channel operator."));
+							else
+								span.Inlines.Add(new Run(" is no-longer a channel operator."));
+							
+							ChatHistory.AppendInline(span);
+						});
+						break;
+				}
+			}
 		}
 		private void Participants_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
@@ -456,6 +504,7 @@ namespace NexusIM.Controls
 
 		private LinkedList<string> mMessageHistory;
 		private LinkedListNode<string> mHistoryNode;
+		private LinkedListNode<string> mHistoryRoot;
 		private Window mWindow;
 		private IntPtr mWindowPointer;
 		private IrcChanUserContextMenu mUserContextMenu;

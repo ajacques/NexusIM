@@ -30,8 +30,8 @@ namespace InstantMessage.Protocols.Irc
 	public enum IRCChannelModes
 	{
 		None,
-		Moderated,
-		InviteOnly,
+		Moderated, // m
+		InviteOnly // i
 	}
 
 	public enum IRCJoinFailedReason

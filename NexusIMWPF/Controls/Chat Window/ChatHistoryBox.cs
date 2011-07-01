@@ -22,6 +22,8 @@ namespace NexusIM.Controls
 			FlowDocument doc = new FlowDocument();
 			mInlines = new Paragraph();
 			doc.Blocks.Add(mInlines);
+
+			this.Document = doc;
 		}
 
 		public void AttachToProtocol(IMProtocolWrapper protocol)
@@ -35,6 +37,8 @@ namespace NexusIM.Controls
 				mInlines.Inlines.Add(new LineBreak());
 
 			mInlines.Inlines.Add(inline);
+
+			this.ScrollToEnd();
 		}
 		public void RemoveLast()
 		{

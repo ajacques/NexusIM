@@ -9,6 +9,19 @@
 	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private" UseLayoutRounding="True">
 	<UserControl.Resources>
 		<DropShadowEffect x:Key="SubtleShadow" BlurRadius="15" Direction="300" Color="#FFB4B4B4"/>
+		<Storyboard x:Key="InviteUserOpen">
+			<DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="InvitePopup" From="0" To="1" Duration="0:0:0.2" />
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OverlayRect">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="InvitePopup">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="OverlayRect">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0.5"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
 	</UserControl.Resources>
 	<Grid x:Name="LayoutRoot">
 		<Grid.RowDefinitions>
@@ -29,13 +42,20 @@
 				<Run x:Name="OccupantCount" FontSize="9" Foreground="Gray">64</Run>
 				<Run FontSize="9" Foreground="Gray">people</Run>
 			</TextBlock>
-			<Polygon HorizontalAlignment="Right" Margin="0,0,10,0" Width="9" Height="9" Points="1,1 8,1 4.5,7 1,1" Fill="#FF075152" Stroke="#FF075152" ToolTip="View more options" MouseDown="RoomOptions_MouseDown" Cursor="Hand">
-				<Polygon.ContextMenu>
+			<Grid VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,23,0" ToolTip="View more options" MouseDown="RoomOptions_MouseDown"  Cursor="Hand">
+				<Grid.ContextMenu>
 					<ContextMenu>
-						<MenuItem Header="Invite User" />
+						<MenuItem Header="Invite User" Click="InviteUser_Click" />
 					</ContextMenu>
-				</Polygon.ContextMenu>
-			</Polygon>
+				</Grid.ContextMenu>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="menu" Margin="0,-4,2,0" FontFamily="Tahoma" />
+				<Polygon HorizontalAlignment="Right" Width="9" Height="9" Points="1,1 8,1 4.5,7 1,1" Fill="#FF075152" Stroke="#FF075152" Grid.Column="1">
+				</Polygon>
+			</Grid>
 			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" Effect="{DynamicResource SubtleShadow}" />
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<nxc:ChatHistoryBox Grid.Row="1" x:Name="ChatHistory" VerticalAlignment="Bottom" />
@@ -58,17 +78,27 @@
 			</Grid.Background>
 			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown"  BorderBrush="Black" />
 		</Grid>
-		<Popup Width="150" Height="120">
-			<Grid Background="#FFEBEBEB">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition />
-				</Grid.RowDefinitions>
-				<Grid.Effect>
-					<DropShadowEffect BlurRadius="10" ShadowDepth="3" Color="#FFBEBEBE" />
-				</Grid.Effect>
-				<TextBlock Text="Invite User" Margin="3,0,0,0" />
-			</Grid>
-		</Popup>
+		<Rectangle x:Name="OverlayRect" Visibility="Collapsed" Fill="#FF707070" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+		<Grid x:Name="InvitePopup" Visibility="Collapsed" Background="#FFEBEBEB" Width="160" VerticalAlignment="Center">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="50" />
+				<RowDefinition Height="30" />
+			</Grid.RowDefinitions>
+			<Grid.Effect>
+				<DropShadowEffect BlurRadius="10" ShadowDepth="3" Color="#FFBEBEBE" />
+			</Grid.Effect>
+			<!-- Header -->
+			<TextBlock Text="Invite User" Margin="3,0,0,0" />
+			<!-- Username -->
+			<TextBlock Text="Username" Grid.Row="1" Margin="3,4,0,0" Grid.RowSpan="2" />
+			<TextBox x:Name="InviteUsername" Height="22" Grid.Row="1" Margin="3,20,3,0" VerticalAlignment="Top" TabIndex="500" />
+			<!-- Message -->
+			<TextBlock Text="Message (Optional)" Grid.Row="2" Margin="3,1,0,0"/>
+			<TextBox x:Name="InviteMessage" Height="22" Grid.Row="2" Margin="3,17,3,0" VerticalAlignment="Top" TabIndex="501" />
+			<!-- Invite Button -->
+			<Button Grid.Row="3" Width="50" Height="22" Content="Invite" TabIndex="502" Click="InviteUserButton_Click" />
+		</Grid>
 	</Grid>
 </UserControl>
