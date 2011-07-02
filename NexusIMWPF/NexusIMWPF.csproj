@@ -85,7 +85,7 @@
     <Reference Include="System.Core, Version=4.0.0.0" />
     <Reference Include="System.Data.Linq, Version=4.0.0.0" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" Condition=" '$(OS)' == 'Windows_NT' " />
-    <Reference Include="Microsoft.SqlServerCe.VersionManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Condition=" '$(OS)' == 'Windows_NT' "  />
+    <Reference Include="Microsoft.SqlServerCe.VersionManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Condition=" '$(OS)' == 'Windows_NT' " />
     <Reference Include="System.Deployment" Condition=" '$(OS)' == 'Windows_NT' " />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -257,6 +257,9 @@
     </Compile>
     <Compile Include="Windows\SelectRecipientWindow.xaml.cs">
       <DependentUpon>SelectRecipientWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Specialized\IRC\ServerLinkWindow.xaml.cs">
+      <DependentUpon>ServerLinkWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SysTrayPeekWindow.xaml.cs">
       <DependentUpon>SysTrayPeekWindow.xaml</DependentUpon>
@@ -457,6 +460,10 @@
     <Page Include="Windows\SelectRecipientWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Specialized\IRC\ServerLinkWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\SysTrayPeekWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

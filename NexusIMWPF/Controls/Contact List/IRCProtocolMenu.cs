@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using InstantMessage;
 using InstantMessage.Protocols.Irc;
 using NexusIM.Windows;
+using NexusIM.Windows.IRC;
 
 namespace NexusIM.Controls
 {
@@ -44,7 +45,7 @@ namespace NexusIM.Controls
 					coll.Add(joinItem);
 
 					if (protocol.IsOperator)
-						coll.Add(GenerateAdminMenu());
+						coll.Add(GenerateAdminMenu(protocol));
 				}
 			} else {
 				MenuItem connItem = new MenuItem();
@@ -63,14 +64,25 @@ namespace NexusIM.Controls
 			}
 		}
 
-		private MenuItem GenerateAdminMenu()
+		private MenuItem GenerateAdminMenu(IRCProtocol protocol)
 		{
 			MenuItem root = new MenuItem();
 			root.Header = "Net Admin";
 
-
+			MenuItem links = new MenuItem();
+			links.Header = "Show Server Links";
+			links.Click += new RoutedEventHandler((sender, e) => OpenServerLinkWindow(protocol));
+			root.Items.Add(links);
 
 			return root;
+		}
+
+		private void OpenServerLinkWindow(IRCProtocol protocol)
+		{
+			ServerLinkWindow window = new ServerLinkWindow();
+			window.Owner = Window.GetWindow(this);
+			window.LoadData(protocol);
+			window.ShowDialog();
 		}
 
 		protected override string ProtocolName

@@ -6,10 +6,11 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
 using InstantMessage;
+using System.Windows.Markup;
 
 namespace NexusIM.Controls
 {
-	class ChatHistoryBox : RichTextBox
+	class ChatHistoryBox : RichTextBox, IAddChild
 	{
 		public ChatHistoryBox()
 		{
@@ -24,6 +25,14 @@ namespace NexusIM.Controls
 			doc.Blocks.Add(mInlines);
 
 			this.Document = doc;
+		}
+
+		public void AddChild(object value)
+		{
+			if (value.GetType() != typeof(Inline))
+				throw new ArgumentException("Argument (value) must be of type Inline");
+
+			mInlines.Inlines.Add((Inline)value);
 		}
 
 		public void AttachToProtocol(IMProtocolWrapper protocol)

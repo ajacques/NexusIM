@@ -77,6 +77,13 @@ namespace InstantMessage.Protocols.Irc
 		{
 			mProtocol.BeginFindByHostMask(mChannelName, callback, userState);
 		}
+		public void InviteUser(string username, string message)
+		{
+			if (String.IsNullOrEmpty(message))
+				mProtocol.SendRawMessage(String.Format("INVITE {0} {1}", username, Name));
+			else
+				mProtocol.SendRawMessage(String.Format("INVITE {0} {1} :{2}", username, Name, message));
+		}
 		public IEnumerable<IRCUserMask> EndFindByHostMask(IAsyncResult result)
 		{
 			return mProtocol.EndFindByHostMask(result);

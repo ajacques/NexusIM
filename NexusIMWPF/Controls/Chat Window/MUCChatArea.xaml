@@ -9,7 +9,7 @@
 	d:DesignWidth="600" d:DesignHeight="500" x:FieldModifier="private" UseLayoutRounding="True">
 	<UserControl.Resources>
 		<DropShadowEffect x:Key="SubtleShadow" BlurRadius="15" Direction="300" Color="#FFB4B4B4"/>
-		<Storyboard x:Key="InviteUserOpen">
+		<Storyboard x:Key="InviteUserOpen" Duration="0:0:0.3">
 			<DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="InvitePopup" From="0" To="1" Duration="0:0:0.2" />
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="OverlayRect">
 				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
@@ -37,7 +37,7 @@
 				<RowDefinition Height="48" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
-			<TextBlock Margin="5,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource SubtleShadow}">
+			<TextBlock Margin="5,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource SubtleShadow}" TextTrimming="CharacterEllipsis">
 				<Run x:Name="RoomName" FontFamily="Tahoma" FontSize="24">#main</Run>
 				<Run x:Name="OccupantCount" FontSize="9" Foreground="Gray">64</Run>
 				<Run FontSize="9" Foreground="Gray">people</Run>
@@ -53,13 +53,13 @@
 					<ColumnDefinition />
 				</Grid.ColumnDefinitions>
 				<TextBlock Text="menu" Margin="0,-4,2,0" FontFamily="Tahoma" />
-				<Polygon HorizontalAlignment="Right" Width="9" Height="9" Points="1,1 8,1 4.5,7 1,1" Fill="#FF075152" Stroke="#FF075152" Grid.Column="1">
-				</Polygon>
+				<Polygon HorizontalAlignment="Right" Width="9" Height="9" Points="1,1 8,1 4.5,7 1,1" Fill="#FF075152" Stroke="#FF075152" Grid.Column="1" />
 			</Grid>
 			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" Effect="{DynamicResource SubtleShadow}" />
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<nxc:ChatHistoryBox Grid.Row="1" x:Name="ChatHistory" VerticalAlignment="Bottom" />
 		</Grid>
+		<!-- Participant List -->
 		<Grid Grid.Column="1">
 			<Grid.Background>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -69,6 +69,7 @@
 			</Grid.Background>
 			<ListBox x:Name="OccupantList" Background="{x:Null}" MouseRightButtonDown="OccupantList_MouseRightButtonDown" SelectionChanged="OccupantList_SelectionChanged" BorderBrush="{x:Null}" />
 		</Grid>
+		<!-- Bottom Send Message Box -->
 		<Grid Grid.Row="2" Grid.ColumnSpan="2">
 			<Grid.Background>
 				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -78,8 +79,8 @@
 			</Grid.Background>
 			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown"  BorderBrush="Black" />
 		</Grid>
-		<Rectangle x:Name="OverlayRect" Visibility="Collapsed" Fill="#FF707070" Grid.ColumnSpan="2" Grid.RowSpan="2" />
-		<Grid x:Name="InvitePopup" Visibility="Collapsed" Background="#FFEBEBEB" Width="160" VerticalAlignment="Center">
+		<Rectangle x:Name="OverlayRect" Visibility="Collapsed" Fill="#FF707070" Grid.ColumnSpan="2" Grid.RowSpan="2" MouseLeftButtonDown="OverlayRect_MouseLeftButtonDown" />
+		<Grid x:Name="InvitePopup" Visibility="Collapsed" Background="#FFEBEBEB" Width="160" VerticalAlignment="Center" Grid.ColumnSpan="2">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
@@ -90,7 +91,7 @@
 				<DropShadowEffect BlurRadius="10" ShadowDepth="3" Color="#FFBEBEBE" />
 			</Grid.Effect>
 			<!-- Header -->
-			<TextBlock Text="Invite User" Margin="3,0,0,0" />
+			<TextBlock Text="Invite User" Margin="3,0,0,0" FontWeight="Bold" />
 			<!-- Username -->
 			<TextBlock Text="Username" Grid.Row="1" Margin="3,4,0,0" Grid.RowSpan="2" />
 			<TextBox x:Name="InviteUsername" Height="22" Grid.Row="1" Margin="3,20,3,0" VerticalAlignment="Top" TabIndex="500" />

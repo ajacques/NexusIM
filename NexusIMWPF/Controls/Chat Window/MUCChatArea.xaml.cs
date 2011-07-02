@@ -1,21 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using InstantMessage;
 using InstantMessage.Events;
 using InstantMessage.Protocols;
-using NexusIM.Protocol;
-using InstantMessage;
-using System.Collections.Generic;
-using NexusIM.Misc;
 using InstantMessage.Protocols.Irc;
-using System.Windows;
-using System.Collections.Specialized;
-using System.Text.RegularExpressions;
-using System.Windows.Interop;
-using System.Windows.Media.Animation;
+using NexusIM.Protocol;
 
 namespace NexusIM.Controls
 {
@@ -116,12 +115,7 @@ namespace NexusIM.Controls
 					int ct = 0;
 					while (partEnumer.MoveNext())
 					{
-						IContact username = partEnumer.Current;
-						TextBlock user = new TextBlock();
-						user.Text = username.Nickname;
-						user.ContextMenu = mUserContextMenu;
-
-						OccupantList.Items.Add(user);
+						AddUser(partEnumer.Current);
 						ct++;
 					}
 					OccupantCount.Text = ct.ToString();
@@ -229,6 +223,21 @@ namespace NexusIM.Controls
 			ProcessChatMessage(new IMMessageEventArgs(new SelfContact(mProtocol), message, flags));
 			return true;
 		}
+		private void HideAllOverlays()
+		{
+			OverlayRect.Visibility = Visibility.Collapsed;
+
+			// Close any other popups
+			InvitePopup.Visibility = Visibility.Collapsed;
+		}
+		private void AddUser(IContact contact)
+		{
+			TextBlock user = new TextBlock();
+			user.Text = contact.Nickname;
+			user.ContextMenu = mUserContextMenu;
+
+			OccupantList.Items.Add(user);
+		}
 
 		protected override void OnVisualParentChanged(DependencyObject oldParent)
 		{
@@ -254,13 +263,15 @@ namespace NexusIM.Controls
 						return;
 
 					MessageBody.Text = mHistoryNode.Value;
-					mHistoryNode = mHistoryNode.Next;
+					if (mHistoryNode.Next != mHistoryRoot)
+						mHistoryNode = mHistoryNode.Next;
 				} else if (e.Key == Key.Down) {
 					if (mHistoryNode == null)
 						return;
 
 					MessageBody.Text = mHistoryNode.Value;
-					mHistoryNode = mHistoryNode.Previous;
+					if (mHistoryNode.Previous != mHistoryRoot)
+						mHistoryNode = mHistoryNode.Previous;
 				}
 			}
 		}
@@ -338,14 +349,31 @@ namespace NexusIM.Controls
 		private void InviteUser_Click(object sender, RoutedEventArgs e)
 		{
 			Storyboard animIn = (Storyboard)FindResource("InviteUserOpen");
+			
+			EventHandler handler = null;
+			handler = (f, g) => {
+				InviteUsername.Focus();
+				animIn.Completed -= handler;
+				handler = null;
+			};
+			animIn.Completed += handler;
 
 			animIn.Begin();
-
-			InviteUsername.Focus();
 		}
 		private void InviteUserButton_Click(object sender, RoutedEventArgs e)
 		{
-			InvitePopup.Visibility = Visibility.Collapsed;
+			string username = InviteUsername.Text;
+			InviteUsername.Text = String.Empty;
+			string message = InviteMessage.Text;
+			InviteMessage.Text = String.Empty;
+
+			HideAllOverlays();
+
+			ChatRoom.InviteUser(username, message);
+		}
+		private void OverlayRect_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			HideAllOverlays();
 		}
 
 		// Chat Room Event Handlers
@@ -370,6 +398,8 @@ namespace NexusIM.Controls
 				span.Inlines.Add(user);
 				span.Inlines.Add(message);
 				AppendChatInline(span);
+
+				AddUser(e.Username);
 			});
 		}
 		private void IrcChannel_OnUserPart(object sender, IMChatRoomGenericEventArgs e)

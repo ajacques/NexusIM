@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using InstantMessage.Events;
 
 namespace InstantMessage.Protocols
@@ -11,6 +9,9 @@ namespace InstantMessage.Protocols
 	/// </summary>
 	public interface IChatRoom : IMessagable
 	{
+		void InviteUser(string username, string message);
+		void Leave(string reason);
+
 		/// <summary>
 		/// Gets the name of chat room
 		/// </summary>
@@ -30,7 +31,6 @@ namespace InstantMessage.Protocols
 		{
 			get;
 		}
-		void Leave(string reason);
 
 		event EventHandler<IMMessageEventArgs> OnMessageReceived;
 		event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;

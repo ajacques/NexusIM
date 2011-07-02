@@ -129,6 +129,44 @@ namespace InstantMessage.Protocols.Irc
 			return args.Results;
 		}
 
+		public void QueryServer(string command, int dataNumeric, int endNumeric, ServerResponse handler)
+		{
+			ServerResponse endHandler = null;
+			
+			endHandler = (int id, string line) =>
+				{
+					mRespHandlers.Remove(dataNumeric);
+					mRespHandlers.Remove(endNumeric);
+					endHandler = null;
+					handler(endNumeric, line);
+				};
+
+			mRespHandlers.Add(dataNumeric, handler);
+			mRespHandlers.Add(endNumeric, endHandler);
+
+			SendRawMessage(command);
+		}
+		public void QueryServer(string command, int[] dataNumerics, int endNumeric, ServerResponse handler)
+		{
+			ServerResponse endHandler = null;
+
+			dataNumerics = (int[])dataNumerics.Clone(); // Get our own copy
+
+			endHandler = (int id, string line) =>
+			{
+				for (int i = 0; i < dataNumerics.Length; i++)
+					mRespHandlers.Remove(dataNumerics[i]);
+				mRespHandlers.Remove(endNumeric);
+				endHandler = null;
+				handler(endNumeric, line);
+			};
+			for (int i = 0; i < dataNumerics.Length; i++)
+				mRespHandlers.Add(dataNumerics[i], handler);
+			mRespHandlers.Add(endNumeric, endHandler);
+
+			SendRawMessage(command);
+		}
+
 		public void Disconnect(string reason)
 		{
 			sendData("QUIT :" + reason);
@@ -139,7 +177,7 @@ namespace InstantMessage.Protocols.Irc
 			{
 				ServerResponse resp = new ServerResponse((code, msg) =>
 					{
-						msg = msg.Substring(msg.LastIndexOf(':'));
+						msg = msg.Substring(msg.LastIndexOf(':') + 1);
 						if (code == 491)
 							callback(false, msg);
 						else
@@ -467,7 +505,7 @@ namespace InstantMessage.Protocols.Irc
 					}
 					ServerResponse resp = null;
 					if (mRespHandlers.TryGetValue(numericReply, out resp))
-						resp(numericReply, line);
+						resp(numericReply, param[2].Split(mLineSplitSep, 2)[1]);
 				} else {
 					switch (parameters[1].ToUpper())
 					{
@@ -888,7 +926,7 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 
 		// Private Delegates
-		private delegate void ServerResponse(int id, string contents);
+		public delegate void ServerResponse(int id, string contents);
 
 		// Variables		
 		private HostMaskFindResult mPendingHostLookup;
@@ -901,7 +939,7 @@ namespace InstantMessage.Protocols.Irc
 		private DateTime mConnectTime;
 		private static TimeSpan mIdlePeriod = TimeSpan.FromSeconds(30);
 		private char[] mLineSplitSep = new char[] { ' ' };
-		private Dictionary<int, ServerResponse> mRespHandlers = new Dictionary<int, ServerResponse>();
+		private SortedDictionary<int, ServerResponse> mRespHandlers = new SortedDictionary<int, ServerResponse>();
 
 		// Socket-related Variables
 		private string mActualServer;
