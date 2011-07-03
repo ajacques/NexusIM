@@ -565,6 +565,11 @@ namespace NexusIM
 
 								protocol = irc;
 								break;
+#if DEBUG
+							case "test":
+								protocol = new TestProtocol();
+								break;
+#endif
 							default:
 								protocol = IMProtocol.FromString(current.AccountType);
 								break;

@@ -6,6 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using InstantMessage.Protocols.Irc;
 using System.ComponentModel;
+using NexusIM.Controls;
+using System.Diagnostics;
+using InstantMessage.Events;
 
 namespace NexusIM.Windows.IRC
 {
@@ -17,6 +20,8 @@ namespace NexusIM.Windows.IRC
 		public ServerLinkWindow()
 		{
 			InitializeComponent();
+
+			mServers = new SortedDictionary<string, ServerInfo>();
 		}
 
 		public void LoadData(IRCProtocol protocol)
@@ -29,13 +34,22 @@ namespace NexusIM.Windows.IRC
 			LinksList.ContextMenu = new LinkContextMenu(mProtocol, this);
 
 			protocol.QueryServer("STATS C", new int[] { 213, 244 }, 219, new IRCProtocol.ServerResponse(OnResponse));
+			protocol.OnNoticeReceive += new EventHandler<IMChatRoomGenericEventArgs>(protocol_OnNoticeReceive);
 		}
 
-		protected void RefreshStatus()
+		protected override void OnInitialized(EventArgs e)
+		{
+			base.OnInitialized(e);
+
+			Placeholder.SetText(ConnectHostname, "Hostname");
+			Placeholder.SetText(ConnectPort, "Port");
+		}
+
+		// Private Methods
+		private void RefreshStatus()
 		{
 			mProtocol.QueryServer("STATS X", 247, 219, new IRCProtocol.ServerResponse(OnUnlinkResponse));
 		}
-
 		private void OnUnlinkResponse(int numeric, string data)
 		{
 			switch (numeric)
@@ -106,6 +120,26 @@ namespace NexusIM.Windows.IRC
 			}
 		}
 
+		// Event Handlers
+		private void RefreshButton_Click(object sender, RoutedEventArgs e)
+		{
+			RefreshStatus();
+		}
+		private void ConnectButton_Click(object sender, RoutedEventArgs e)
+		{
+			Trace.WriteLine(String.Format("User has requested connect to irc server : {0}:{1}", ConnectHostname.Text, ConnectPort.Text));
+			mProtocol.SendRawMessage(string.Format("CONNECT {0} {1}", ConnectHostname.Text, ConnectPort.Text));
+
+			ConnectHostname.Text = String.Empty;
+			ConnectPort.Text = String.Empty;
+		}
+		private void protocol_OnNoticeReceive(object sender, IMChatRoomGenericEventArgs e)
+		{
+			if (e.Message.StartsWith("*** Connect"))
+				Dispatcher.InvokeIfRequired(() => ConnectOutput.Text = e.Message);
+		}
+
+		// Nested Classes
 		private sealed class LinkContextMenu : ContextMenu
 		{
 			public LinkContextMenu(IRCProtocol protocol, ServerLinkWindow view)
@@ -130,6 +164,11 @@ namespace NexusIM.Windows.IRC
 					disconnect.Header = "Disconnect";
 					disconnect.Click += new RoutedEventHandler(DisconnectServer_Click);
 					Items.Add(disconnect);
+				} else if (mServerInfo.Status == "Down") {
+					MenuItem connect = new MenuItem();
+					connect.Header = "Connect";
+					connect.Click += new RoutedEventHandler(ConnectServer_Click);
+					Items.Add(connect);
 				}
 			}
 
@@ -141,11 +180,16 @@ namespace NexusIM.Windows.IRC
 
 				mView.RefreshStatus();
 			}
+			private void ConnectServer_Click(object sender, RoutedEventArgs e)
+			{
+				ServerInfo mServerInfo = mView.LinksList.SelectedItem as ServerInfo;
+
+				mProtocol.SendRawMessage(string.Format("CONNECT {0} {1}", mServerInfo.ServerName, mServerInfo.Port));
+			}
 			
 			private IRCProtocol mProtocol;
 			private ServerLinkWindow mView;
 		}
-
 		private sealed class ServerInfo : IComparable, IComparable<ServerInfo>, INotifyPropertyChanged
 		{
 			int IComparable.CompareTo(object other)
@@ -233,7 +277,8 @@ namespace NexusIM.Windows.IRC
 			private string mAddress;
 		}
 
-		private SortedDictionary<string, ServerInfo> mServers = new SortedDictionary<string, ServerInfo>();
-		private IRCProtocol mProtocol;
+		// Variables
+		private SortedDictionary<string, ServerInfo> mServers; // Sorts a reference to all known links. Allows for fast search and updating of data
+		private IRCProtocol mProtocol; // A reference to the protocol that this window will work with
 	}
 }

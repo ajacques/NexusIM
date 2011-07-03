@@ -59,6 +59,14 @@ namespace NexusIM.Controls
 		{
 			return new PointHitTestResult(this, hitTestParameters.HitPoint);
 		}
+		protected override void OnInitialized(EventArgs e)
+		{
+			base.OnInitialized(e);
+
+			Placeholder.SetText(UsernameBox, "Username");
+			
+			//Placeholder.SetText(PasswordBox, "Password");
+		}
 
 		public void PopulateUIControls(IMProtocolWrapper extraData)
 		{
@@ -83,6 +91,7 @@ namespace NexusIM.Controls
 					PasswordBox.IsEnabled = false;
 				PasswordBox.Password = String.Empty;
 				SavedText.Visibility = Visibility.Visible;
+				//Placeholder.SetText(ServerBox, "Server");
 			}
 
 			if (mProtocolType == typeof(IRCProtocol))
@@ -160,13 +169,13 @@ namespace NexusIM.Controls
 		}
 		private void ServerBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
-			if (ServerBox.Text.Length >= 1)
-				ServerBoxHint.Visibility = Visibility.Collapsed;
+			//if (ServerBox.Text.Length >= 1)
+			//	ServerBoxHint.Visibility = Visibility.Collapsed;
 		}
 		private void ServerBox_LostFocus(object sender, RoutedEventArgs e)
 		{
-			if (ServerBox.Text.Length == 0)
-				ServerBoxHint.Visibility = Visibility.Visible;
+			//if (ServerBox.Text.Length == 0)
+				//ServerBoxHint.Visibility = Visibility.Visible;
 		}
 		private void SettingsLink_Click(object sender, RoutedEventArgs e)
 		{

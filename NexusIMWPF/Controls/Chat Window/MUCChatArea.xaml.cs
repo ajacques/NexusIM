@@ -265,6 +265,10 @@ namespace NexusIM.Controls
 					MessageBody.Text = mHistoryNode.Value;
 					if (mHistoryNode.Next != mHistoryRoot)
 						mHistoryNode = mHistoryNode.Next;
+
+					e.Handled = true;
+
+					MessageBody.CaretIndex = MessageBody.Text.Length;
 				} else if (e.Key == Key.Down) {
 					if (mHistoryNode == null)
 						return;
@@ -272,6 +276,9 @@ namespace NexusIM.Controls
 					MessageBody.Text = mHistoryNode.Value;
 					if (mHistoryNode.Previous != mHistoryRoot)
 						mHistoryNode = mHistoryNode.Previous;
+
+					e.Handled = true;
+					MessageBody.CaretIndex = MessageBody.Text.Length;
 				}
 			}
 		}

@@ -8,7 +8,7 @@ using NexusIM.Windows.IRC;
 
 namespace NexusIM.Controls
 {
-	class IRCProtocolMenu : ProtocolMenu<IRCProtocol>
+	sealed class IRCProtocolMenu : ProtocolMenu<IRCProtocol>
 	{
 		// Event handlers
 		private void joinItem_Click(object sender, RoutedEventArgs e)
@@ -80,9 +80,9 @@ namespace NexusIM.Controls
 		private void OpenServerLinkWindow(IRCProtocol protocol)
 		{
 			ServerLinkWindow window = new ServerLinkWindow();
-			window.Owner = Window.GetWindow(this);
+			//window.Owner = Window.GetWindow(this);
 			window.LoadData(protocol);
-			window.ShowDialog();
+			window.Show();
 		}
 
 		protected override string ProtocolName
