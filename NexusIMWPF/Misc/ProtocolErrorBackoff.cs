@@ -17,8 +17,6 @@ namespace NexusIM.Misc
 		{
 			mAttempts = 1;
 			mInterval = TimeSpan.FromSeconds(3);
-			protocol.Protocol.LoginCompleted += new EventHandler(Protocol_LoginSuccess);
-			protocol.Protocol.ErrorOccurred += new EventHandler<IMErrorEventArgs>(Protocol_ErrorOccurred);
 
 			mProtocol = protocol;
 			mTimer = new Timer();
@@ -27,6 +25,8 @@ namespace NexusIM.Misc
 			mTimer.Interval = mInterval.TotalMilliseconds;
 			mTimer.Start();
 
+			protocol.Protocol.LoginCompleted += new EventHandler(Protocol_LoginSuccess);
+			protocol.Protocol.ErrorOccurred += new EventHandler<IMErrorEventArgs>(Protocol_ErrorOccurred);
 			Trace.WriteLine("Protocol encountered an error. Re-attempting login in " + mInterval.TotalSeconds + " seconds");
 		}
 

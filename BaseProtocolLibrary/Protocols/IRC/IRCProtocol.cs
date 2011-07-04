@@ -430,13 +430,14 @@ namespace InstantMessage.Protocols.Irc
 			while (true)
 			{
 				Thread.Sleep(mIdlePeriod);
-				sendData(String.Format("PING :{0}", Math.Round((DateTime.UtcNow - mConnectTime).TotalSeconds, 0)));
-
-				if (DateTime.UtcNow - mLastCommunication > mMaxIdle)
+				if (mProtocolStatus == IMProtocolStatus.Online && DateTime.UtcNow - mLastCommunication > mMaxIdle)
 				{
-					triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR, "Ping timeout"));
+					// Only throw this error if we think we are connected 
+					//triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR, "Ping timeout"));
+					triggerOnError(new SocketErrorEventArgs(new SocketException(10054)));
 					break;
 				}
+				sendData(String.Format("PING :{0}", Math.Round((DateTime.UtcNow - mConnectTime).TotalSeconds, 0)));
 			}
 		}
 
@@ -795,7 +796,7 @@ namespace InstantMessage.Protocols.Irc
 				bytesRead = mTextStream.EndRead(args);
 			} catch (SocketException e)	{
 				Dispose();
-				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				triggerOnError(new SocketErrorEventArgs(e));
 				return;
 			} catch (IOException e)	{
 				Dispose();

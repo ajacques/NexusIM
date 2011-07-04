@@ -123,6 +123,7 @@ namespace NexusIM.Managers
 					foreach (IMProtocolWrapper extraData in e.NewItems)
 					{
 						extraData.IsReady = true;
+						// Setup Event Handlers
 						extraData.PropertyChanged += new PropertyChangedEventHandler(IndividualProtocol_PropertyChanged);
 
 						if (extraData.Protocol is IRCProtocol)
@@ -133,7 +134,7 @@ namespace NexusIM.Managers
 							protocol.OnJoinChannel += new EventHandler<IMChatRoomEventArgs>(IrcProtocol_OnJoinChannel);
 						}
 
-						ConnectIfNeeded(extraData);
+						ConnectIfNeeded(extraData); // Now connect
 					}
 				}
 			}));
@@ -142,16 +143,13 @@ namespace NexusIM.Managers
 		{
 			if (!Connected)
 				return;
-
-			if (Connected && IsConnectedToInternet())
+			
+			if (extraData.Enabled != (extraData.Protocol.ProtocolStatus != IMProtocolStatus.Offline))
 			{
-				if (extraData.Enabled != (extraData.Protocol.ProtocolStatus != IMProtocolStatus.Offline))
-				{
-					if (extraData.Enabled)
-						extraData.Protocol.BeginLogin();
-					else
-						extraData.Protocol.Disconnect();
-				}
+				if (extraData.Enabled)
+					extraData.Protocol.BeginLogin();
+				else
+					extraData.Protocol.Disconnect();
 			}
 		}
 		private static void ConnectIfNeeded(object threadState)
@@ -228,11 +226,13 @@ namespace NexusIM.Managers
 				switch (exception.SocketErrorCode)
 				{
 					case SocketError.TimedOut:
+					case SocketError.ConnectionReset:
 						traceString.Append("Response: Internalize; Could be a connectivity problem.");
 
 						if (wrapper.ErrorBackoff == null)
 							wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
 
+						break;
 						break;
 					default:
 						traceString.Append("Response: Alert User");
