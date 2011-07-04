@@ -102,13 +102,9 @@ namespace NexusIMWPF
 				return;
 			}
 
-			IEnumerator<IMProtocolWrapper> accEnumer = accounts.GetEnumerator();
-
-			while (accEnumer.MoveNext())
-				AccountManager.Accounts.Add(accEnumer.Current);
+			AccountManager.Accounts.AddRange(accounts);
 
 			StopwatchManager.Stop("AccDBLoad");
-			accEnumer.Dispose();
 		}
 		private static void DoInit(object state)
 		{

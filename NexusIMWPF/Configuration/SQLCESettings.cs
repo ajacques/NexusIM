@@ -697,7 +697,9 @@ namespace NexusIM
 			public int Count
 			{
 				get {
-					throw new NotImplementedException();
+					UserProfile db = UserProfile.Create(mConnectionString);
+
+					return db.Accounts.Count();
 				}
 			}
 			public bool IsReadOnly

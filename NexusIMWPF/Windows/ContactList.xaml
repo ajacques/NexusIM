@@ -104,26 +104,26 @@
 					<ScrollViewer VerticalScrollBarVisibility="Auto">
 						<StackPanel x:Name="ContactListControl" />
 					</ScrollViewer>
-					<Grid x:Name="NoEnabledAccountsWarning" Width="200" Height="120" Visibility="Collapsed">
-						<Grid.RowDefinitions>
-							<RowDefinition Height="50" />
-							<RowDefinition />
-						</Grid.RowDefinitions>
-						<Rectangle Fill="#FFDADADA" RadiusX="4" RadiusY="4" Grid.RowSpan="2" />
-						<TextBlock TextWrapping="Wrap" Margin="2" Grid.Row="0">
+				</Grid>
+			</StackPanel>
+			<Grid x:Name="NoEnabledAccountsWarning" Width="200" Height="120" Visibility="Collapsed">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="55" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Rectangle Fill="#FFDADADA" RadiusX="4" RadiusY="4" Grid.RowSpan="2" />
+				<TextBlock TextWrapping="Wrap" Margin="4" Grid.Row="0">
 					<Run>You currently have no enabled accounts.</Run>
 					<LineBreak />
 					<Hyperlink TextDecorations="None" Click="EditAccounts_Click">Edit your accounts</Hyperlink>
-						</TextBlock>
-						<StackPanel Grid.Row="1">
-							<Grid>
-								<TextBlock><Run Text="{Binding Username}" /><Run Text=" - " /><Hyperlink TextDecorations="None"><Run Text="Enable" /></Hyperlink></TextBlock>
-							</Grid>
-						</StackPanel>
+				</TextBlock>
+				<StackPanel Grid.Row="1">
+					<Grid>
+						<TextBlock><Run Text="{Binding Username}" /><Run Text=" - " /><Hyperlink TextDecorations="None"><Run Text="Enable" /></Hyperlink></TextBlock>
 					</Grid>
-				</Grid>
-			</StackPanel>
-			<StackPanel x:Name="BottomFillPanel" Grid.Row="1" />
+				</StackPanel>
+			</Grid>
+			<StackPanel x:Name="BottomFillPanel" Grid.Row="1" MaxHeight="90" />
 		</Grid>
 		<!-- Menu Bar-->
 		<Menu VerticalAlignment="Top">

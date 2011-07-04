@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using InstantMessage;
 using NexusIM.Managers;
 
@@ -18,13 +20,11 @@ namespace NexusIM.Controls
 			tip.Content = new TextBlock() { Text = this.ProtocolName };
 
 			this.ToolTip = tip;
-		}
 
-		protected abstract string ProtocolName
-		{
-			get;
+			mImage = new Image();
+			this.Content = mImage;
 		}
-
+		
 		private class CustomContextMenu : ContextMenu
 		{
 			public CustomContextMenu(ProtocolMenu<T> button)
@@ -73,7 +73,21 @@ namespace NexusIM.Controls
 
 			this.ContextMenu.IsOpen = true;
 		}
+		protected override void OnInitialized(EventArgs e)
+		{
+			base.OnInitialized(e);
+
+			mImage.Source = this.GetImage();
+		}
 
 		protected abstract void GenerateItemSet(IMProtocolWrapper wrapper, ItemCollection coll);
+		protected abstract ImageSource GetImage();
+		protected abstract string ProtocolName
+		{
+			get;
+		}
+
+		// Variables
+		private Image mImage;
 	}
 }

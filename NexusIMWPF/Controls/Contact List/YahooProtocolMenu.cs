@@ -1,5 +1,8 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using InstantMessage;
 using InstantMessage.Protocols.Yahoo;
 
@@ -25,6 +28,13 @@ namespace NexusIM.Controls
 			coll.Add(item);
 
 			coll.Add(new Separator());
+		}
+		protected override ImageSource GetImage()
+		{
+			Uri uriSource = new Uri("pack://application:,,,/NexusIMWPF;component/Resources/yahoo.png");
+			BitmapImage image = new BitmapImage(uriSource);
+
+			return image;
 		}
 	}
 }

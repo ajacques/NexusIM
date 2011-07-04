@@ -5,6 +5,8 @@ using InstantMessage;
 using InstantMessage.Protocols.Irc;
 using NexusIM.Windows;
 using NexusIM.Windows.IRC;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace NexusIM.Controls
 {
@@ -30,23 +32,20 @@ namespace NexusIM.Controls
 
 			coll.Add(new Separator());
 
-			if (wrapper.Enabled)
+			if (protocol.ProtocolStatus == IMProtocolStatus.Online)
 			{
-				if (protocol.ProtocolStatus == IMProtocolStatus.Connecting)
-				{
-					MenuItem connError = new MenuItem();
-					connError.Header = "Connecting...";
-					connError.IsEnabled = false;
-					coll.Add(connError);
-				} else if (protocol.ProtocolStatus == IMProtocolStatus.Online) {
-					MenuItem joinItem = new MenuItem();
-					joinItem.Header = "Join Chat Room";
-					joinItem.Click += new RoutedEventHandler(joinItem_Click);
-					coll.Add(joinItem);
+				MenuItem joinItem = new MenuItem();
+				joinItem.Header = "Join Chat Room";
+				joinItem.Click += new RoutedEventHandler(joinItem_Click);
+				coll.Add(joinItem);
 
-					if (protocol.IsOperator)
-						coll.Add(GenerateAdminMenu(protocol));
-				}
+				if (protocol.IsOperator)
+					coll.Add(GenerateAdminMenu(protocol));
+			} else if (protocol.ProtocolStatus == IMProtocolStatus.Connecting) {
+				MenuItem connError = new MenuItem();
+				connError.Header = "Connecting...";
+				connError.IsEnabled = false;
+				coll.Add(connError);
 			} else {
 				MenuItem connItem = new MenuItem();
 				connItem.Header = "Connect";
@@ -62,6 +61,13 @@ namespace NexusIM.Controls
 
 				coll.Add(connItem);
 			}
+		}
+		protected override ImageSource GetImage()
+		{
+			Uri uriSource = new Uri("pack://application:,,,/NexusIMWPF;component/Resources/crown.png");
+			BitmapImage image = new BitmapImage(uriSource);
+
+			return image;
 		}
 
 		private MenuItem GenerateAdminMenu(IRCProtocol protocol)

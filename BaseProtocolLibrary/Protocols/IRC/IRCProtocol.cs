@@ -25,6 +25,8 @@ namespace InstantMessage.Protocols.Irc
 			Port = 6667;
 
 			CreatePingThread();
+
+			mOnDuplicateName = (origin) => origin + '_';
 		}
 		public IRCProtocol(string hostname, int port = 6667, bool useSsl = false) : this()
 		{
@@ -377,7 +379,7 @@ namespace InstantMessage.Protocols.Irc
 			set	{
 				if (mNickname != value)
 				{
-					mNickname = value;
+					mOriginalNick = mNickname = value;
 
 					NotifyPropertyChanged("Nickname");
 
@@ -885,6 +887,30 @@ namespace InstantMessage.Protocols.Irc
 			if (!String.IsNullOrEmpty(mNickname))
 				sendData("NICK " + mNickname);
 
+			if (client.Available >= 1)
+			{
+				byte[] buffer = new byte[1024];
+				int bytesRead = mTextStream.Read(buffer, 0, buffer.Length);
+
+				StringReader reader = new StringReader(mTextEncoder.GetString(buffer, 0, bytesRead));
+
+				while (reader.Peek() != -1)
+				{
+					string line = reader.ReadLine();
+
+					if (line[0] == ':')
+					{
+						string[] parts = line.Split(mLineSplitSep, 3);
+
+						if (parts[1] == "433")
+						{
+							triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "Duplicate Nickname"));
+							return;
+						}
+					}
+				}
+			}
+
 			if (String.IsNullOrEmpty(mRealName))
 				mRealName = mUsername;
 
@@ -926,13 +952,15 @@ namespace InstantMessage.Protocols.Irc
 		public event EventHandler<ChatRoomJoinFailedEventArgs> OnChannelJoinFailed;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnNoticeReceive;
 
-		// Private Delegates
+		// Delegates
 		public delegate void ServerResponse(int id, string contents);
+		public delegate string DuplicateNickname(string original);
 
 		// Variables		
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
 		private string mNickname;
+		private string mOriginalNick;
 		private bool mIsOperator;
 		private ChatRoomCollection<IRCChannel> mChannels = new ChatRoomCollection<IRCChannel>();
 		private Thread mWatchThread;
@@ -941,6 +969,7 @@ namespace InstantMessage.Protocols.Irc
 		private static TimeSpan mIdlePeriod = TimeSpan.FromSeconds(30);
 		private char[] mLineSplitSep = new char[] { ' ' };
 		private SortedDictionary<int, ServerResponse> mRespHandlers = new SortedDictionary<int, ServerResponse>();
+		private DuplicateNickname mOnDuplicateName;
 
 		// Socket-related Variables
 		private string mActualServer;

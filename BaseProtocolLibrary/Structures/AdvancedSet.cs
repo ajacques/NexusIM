@@ -34,6 +34,24 @@ namespace InstantMessage
 
 			return success;
 		}
+		public void AddRange(IEnumerable<T> items)
+		{
+			mLock.EnterWriteLock();
+
+			IList list = new List<T>();
+
+			try	{
+				foreach (T item in items)
+				{
+					base.Add(item);
+					list.Add(item);
+				}
+			} finally {
+				mLock.ExitWriteLock();
+			}
+
+			RaiseItemAdded(list);
+		}
 		public new bool Remove(T item)
 		{
 			mLock.EnterWriteLock();
@@ -69,6 +87,19 @@ namespace InstantMessage
 
 				try {
 					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItem));
+				} finally {
+					mLock.ExitReadLock();
+				}
+			}
+		}
+		protected void RaiseItemAdded(IList newItems)
+		{
+			if (CollectionChanged != null)
+			{
+				mLock.EnterReadLock();
+
+				try	{
+					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems));
 				} finally {
 					mLock.ExitReadLock();
 				}
