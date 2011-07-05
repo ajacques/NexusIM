@@ -8,13 +8,11 @@ using System.Collections;
 
 namespace InstantMessage.Protocols
 {
-	public class ContactCollection : AdvancedSet<IContact>
+	public class ContactCollection : AdvancedSet<string, IContact>
 	{
-		public IContact this[string name]
+		public void Add(IContact contact)
 		{
-			get	{
-				return this.FirstOrDefault(i => i.Username == name);
-			}
+			base.Add(contact.Username, contact);
 		}
 	}
 }

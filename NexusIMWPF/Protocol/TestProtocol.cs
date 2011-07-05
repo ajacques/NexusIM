@@ -12,14 +12,14 @@ namespace NexusIM
 			
 			Trace.WriteLine("TestProtocol: Beginning Login");
 
-			ContactList.Add(new IMBuddy(this, "Test User") { Status = IMBuddyStatus.Available });
-			ContactList.Add(new IMBuddy(this, "Test User 2") { Status = IMBuddyStatus.Available });
-			ContactList.Add(new IMBuddy(this, "Test User 3") { Status = IMBuddyStatus.Available });
-			ContactList.Add(new IMBuddy(this, "Offline User") { Status = IMBuddyStatus.Offline });
-			ContactList.Add(new IMBuddy(this, "Away User") { Status = IMBuddyStatus.Away });
-			ContactList.Add(new IMBuddy(this, "Busy User") { Status = IMBuddyStatus.Busy });
-			ContactList.Add(new IMBuddy(this, "Test User") { Status = IMBuddyStatus.Available, StatusMessage = "Test Status Message" });
-			ContactList.Add(new IMBuddy(this, "Grouped User") { Group = "Test Group" });
+			ContactList.Add(new IMBuddy(this, "testuser") { Status = IMBuddyStatus.Available });
+			ContactList.Add(new IMBuddy(this, "testuser2") { Status = IMBuddyStatus.Available });
+			ContactList.Add(new IMBuddy(this, "testuser3") { Status = IMBuddyStatus.Available });
+			ContactList.Add(new IMBuddy(this, "offlineuser") { Status = IMBuddyStatus.Offline });
+			ContactList.Add(new IMBuddy(this, "awayuser") { Status = IMBuddyStatus.Away });
+			ContactList.Add(new IMBuddy(this, "busyuser") { Status = IMBuddyStatus.Busy });
+			ContactList.Add(new IMBuddy(this, "statususer") { Status = IMBuddyStatus.Available, StatusMessage = "Test Status Message" });
+			ContactList.Add(new IMBuddy(this, "groupeduser") { Group = "Test Group" });
 
 			mSelf = new IMBuddy(this, "You");
 			mSelf.Status = (IMBuddyStatus)this.Status;
@@ -47,6 +47,12 @@ namespace NexusIM
 				IMBuddy buddy = (IMBuddy)ContactList[friendName];
 				buddy.InvokeReceiveMessage("working");
 				triggerOnMessageReceive(new InstantMessage.Events.IMMessageEventArgs(buddy, "working"));
+			} else if (message == "delete")	{
+				IContact contact;
+				if (ContactList.TryGetValue(friendName, out contact))
+				{
+					ContactList.Remove(friendName);
+				}
 			}
 
 			Trace.WriteLine("To " + friendName + ": " + message);

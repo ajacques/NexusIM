@@ -61,10 +61,10 @@ namespace NexusIM.Managers
 		{
 			if (e.NewItems != null)
 			{
-				foreach (IContact contact in e.NewItems)
+				foreach (KeyValuePair<String, IContact> contact in e.NewItems)
 				{
-					string groupname = contact.Group;
-					if (String.IsNullOrEmpty(contact.Group))
+					string groupname = contact.Value.Group;
+					if (String.IsNullOrEmpty(contact.Value.Group))
 						groupname = "Friends";
 
 					GroupOfContacts group = Groups.FirstOrDefault(g => g.GroupName == groupname);
@@ -74,14 +74,25 @@ namespace NexusIM.Managers
 						group.GroupName = groupname;
 						Groups.Add(group);
 					}
-					ContactList.Add(contact);
-					group.Contacts.Add(contact);
+					ContactList.Add(contact.Value);
+					group.Contacts.Add(contact.Value);
 				}
 			}
 			if (e.OldItems != null)
 			{
-				foreach (IContact contact in e.OldItems)
-					ContactList.Remove(contact);
+				foreach (KeyValuePair<String, IContact> contact in e.OldItems)
+				{
+					string groupname = contact.Value.Group;
+					if (String.IsNullOrEmpty(contact.Value.Group))
+						groupname = "Friends";
+
+					GroupOfContacts group = Groups.FirstOrDefault(g => g.GroupName == groupname);
+					if (group != null)
+					{
+						group.Contacts.Remove(contact.Value);
+					}
+					ContactList.Remove(contact.Value);
+				}
 			}
 		}
 	}

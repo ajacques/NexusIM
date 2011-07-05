@@ -31,7 +31,7 @@ namespace NexusIM.Windows
 
 			string search = name.ToUpperInvariant();
 
-			IEnumerable<IContact> contacts = AccountManager.Accounts.Where(p => p.Enabled && p.Protocol.ProtocolStatus == IMProtocolStatus.Online).SelectMany(s => s.Protocol.ContactList);
+			IEnumerable<IContact> contacts = AccountManager.Accounts.Where(p => p.Enabled && p.Protocol.ProtocolStatus == IMProtocolStatus.Online).SelectMany(s => s.Protocol.ContactList.Values);
 
 			IEnumerable<IContact> results = contacts.Where(i =>
 				(!String.IsNullOrEmpty(i.Nickname) &&

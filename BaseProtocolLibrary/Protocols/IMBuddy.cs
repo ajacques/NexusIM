@@ -245,7 +245,7 @@ namespace InstantMessage
 		
 		public static IMBuddy FromUsername(string username, IMProtocol source)
 		{
-			return (IMBuddy)(from p in source.ContactList where p.Username == username select new { p }).FirstOrDefault().p;
+			return (IMBuddy)(from p in source.ContactList where p.Value.Username == username select p.Value).FirstOrDefault();
 		}
 
 		public bool Equals(IContact right)

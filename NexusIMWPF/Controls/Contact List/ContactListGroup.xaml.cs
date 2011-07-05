@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
@@ -10,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
 using NexusIM.Managers;
-using System.Collections.Generic;
 
 namespace NexusIM.Controls
 {
@@ -117,7 +117,30 @@ namespace NexusIM.Controls
 					}
 					ContactList.Children.Insert(pos, item);
 				}
-			}); // Don't use async because we have a reader lock right now and we can't let it go because another thread might try to write to it
+			});
+		}
+		private void DeleteItem(UIElement element)
+		{
+			Storyboard anim = new Storyboard();
+			DoubleAnimation heightAnim = new DoubleAnimation();
+			Storyboard.SetTarget(heightAnim, element);
+			Storyboard.SetTargetProperty(heightAnim, new PropertyPath("(FrameworkElement.Height)"));
+
+			anim.Children.Add(heightAnim);
+			heightAnim.To = 0;
+			heightAnim.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+			heightAnim.EasingFunction = new PowerEase() { EasingMode = EasingMode.EaseIn };
+
+			DoubleAnimation opacityAnim = new DoubleAnimation();
+			Storyboard.SetTarget(opacityAnim, element);
+			Storyboard.SetTargetProperty(opacityAnim, new PropertyPath("(FrameworkElement.Opacity)"));
+
+			anim.Children.Add(opacityAnim);
+			opacityAnim.To = 0;
+			opacityAnim.Duration = new Duration(TimeSpan.FromSeconds(0.3));
+
+			anim.Completed += new EventHandler((sender, args) => ContactList.Children.Remove(element));
+			anim.Begin();
 		}
 
 		private void ContactListItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -142,7 +165,14 @@ namespace NexusIM.Controls
 			{
 				foreach (IContact contact in e.OldItems)
 				{
-
+					foreach (ContactListItem item in ContactList.Children)
+					{
+						if (item.Contact == contact)
+						{
+							Dispatcher.InvokeIfRequired(new UIElemDelegate(DeleteItem), args: item);
+							break;
+						}
+					}
 				}
 			}
 		}
@@ -158,6 +188,8 @@ namespace NexusIM.Controls
 			if (p.Y < ClickArea.ActualHeight)
 				IsExpanded = !IsExpanded;
 		}
+
+		private delegate void UIElemDelegate(UIElement elem);
 
 		protected override HitTestResult HitTestCore(PointHitTestParameters hitTestParameters)
 		{

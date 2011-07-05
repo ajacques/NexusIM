@@ -74,9 +74,6 @@
     <Compile Include="YParamCollTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\Common.accessor" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
       <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
       <Name>BaseProtocolLibrary</Name>
@@ -102,7 +99,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <Shadow Include="Test References\BaseProtocolLibrary.accessor" />
+    <Shadow Include="Test References\Common.accessor" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -202,7 +202,7 @@ namespace InstantMessage.Protocols.Yahoo
 			var buddies = from IMBuddy b in buddylist where b.Username == name select new { b };
 			foreach (var budd in buddies)
 			{
-				buddylist.Remove(budd.b);
+				buddylist.Remove(budd.b.Username);
 			}
 
 			IMBuddy buddy = new IMBuddy(this, name);
@@ -1221,22 +1221,6 @@ namespace InstantMessage.Protocols.Yahoo
 		private void updateMobileCarrierInfo()
 		{
 			return;
-
-			if (!mCompletedCarrierSetup)
-				return;
-
-			foreach (IMBuddy buddy in buddylist)
-			{
-				var carrier = (from CarrierInfo c in mCarriers 
-							   let y = buddy.Options["smscarrierid"] 
-							   where c.carrierid == y 
-							   select new { CompanyName = c.humanname, MaxChars = c.maxchars }).First();
-				if (carrier != null)
-				{
-					buddy.MaxMessageLength = carrier.MaxChars;
-					buddy.Options.Add("smscarriername", carrier.CompanyName);
-				}
-			}
 		}
 
 		/// <summary>

@@ -54,6 +54,22 @@ namespace ProtocolTests
 		public event EventHandler OnUserListReceived;
 		public event EventHandler OnJoin;
 		public event EventHandler<IMChatRoomGenericEventArgs> OnUserJoin;
+
+		
+		public void InviteUser(string username, string message)
+		{
+			throw new NotImplementedException();
+		}
+
+		IEnumerable<IContact> IChatRoom.Participants
+		{
+			get { throw new NotImplementedException(); }
+		}
+		
+		public void SendMessage(string message, MessageFlags flags = MessageFlags.None)
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	[TestClass]

@@ -40,11 +40,6 @@ namespace NexusWeb.Services
 			mRedisClient = new RedisClient(Settings.Default.RedisServer);
 		}
 
-		~ContactMap()
-		{
-			mRedisClient.Dispose();
-		}
-
 		[OperationContract]
 		[WebGet(ResponseFormat = WebMessageFormat.Json, UriTemplate="All")]
 		public IEnumerable<UserLocationData> QueryAllPoints()

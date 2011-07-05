@@ -79,6 +79,30 @@
 		</ResourceDictionary>
 	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
-		<TabControl x:Name="ChatAreas" Padding="0" SelectionChanged="ChatAreas_SelectionChanged" Height="Auto" Style="{DynamicResource CustomTabStyle}" />
+		<TabControl x:Name="ChatAreas" Padding="0" SelectionChanged="ChatAreas_SelectionChanged" Height="Auto" Style="{DynamicResource CustomTabStyle}" Visibility="Collapsed" />
+		<Grid x:Name="SingleArea" VerticalAlignment="Stretch" />
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="30" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<!-- Tab Buttons -->
+			<Grid Height="30">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="0.5*" />
+					<ColumnDefinition Width="0.5*" />
+				</Grid.ColumnDefinitions>
+				<Grid Margin="3,3,3,0" Height="27" MinWidth="100">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="16" />
+						<ColumnDefinition />
+						<ColumnDefinition Width="16"/>
+					</Grid.ColumnDefinitions>
+					<Rectangle Grid.ColumnSpan="3" Fill="#FFE5E5E5" RadiusX="3" RadiusY="3" Height="30" />
+					<TextBlock Text="My Really Long Username Is Everywhere" Grid.Column="1" Margin="5" TextTrimming="CharacterEllipsis" />
+					<TextBlock Text="×" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,-1.5,5,0" UseLayoutRounding="False" />
+				</Grid>
+			</Grid>
+		</Grid>
 	</Grid>
 </Window>

@@ -16,9 +16,6 @@ namespace NexusIM.Windows
 		public ChatWindow()
 		{
 			this.InitializeComponent();
-
-			mTabAreas = new List<ITabbedArea>();
-			mTabAreaSyncObject = new object();
 		}
 
 		public void AttachAreaAndShow(TabItem tabPage)
@@ -138,16 +135,7 @@ namespace NexusIM.Windows
 			return IntPtr.Zero;
 		}
 
-		public IEnumerable<ITabbedArea> TabAreas
-		{
-			get	{
-				lock (mTabAreaSyncObject)
-					return mTabAreas;
-			}
-		}
-
 		private int mUnread;
-		private List<ITabbedArea> mTabAreas;
-		private object mTabAreaSyncObject;
+		private int mTabCount;
 	}
 }
