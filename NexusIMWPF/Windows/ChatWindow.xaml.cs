@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using NexusIM.Controls;
 
 namespace NexusIM.Windows
@@ -26,18 +26,24 @@ namespace NexusIM.Windows
 				
 				host.HostWindow = this;
 			}
-			Dispatcher.BeginInvoke(new GenericEvent(() =>
-			{
-				ChatAreas.Items.Add(tabPage);
-				ChatAreas.SelectedItem = tabPage;
-			}));
+		}
+		public void AttachAreaAndShow(UIElement element)
+		{
+			Dispatcher.InvokeIfRequired(() =>
+				{
+					ChatArea.Children.Add(element);
+					Grid.SetRow(element, 1);
+
+					UIElement button = GenerateTabButton(element);
+
+					TabButtons.Children.Add(button);
+					TabButtons.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0.5, GridUnitType.Auto) });
+
+					Grid.SetColumn(button, TabButtons.ColumnDefinitions.Count - 1);
+				});
 		}
 		public void HandleTabClose(TabItem tabPage)
 		{
-			ChatAreas.Items.Remove(tabPage);
-
-			if (ChatAreas.Items.Count == 0)
-				this.Close();
 		}
 		public void IncrementUnread(int step = 1)
 		{
@@ -70,7 +76,7 @@ namespace NexusIM.Windows
 		{
 			base.OnSourceInitialized(e);
 
-			Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
+			UpdateGlass();
 		}
 		protected override void OnPreviewKeyDown(KeyEventArgs e)
 		{
@@ -106,15 +112,44 @@ namespace NexusIM.Windows
 
 		private void ChatAreas_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			this.Title = ChatAreas.SelectedItem.ToString();
-
 			UpdateWindowTitle();
 		}
 
 		// Private Functions
+		private UIElement GenerateTabButton(UIElement subItem)
+		{
+			Grid headerGrid = new Grid();
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(16) });
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(16) });
+			headerGrid.MinWidth = 100;
+
+			Rectangle rect = new Rectangle();
+
+			TextBlock mHeaderString = new TextBlock();
+			mHeaderString.Padding = new Thickness(2, 0, 5, 0);
+			mHeaderString.Text = subItem.ToString();
+			Grid.SetColumn(mHeaderString, 1);
+
+			Grid closeButtonGrid = new Grid();
+			Grid.SetColumn(closeButtonGrid, 2);
+
+			TextBlock closeButton = new TextBlock();
+			closeButton.Text = "×";
+			closeButton.HorizontalAlignment = HorizontalAlignment.Right;
+			closeButton.Margin = new Thickness(0, -1.5, 0, 0);
+			closeButton.UseLayoutRounding = false;
+			closeButton.HorizontalAlignment = HorizontalAlignment.Right;
+			closeButtonGrid.Children.Add(closeButton);
+
+			headerGrid.Children.Add(mHeaderString);
+			headerGrid.Children.Add(closeButtonGrid);
+
+			return headerGrid;
+		}
 		private void UpdateWindowTitle()
 		{
-			Dispatcher.InvokeIfRequired(() => {
+			/*Dispatcher.InvokeIfRequired(() => {
 				string msg;
 
 				if (mUnread == 0)
@@ -123,13 +158,17 @@ namespace NexusIM.Windows
 					msg = String.Format("[{0}] {1}", mUnread, ChatAreas.SelectedItem.ToString());
 
 				Title = msg;
-			});
+			});*/
+		}
+		private void UpdateGlass()
+		{
+			Aero.ExtendGlass(this, new Thickness(1, 31, 1, 0));
 		}
 		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
 			if (msg == Aero.WM_DWMCOMPOSITIONCHANGED)
 			{
-				Aero.ExtendGlass(this, new Thickness(1, 33, 1, 0));
+				UpdateGlass();
 				handled = true;
 			}
 			return IntPtr.Zero;

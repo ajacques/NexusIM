@@ -28,6 +28,10 @@ namespace NexusIM.Controls
 
 			MessageBody.DragEnter += new DragEventHandler(MessageBody_DragEnter);
 		}
+		public ContactChatArea(IContact contact) : this()
+		{
+			PopulateUIControls(contact);
+		}
 
 		private void MessageBody_DragEnter(object sender, DragEventArgs e)
 		{

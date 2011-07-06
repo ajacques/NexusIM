@@ -19,7 +19,7 @@ namespace NexusIM.Managers
 		{
 			ChatWindows = new ChatWindowCollection();
 			OtherWindows = new List<Window>();
-			ChatAreas = new SortedDictionary<AreaSortPoolKey, Tuple<ChatWindow, TabItem>>();
+			ChatAreas = new SortedDictionary<AreaSortPoolKey, Tuple<ChatWindow, UIElement>>();
 		}
 		public static void OpenContactListWindow()
 		{
@@ -41,8 +41,7 @@ namespace NexusIM.Managers
 		}
 		public static void OpenContactWindow(IContact contact, bool getFocus = true)
 		{
-			Func<TabItem> generator = () => { return new ContactChatAreaHost(contact); };
-			Tuple<ChatWindow, TabItem> tuple = PlaceInCorrectWindowPool(contact.Protocol, contact.Username, generator);
+			Tuple<ChatWindow, UIElement> tuple = PlaceInCorrectWindowPool(contact.Protocol, contact.Username, () => new ContactChatArea(contact));
 			
 			if (getFocus && !tuple.Item1.IsVisible)
 				DispatcherInvoke(() => tuple.Item1.Show());
@@ -51,8 +50,7 @@ namespace NexusIM.Managers
 		}
 		public static void OpenGroupChatWindow(IChatRoom chatRoom)
 		{
-			Func<TabItem> generator = () => { return new GroupChatAreaHost(chatRoom); };
-			Tuple<ChatWindow, TabItem> tuple = PlaceInCorrectWindowPool(chatRoom.Protocol, chatRoom.Name, generator);
+			Tuple<ChatWindow, UIElement> tuple = PlaceInCorrectWindowPool(chatRoom.Protocol, chatRoom.Name, () => new GroupChatAreaHost(chatRoom));
 
 			if (!tuple.Item1.IsVisible)
 				DispatcherInvoke(() => tuple.Item1.Show());
@@ -116,11 +114,11 @@ namespace NexusIM.Managers
 		/// <param name="poolObjectId">Specifies the object id that defines which window pool the TabItem goes in.</param>
 		/// <param name="mutator">Specifies a factory function that will return a newly created ChatArea (ex. ContactChatArea). Will be called if the ChatArea isn't already open.</param>
 		/// <returns>A tuple containing the ChatWindow and ChatArea.</returns>
-		public static Tuple<ChatWindow, TabItem> PlaceInCorrectWindowPool(IMProtocol protocol, string poolObjectId, Func<TabItem> mutator)
+		public static Tuple<ChatWindow, UIElement> PlaceInCorrectWindowPool(IMProtocol protocol, string poolObjectId, Func<UIElement> mutator)
 		{
 			AreaSortPoolKey key = new AreaSortPoolKey(protocol, poolObjectId); // Used to sort the binary tree
 
-			Tuple<ChatWindow, TabItem> tabItem = null;
+			Tuple<ChatWindow, UIElement> tabItem = null;
 			if (ChatAreas.TryGetValue(key, out tabItem)) // Quickly check to see if the Area is already open
 				return tabItem;
 
@@ -142,7 +140,7 @@ namespace NexusIM.Managers
 				ChatWindows.Add(-1, window);
 			}
 
-			TabItem item = null;
+			UIElement item = null;
 			// Never do anything other than UI-code on the UI thread
 			// We want to remain responsive at all times
 			DispatcherInvoke(() =>
@@ -226,7 +224,7 @@ namespace NexusIM.Managers
 			get;
 			private set;
 		}
-		private static SortedDictionary<AreaSortPoolKey, Tuple<ChatWindow, TabItem>> ChatAreas
+		private static SortedDictionary<AreaSortPoolKey, Tuple<ChatWindow, UIElement>> ChatAreas
 		{
 			get;
 			set;
