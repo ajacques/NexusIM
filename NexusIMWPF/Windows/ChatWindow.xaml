@@ -10,7 +10,7 @@
 	<Grid x:Name="LayoutRoot">
 		<Grid x:Name="ChatArea">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="30" />
+				<RowDefinition x:Name="TabRow" Height="30" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
 			<!-- Tab Buttons -->
@@ -24,7 +24,7 @@
 						<ColumnDefinition />
 						<ColumnDefinition Width="16"/>
 					</Grid.ColumnDefinitions>
-					<Rectangle Grid.ColumnSpan="3" Fill="#FFE5E5E5" RadiusX="3" RadiusY="3" Height="30" />
+					<Rectangle Grid.ColumnSpan="3" Fill="#FFEAEAEA" RadiusX="3" RadiusY="3" Height="30" />
 					<TextBlock Text="My Really Long Username Is Everywhere" Grid.Column="1" Margin="5" TextTrimming="CharacterEllipsis" />
 					<TextBlock Text="×" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,-1.5,5,0" UseLayoutRounding="False" />
 				</Grid>

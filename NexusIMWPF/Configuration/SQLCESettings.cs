@@ -562,6 +562,14 @@ namespace NexusIM
 								IRCProtocol irc = new IRCProtocol();
 								irc.Nickname = current.AccountSettings.Where(ac => ac.Key == "nickname").Select(ac => ac.Value).FirstOrDefault();
 								irc.RealName = current.AccountSettings.Where(ac => ac.Key == "realname").Select(ac => ac.Value).FirstOrDefault();
+								string port = current.AccountSettings.Where(ac => ac.Key == "port").Select(ac => ac.Value).FirstOrDefault();
+								int nPort;
+								if (!String.IsNullOrWhiteSpace(port) && Int32.TryParse(port, out nPort))
+									irc.Port = nPort;
+								string ssl = current.AccountSettings.Where(ac => ac.Key == "sslenabled").Select(ac => ac.Value).FirstOrDefault();
+								bool bSsl;
+								if (!String.IsNullOrWhiteSpace(port) && Boolean.TryParse(ssl, out bSsl))
+									irc.SslEnabled = bSsl;
 
 								protocol = irc;
 								break;

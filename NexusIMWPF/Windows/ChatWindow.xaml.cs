@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
 using NexusIM.Controls;
+using System.Windows.Media;
 
 namespace NexusIM.Windows
 {
@@ -16,6 +17,8 @@ namespace NexusIM.Windows
 		public ChatWindow()
 		{
 			this.InitializeComponent();
+
+			TabRow.Height = new GridLength(0);
 		}
 
 		public void AttachAreaAndShow(TabItem tabPage)
@@ -41,6 +44,8 @@ namespace NexusIM.Windows
 
 					Grid.SetColumn(button, TabButtons.ColumnDefinitions.Count - 1);
 				});
+			mMainPane = element;
+			UpdateWindowTitle();
 		}
 		public void HandleTabClose(TabItem tabPage)
 		{
@@ -123,12 +128,20 @@ namespace NexusIM.Windows
 			headerGrid.ColumnDefinitions.Add(new ColumnDefinition());
 			headerGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(16) });
 			headerGrid.MinWidth = 100;
+			headerGrid.Margin = new Thickness(3, 3, 3, 0);
 
 			Rectangle rect = new Rectangle();
+			rect.RadiusX = 3;
+			rect.RadiusY = 3;
+			rect.Height = 30;
+			rect.Fill = new SolidColorBrush(Color.FromArgb(0xff, 0xea, 0xea, 0xea));
+			headerGrid.Children.Add(rect);
+			Grid.SetColumnSpan(rect, 3);
 
 			TextBlock mHeaderString = new TextBlock();
-			mHeaderString.Padding = new Thickness(2, 0, 5, 0);
+			mHeaderString.Padding = new Thickness(5);
 			mHeaderString.Text = subItem.ToString();
+			mHeaderString.TextTrimming = TextTrimming.CharacterEllipsis;
 			Grid.SetColumn(mHeaderString, 1);
 
 			Grid closeButtonGrid = new Grid();
@@ -149,6 +162,17 @@ namespace NexusIM.Windows
 		}
 		private void UpdateWindowTitle()
 		{
+			Dispatcher.InvokeIfRequired(() =>
+			{
+				string msg;
+
+				if (mUnread == 0)
+					msg = mMainPane.ToString();
+				else
+					msg = String.Format("[{0}] {1}", mUnread, mMainPane.ToString());
+
+				Title = msg;
+			});
 			/*Dispatcher.InvokeIfRequired(() => {
 				string msg;
 
@@ -162,7 +186,7 @@ namespace NexusIM.Windows
 		}
 		private void UpdateGlass()
 		{
-			Aero.ExtendGlass(this, new Thickness(1, 31, 1, 0));
+			//Aero.ExtendGlass(this, new Thickness(1, 31, 1, 0));
 		}
 		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
@@ -174,6 +198,7 @@ namespace NexusIM.Windows
 			return IntPtr.Zero;
 		}
 
+		private UIElement mMainPane;
 		private int mUnread;
 		private int mTabCount;
 	}

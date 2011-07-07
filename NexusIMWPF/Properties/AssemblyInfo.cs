@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Markup;
 using System.Resources;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security;
+using System.Windows;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -58,3 +58,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: CLSCompliant(true)]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
+[assembly: SecurityRules(SecurityRuleSet.Level2)]

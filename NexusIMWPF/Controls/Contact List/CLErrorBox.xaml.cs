@@ -8,6 +8,8 @@ using System.Net.Sockets;
 using InstantMessage;
 using NexusIM.Managers;
 using NexusIM.Windows;
+using InstantMessage.Events;
+using System.Windows.Documents;
 
 namespace NexusIM.Controls
 {
@@ -19,26 +21,41 @@ namespace NexusIM.Controls
 		public CLErrorBox()
 		{
 			InitializeComponent();
-
-			ProtocolString.Text = "test";
 		}
 
 		public void PopulateControls(IMProtocolWrapper protocol, SocketException exception)
 		{
 			PopulateProtocolControls(protocol.Protocol);
-
 			ErrorString.Text = exception.Message;
-
 			mProtocol = protocol;
+
+			AddLink("Reconnect", new RoutedEventHandler(ReconnectLink_Click));
+			AddLink("Edit", new RoutedEventHandler(EditLink_Click));
+			AddLink("Disable", new RoutedEventHandler(DisableLink_Click));
 		}
-		private void PopulateProtocolControls(IMProtocol protocol)
+		public void PopulateProtocolControls(IMProtocol protocol)
 		{
-			ProtocolString.Text = protocol.ToString();
+			Dispatcher.InvokeIfRequired(() => ProtocolString.Text = protocol.ToString());
+		}
+		public void SetErrorString(string message)
+		{
+			Dispatcher.InvokeIfRequired(() => ErrorString.Text = message);
 		}
 		private void Close()
 		{
 			Panel panel = (Panel)Parent;
 			panel.Children.Remove(this);
+		}
+		public void AddLink(string body, RoutedEventHandler handler)
+		{
+			if (LinkBox.Inlines.Count >= 1)
+				LinkBox.Inlines.Add(new Run(" ▪ "));;
+
+			Hyperlink link = new Hyperlink();
+			link.Inlines.Add(new Run(body));
+			link.TextDecorations = null;
+			link.Click += handler;
+			LinkBox.Inlines.Add(link);
 		}
 
 		// Event handlers

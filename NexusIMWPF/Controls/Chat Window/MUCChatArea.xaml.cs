@@ -29,8 +29,14 @@ namespace NexusIM.Controls
 
 			mMessageHistory = new LinkedList<string>();
 		}
+		public MUCChatArea(IChatRoom chatRoom)
+		{
+			PopulateUIControls(chatRoom);
 
-		internal void PopulateUIControls(IChatRoom room, GroupChatAreaHost host)
+			mChatRoom = chatRoom;
+		}
+
+		internal void PopulateUIControls(IChatRoom room)
 		{
 			mChatRoom = room;
 			mProtocol = room.Protocol;

@@ -18,6 +18,7 @@ using NexusIM.Windows;
 using NexusIM.Controls;
 using Microsoft.Win32;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace NexusIM.Managers
 {
@@ -233,7 +234,6 @@ namespace NexusIM.Managers
 							wrapper.ErrorBackoff = new ProtocolErrorBackoff(wrapper);
 
 						break;
-						break;
 					default:
 						traceString.Append("Response: Alert User");
 
@@ -250,6 +250,7 @@ namespace NexusIM.Managers
 				Trace.WriteLine(traceString);
 			} else if (e is CertErrorEventArgs) { // Certificate Errors warn us about problems with the transport layer authentication
 				CertErrorEventArgs certError = (CertErrorEventArgs)e;
+				// Do some logging
 				StringBuilder error = new StringBuilder();
 				error.Append("AccountManager: X.509 Certificate Chain Error");
 				error.AppendFormat(" ({0}) ", certError.PolicyErrors.ToString());
@@ -260,9 +261,39 @@ namespace NexusIM.Managers
 
 				Trace.Write(error);
 
-				certError.Continue = true;
+				// Now verify the thumbprint
+				string thumbprint = certError.Certificate.GetCertHashString();
+				string prevprint;
+				if (protocol.ConfigurationSettings.TryGetValue("sslthumbprint", out prevprint)) // Check to see if we already have a thumbprint
+				{
+					if (thumbprint != prevprint)
+					{
+						// High priority problem - New SSL Certificate
+						byte[] certData = certError.Certificate.Export(X509ContentType.Cert); // We have to export it because the X509Certificate class has some funky CLR Security settings on it prevent cross thread access
+						WindowSystem.DispatcherInvoke(() =>
+							{
+								CLErrorBox box = new CLErrorBox();
+								box.PopulateProtocolControls(protocol);
+								box.SetErrorString("The server's certificate has changed.");
+								box.AddLink("Accept", (t, g) => {} );
+								box.AddLink("View Details", (t, g) => OpenCertDetailsWindow(certData));
+
+								WindowSystem.ContactListWindow.OpenErrorBox(box);
+							});
+					} else
+						certError.Continue = true; // The user previously accepted this certificate
+				}
 			} else
 				Trace.WriteLine("AccountManager: An IMProtocol.Error event was thrown that the AccountManager can not handle (Type: " + e.GetType().FullName + ")");
+		}
+		private static void OpenCertDetailsWindow(byte[] certdata)
+		{
+			X509Certificate2 certificate = new X509Certificate2(certdata);
+
+			TLSCertificateDetails window = new TLSCertificateDetails();
+			window.PopulateControls(certificate);
+			window.Owner = WindowSystem.ContactListWindow;
+			window.Show();
 		}
 
 		public static event EventHandler<StatusUpdateEventArgs> StatusChanged;

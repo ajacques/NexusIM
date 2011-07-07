@@ -50,7 +50,7 @@ namespace NexusIM.Managers
 		}
 		public static void OpenGroupChatWindow(IChatRoom chatRoom)
 		{
-			Tuple<ChatWindow, UIElement> tuple = PlaceInCorrectWindowPool(chatRoom.Protocol, chatRoom.Name, () => new GroupChatAreaHost(chatRoom));
+			Tuple<ChatWindow, UIElement> tuple = PlaceInCorrectWindowPool(chatRoom.Protocol, chatRoom.Name, () => new MUCChatArea(chatRoom));
 
 			if (!tuple.Item1.IsVisible)
 				DispatcherInvoke(() => tuple.Item1.Show());
@@ -74,14 +74,11 @@ namespace NexusIM.Managers
 		}
 		public static void DispatcherInvoke(GenericEvent target, bool asAsync = true)
 		{
-			if (!Application.Dispatcher.CheckAccess())
-			{
-				if (asAsync)
-					Application.Dispatcher.BeginInvoke(target);
-				else
-					Application.Dispatcher.Invoke(target);
-			} else
-				target();
+			Application.Dispatcher.InvokeIfRequired(target, asAsync);
+		}
+		public static void DispatcherInvoke(Delegate target, bool useAsync = true, params object[] args)
+		{
+			Application.Dispatcher.InvokeIfRequired(target, useAsync, args);
 		}
 		public static Window OpenSingletonWindow(Type windowType)
 		{

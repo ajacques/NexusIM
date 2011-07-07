@@ -31,24 +31,28 @@ namespace NexusIM.Windows
 			AggregateContactList.Groups.CollectionChanged += new NotifyCollectionChangedEventHandler(ContactList_Changed);
 		}
 
+		public void OpenErrorBox(CLErrorBox box)
+		{
+			Storyboard anim = new Storyboard();
+			DoubleAnimation dblAnim = new DoubleAnimation();
+			dblAnim.Duration = new Duration(TimeSpan.FromMilliseconds(250));
+			dblAnim.From = 0;
+			dblAnim.To = 50;
+			anim.Children.Add(dblAnim);
+
+			Storyboard.SetTarget(anim, box);
+			Storyboard.SetTargetProperty(anim, new PropertyPath("(FrameworkElement.Height)"));
+
+			BottomFillPanel.Children.Add(box);
+			//anim.Begin();
+		}
 		public void InsertErrorBox(IMProtocolWrapper protocol, SocketErrorEventArgs e)
 		{
 			Dispatcher.InvokeIfRequired(() => {
 				CLErrorBox box = new CLErrorBox();
 				box.PopulateControls(protocol, e.Exception);
 
-				Storyboard anim = new Storyboard();
-				DoubleAnimation dblAnim = new DoubleAnimation();
-				dblAnim.Duration = new Duration(TimeSpan.FromMilliseconds(250));
-				dblAnim.From = 0;
-				dblAnim.To = 50;
-				anim.Children.Add(dblAnim);
-
-				Storyboard.SetTarget(anim, box);
-				Storyboard.SetTargetProperty(anim, new PropertyPath("(FrameworkElement.Height)"));
-				
-				BottomFillPanel.Children.Add(box);
-				//anim.Begin();
+				OpenErrorBox(box);
 			});
 		}
 

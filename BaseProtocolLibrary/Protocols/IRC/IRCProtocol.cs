@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using InstantMessage.Events;
+using System.Security.Authentication;
 
 namespace InstantMessage.Protocols.Irc
 {
@@ -74,7 +75,8 @@ namespace InstantMessage.Protocols.Irc
 		{
 			try	{
 				sendData("QUIT");
-			} catch (IOException) {}
+			} catch (IOException) {
+			} catch (NullReferenceException) {}
 
 			client.Disconnect(false);
 
@@ -408,7 +410,7 @@ namespace InstantMessage.Protocols.Irc
 		public bool SslEnabled
 		{
 			get;
-			private set;
+			set;
 		}
 		public bool IsOperator
 		{
@@ -843,7 +845,13 @@ namespace InstantMessage.Protocols.Irc
 		private void CompleteSslNegotiation(IAsyncResult e)
 		{
 			SslStream sslstream = (SslStream)e.AsyncState;
-			sslstream.EndAuthenticateAsClient(e);
+			try	{
+				sslstream.EndAuthenticateAsClient(e);
+			} catch (AuthenticationException ex) {
+				Trace.WriteLine("IRC: Failed to complete SSL Handshake: " + ex.Message.ToString());
+				Disconnect();
+				return;
+			}
 
 			Trace.WriteLine("IRC: SSL Handshake complete. Continuing");
 

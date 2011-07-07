@@ -30,6 +30,8 @@ namespace NexusIM.Controls
 		}
 		public ContactChatArea(IContact contact) : this()
 		{
+			Contact = contact;
+
 			PopulateUIControls(contact);
 		}
 
@@ -109,6 +111,15 @@ namespace NexusIM.Controls
 			block.Inlines.Add(new Run(input.PathAndQuery));
 
 			return block;
+		}
+
+		public override string ToString()
+		{
+			if (contact == null)
+				return base.ToString();
+			if (contact.Nickname == null)
+				return contact.Username;
+			return contact.Nickname;
 		}
 
 		protected override void OnGotFocus(RoutedEventArgs e)
@@ -262,7 +273,7 @@ namespace NexusIM.Controls
 				return contact;
 			}
 			set {
-				DataContext = contact = value;
+				contact = value;
 				contact.Protocol.onDisconnect += new EventHandler<IMDisconnectEventArgs>(Protocol_OnDisconnect);
 				contact.Protocol.LoginCompleted += new EventHandler(Protocol_LoginCompleted);
 			}

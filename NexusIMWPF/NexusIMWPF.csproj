@@ -264,6 +264,9 @@
     <Compile Include="Windows\SysTrayPeekWindow.xaml.cs">
       <DependentUpon>SysTrayPeekWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\TLSCertificateDetails.xaml.cs">
+      <DependentUpon>TLSCertificateDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ToasterNotification.xaml.cs">
       <DependentUpon>ToasterNotification.xaml</DependentUpon>
     </Compile>
@@ -464,6 +467,10 @@
     <Page Include="Windows\SysTrayPeekWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\TLSCertificateDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ToasterNotification.xaml">
       <Generator>MSBuild:Compile</Generator>
