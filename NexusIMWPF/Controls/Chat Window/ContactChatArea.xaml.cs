@@ -128,6 +128,13 @@ namespace NexusIM.Controls
 
 			MessageBody.Focus();
 		}
+		protected override void OnVisualParentChanged(DependencyObject oldParent)
+		{
+			base.OnVisualParentChanged(oldParent);
+
+			Window parent = Window.GetWindow(this);
+			parent.Closed += new EventHandler(Window_Closed);
+		}
 
 		// Event Handlers
 		private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -237,6 +244,10 @@ namespace NexusIM.Controls
 		private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
 		{
 			MessageBody.Focus();
+		}
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			
 		}
 
 		// Protocol Events

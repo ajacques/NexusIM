@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
@@ -928,7 +927,7 @@ namespace InstantMessage.Protocols.Yahoo
 			authpkt.AddParameter(2, "1");
 			authpkt.AddParameter(244, "16777151"); // Build number
 			authpkt.AddParameter(98, "us");
-			authpkt.AddParameter(135, "11.0.0.1751"); // Version Info			
+			authpkt.AddParameter(135, "11.0.0.1751"); // Version Info
 			authpkt.AddParameter(300, "508");
 			authpkt.AddParameter(500, "000000000000"); // MAC address - We're not going to submit it
 			authpkt.AddParameter(510, "0");
@@ -1336,8 +1335,8 @@ namespace InstantMessage.Protocols.Yahoo
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
 		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
-		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgrb&login={0}&passwd={1}";
-		private const string mAuthCookieGetUrl = "https://login.yahoo.com/config/pwtoken_login?src=ymsgrb&token={0}";
+		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
+		private const string mAuthCookieGetUrl = "https://login.yahoo.com/config/pwtoken_login?src=ymsgr&token={0}";
 		private static Encoding dEncoding = Encoding.ASCII;
 		
 		public enum YahooIMVironment

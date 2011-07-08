@@ -28,12 +28,11 @@ namespace NexusIM.Controls
 			InitializeComponent();
 
 			mMessageHistory = new LinkedList<string>();
+			mHistoryRoot = mMessageHistory.AddFirst(String.Empty);
 		}
-		public MUCChatArea(IChatRoom chatRoom)
+		public MUCChatArea(IChatRoom chatRoom) : this()
 		{
 			PopulateUIControls(chatRoom);
-
-			mChatRoom = chatRoom;
 		}
 
 		internal void PopulateUIControls(IChatRoom room)
@@ -252,7 +251,10 @@ namespace NexusIM.Controls
 			mWindow = Window.GetWindow(this);
 			mWindowPointer = new WindowInteropHelper(mWindow).Handle;
 			MessageBody.Focus();
+
+			mWindow.Closed += new EventHandler(Window_Closed);
 		}
+
 		protected override void OnInitialized(EventArgs e)
 		{
 			base.OnInitialized(e);
@@ -304,7 +306,7 @@ namespace NexusIM.Controls
 				if (ProcessSendMessage(message))
 					MessageBody.Text = String.Empty;
 
-				mHistoryNode = mHistoryNode = mMessageHistory.AddFirst(message);
+				mHistoryNode = mMessageHistory.AddAfter(mHistoryRoot, message);
 			} else if (e.Key == Key.Tab) {
 				e.Handled = true;
 				string lastword = MessageBody.Text.Substring(MessageBody.Text.LastIndexOf(' ') + 1);
@@ -388,6 +390,10 @@ namespace NexusIM.Controls
 		{
 			HideAllOverlays();
 		}
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			ChatRoom.Leave(null);
+		}
 
 		// Chat Room Event Handlers
 		private void ChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
@@ -400,7 +406,7 @@ namespace NexusIM.Controls
 		}
 		private void ChatRoom_OnUserJoin(object sender, IMChatRoomGenericEventArgs e)
 		{
-			ChatHistory.Dispatcher.InvokeIfRequired(() => {
+			Dispatcher.InvokeIfRequired(() => {
 				Span span = new Span();
 				Run user = new Run(e.Username.Nickname);
 				Run message = new Run(" has entered the room.");
@@ -417,7 +423,7 @@ namespace NexusIM.Controls
 		}
 		private void IrcChannel_OnUserPart(object sender, IMChatRoomGenericEventArgs e)
 		{
-			ChatHistory.Dispatcher.InvokeIfRequired(() =>
+			Dispatcher.InvokeIfRequired(() =>
 			{
 				Span span = new Span();
 				Run user = new Run(e.Username.Nickname);
@@ -433,6 +439,8 @@ namespace NexusIM.Controls
 				span.Inlines.Add(user);
 				span.Inlines.Add(message);
 				AppendChatInline(span);
+
+				OccupantList.Items.Remove(e.Username);
 			});
 		}
 		private void IrcChannel_OnKicked(object sender, IMChatRoomGenericEventArgs e)
@@ -466,6 +474,8 @@ namespace NexusIM.Controls
 				container.Child = autoRejoin;
 
 				AppendChatInline(span);
+
+				OccupantList.Items.Remove(e.Username);
 			});
 		}
 		private void IrcChannel_TopicChanged(object sender, IMChatRoomGenericEventArgs e)
@@ -490,7 +500,7 @@ namespace NexusIM.Controls
 							if (mode.IsAdd)
 								span.Inlines.Add(new Run(" is now a channel operator."));
 							else
-								span.Inlines.Add(new Run(" is no-longer a channel operator."));
+								span.Inlines.Add(new Run(" is no longer a channel operator."));
 							
 							ChatHistory.AppendInline(span);
 						});

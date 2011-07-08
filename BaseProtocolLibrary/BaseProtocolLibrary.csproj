@@ -85,6 +85,7 @@
     <Compile Include="Protocols\Interfaces\IContact.cs" />
     <Compile Include="Protocols\Interfaces\IHasPresence.cs" />
     <Compile Include="Protocols\Interfaces\IMessagable.cs" />
+    <Compile Include="Protocols\Interfaces\IProtocol.cs" />
     <Compile Include="Protocols\IRC\IRCChannel.cs" />
     <Compile Include="Protocols\IRC\IRCEnums.cs" />
     <Compile Include="Protocols\IRC\IRCProtocol.cs" />
@@ -134,7 +135,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

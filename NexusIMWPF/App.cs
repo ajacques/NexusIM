@@ -44,11 +44,21 @@ namespace NexusIMWPF
 				this.Shutdown();
 				return;
 			}
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			ThreadPool.QueueUserWorkItem(new WaitCallback(DoInit), null);
 
 			WindowSystem.RegisterApp(this);
 			this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 			this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
+		}
+
+		private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Exception exception = (Exception)e.ExceptionObject;
+			exception = exception.GetBaseException();
+
+			Trace.WriteLine("Unhandled Exception: " + exception.Message);
+			Trace.WriteLine(exception.StackTrace);
 		}
 
 		private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

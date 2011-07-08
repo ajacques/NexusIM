@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows;
+using NexusIM.Misc;
 
 namespace NexusIM.Controls
 {
@@ -15,18 +12,23 @@ namespace NexusIM.Controls
 		{
 			mUsername = new Run();
 			mMessage = new Run();
+			mTimestamp = new Run();
 
 			mUsername.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
+			mTimestamp.Text = String.Format(CultureInfo.InstalledUICulture, SettingCache.GetValue("ChatMsgTimestampFormat"), DateTime.Now);
+			mTimestamp.Foreground = mUsername.Foreground;
 
+			this.Inlines.Add(mTimestamp);
+			this.Inlines.Add(new Run(" "));
 			this.Inlines.Add(mUsername);
-			this.Inlines.Add(new Run() { Text = ":  "});
+			this.Inlines.Add(new Run(": "));
 			this.Inlines.Add(mMessage);
 		}
 
 		public Color UsernameColor
 		{
 			set	{
-				mUsername.Foreground = new SolidColorBrush(value);
+				mTimestamp.Foreground = mUsername.Foreground = new SolidColorBrush(value);
 			}
 		}
 		public string Username
@@ -53,6 +55,7 @@ namespace NexusIM.Controls
 			base.OnInitialized(e);
 		}
 
+		private Run mTimestamp;
 		private Run mUsername;
 		private Run mMessage;
 	}

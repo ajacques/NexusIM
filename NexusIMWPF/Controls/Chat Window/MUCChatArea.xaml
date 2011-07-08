@@ -37,7 +37,15 @@
 				<RowDefinition Height="48" />
 				<RowDefinition />
 			</Grid.RowDefinitions>
-			<TextBlock Margin="5,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Effect="{DynamicResource SubtleShadow}" TextTrimming="CharacterEllipsis">
+			<Rectangle Margin="0,0,0,-5">
+				<Rectangle.Fill>
+					<LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+						<GradientStop Color="WhiteSmoke" Offset="0.942" />
+						<GradientStop Color="White" Offset="1" />
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+			<TextBlock Margin="5,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" TextTrimming="CharacterEllipsis">
 				<Run x:Name="RoomName" FontFamily="Tahoma" FontSize="24">#main</Run>
 				<Run x:Name="OccupantCount" FontSize="9" Foreground="Gray">64</Run>
 				<Run FontSize="9" Foreground="Gray">people</Run>
@@ -55,7 +63,7 @@
 				<TextBlock Text="menu" Margin="0,-4,2,0" FontFamily="Tahoma" />
 				<Polygon HorizontalAlignment="Right" Width="9" Height="9" Points="1,1 8,1 4.5,7 1,1" Fill="#FF075152" Stroke="#FF075152" Grid.Column="1" />
 			</Grid>
-			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis" Effect="{DynamicResource SubtleShadow}" />
+			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis"/>
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
 			<nxc:ChatHistoryBox Grid.Row="1" x:Name="ChatHistory" VerticalAlignment="Bottom" />
 		</Grid>

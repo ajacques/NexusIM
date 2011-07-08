@@ -79,7 +79,7 @@ namespace InstantMessage
 	/// Stores information and handles communication for specific IM networks
 	/// </summary>
 	[IMNetwork("default")]
-	public class IMProtocol : INotifyPropertyChanged, IComparable<IMProtocol>
+	public class IMProtocol : INotifyPropertyChanged, IComparable<IMProtocol>, IProtocol
 	{
 		public IMProtocol()
 		{
