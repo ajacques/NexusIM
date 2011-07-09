@@ -13,14 +13,18 @@ namespace NexusIM.Controls
 			mUsername = new Run();
 			mMessage = new Run();
 			mTimestamp = new Run();
+			mAuthSpan = new Span();
 
 			mUsername.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
-			mTimestamp.Text = String.Format(CultureInfo.InstalledUICulture, SettingCache.GetValue("ChatMsgTimestampFormat"), DateTime.Now);
+			mTimestamp.Text = DateTime.Now.ToString(SettingCache.GetValue("ChatMsgTimestampFormat"));
 			mTimestamp.Foreground = mUsername.Foreground;
 
-			this.Inlines.Add(mTimestamp);
-			this.Inlines.Add(new Run(" "));
-			this.Inlines.Add(mUsername);
+			mAuthSpan.Inlines.Add(new Run("["));
+			mAuthSpan.Inlines.Add(mTimestamp);
+			mAuthSpan.Inlines.Add(new Run("] "));
+			mAuthSpan.Inlines.Add(mUsername);
+
+			this.Inlines.Add(mAuthSpan);
 			this.Inlines.Add(new Run(": "));
 			this.Inlines.Add(mMessage);
 		}
@@ -28,7 +32,7 @@ namespace NexusIM.Controls
 		public Color UsernameColor
 		{
 			set	{
-				mTimestamp.Foreground = mUsername.Foreground = new SolidColorBrush(value);
+				mAuthSpan.Foreground = new SolidColorBrush(value);
 			}
 		}
 		public string Username
@@ -55,6 +59,7 @@ namespace NexusIM.Controls
 			base.OnInitialized(e);
 		}
 
+		private Span mAuthSpan;
 		private Run mTimestamp;
 		private Run mUsername;
 		private Run mMessage;

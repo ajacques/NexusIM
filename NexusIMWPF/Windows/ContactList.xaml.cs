@@ -214,6 +214,11 @@ namespace NexusIM.Windows
 			window.Owner = this;
 			window.ShowDialog();
 		}
+		private void Options_Click(object sender, RoutedEventArgs e)
+		{
+			AppOptionsWindow window = new AppOptionsWindow();
+			window.Show();
+		}
 
 		// Status Message Related Event handlers
 		private void SetStatusMessage_Click(object sender, RoutedEventArgs e)

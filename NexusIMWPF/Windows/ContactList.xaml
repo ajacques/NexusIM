@@ -147,6 +147,8 @@
 			<MenuItem Header="Tools">
 				<MenuItem Header="Join a Chat Room" Click="JoinRoom_Click" />
 				<MenuItem Header="My Accounts" Click="EditAccounts_Click" />
+				<Separator />
+				<MenuItem Header="Options" Click="Options_Click" />
 			</MenuItem>
 			<MenuItem Header="Help">
 				<MenuItem Header="About" Click="AboutMenuItem_Click" />

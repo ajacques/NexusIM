@@ -231,6 +231,9 @@
     <Compile Include="Windows\AddContactWindow.xaml.cs">
       <DependentUpon>AddContactWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\AppOptionsWindow.xaml.cs">
+      <DependentUpon>AppOptionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ChatHistory.xaml.cs">
       <DependentUpon>ChatHistory.xaml</DependentUpon>
     </Compile>
@@ -423,6 +426,10 @@
     <Page Include="Windows\AddContactWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\AppOptionsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ChatHistory.xaml">
       <SubType>Designer</SubType>
