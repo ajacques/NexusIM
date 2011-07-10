@@ -86,7 +86,7 @@ namespace NexusIMWPF
 		{
 			IPCHandler.StartServer();
 			AccountManager.Setup();
-			NotificationQueue.EventWireup();
+			//NotificationQueue.EventWireup();
 		}
 		private static void LoadAccounts(object state)
 		{

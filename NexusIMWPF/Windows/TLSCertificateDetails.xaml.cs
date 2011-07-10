@@ -30,8 +30,8 @@ namespace NexusIM.Windows
 			Unit.Text = commonname.ReadLine().Substring(3);
 			CommonName.Text = commonname.ReadLine().Substring(3);
 
-			IssueDate.Text = certificate.NotBefore.ToString(CultureInfo.CurrentUICulture);
-			ExpireDate.Text = certificate.NotAfter.ToString(CultureInfo.CurrentUICulture);
+			IssueDate.Text = certificate.NotBefore.ToString(CultureInfo.InstalledUICulture);
+			ExpireDate.Text = certificate.NotAfter.ToString(CultureInfo.InstalledUICulture);
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows.Documents;
 using System.Windows.Media;
 using NexusIM.Misc;
@@ -15,10 +14,9 @@ namespace NexusIM.Controls
 			mTimestamp = new Run();
 			mAuthSpan = new Span();
 
-			mUsername.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
+			mAuthSpan.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
 			mTimestamp.Text = DateTime.Now.ToString(SettingCache.GetValue("ChatMsgTimestampFormat"));
-			mTimestamp.Foreground = mUsername.Foreground;
-
+			
 			mAuthSpan.Inlines.Add(new Run("["));
 			mAuthSpan.Inlines.Add(mTimestamp);
 			mAuthSpan.Inlines.Add(new Run("] "));
@@ -52,11 +50,6 @@ namespace NexusIM.Controls
 			set	{
 				mMessage.Text = value;
 			}
-		}
-
-		protected override void OnInitialized(EventArgs e)
-		{
-			base.OnInitialized(e);
 		}
 
 		private Span mAuthSpan;

@@ -12,9 +12,16 @@
 				<TabItem Header="Messages">
 					<ScrollViewer>
 						<StackPanel Margin="3,3,0,0">
-							<GroupBox Header="Format">
+							<GroupBox Header="Timestamp Format">
 								<StackPanel>
-									<ListView x:Name="ChatMsgStampFormat" />
+									<TextBlock>
+										<Hyperlink TextDecorations="None" Click="CustomMsgStampHelp_Click">Custom Timestamp Help</Hyperlink>
+									</TextBlock>
+									<ListView x:Name="ChatMsgStampFormat">
+										<ListViewItem>
+											<TextBox x:Name="CustomMsgStamp" Width="260" GotFocus="CustomMsgStamp_GotFocus" />
+										</ListViewItem>
+									</ListView>
 								</StackPanel>
 							</GroupBox>
 						</StackPanel>
@@ -22,6 +29,6 @@
 				</TabItem>
 			</TabControl>
 		</Grid>
-		<Button Content="Save" HorizontalAlignment="Right" Margin="0,9,8,8" Width="75" Grid.Row="1" />
+		<Button Content="Save" HorizontalAlignment="Right" Margin="0,9,8,8" Width="75" Grid.Row="1" Click="SaveButton_Click" />
 	</Grid>
 </Window>

@@ -54,7 +54,7 @@ namespace InstantMessage.Protocols.SIP
 				get;
 				set;
 			}
-			protected IDictionary<string, string> Headers
+			public IDictionary<string, string> Headers
 			{
 				get;
 				private set;
@@ -100,13 +100,12 @@ namespace InstantMessage.Protocols.SIP
 			}
 		}
 
-		private string ProcessDigestAuth(string crypto, string realm, string nonce)
+		private string ComputeMD5Hash(string input)
 		{
-			HashAlgorithm algorithm = HashAlgorithm.Create(crypto);
+			if (mMD5Hash == null)
+				mMD5Hash = new MD5Cng();
 
-			string input = Username + ":" + realm + ":" + Password;
-
-			byte[] output = algorithm.ComputeHash(Encoding.Default.GetBytes(input));
+			byte[] output = mMD5Hash.ComputeHash(Encoding.Default.GetBytes(input));
 
 			StringBuilder builder = new StringBuilder(32);
 			for (int i = 0; i < output.Length; i++)
@@ -114,14 +113,33 @@ namespace InstantMessage.Protocols.SIP
 
 			return builder.ToString();
 		}
+		private string ProcessDigestAuth(string crypto, string realm, string nonce)
+		{
+			if (mA1Hash == null)
+			{
+				string input = Username + ":" + realm + ":" + Password;
+				mA1Hash = ComputeMD5Hash(input);
+			}
+			
+			string a2 = ComputeMD5Hash("REGISTER:sip:" + Server);
+
+			string final = ComputeMD5Hash(mA1Hash + ":" + nonce + ":" + a2);
+
+			return final;
+		}
 		private void ProcessUnauthorized(TextReader reader)
 		{
 			SIPPacket packet = null;
-			string authline;
+			string authline = null;
+			string realm = null;
+			string nonce = null;
 
 			while (reader.Peek() != -1)
 			{
 				string line = reader.ReadLine();
+				if (String.IsNullOrEmpty(line))
+					break;
+
 				int headerPoint = line.IndexOf(':') + 1;
 				string header = line.Substring(0, headerPoint - 1);
 				string value = line.Substring(headerPoint + 1);
@@ -139,8 +157,8 @@ namespace InstantMessage.Protocols.SIP
 						{
 							case "Digest":
 								string algo = parts[0].Substring(11);
-								string realm = parts[1].Substring(8, parts[1].Length - 9);
-								string nonce = parts[2].Substring(8, parts[2].Length - 9);
+								realm = parts[1].Substring(8, parts[1].Length - 9);
+								nonce = parts[2].Substring(8, parts[2].Length - 9);
 
 								authline = ProcessDigestAuth(algo, realm, nonce);
 								break;
@@ -150,6 +168,23 @@ namespace InstantMessage.Protocols.SIP
 						}
 						break;
 				}
+			}
+
+			if (packet != null && authline != null)
+			{
+				// Digest username=\"adam\", realm=\"asterisk\", nonce=\"4774c314\", uri=\"sip:192.168.2.217\", response=\"52f9ebebadfea2dde23e0308b95e9e7d\", algorithm=MD5
+				StringBuilder builder = new StringBuilder();
+				builder.Append("Digest ");
+				builder.AppendFormat("username=\"{0}\"", Username);
+				builder.AppendFormat(", realm=\"{0}\"", realm);
+				builder.AppendFormat(", nonce=\"{0}\"", nonce);
+				builder.AppendFormat(", uri=\"sip:{0}\"", Server);
+				builder.AppendFormat(", response=\"{0}\"", authline);
+				builder.AppendFormat(", algorithm=\"{0}\"", "MD5");
+
+				packet.Headers.Add("Authorization", builder.ToString());
+
+				ResendPacket(packet);
 			}
 		}
 		private void ReceivePacket(IAsyncResult e)
@@ -168,6 +203,8 @@ namespace InstantMessage.Protocols.SIP
 				case 401: // Unauthorized
 					ProcessUnauthorized(reader);
 					break;
+				case 200: // OK
+					break;
 			}
 		}
 
@@ -180,6 +217,12 @@ namespace InstantMessage.Protocols.SIP
 				builder.Append((char)rand.Next(97, 122));
 
 			return builder.ToString();
+		}
+		private void ResendPacket(SIPPacket packet)
+		{
+			string pktdata = packet.GetBody(this);
+			byte[] pkt = Encoding.UTF8.GetBytes(pktdata);
+			mClient.Send(pkt, pkt.Length, new IPEndPoint(IPAddress.Parse(Server), 5060));
 		}
 		private void SendPacket(SIPPacket packet)
 		{
@@ -196,6 +239,8 @@ namespace InstantMessage.Protocols.SIP
 			set;
 		}
 
+		private MD5 mMD5Hash;
+		private string mA1Hash;
 		private UdpClient mClient;
 		private SortedList<int, SIPPacket> mSequences;
 		protected int sequenceId;
