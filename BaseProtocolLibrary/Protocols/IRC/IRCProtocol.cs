@@ -438,6 +438,7 @@ namespace InstantMessage.Protocols.Irc
 				{
 					// Only throw this error if we think we are connected 
 					//triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR, "Ping timeout"));
+					Trace.WriteLine("IRC: Idle timeout");
 					triggerOnError(new SocketErrorEventArgs(new SocketException(10054)));
 					break;
 				}
@@ -799,10 +800,12 @@ namespace InstantMessage.Protocols.Irc
 			try	{
 				bytesRead = mTextStream.EndRead(args);
 			} catch (SocketException e)	{
+				Trace.WriteLine("IRC: SocketException: " + e.Message);
 				Dispose();
 				triggerOnError(new SocketErrorEventArgs(e));
 				return;
 			} catch (IOException e)	{
+				Trace.WriteLine("IRC: SocketException: " + e.Message);
 				Dispose();
 				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
 				return;

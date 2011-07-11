@@ -261,11 +261,11 @@ namespace NexusIM
 			public string this[string key]
 			{
 				get	{
-					AccountSetting setting = mSource.FirstOrDefault(s => s.Key == key);
+					string setting = mSource.Where(s => s.Key == key).Select(s => s.Value).FirstOrDefault();
 					if (setting == null)
 						return null;
 
-					return setting.Value;
+					return setting;
 				}
 				set	{
 					AccountSetting setting = mSource.FirstOrDefault(s => s.Key == key);

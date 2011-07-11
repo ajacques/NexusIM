@@ -2,6 +2,7 @@
 using System.Windows.Documents;
 using System.Windows.Media;
 using NexusIM.Misc;
+using System.Globalization;
 
 namespace NexusIM.Controls
 {
@@ -15,7 +16,7 @@ namespace NexusIM.Controls
 			mAuthSpan = new Span();
 
 			mAuthSpan.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
-			mTimestamp.Text = DateTime.Now.ToString(SettingCache.GetValue("ChatMsgTimestampFormat"));
+			mTimestamp.Text = DateTime.Now.ToString(SettingCache.GetValue("ChatMsgTimestampFormat"), CultureInfo.InstalledUICulture);
 			
 			mAuthSpan.Inlines.Add(new Run("["));
 			mAuthSpan.Inlines.Add(mTimestamp);

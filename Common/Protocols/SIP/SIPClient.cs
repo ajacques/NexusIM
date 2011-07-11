@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace InstantMessage.Protocols.SIP
 {
-	public class SIPClient : IMProtocol
+	public class SIPClient : IMProtocol//, IVOIPCapable
 	{
 		public SIPClient()
 		{
@@ -17,24 +16,37 @@ namespace InstantMessage.Protocols.SIP
 
 			UserAgent = "NexusIM SIP Client";
 			mSequences = new SortedList<int, SIPPacket>();
+			mCallsInProgress = new SortedList<string, SIPCall>();
 		}
 
 		public override void BeginLogin()
 		{
 			base.BeginLogin();
-			//mClient.Connect(Server, 5060);
 
 			RegisterPacket packet = new RegisterPacket(this);
 			SendPacket(packet);
 			mClient.BeginReceive(new AsyncCallback(ReceivePacket), null);
 		}
+		public SIPCall BeginCall(string username)
+		{
+			InvitePacket packet = new InvitePacket(username, this);
+			SendPacket(packet);
+
+			string callId = packet.Headers["Call-Id"];
+
+			SIPCall call = new SIPCall(this, callId);
+			mCallsInProgress.Add(callId, call);
+
+			return call;
+		}
 
 		// Packet Classes
-		private class SIPPacket
+		private abstract class SIPPacket
 		{
 			protected SIPPacket(SIPClient client)
 			{
 				Headers = new SortedDictionary<string, string>();
+				Body = new StringWriter();
 
 				SequenceId = ++client.sequenceId;
 			}
@@ -59,6 +71,11 @@ namespace InstantMessage.Protocols.SIP
 				get;
 				private set;
 			}
+			protected StringWriter Body
+			{
+				get;
+				private set;
+			}
 
 			public string GetBody(SIPClient client)
 			{
@@ -66,15 +83,21 @@ namespace InstantMessage.Protocols.SIP
 
 				Headers["User-Agent"] = client.UserAgent;
 				Headers["CSeq"] = String.Format("{0} {1}", SequenceId, Method);
+				
 
 				// Write the first line
 				writer.WriteLine("{0} sip:{1} SIP/2.0", Method, Target);
 
 				foreach (KeyValuePair<string, string> pair in Headers)
 					writer.WriteLine("{0}: {1}", pair.Key, pair.Value);
-				writer.WriteLine("Content-Length: 0");
+				writer.Write("Content-Length: ");
+				writer.WriteLine(Body.ToString().Length);
 
 				writer.WriteLine();
+
+				// Write Body
+				writer.Write(Body.ToString());
+
 				return writer.ToString();
 			}
 
@@ -99,6 +122,61 @@ namespace InstantMessage.Protocols.SIP
 				Headers.Add("Call-Id", client.GenerateCallId());
 			}
 		}
+		private class InvitePacket : SIPPacket
+		{
+			public InvitePacket(string username, SIPClient client) : base(client)
+			{
+				Method = "INVITE";
+				Target = username;
+
+				Headers.Add("Content-Type", "application/sdp");
+				Headers.Add("From", String.Format("\"{0}\" <sip:{0}@{1}>", client.Username, client.Server));
+				Headers.Add("To", String.Format("\"{0}\" <sip:{0}>", username));
+				Headers.Add("Call-Id", client.GenerateCallId());
+
+				BuildSDP();
+			}
+
+			private void BuildSDP()
+			{
+				Body.WriteLine("v=0");
+				Body.WriteLine("o=- {0} {0} IN IP4 {1}", Math.Floor(DateTime.UtcNow.Subtract(new DateTime(1970, 12, 1)).TotalSeconds).ToString(), "192.168.2.35");
+				Body.WriteLine("s=NexusIM VoIP Call");
+				Body.WriteLine("t=0 0");
+				Body.WriteLine("m=audio 50000 RTP/AVP 9");
+				Body.WriteLine("a=rtpmap:9 G722/8000");
+				Body.WriteLine("a=rtpmap:8 speex/48000");
+				Body.WriteLine("a=sendrecv");
+
+				BuildConnInfo();
+			}
+
+			private void BuildConnInfo()
+			{
+				IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+
+				foreach (IPAddress ip in localIPs)
+				{
+					switch (ip.AddressFamily)
+					{
+						case AddressFamily.InterNetwork:
+							if (ip.GetAddressBytes()[0] == 169)
+								continue;
+							Body.Write("c=IN IP4 ");
+							break;
+						case AddressFamily.InterNetworkV6:
+							if (ip.GetAddressBytes()[0] == 0xfe && ip.GetAddressBytes()[1] == 0x80)
+								continue;
+							Body.Write("c=IN IP6 ");
+							break;
+						default:
+							continue;
+					}
+
+					Body.WriteLine(ip.ToString());
+				}
+			}
+		}
 
 		private string ComputeMD5Hash(string input)
 		{
@@ -113,7 +191,7 @@ namespace InstantMessage.Protocols.SIP
 
 			return builder.ToString();
 		}
-		private string ProcessDigestAuth(string crypto, string realm, string nonce)
+		private string ProcessDigestAuth(SIPPacket packet, string crypto, string realm, string nonce)
 		{
 			if (mA1Hash == null)
 			{
@@ -121,7 +199,7 @@ namespace InstantMessage.Protocols.SIP
 				mA1Hash = ComputeMD5Hash(input);
 			}
 			
-			string a2 = ComputeMD5Hash("REGISTER:sip:" + Server);
+			string a2 = ComputeMD5Hash(packet.Method + ":sip:" + packet.Target);
 
 			string final = ComputeMD5Hash(mA1Hash + ":" + nonce + ":" + a2);
 
@@ -160,7 +238,7 @@ namespace InstantMessage.Protocols.SIP
 								realm = parts[1].Substring(8, parts[1].Length - 9);
 								nonce = parts[2].Substring(8, parts[2].Length - 9);
 
-								authline = ProcessDigestAuth(algo, realm, nonce);
+								authline = ProcessDigestAuth(packet, algo, realm, nonce);
 								break;
 							default:
 								triggerOnError(new Events.IMErrorEventArgs(Events.IMProtocolErrorReason.Unknown, "Unsupported authentication scheme: " + parts[0]));
@@ -182,6 +260,11 @@ namespace InstantMessage.Protocols.SIP
 				builder.AppendFormat(", response=\"{0}\"", authline);
 				builder.AppendFormat(", algorithm=\"{0}\"", "MD5");
 
+				if (packet.Headers.ContainsKey("Authorization"))
+				{
+					triggerOnError(null);
+					return;
+				}
 				packet.Headers.Add("Authorization", builder.ToString());
 
 				ResendPacket(packet);
@@ -204,6 +287,8 @@ namespace InstantMessage.Protocols.SIP
 					ProcessUnauthorized(reader);
 					break;
 				case 200: // OK
+					mLoginWaitHandle.Set();
+					mProtocolStatus = IMProtocolStatus.Online;
 					break;
 			}
 		}
@@ -243,6 +328,7 @@ namespace InstantMessage.Protocols.SIP
 		private string mA1Hash;
 		private UdpClient mClient;
 		private SortedList<int, SIPPacket> mSequences;
+		private SortedList<string, SIPCall> mCallsInProgress;
 		protected int sequenceId;
 	}
 }

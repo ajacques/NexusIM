@@ -62,7 +62,8 @@
     <Compile Include="ITranslator.cs" />
     <Compile Include="OTRManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SIPClient.cs" />
+    <Compile Include="Protocols\SIP\SIPCall.cs" />
+    <Compile Include="Protocols\SIP\SIPClient.cs" />
     <Compile Include="Wildcard.cs" />
   </ItemGroup>
   <ItemGroup>
