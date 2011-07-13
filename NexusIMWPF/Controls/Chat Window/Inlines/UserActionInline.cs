@@ -7,18 +7,16 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows;
 
-namespace NexusIM.Controls
+namespace NexusIM.Controls.Inlines
 {
-	public class UserActionInline : Span
+	public class UserActionInline : TimestampedInline
 	{
 		public UserActionInline()
 		{
 			mUsername = new Run();
 			mMessage = new Run();
 
-			mUsername.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
-
-			this.Inlines.Add(mUsername);
+			this.LeftSpan.Inlines.Add(mUsername);
 			this.Inlines.Add(new Run(" "));
 			this.Inlines.Add(mMessage);
 		}
@@ -26,7 +24,7 @@ namespace NexusIM.Controls
 		public Color UsernameColor
 		{
 			set	{
-				mUsername.Foreground = new SolidColorBrush(value);
+				this.LeftSpan.Foreground = new SolidColorBrush(value);
 			}
 		}
 		public string Username

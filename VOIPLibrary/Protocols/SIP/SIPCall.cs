@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using InstantMessage.Protocols.VOIP;
 using System.IO;
+using System.Diagnostics;
 
 namespace InstantMessage.Protocols.SIP
 {
@@ -21,21 +22,28 @@ namespace InstantMessage.Protocols.SIP
 		{
 			mClient = client;
 			mCallId = callid;
+			mProfiles = new List<IMediaProfile>();
 		}
 
-		public void Dial()
+		public void Invite(string username)
 		{
 			mStatus = VOIPCallStatus.Connecting;
 			StringWriter sbpBuilder = new StringWriter();
 
 			foreach (IMediaProfile profile in Profiles)
 			{
-				if (profile.GetType() != typeof(ISIPMediaProfile))
-					throw new ArgumentException("All Profiles must be of type ISIPMediaProfile");
+				sbpBuilder.WriteLine("m={0} {1} {2}", profile.MediaType, profile.Port, profile.MediaProtocol);
 
-				ISIPMediaProfile sip = (ISIPMediaProfile)profile;
-				sbpBuilder.Write("m={0} {1} {2}", sip.MediaType, sip.Port, sip.MediaProtocol);
+				foreach (string attribute in profile.Attributes)
+				{
+					sbpBuilder.Write("a=");
+					sbpBuilder.WriteLine(attribute);
+				}
 			}
+
+			Trace.WriteLine(String.Format("SIP: Inviting user {0} to call {1}", username, mCallId));
+
+			mClient.InviteUser(this, username, sbpBuilder.ToString());
 		}
 
 		public void Hangup()
@@ -46,7 +54,7 @@ namespace InstantMessage.Protocols.SIP
 		public IList<IMediaProfile> Profiles
 		{
 			get {
-				throw new NotImplementedException();
+				return mProfiles;
 			}
 		}
 
@@ -60,5 +68,6 @@ namespace InstantMessage.Protocols.SIP
 		private string mCallId;
 		private SIPClient mClient;
 		private VOIPCallStatus mStatus;
+		private List<IMediaProfile> mProfiles;
 	}
 }

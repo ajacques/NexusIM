@@ -25,6 +25,12 @@ namespace NexusIM.Protocol
 				return mProtocol.Username;
 			}
 		}
+		public string DisplayName
+		{
+			get	{
+				return Username;
+			}
+		}
 
 		public string Nickname
 		{

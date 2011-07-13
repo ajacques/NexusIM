@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using InstantMessage;
 
 namespace InstantMessage.Protocols.SIP
 {
-	public class SIPClient : IMProtocol//, IVOIPCapable
+	[IMNetwork("sip")]
+	public class SIPClient : IMProtocol, IProtocol, IRequiresUsername, IRequiresPassword //, IVOIPCapable
 	{
 		public SIPClient()
 		{
@@ -27,12 +29,9 @@ namespace InstantMessage.Protocols.SIP
 			SendPacket(packet);
 			mClient.BeginReceive(new AsyncCallback(ReceivePacket), null);
 		}
-		public SIPCall BeginCall(string username)
+		public SIPCall NewCall()
 		{
-			InvitePacket packet = new InvitePacket(username, this);
-			SendPacket(packet);
-
-			string callId = packet.Headers["Call-Id"];
+			string callId = GenerateCallId();
 
 			SIPCall call = new SIPCall(this, callId);
 			mCallsInProgress.Add(callId, call);
@@ -40,21 +39,30 @@ namespace InstantMessage.Protocols.SIP
 			return call;
 		}
 
+		internal void InviteUser(SIPCall call, string username, string mediaProfile)
+		{
+			InvitePacket packet = new InvitePacket(username, call, this);
+			IPEndPoint ep = (IPEndPoint)mClient.Client.LocalEndPoint;
+			packet.Body.Write(mediaProfile);
+
+			SendPacket(packet);
+		}
+
 		// Packet Classes
 		private abstract class SIPPacket
 		{
-			protected SIPPacket(SIPClient client)
+			protected SIPPacket(int seqId)
 			{
 				Headers = new SortedDictionary<string, string>();
 				Body = new StringWriter();
 
-				SequenceId = ++client.sequenceId;
+				SequenceId = seqId;
 			}
 
 			public int SequenceId
 			{
 				get;
-				private set;
+				protected set;
 			}
 			public string Method
 			{
@@ -71,7 +79,7 @@ namespace InstantMessage.Protocols.SIP
 				get;
 				private set;
 			}
-			protected StringWriter Body
+			public StringWriter Body
 			{
 				get;
 				private set;
@@ -83,15 +91,14 @@ namespace InstantMessage.Protocols.SIP
 
 				Headers["User-Agent"] = client.UserAgent;
 				Headers["CSeq"] = String.Format("{0} {1}", SequenceId, Method);
-				
+				Headers["Max-Forwards"] = "70";
+				Headers["Content-Length"] = Body.ToString().Length.ToString();
 
 				// Write the first line
 				writer.WriteLine("{0} sip:{1} SIP/2.0", Method, Target);
 
 				foreach (KeyValuePair<string, string> pair in Headers)
 					writer.WriteLine("{0}: {1}", pair.Key, pair.Value);
-				writer.Write("Content-Length: ");
-				writer.WriteLine(Body.ToString().Length);
 
 				writer.WriteLine();
 
@@ -112,7 +119,7 @@ namespace InstantMessage.Protocols.SIP
 		}
 		private class RegisterPacket : SIPPacket
 		{
-			public RegisterPacket(SIPClient client) : base(client)
+			public RegisterPacket(SIPClient client) : base(++client.sequenceId)
 			{
 				Method = "REGISTER";
 				Target = client.Server;
@@ -124,7 +131,7 @@ namespace InstantMessage.Protocols.SIP
 		}
 		private class InvitePacket : SIPPacket
 		{
-			public InvitePacket(string username, SIPClient client) : base(client)
+			public InvitePacket(string username, SIPCall call, SIPClient client) : base(++client.sequenceId)
 			{
 				Method = "INVITE";
 				Target = username;
@@ -143,14 +150,9 @@ namespace InstantMessage.Protocols.SIP
 				Body.WriteLine("o=- {0} {0} IN IP4 {1}", Math.Floor(DateTime.UtcNow.Subtract(new DateTime(1970, 12, 1)).TotalSeconds).ToString(), "192.168.2.35");
 				Body.WriteLine("s=NexusIM VoIP Call");
 				Body.WriteLine("t=0 0");
-				Body.WriteLine("m=audio 50000 RTP/AVP 9");
-				Body.WriteLine("a=rtpmap:9 G722/8000");
-				Body.WriteLine("a=rtpmap:8 speex/48000");
-				Body.WriteLine("a=sendrecv");
 
 				BuildConnInfo();
 			}
-
 			private void BuildConnInfo()
 			{
 				IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
@@ -175,6 +177,37 @@ namespace InstantMessage.Protocols.SIP
 
 					Body.WriteLine(ip.ToString());
 				}
+			}
+		}
+		private class ResponsePacket : SIPPacket
+		{
+			public ResponsePacket(TextReader source) : base(-1)
+			{
+				string status = source.ReadLine();
+				StatusCode = Int32.Parse(status.Substring(8, 3));
+
+				while (source.Peek() != -1)
+				{
+					string line = source.ReadLine();
+					if (String.IsNullOrEmpty(line))
+						break;
+
+					int headerPoint = line.IndexOf(':') + 1;
+					string header = line.Substring(0, headerPoint - 1);
+					string value = line.Substring(headerPoint + 1);
+
+					Headers.Add(header, value);
+				}
+
+				string cseq;
+				if (Headers.TryGetValue("CSeq", out cseq))
+					SequenceId = Int32.Parse(cseq.Substring(0, cseq.IndexOf(' ')));
+			}
+
+			public int StatusCode
+			{
+				get;
+				private set;
 			}
 		}
 
@@ -205,50 +238,32 @@ namespace InstantMessage.Protocols.SIP
 
 			return final;
 		}
-		private void ProcessUnauthorized(TextReader reader)
+		private void ProcessUnauthorized(ResponsePacket respPacket)
 		{
-			SIPPacket packet = null;
-			string authline = null;
+			int id = respPacket.SequenceId;
+			SIPPacket packet = mSequences[id];
 			string realm = null;
 			string nonce = null;
+			string hash = null;
 
-			while (reader.Peek() != -1)
+			string authval = respPacket.Headers["WWW-Authenticate"];
+			string scheme = authval.Substring(0, authval.IndexOf(' '));
+			string[] parts = authval.Substring(authval.IndexOf(' ')).Split(',');
+			switch (scheme)
 			{
-				string line = reader.ReadLine();
-				if (String.IsNullOrEmpty(line))
+				case "Digest":
+					string algo = parts[0].Substring(11);
+					realm = parts[1].Substring(8, parts[1].Length - 9);
+					nonce = parts[2].Substring(8, parts[2].Length - 9);
+
+					hash = ProcessDigestAuth(packet, algo, realm, nonce);
 					break;
-
-				int headerPoint = line.IndexOf(':') + 1;
-				string header = line.Substring(0, headerPoint - 1);
-				string value = line.Substring(headerPoint + 1);
-
-				switch (header)
-				{
-					case "CSeq":
-						int id = Int32.Parse(value.Substring(0, value.IndexOf(' ')));
-						mSequences.TryGetValue(id, out packet);
-						break;
-					case "WWW-Authenticate":
-						string scheme = value.Substring(0, value.IndexOf(' '));
-						string[] parts = value.Substring(value.IndexOf(' ')).Split(',');
-						switch (scheme)
-						{
-							case "Digest":
-								string algo = parts[0].Substring(11);
-								realm = parts[1].Substring(8, parts[1].Length - 9);
-								nonce = parts[2].Substring(8, parts[2].Length - 9);
-
-								authline = ProcessDigestAuth(packet, algo, realm, nonce);
-								break;
-							default:
-								triggerOnError(new Events.IMErrorEventArgs(Events.IMProtocolErrorReason.Unknown, "Unsupported authentication scheme: " + parts[0]));
-								break;
-						}
-						break;
-				}
+				default:
+					triggerOnError(new Events.IMErrorEventArgs(Events.IMProtocolErrorReason.Unknown, "Unsupported authentication scheme: " + parts[0]));
+					break;
 			}
 
-			if (packet != null && authline != null)
+			if (packet != null && hash != null)
 			{
 				// Digest username=\"adam\", realm=\"asterisk\", nonce=\"4774c314\", uri=\"sip:192.168.2.217\", response=\"52f9ebebadfea2dde23e0308b95e9e7d\", algorithm=MD5
 				StringBuilder builder = new StringBuilder();
@@ -256,8 +271,11 @@ namespace InstantMessage.Protocols.SIP
 				builder.AppendFormat("username=\"{0}\"", Username);
 				builder.AppendFormat(", realm=\"{0}\"", realm);
 				builder.AppendFormat(", nonce=\"{0}\"", nonce);
-				builder.AppendFormat(", uri=\"sip:{0}\"", Server);
-				builder.AppendFormat(", response=\"{0}\"", authline);
+				if (packet is RegisterPacket)
+					builder.AppendFormat(", uri=\"sip:{0}\"", Server);
+				else
+					builder.AppendFormat(", uri=\"sip:{0}\"", packet.Target);
+				builder.AppendFormat(", response=\"{0}\"", hash);
 				builder.AppendFormat(", algorithm=\"{0}\"", "MD5");
 
 				if (packet.Headers.ContainsKey("Authorization"))
@@ -277,18 +295,21 @@ namespace InstantMessage.Protocols.SIP
 			mClient.BeginReceive(new AsyncCallback(ReceivePacket), null);
 			
 			TextReader reader = new StringReader(Encoding.UTF8.GetString(pktdata));
-			string status = reader.ReadLine();
-
-			int statusCode = Int32.Parse(status.Substring(8, 3));
-
-			switch (statusCode)
+			
+			ResponsePacket packet = new ResponsePacket(reader);
+			
+			switch (packet.StatusCode)
 			{
 				case 401: // Unauthorized
-					ProcessUnauthorized(reader);
+					ProcessUnauthorized(packet);
 					break;
-				case 200: // OK
-					mLoginWaitHandle.Set();
-					mProtocolStatus = IMProtocolStatus.Online;
+				case 200:
+					SIPPacket tPacket = mSequences[packet.SequenceId];
+
+					if (tPacket is RegisterPacket)
+						LoginWaitHandle.Set();
+					mSequences.Remove(packet.SequenceId);
+
 					break;
 			}
 		}

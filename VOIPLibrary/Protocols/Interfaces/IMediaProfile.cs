@@ -19,5 +19,9 @@ namespace InstantMessage.Protocols.VOIP
 		{
 			get;
 		}
+		IEnumerable<string> Attributes
+		{
+			get;
+		}
 	}
 }

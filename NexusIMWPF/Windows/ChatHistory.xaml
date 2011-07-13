@@ -10,7 +10,7 @@
 		<DatePicker Margin="8,8,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
 		<RichTextBox Margin="8,36,8,8" Focusable="False" UndoLimit="0">
 			<FlowDocument>
-				<Paragraph><Run Text="Upper Bound" /><nxc:ChatMessageInline Username="Test" MessageBody="Happy Birthday" /></Paragraph>
+				<Paragraph><Run Text="Upper Bound" /></Paragraph>
 			</FlowDocument>
 		</RichTextBox>
 	</Grid>

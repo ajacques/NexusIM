@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -14,7 +13,9 @@ using InstantMessage;
 using InstantMessage.Events;
 using InstantMessage.Protocols;
 using InstantMessage.Protocols.Irc;
+using NexusIM.Controls.Inlines;
 using NexusIM.Protocol;
+using NexusIM.Windows;
 
 namespace NexusIM.Controls
 {
@@ -44,6 +45,8 @@ namespace NexusIM.Controls
 			mChatRoom.OnUserListReceived += new EventHandler(ChatRoom_OnUserListReceived);
 			mChatRoom.OnUserJoin += new EventHandler<IMChatRoomGenericEventArgs>(ChatRoom_OnUserJoin);
 
+			mProtocol.onDisconnect += new EventHandler<IMDisconnectEventArgs>(Protocol_OnDisconnect);
+
 			if (mProtocol is IRCProtocol)
 			{
 				IRCProtocol ircProtocol = (IRCProtocol)mProtocol;
@@ -61,6 +64,8 @@ namespace NexusIM.Controls
 			} else
 				mNickSearch = new Regex(String.Format(@"(?:^|\ ){0}(?:$|\ |')", mProtocol.Username));
 			RoomName.Text = mChatRoom.Name;
+
+			UpdateParentWindowData();
 		}
 
 		public void Dispose()
@@ -77,6 +82,13 @@ namespace NexusIM.Controls
 				ircProtocol.OnNoticeReceive -= new EventHandler<IMChatRoomGenericEventArgs>(IrcProtocol_OnNoticeReceive);
 				ircChannel.OnKickedFromChannel -= new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnKicked);
 			}
+		}
+		public override string ToString()
+		{
+			if (ChatRoom == null)
+				return base.ToString();
+
+			return ChatRoom.Name;
 		}
 
 		public void ProcessChatMessage(IMMessageEventArgs e)
@@ -243,16 +255,25 @@ namespace NexusIM.Controls
 
 			OccupantList.Items.Add(user);
 		}
+		private void UpdateParentWindowData()
+		{
+			if (mWindow == null)
+				return;
+
+			mWindow.UpdateWindowTitle();
+		}
 
 		protected override void OnVisualParentChanged(DependencyObject oldParent)
 		{
 			base.OnVisualParentChanged(oldParent);
 
-			mWindow = Window.GetWindow(this);
+			mWindow = (ChatWindow)Window.GetWindow(this);
 			mWindowPointer = new WindowInteropHelper(mWindow).Handle;
 			MessageBody.Focus();
 
 			mWindow.Closed += new EventHandler(Window_Closed);
+
+			UpdateParentWindowData();
 		}
 
 		protected override void OnInitialized(EventArgs e)
@@ -398,6 +419,7 @@ namespace NexusIM.Controls
 		// Chat Room Event Handlers
 		private void ChatRoom_OnMessageReceived(object sender, IMMessageEventArgs e)
 		{
+			mWindow.IncrementUnread();
 			ProcessChatMessage(e);
 		}
 		private void ChatRoom_OnUserListReceived(object sender, EventArgs e)
@@ -425,7 +447,7 @@ namespace NexusIM.Controls
 		{
 			Dispatcher.InvokeIfRequired(() =>
 			{
-				Span span = new Span();
+				Span span = new TimestampedInline();
 				Run user = new Run(e.Username.Nickname);
 				Run message = new Run();
 				if (String.IsNullOrEmpty(e.Message))
@@ -508,10 +530,6 @@ namespace NexusIM.Controls
 				}
 			}
 		}
-		private void Participants_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			ProcessUserList();
-		}
 		private void IrcProtocol_LoginAsOperatorResult(bool success, string message)
 		{
 			Dispatcher.InvokeIfRequired(() => {
@@ -528,6 +546,10 @@ namespace NexusIM.Controls
 					AppendChatInline(msg);
 				}
 			});
+		}
+		private void Protocol_OnDisconnect(object sender, IMDisconnectEventArgs e)
+		{
+			Dispatcher.BeginInvoke(new GenericEvent(() => ChatHistory.AppendInline(new AccountDisconnectedInline())));
 		}
 		
 		// Protocol Event Handlers
@@ -558,7 +580,7 @@ namespace NexusIM.Controls
 		private LinkedList<string> mMessageHistory;
 		private LinkedListNode<string> mHistoryNode;
 		private LinkedListNode<string> mHistoryRoot;
-		private Window mWindow;
+		private ChatWindow mWindow;
 		private IntPtr mWindowPointer;
 		private IrcChanUserContextMenu mUserContextMenu;
 		private IChatRoom mChatRoom;

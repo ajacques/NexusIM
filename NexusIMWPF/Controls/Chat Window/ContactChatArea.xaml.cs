@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Managers;
+using NexusIM.Controls.Inlines;
 
 namespace NexusIM.Controls
 {
@@ -253,18 +254,7 @@ namespace NexusIM.Controls
 		// Protocol Events
 		private void Protocol_OnDisconnect(object sender, IMDisconnectEventArgs e)
 		{
-			Dispatcher.BeginInvoke(new GenericEvent(() => {
-				Run description = new Run();
-				description.Text = "Account Disconnected ";
-
-				Hyperlink reconnect = new Hyperlink();
-				reconnect.Inlines.Add(new Run("Reconnect"));
-				reconnect.Cursor = Cursors.Hand;
-				reconnect.MouseLeftButtonDown += new MouseButtonEventHandler(Protocol_DoReconnect);
-
-				ChatHistory.AppendInline(description);
-				ChatHistory.AppendInline(reconnect);
-			}));
+			Dispatcher.BeginInvoke(new GenericEvent(() => ChatHistory.AppendInline(new AccountDisconnectedInline())));
 		}
 		private void Protocol_DoReconnect(object sender, MouseButtonEventArgs e)
 		{

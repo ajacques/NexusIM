@@ -68,6 +68,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>nexusim.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification" Condition=" '$(OS)' == 'Windows_NT' ">
       <HintPath>..\..\wpf-notifyicon\NotifyIconWpf\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
@@ -106,12 +109,13 @@
     <Compile Include="Configuration\IMProtocolWrapper.cs" />
     <Compile Include="Configuration\ISettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
+    <Compile Include="Controls\Chat Window\Inlines\AccountDisconnectedInline.cs" />
     <Compile Include="Controls\Chat Window\ChatHistoryBox.cs" />
-    <Compile Include="Controls\Chat Window\UserActionInline.cs" />
+    <Compile Include="Controls\Chat Window\Inlines\TimestampedInline.cs" />
+    <Compile Include="Controls\Chat Window\Inlines\UserActionInline.cs" />
     <Compile Include="Controls\Contact List\CLErrorBox.xaml.cs">
       <DependentUpon>CLErrorBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat Window\GroupChatAreaHost.cs" />
     <Compile Include="Controls\Contact List\ProtocolMenu.cs" />
     <Compile Include="Controls\Contact List\YahooProtocolMenu.cs" />
     <Compile Include="Controls\HostValidationTextbox.cs" />
@@ -142,8 +146,7 @@
     <Compile Include="Controls\AccountSelectorControl.xaml.cs">
       <DependentUpon>AccountSelectorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Chat Window\ChatAreaHost.cs" />
-    <Compile Include="Controls\Chat Window\ChatMessageInline.cs" />
+    <Compile Include="Controls\Chat Window\Inlines\ChatMessageInline.cs" />
     <Compile Include="Controls\ChatMessageNotification.xaml.cs">
       <DependentUpon>ChatMessageNotification.xaml</DependentUpon>
     </Compile>
@@ -569,6 +572,7 @@
     </Content>
     <Resource Include="Images\cataduck.jpg" />
     <Resource Include="Resources\default_profile_pic.png" />
+    <Resource Include="nexusim.ico" />
     <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

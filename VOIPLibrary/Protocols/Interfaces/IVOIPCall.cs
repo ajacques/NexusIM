@@ -14,7 +14,6 @@ namespace InstantMessage.Protocols.VOIP
 
 	public interface IVOIPCall
 	{
-		void Dial();
 		void Hangup();
 
 		/// <summary>

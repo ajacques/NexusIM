@@ -21,15 +21,6 @@ namespace NexusIM.Windows
 			TabRow.Height = new GridLength(0);
 		}
 
-		public void AttachAreaAndShow(TabItem tabPage)
-		{
-			if (tabPage is ContactChatAreaHost)
-			{
-				ContactChatAreaHost host = (ContactChatAreaHost)tabPage;
-				
-				host.HostWindow = this;
-			}
-		}
 		public void AttachAreaAndShow(UIElement element)
 		{
 			Dispatcher.InvokeIfRequired(() =>
@@ -160,8 +151,11 @@ namespace NexusIM.Windows
 
 			return headerGrid;
 		}
-		private void UpdateWindowTitle()
+		public void UpdateWindowTitle()
 		{
+			if (mMainPane == null)
+				return;
+
 			Dispatcher.InvokeIfRequired(() =>
 			{
 				string msg;

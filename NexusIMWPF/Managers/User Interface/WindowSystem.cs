@@ -168,10 +168,6 @@ namespace NexusIM.Managers
 			var area = ChatAreas.Where(t => t.Value.Item1 == window).FirstOrDefault();
 			ChatAreas.Remove(area.Key);
 		}
-		private static void ChatAreaHost_TabClosed(object sender, EventArgs e)
-		{
-			ContactChatAreaHost host = (ContactChatAreaHost)sender;
-		}
 
 		// Nested Classes
 		private class AreaSortPoolKey : IComparable<AreaSortPoolKey>

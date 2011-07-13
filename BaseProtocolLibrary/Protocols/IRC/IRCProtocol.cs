@@ -16,7 +16,7 @@ using System.Security.Authentication;
 namespace InstantMessage.Protocols.Irc
 {
 	[IMNetwork("irc")]
-	public sealed class IRCProtocol : IMProtocol, IDisposable, IHasMUCRooms<IRCChannel>
+	public sealed class IRCProtocol : IMProtocol, IDisposable, IHasMUCRooms<IRCChannel>, IRequiresUsername, IRequiresPassword
 	{
 		public IRCProtocol()
 		{
@@ -234,7 +234,8 @@ namespace InstantMessage.Protocols.Irc
 
 		public void SendRawMessage(string message)
 		{
-			sendData(message);
+			if (mProtocolStatus == IMProtocolStatus.Online)
+				sendData(message);
 		}
 		private string UserModeToString(IRCUserModes modes, out int numModes)
 		{

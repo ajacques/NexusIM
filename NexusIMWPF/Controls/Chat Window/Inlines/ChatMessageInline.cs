@@ -4,26 +4,16 @@ using System.Windows.Media;
 using NexusIM.Misc;
 using System.Globalization;
 
-namespace NexusIM.Controls
+namespace NexusIM.Controls.Inlines
 {
-	public class ChatMessageInline : Span
+	public class ChatMessageInline : TimestampedInline
 	{
 		public ChatMessageInline()
 		{
 			mUsername = new Run();
 			mMessage = new Run();
-			mTimestamp = new Run();
-			mAuthSpan = new Span();
 
-			mAuthSpan.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
-			mTimestamp.Text = DateTime.Now.ToString(SettingCache.GetValue("ChatMsgTimestampFormat"), CultureInfo.InstalledUICulture);
-			
-			mAuthSpan.Inlines.Add(new Run("["));
-			mAuthSpan.Inlines.Add(mTimestamp);
-			mAuthSpan.Inlines.Add(new Run("] "));
-			mAuthSpan.Inlines.Add(mUsername);
-
-			this.Inlines.Add(mAuthSpan);
+			this.LeftSpan.Inlines.Add(mUsername);
 			this.Inlines.Add(new Run(": "));
 			this.Inlines.Add(mMessage);
 		}
@@ -31,7 +21,7 @@ namespace NexusIM.Controls
 		public Color UsernameColor
 		{
 			set	{
-				mAuthSpan.Foreground = new SolidColorBrush(value);
+				LeftSpan.Foreground = new SolidColorBrush(value);
 			}
 		}
 		public string Username
@@ -53,8 +43,6 @@ namespace NexusIM.Controls
 			}
 		}
 
-		private Span mAuthSpan;
-		private Run mTimestamp;
 		private Run mUsername;
 		private Run mMessage;
 	}

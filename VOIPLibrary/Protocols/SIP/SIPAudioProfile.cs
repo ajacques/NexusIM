@@ -6,13 +6,16 @@ using InstantMessage.Protocols.VOIP;
 
 namespace InstantMessage.Protocols.SIP
 {
-	public class SIPAudioProfile : ISIPMediaProfile
+	public class SIPAudioProfile : IMediaProfile
 	{
 		public SIPAudioProfile()
 		{
 			mAttributes = new List<string>();
 
 			mAttributes.Add("rtpmap:9 G722/8000");
+			mAttributes.Add("rtcp:50001");
+			mAttributes.Add("rtpmap:101 telephone-event/8000");
+			mAttributes.Add("rmtp:101 0-15");
 			mAttributes.Add("sendrecv");
 		}
 

@@ -424,7 +424,8 @@ namespace InstantMessage
 		}
 		protected void triggerOnError(IMErrorEventArgs e)
 		{
-			Debug.WriteLine("Protocol Error: " + ToString() + " - " + e.Reason.ToString());
+			if (e != null)
+				Debug.WriteLine("Protocol Error: " + ToString() + " - " + e.Reason.ToString());
 			this.mProtocolStatus = IMProtocolStatus.Offline;
 
 			if (ErrorOccurred != null)

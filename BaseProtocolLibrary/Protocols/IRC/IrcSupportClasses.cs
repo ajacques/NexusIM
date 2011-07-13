@@ -123,6 +123,12 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			internal set;
 		}
+		public string DisplayName
+		{
+			get	{
+				return Username;
+			}
+		}
 		public IMBuddyStatus Status
 		{
 			get	{

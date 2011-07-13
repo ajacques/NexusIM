@@ -241,15 +241,10 @@ namespace NexusIM
 			}
 			public bool TryGetValue(string key, out string value)
 			{
-				AccountSetting setting = mSource.FirstOrDefault(s => s.Key == key);
+				value = mSource.Where(s => s.Key == key).Select(s => s.Value).FirstOrDefault();
 
-				if (setting == null)
-				{
-					value = null;
+				if (value == null)
 					return false;
-				}
-
-				value = setting.Value;
 				return true;
 			}
 			public ICollection<string> Values

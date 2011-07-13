@@ -15,7 +15,7 @@ namespace InstantMessage
 	}
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	class IMNetworkAttribute : Attribute
+	public class IMNetworkAttribute : Attribute
 	{
 		public IMNetworkAttribute(string shortname)
 		{

@@ -39,7 +39,6 @@
     <Compile Include="Protocols\Interfaces\IVOIPCall.cs" />
     <Compile Include="Protocols\Interfaces\IVOIPCapable.cs" />
     <Compile Include="Protocols\Interfaces\IMediaProfile.cs" />
-    <Compile Include="Protocols\SIP\ISIPMediaProfile.cs" />
     <Compile Include="Protocols\SIP\SIPAudioProfile.cs" />
     <Compile Include="Protocols\SIP\SIPCall.cs" />
     <Compile Include="Protocols\SIP\SIPClient.cs" />

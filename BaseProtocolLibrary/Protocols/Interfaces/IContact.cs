@@ -20,6 +20,10 @@ namespace InstantMessage
 			get; 
 			set;
 		}
+		string DisplayName
+		{
+			get;
+		}
 		string Group
 		{
 			get;

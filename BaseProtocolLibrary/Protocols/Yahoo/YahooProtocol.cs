@@ -995,7 +995,6 @@ namespace InstantMessage.Protocols.Yahoo
 
 			int status = Convert.ToInt32(reader.ReadLine());
 			
-			//string streamBuf = reader.ReadToEnd();
 			int validfor = 0;
 
 			// Parsing
@@ -1003,7 +1002,8 @@ namespace InstantMessage.Protocols.Yahoo
 			{
 				//      [          ]
 				// crumb=iavJ...Prm
-				crumb = reader.ReadLine().Substring(7);
+				crumb = reader.ReadLine();
+				crumb = crumb.Substring(6);
 
 				//  [               ]
 				// Y=v=1&n=8...&np=1; path=/; domain=.yahoo.com
@@ -1056,7 +1056,8 @@ namespace InstantMessage.Protocols.Yahoo
 				
 				Trace.WriteLine("Yahoo: Have auth token (" + token.Substring(0, 20) + "...)");
 
-				mConfig.Add("token", token);
+				mConfig["tokenexpires"] = "0";
+				mConfig["token"] = token;
 			} else if (status == 1212) { // Invalid Credentials
 				Trace.WriteLine("Yahoo: OnGetYToken got Invalid credentials Error. Handling");
 				triggerBadCredentialsError();
@@ -1334,9 +1335,9 @@ namespace InstantMessage.Protocols.Yahoo
 		
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";
-		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgr&useutf8=1&legenc=codepage-1252";
-		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgr&login={0}&passwd={1}";
-		private const string mAuthCookieGetUrl = "https://login.yahoo.com/config/pwtoken_login?src=ymsgr&token={0}";
+		private const string mAddressBookUrl = "http://address.yahoo.com/yap/us?v=XM&prog=ymsgrb&useutf8=1&legenc=codepage-1252";
+		private const string mAuthTokenGetUrl = "https://login.yahoo.com/config/pwtoken_get?src=ymsgrb&login={0}&passwd={1}";
+		private const string mAuthCookieGetUrl = "https://login.yahoo.com/config/pwtoken_login?src=ymsgrb&token={0}";
 		private static Encoding dEncoding = Encoding.ASCII;
 		
 		public enum YahooIMVironment
