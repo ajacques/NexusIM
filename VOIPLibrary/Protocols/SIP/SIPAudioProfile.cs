@@ -13,9 +13,9 @@ namespace InstantMessage.Protocols.SIP
 			mAttributes = new List<string>();
 
 			mAttributes.Add("rtpmap:9 G722/8000");
-			mAttributes.Add("rtcp:50001");
 			mAttributes.Add("rtpmap:101 telephone-event/8000");
-			mAttributes.Add("rmtp:101 0-15");
+			mAttributes.Add("rmtp:101 0-16");
+			mAttributes.Add("ptime:20");
 			mAttributes.Add("sendrecv");
 		}
 

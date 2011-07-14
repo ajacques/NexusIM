@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\..\..\References\naudio\NAudio\bin\Debug\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -42,6 +45,8 @@
     <Compile Include="Protocols\SIP\SIPAudioProfile.cs" />
     <Compile Include="Protocols\SIP\SIPCall.cs" />
     <Compile Include="Protocols\SIP\SIPClient.cs" />
+    <Compile Include="RTCPEndpoint.cs" />
+    <Compile Include="RtpEndPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">

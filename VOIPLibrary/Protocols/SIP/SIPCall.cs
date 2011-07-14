@@ -27,7 +27,6 @@ namespace InstantMessage.Protocols.SIP
 
 		public void Invite(string username)
 		{
-			mStatus = VOIPCallStatus.Connecting;
 			StringWriter sbpBuilder = new StringWriter();
 
 			foreach (IMediaProfile profile in Profiles)
@@ -58,16 +57,22 @@ namespace InstantMessage.Protocols.SIP
 			}
 		}
 
-		public VOIPCallStatus Status
+		public SIPCallStatus Status
 		{
 			get {
 				return mStatus;
 			}
 		}
+		public string CallId
+		{
+			get {
+				return mCallId;
+			}
+		}
 
 		private string mCallId;
 		private SIPClient mClient;
-		private VOIPCallStatus mStatus;
+		private SIPCallStatus mStatus;
 		private List<IMediaProfile> mProfiles;
 	}
 }

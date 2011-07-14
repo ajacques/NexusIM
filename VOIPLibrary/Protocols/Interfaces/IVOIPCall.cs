@@ -23,10 +23,5 @@ namespace InstantMessage.Protocols.VOIP
 		{
 			get;
 		}
-
-		VOIPCallStatus Status
-		{
-			get;
-		}
 	}
 }

@@ -62,7 +62,7 @@ namespace InstantMessage.Protocols.SIP
 			public int SequenceId
 			{
 				get;
-				protected set;
+				set;
 			}
 			public string Method
 			{
@@ -139,7 +139,7 @@ namespace InstantMessage.Protocols.SIP
 				Headers.Add("Content-Type", "application/sdp");
 				Headers.Add("From", String.Format("\"{0}\" <sip:{0}@{1}>", client.Username, client.Server));
 				Headers.Add("To", String.Format("\"{0}\" <sip:{0}>", username));
-				Headers.Add("Call-Id", client.GenerateCallId());
+				Headers.Add("Call-Id", call.CallId);
 
 				BuildSDP();
 			}
@@ -184,7 +184,16 @@ namespace InstantMessage.Protocols.SIP
 			public ResponsePacket(TextReader source) : base(-1)
 			{
 				string status = source.ReadLine();
-				StatusCode = Int32.Parse(status.Substring(8, 3));
+
+				if (status.StartsWith("SIP/2.0"))
+				{
+					StatusCode = Int32.Parse(status.Substring(8, 3));
+				} else {
+					int m1Split = status.IndexOf(' ');
+					Method = status.Substring(0, m1Split);
+					int m2Split = status.IndexOf(' ', m1Split + 1);
+					Target = status.Substring(m1Split + 1, m2Split - m1Split);
+				}
 
 				while (source.Peek() != -1)
 				{
@@ -208,6 +217,18 @@ namespace InstantMessage.Protocols.SIP
 			{
 				get;
 				private set;
+			}
+		}
+		private class AckPacket : SIPPacket
+		{
+			public AckPacket(SIPPacket original, ResponsePacket packet) : base(packet.SequenceId)
+			{
+				Method = "ACK";
+				Target = original.Target;
+
+				Headers["From"] = packet.Headers["From"];
+				Headers["To"] = packet.Headers["To"];
+				Headers["Call-ID"] = packet.Headers["Call-ID"];
 			}
 		}
 
@@ -245,6 +266,15 @@ namespace InstantMessage.Protocols.SIP
 			string realm = null;
 			string nonce = null;
 			string hash = null;
+
+			if (packet is InvitePacket)
+			{
+				SIPPacket ackPacket = new AckPacket(packet, respPacket);
+				ResendPacket(ackPacket);
+				mSequences.Remove(packet.SequenceId);
+				packet.SequenceId = ++sequenceId;
+				mSequences.Add(packet.SequenceId, packet);
+			}
 
 			string authval = respPacket.Headers["WWW-Authenticate"];
 			string scheme = authval.Substring(0, authval.IndexOf(' '));
@@ -288,6 +318,10 @@ namespace InstantMessage.Protocols.SIP
 				ResendPacket(packet);
 			}
 		}
+		private void ProcessTrying(ResponsePacket respPacket)
+		{
+			SIPCall call = mCallsInProgress[respPacket.Headers["Call-ID"]];
+		}
 		private void ReceivePacket(IAsyncResult e)
 		{
 			IPEndPoint source = null;
@@ -300,15 +334,30 @@ namespace InstantMessage.Protocols.SIP
 			
 			switch (packet.StatusCode)
 			{
+				case 0:
+					{
+						SIPPacket ackPacket = new AckPacket(packet, packet);
+						ResendPacket(ackPacket);
+					}
+					break;
+				case 100: // Trying
+					ProcessTrying(packet);
+					break;
 				case 401: // Unauthorized
 					ProcessUnauthorized(packet);
 					break;
-				case 200:
-					SIPPacket tPacket = mSequences[packet.SequenceId];
+				case 200: // OK
+					{
+						SIPPacket tPacket = mSequences[packet.SequenceId];
 
-					if (tPacket is RegisterPacket)
-						LoginWaitHandle.Set();
-					mSequences.Remove(packet.SequenceId);
+						if (tPacket is RegisterPacket)
+							LoginWaitHandle.Set();
+						else if (tPacket is InvitePacket) {
+							SIPPacket ackPacket = new AckPacket(tPacket, packet);
+							ResendPacket(ackPacket);
+						}
+						mSequences.Remove(packet.SequenceId);
+					}
 
 					break;
 			}
