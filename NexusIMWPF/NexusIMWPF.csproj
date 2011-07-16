@@ -113,6 +113,7 @@
     <Compile Include="Controls\Chat Window\ChatHistoryBox.cs" />
     <Compile Include="Controls\Chat Window\Inlines\TimestampedInline.cs" />
     <Compile Include="Controls\Chat Window\Inlines\UserActionInline.cs" />
+    <Compile Include="Controls\Chat Window\SendMessageBox.cs" />
     <Compile Include="Controls\Contact List\CLErrorBox.xaml.cs">
       <DependentUpon>CLErrorBox.xaml</DependentUpon>
     </Compile>

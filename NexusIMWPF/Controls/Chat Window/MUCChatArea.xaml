@@ -85,7 +85,7 @@
 					<GradientStop Color="#FF8396FF" Offset="1"/>
 				</LinearGradientBrush>
 			</Grid.Background>
-			<TextBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown"  BorderBrush="Black" />
+			<nxc:SendMessageBox x:Name="MessageBody" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" SpellCheck.IsEnabled="True" Margin="5,0,5,5" Height="30" KeyDown="MessageBody_KeyDown" BorderBrush="Black" />
 		</Grid>
 		<Rectangle x:Name="OverlayRect" Visibility="Collapsed" Fill="#FF707070" Grid.ColumnSpan="2" Grid.RowSpan="2" MouseLeftButtonDown="OverlayRect_MouseLeftButtonDown" />
 		<Grid x:Name="InvitePopup" Visibility="Collapsed" Background="#FFEBEBEB" Width="160" VerticalAlignment="Center" Grid.ColumnSpan="2">

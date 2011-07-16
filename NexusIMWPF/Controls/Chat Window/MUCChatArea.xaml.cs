@@ -28,8 +28,7 @@ namespace NexusIM.Controls
 		{
 			InitializeComponent();
 
-			mMessageHistory = new LinkedList<string>();
-			mHistoryRoot = mMessageHistory.AddFirst(String.Empty);
+			MessageBody.MessageSend += new EventHandler<SendMessageEventArgs>(MessageBody_MessageSend);
 		}
 		public MUCChatArea(IChatRoom chatRoom) : this()
 		{
@@ -276,59 +275,11 @@ namespace NexusIM.Controls
 			UpdateParentWindowData();
 		}
 
-		protected override void OnInitialized(EventArgs e)
-		{
-			base.OnInitialized(e);
-		}
-		protected override void OnPreviewKeyDown(KeyEventArgs e)
-		{
-			base.OnPreviewKeyDown(e);
-
-			if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-			{
-				if (e.Key == Key.Up)
-				{
-					if (mHistoryNode == null)
-						return;
-
-					MessageBody.Text = mHistoryNode.Value;
-					if (mHistoryNode.Next != mHistoryRoot)
-						mHistoryNode = mHistoryNode.Next;
-
-					e.Handled = true;
-
-					MessageBody.CaretIndex = MessageBody.Text.Length;
-				} else if (e.Key == Key.Down) {
-					if (mHistoryNode == null)
-						return;
-
-					MessageBody.Text = mHistoryNode.Value;
-					if (mHistoryNode.Previous != mHistoryRoot)
-						mHistoryNode = mHistoryNode.Previous;
-
-					e.Handled = true;
-					MessageBody.CaretIndex = MessageBody.Text.Length;
-				}
-			}
-		}
-
 		// User Interface Event Handlers
 		private void MessageBody_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter && Keyboard.IsKeyUp(Key.LeftCtrl) && Keyboard.IsKeyUp(Key.RightCtrl))
+			if (e.Key == Key.Tab)
 			{
-				e.Handled = true;
-
-				string message = MessageBody.Text;
-
-				if (String.IsNullOrEmpty(message))
-					return;
-
-				if (ProcessSendMessage(message))
-					MessageBody.Text = String.Empty;
-
-				mHistoryNode = mMessageHistory.AddAfter(mHistoryRoot, message);
-			} else if (e.Key == Key.Tab) {
 				e.Handled = true;
 				string lastword = MessageBody.Text.Substring(MessageBody.Text.LastIndexOf(' ') + 1);
 				IEnumerable<IContact> matches = mChatRoom.Participants.Where(c => c.Nickname.StartsWith(lastword));
@@ -339,6 +290,10 @@ namespace NexusIM.Controls
 					MessageBody.CaretIndex = MessageBody.Text.Length;
 				}
 			}
+		}
+		private void MessageBody_MessageSend(object sender, SendMessageEventArgs e)
+		{
+			ProcessSendMessage(e.Message);
 		}
 		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
 		{
@@ -577,9 +532,6 @@ namespace NexusIM.Controls
 			}
 		}
 
-		private LinkedList<string> mMessageHistory;
-		private LinkedListNode<string> mHistoryNode;
-		private LinkedListNode<string> mHistoryRoot;
 		private ChatWindow mWindow;
 		private IntPtr mWindowPointer;
 		private IrcChanUserContextMenu mUserContextMenu;
