@@ -7,11 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using InstantMessage.Events;
-using System.Security.Authentication;
 
 namespace InstantMessage.Protocols.Irc
 {
@@ -27,7 +27,7 @@ namespace InstantMessage.Protocols.Irc
 
 			CreatePingThread();
 
-			mOnDuplicateName = (origin) => origin + '_';
+			mOnDuplicateName = (protocol, origin) => origin + '_';
 		}
 		public IRCProtocol(string hostname, int port = 6667, bool useSsl = false) : this()
 		{
@@ -382,7 +382,7 @@ namespace InstantMessage.Protocols.Irc
 			set	{
 				if (mNickname != value)
 				{
-					mOriginalNick = mNickname = value;
+					mActualNickname = mNickname = value;
 
 					NotifyPropertyChanged("Nickname");
 
@@ -417,6 +417,15 @@ namespace InstantMessage.Protocols.Irc
 		{
 			get	{
 				return mIsOperator;
+			}
+		}
+		public DuplicateNickname NicknameCollisionHandler
+		{
+			get	{
+				return mOnDuplicateName;
+			}
+			set {
+				mOnDuplicateName = value;
 			}
 		}
 
@@ -503,6 +512,9 @@ namespace InstantMessage.Protocols.Irc
 						case 381: // Login as Operator Success
 							mIsOperator = true;
 							break;
+						case 433: // Nickname in Use
+							HandleNicknameInUse();
+							break;
 						case 473: // Invite only
 							HandleJoinFailedPacket(IRCJoinFailedReason.InviteOnly, parameters.Skip(3).ToArray(), line.Substring(line.IndexOf(':', 1)));
 							break;
@@ -529,7 +541,7 @@ namespace InstantMessage.Protocols.Irc
 							HandlePartPacket(line, parameters);
 							break;
 						case "MODE":
-							HandleModeChangePacket(line, parameters);
+							HandleModeChangePacket(param[0], param[2]);
 							break;
 						case "NOTICE":
 							HandleNotice(line.Substring(line.IndexOf(':', 1) + 1));
@@ -588,7 +600,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			IRCUserMask mask = new IRCUserMask(this, parameters[0]);
 
-			if (mask.Nickname == mNickname)
+			if (mask.Nickname == mActualNickname)
 			{
 				string channelName = parameters[2];
 
@@ -608,49 +620,58 @@ namespace InstantMessage.Protocols.Irc
 					channel.TriggerOnPart(mask, line.Substring(index + 1));
 			}
 		}
-		private void HandleModeChangePacket(string line, string[] parameters)
+		private void HandleModeChangePacket(string username, string param)
 		{
-			string channelName = parameters[2];
+			// param will be in format: [channelName] [modes] [<user>]
+			string[] parameters = param.Split(mLineSplitSep, 3);
 
-			if (channelName == mNickname)
-				return;
+			string target = parameters[0];
 
-			string modes = parameters[3];
-
-			IRCChannel channel = FindChannelByName(channelName);
-			
-			bool isApply = false;
-
-			string[] people = parameters.Skip(4).ToArray();
-			List<IRCUserModeChange> modeChanges = new List<IRCUserModeChange>();
-			int i = 0;
-
-			foreach (char mode in modes)
+			if (target[0] == '#')
 			{
-				if (mode == '-')
-					isApply = false;
-				else if (mode == '+')
-					isApply = true;
-				else {
-					if (i > people.Length - 1)
+				string modes = parameters[1];
+
+				IRCChannel channel = FindChannelByName(target);
+
+				bool isApply = false;
+
+				string[] people = parameters[2].Split(' ');
+				List<IRCUserModeChange> modeChanges = new List<IRCUserModeChange>();
+				int i = 0;
+
+				foreach (char mode in modes)
+				{
+					if (mode == '-')
+						isApply = false;
+					else if (mode == '+')
+						isApply = true;
+					else
 					{
-					} else {
-						IRCUserModeChange change = new IRCUserModeChange();
-						change.UserMask = new IRCUserMask(this, people[i]);
-						change.Mode = CharToUserMode(mode);
-						change.IsAdd = isApply;
-						modeChanges.Add(change);
-						i++;
+						if (i > people.Length - 1)
+						{
+						} else {
+							IRCUserModeChange change = new IRCUserModeChange();
+							change.UserMask = new IRCUserMask(this, people[i]);
+							change.Mode = CharToUserMode(mode);
+							change.IsAdd = isApply;
+							modeChanges.Add(change);
+							i++;
+						}
 					}
 				}
-			}
 
-			channel.TriggerModeChange(modeChanges);
+				IRCModeChangeEventArgs args = new IRCModeChangeEventArgs();
+				args.Username = new IRCUserMask(this, username);
+				args.UserModes = modeChanges;
+				args.RawMode = param.Substring(param.IndexOf(' ') + 1);
+
+				channel.TriggerModeChange(args);
+			}
 		}
 		private void HandleUserJoinPacket(string[] parameters)
 		{
 			string name = parameters[2].Replace(":", "");
-			if (ExtractNickname(parameters[0]) != mNickname)
+			if (ExtractNickname(parameters[0]) != mActualNickname)
 				FindChannelByName(name).TriggerOnUserJoin(parameters[0]);
 			else {
 				if (!mChannels.ContainsKey(name))
@@ -680,6 +701,9 @@ namespace InstantMessage.Protocols.Irc
 			if (parameters[3] == mNickname) // It's us! 
 			{
 				FindChannelByName(parameters[2]).TriggerOnKicked(parameters[0], reason);
+			} else {
+				IRCChannel channel = FindChannelByName(parameters[2]);
+				
 			}
 		}
 		private void HandlePingPacket(string destination)
@@ -741,6 +765,19 @@ namespace InstantMessage.Protocols.Irc
 
 			Trace.WriteLineIf(offset.TotalSeconds > 5, "IRC: Latency Alert: " + offset.ToString());
 		}
+		private void HandleNicknameInUse()
+		{
+			triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "Duplicate Nickname"));
+			mProtocolStatus = IMProtocolStatus.Offline;
+			if (mOnDuplicateName != null)
+			{
+				string newNick = mOnDuplicateName(this, mActualNickname);
+				if (String.IsNullOrEmpty(newNick))
+					return;
+				mActualNickname = newNick;
+				BeginLogin();
+			}
+		}
 
 		// Socket Support Methods
 		private void SocketProcessByteQueue(int bytesRead)
@@ -794,7 +831,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void readDataAsync(IAsyncResult args)
 		{
-			if (client == null || !client.Connected)
+			if (client == null || !client.Connected || args != mOngoingResult)
 				return;
 
 			int bytesRead;
@@ -821,7 +858,7 @@ namespace InstantMessage.Protocols.Irc
 			SocketProcessByteQueue(bytesRead);
 			mLastCommunication = DateTime.UtcNow;
 
-			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+			mOngoingResult = mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{
@@ -871,7 +908,7 @@ namespace InstantMessage.Protocols.Irc
 			CompleteLogin();
 
 			mDataQueue = new byte[mBufferSize];
-			mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+			mOngoingResult = mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
 		private void CompleteLogin()
 		{
@@ -897,7 +934,7 @@ namespace InstantMessage.Protocols.Irc
 				sendData("PASS " + Password);
 
 			if (!String.IsNullOrEmpty(mNickname))
-				sendData("NICK " + mNickname);
+				sendData("NICK " + mActualNickname);
 
 			if (client.Available >= 1)
 			{
@@ -916,7 +953,7 @@ namespace InstantMessage.Protocols.Irc
 
 						if (parts[1] == "433")
 						{
-							triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, "Duplicate Nickname"));
+							HandleNicknameInUse();
 							return;
 						}
 					}
@@ -966,13 +1003,13 @@ namespace InstantMessage.Protocols.Irc
 
 		// Delegates
 		public delegate void ServerResponse(int id, string contents);
-		public delegate string DuplicateNickname(string original);
+		public delegate string DuplicateNickname(IRCProtocol protocol, string original);
 
-		// Variables		
+		// Variables
 		private HostMaskFindResult mPendingHostLookup;
 		private string mRealName = "nexusim";
 		private string mNickname;
-		private string mOriginalNick;
+		private string mActualNickname;
 		private bool mIsOperator;
 		private ChatRoomCollection<IRCChannel> mChannels = new ChatRoomCollection<IRCChannel>();
 		private Thread mWatchThread;
@@ -991,6 +1028,7 @@ namespace InstantMessage.Protocols.Irc
 		private StreamWriter mWriter;
 		private Stream mTextStream;
 		private StringBuilder mBufferCutoffMessage;
+		private IAsyncResult mOngoingResult;
 		private const int mBufferSize = 1024;
 		private static Encoding mTextEncoder = Encoding.UTF8;
 	}

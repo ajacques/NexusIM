@@ -32,4 +32,35 @@ namespace InstantMessage.Events
 			internal set;
 		}
 	}
+	public enum GroupChatUserLeaveReason
+	{
+		UserRequested,
+		Kicked
+	}
+	public class UserLeaveRoomEventArgs : IMChatRoomEventArgs
+	{
+		public UserLeaveRoomEventArgs(IContact user, string kickReason, IContact kicker)
+		{
+			User = user;
+		}
+
+		public IContact User
+		{
+			get;
+			internal set;
+		}
+		public GroupChatUserLeaveReason LeaveReason
+		{
+			get;
+			internal set;
+		}
+		/// <summary>
+		/// Gets 
+		/// </summary>
+		public string Message
+		{
+			get;
+			internal set;
+		}
+	}
 }

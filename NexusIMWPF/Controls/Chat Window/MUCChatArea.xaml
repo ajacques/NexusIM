@@ -65,7 +65,9 @@
 			</Grid>
 			<TextBlock x:Name="RoomDescription" Text="This is the channel topic. Here is where we'll explain the channel rules and what the channel is about. Is this enough text?" Margin="10,0,0,2" FontFamily="Calibri" FontSize="10.667" HorizontalAlignment="Left" VerticalAlignment="Bottom" Foreground="#FF5E5E5E" TextTrimming="CharacterEllipsis"/>
 			<Rectangle Grid.Row="1" Fill="White" RadiusX="4" RadiusY="4" Stroke="#FF8B8B8B" StrokeThickness="1.5" />
-			<nxc:ChatHistoryBox Grid.Row="1" x:Name="ChatHistory" VerticalAlignment="Bottom" />
+			<ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" VerticalAlignment="Bottom">
+				<nxc:ChatHistoryBox x:Name="ChatHistory" />
+			</ScrollViewer>
 		</Grid>
 		<!-- Participant List -->
 		<Grid Grid.Column="1">

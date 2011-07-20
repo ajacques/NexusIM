@@ -17,7 +17,6 @@ namespace NexusIM.Controls.Inlines
 			mLeftSpan = new Span();
 			Run mTimestamp = new Run();
 
-			mLeftSpan.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 255));
 			mTimestamp.Text = DateTime.Now.ToString(SettingCache.GetValue("ChatMsgTimestampFormat"), CultureInfo.InstalledUICulture);
 
 			mLeftSpan.Inlines.Add(new Run("["));

@@ -150,6 +150,11 @@ namespace InstantMessage.Protocols.Irc
 			if (OnModeChange != null)
 				OnModeChange(this, new IRCModeChangeEventArgs() { UserModes = users });
 		}
+		internal void TriggerModeChange(IRCModeChangeEventArgs args)
+		{
+			if (OnModeChange != null)
+				OnModeChange(this, args);
+		}
 		internal void TriggerTopicChange(string topic, string username)
 		{
 			if (TopicChanged != null)

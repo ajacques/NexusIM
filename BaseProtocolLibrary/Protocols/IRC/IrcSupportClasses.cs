@@ -17,6 +17,16 @@ namespace InstantMessage.Events
 			get;
 			internal set;
 		}
+		public IRCUserMask Username
+		{
+			get;
+			internal set;
+		}
+		public string RawMode
+		{
+			get;
+			internal set;
+		}
 	}
 	public class ChatRoomJoinFailedEventArgs : EventArgs
 	{

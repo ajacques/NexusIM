@@ -384,7 +384,7 @@ namespace NexusIM.Controls
 		private void ChatRoom_OnUserJoin(object sender, IMChatRoomGenericEventArgs e)
 		{
 			Dispatcher.InvokeIfRequired(() => {
-				Span span = new Span();
+				Span span = new TimestampedInline();
 				Run user = new Run(e.Username.Nickname);
 				Run message = new Run(" has entered the room.");
 
@@ -464,26 +464,17 @@ namespace NexusIM.Controls
 		}
 		private void IrcChannel_OnModeChange(object sender, IRCModeChangeEventArgs e)
 		{
-			foreach (var mode in e.UserModes)
+			Dispatcher.InvokeIfRequired(() =>
 			{
-				switch (mode.Mode)
-				{
-					case IRCUserModes.Operator:
-						Dispatcher.InvokeIfRequired(() => {
-							Span span = new Span();
-							span.Inlines.Add(new Run(mode.UserMask.Nickname));
+				Span span = new TimestampedInline();
+				span.Inlines.Add(new Run(e.Username.Nickname));
 
-							span.Foreground = Brushes.Green;
-							if (mode.IsAdd)
-								span.Inlines.Add(new Run(" is now a channel operator."));
-							else
-								span.Inlines.Add(new Run(" is no longer a channel operator."));
-							
-							ChatHistory.AppendInline(span);
-						});
-						break;
-				}
-			}
+				span.Foreground = Brushes.Green;
+				span.Inlines.Add(new Run(" sets mode: "));
+				span.Inlines.Add(new Run(e.RawMode));
+
+				ChatHistory.AppendInline(span);
+			});
 		}
 		private void IrcProtocol_LoginAsOperatorResult(bool success, string message)
 		{
@@ -513,7 +504,7 @@ namespace NexusIM.Controls
 			IRCProtocol ircProtocol = (IRCProtocol)sender;
 			
 			Dispatcher.InvokeIfRequired(() => {
-				Span span = new Span();
+				Span span = new TimestampedInline();
 				Run notice = new Run();
 				notice.Text = e.Message;
 

@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using NexusIM.Managers;
 using System.Windows;
 using System.Windows.Media;
+using System.Linq;
+using InstantMessage;
 
 namespace NexusIM.Windows
 {
@@ -38,6 +40,12 @@ namespace NexusIM.Windows
 					ConnStatus.Foreground = mRedBrush;
 					ConnStatus.Text = "Not Connected";
 				}
+
+				int upcount = AccountManager.Accounts.Count(acc => acc.Protocol.ProtocolStatus == IMProtocolStatus.Online);
+				int totalcount = AccountManager.Accounts.Count;
+
+				OnlineAccReal.Text = upcount.ToString();
+				OnlineAccTotal.Text = totalcount.ToString();
 			}
 		}
 

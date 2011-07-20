@@ -133,6 +133,7 @@ namespace NexusIM.Managers
 
 							IRCProtocol protocol = (IRCProtocol)extraData.Protocol;
 							protocol.OnJoinChannel += new EventHandler<IMChatRoomEventArgs>(IrcProtocol_OnJoinChannel);
+							protocol.NicknameCollisionHandler = new IRCProtocol.DuplicateNickname(IrcProtocol_OnNickCollision);
 						}
 
 						ConnectIfNeeded(extraData); // Now connect
@@ -198,6 +199,20 @@ namespace NexusIM.Managers
 			IRCChannel channel = (IRCChannel)e.ChatRoom;
 			
 			WindowSystem.OpenGroupChatWindow(channel);
+		}
+		private static string IrcProtocol_OnNickCollision(IRCProtocol protocol, string originalNick)
+		{
+			// Show a warning in the contact list
+			WindowSystem.DispatcherInvoke(() => {
+				CLErrorBox box = new CLErrorBox();
+				box.PopulateProtocolControls(protocol);
+				box.ErrorString.Text = "Somebody be stealing your nicknamez.";
+				box.AddLink("Recover", (t, g) => {});
+				box.AddLink("Change", (t, g) => {});
+				WindowSystem.ContactListWindow.OpenErrorBox(box);
+			});
+
+			return originalNick + "_";
 		}
 
 		private static void IMProtocol_AnyErrorOccurred(object sender, IMErrorEventArgs e)
