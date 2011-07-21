@@ -1003,6 +1003,10 @@ namespace InstantMessage.Protocols.Irc
 
 		// Delegates
 		public delegate void ServerResponse(int id, string contents);
+		/// <summary>
+		/// Describes a function that returns a new nickname if the currently requested one is already in use on the server.
+		/// </summary>
+		/// <returns>Return null if you want to cancel the connection</returns>
 		public delegate string DuplicateNickname(IRCProtocol protocol, string original);
 
 		// Variables

@@ -16,6 +16,7 @@ using InstantMessage.Protocols.Irc;
 using NexusIM.Controls.Inlines;
 using NexusIM.Protocol;
 using NexusIM.Windows;
+using NexusIM.Managers;
 
 namespace NexusIM.Controls
 {
@@ -94,6 +95,8 @@ namespace NexusIM.Controls
 		{
 			Dispatcher.InvokeIfRequired(() =>
 			{
+				Inline result = IMMessageProcessor.ProcessMessage(e.Message);
+
 				if (e.Flags == MessageFlags.None)
 				{
 					ChatMessageInline inline = new ChatMessageInline();
@@ -102,7 +105,7 @@ namespace NexusIM.Controls
 						inline.UsernameColor = Color.FromRgb(255, 100, 0);
 					else
 						inline.UsernameColor = Color.FromRgb(0, 0, 255);
-					inline.MessageBody = e.Message;
+					inline.Inlines.Add(result);
 
 					AppendChatInline(inline);
 				} else if (e.Flags == MessageFlags.UserAction) {
@@ -112,7 +115,7 @@ namespace NexusIM.Controls
 						inline.UsernameColor = Color.FromRgb(255, 100, 0);
 					else
 						inline.UsernameColor = Color.FromRgb(0, 0, 255);
-					inline.MessageBody = e.Message;
+					inline.Inlines.Add(result);
 
 					AppendChatInline(inline);
 				}

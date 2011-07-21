@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows;
-using InstantMessage;
 using System.Windows.Markup;
+using InstantMessage;
 
 namespace NexusIM.Controls
 {

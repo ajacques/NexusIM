@@ -28,7 +28,7 @@ namespace NexusIM.Windows
 
 		private void SysTrayPeekWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			if (IsVisible)
+			if (IsVisible) // Only update data if the window is opening
 			{
 				StatusString.Text = AccountManager.Status.ToString();
 

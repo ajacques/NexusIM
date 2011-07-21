@@ -7,7 +7,7 @@ namespace NexusIM.Managers
 {
 	static class UserIdle
 	{
-		[DllImport("User32.dll")]
+		[DllImport("user32.dll")]
 		private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
 
 		private struct LASTINPUTINFO

@@ -6,7 +6,7 @@
 	mc:Ignorable="d" d:DesignWidth="244">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="15" />
+			<RowDefinition Height="17" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="18" />
 		</Grid.RowDefinitions>
@@ -26,7 +26,7 @@
 			</Ellipse>
 			<Line X1="3" X2="13" Y1="8" Y2="8" Stroke="White" StrokeThickness="2" />
 		</Grid>
-		<TextBlock x:Name="ProtocolString" Text="[Username] - [Protocol]" Margin="2,2,2,0" Grid.Column="1" FontSize="11" FontWeight="SemiBold" Grid.Row="0" TextTrimming="CharacterEllipsis" />
+		<TextBlock x:Name="ProtocolString" Text="[Username] - [Protocol]" Margin="2,1,2,0" Grid.Column="1" FontSize="11" FontWeight="SemiBold" Grid.Row="0" TextTrimming="CharacterEllipsis" />
 		<TextBlock x:Name="ErrorString" Text="Sample Message summarizing the error. This can be a single line or even two lines." Margin="4,0,0,0" Grid.Column="1" Grid.Row="1" FontSize="9" TextWrapping="WrapWithOverflow" />
 		<TextBlock x:Name="LinkBox" Grid.Column="1" FontSize="11" VerticalAlignment="Bottom" Grid.Row="2" Margin="2,0,0,2" />
 	</Grid>

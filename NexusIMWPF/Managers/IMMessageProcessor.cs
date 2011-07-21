@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Windows.Documents;
 using InstantMessage;
 using InstantMessage.Events;
-using NexusIM.Controls;
-using System.Threading;
-using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace NexusIM.Managers
 {
@@ -26,7 +25,47 @@ namespace NexusIM.Managers
 				}
 			}
 		}
+		private static void IMProtocol_OnMessageReceived(object sender, IMMessageEventArgs e)
+		{
 
+		}
+
+		public static Inline ProcessMessage(string message)
+		{
+			Span result = new Span();
+			int index = message.IndexOf("http://");
+
+			index = index == -1 ? message.IndexOf("https://") : index;
+			index = index == -1 ? message.IndexOf("ftp://") : index;
+
+			if (index != -1)
+			{
+				int endIndex = message.IndexOf(' ', index);
+				string trailing = endIndex != -1 ? message.Substring(endIndex) : null;
+
+				endIndex = endIndex != -1 ? endIndex : message.Length;
+
+				string hyperlink = message.Substring(index, endIndex - index);
+
+				Uri href = null;
+				try	{
+					href = new Uri(hyperlink);
+				} catch (UriFormatException) {
+					Debug.WriteLine("Uri " + hyperlink + " failed to parse due to invalid format");
+					result.Inlines.Add(new Run(hyperlink));
+				}
+
+				message = message.Substring(0, index);
+
+				Hyperlink hinline = new Hyperlink();
+				hinline.NavigateUri = href;
+				hinline.Inlines.Add(new Run(hyperlink));
+				result.Inlines.Add(hinline);
+			} else
+				result.Inlines.Add(message);
+
+			return result;
+		}
 		public static IEnumerable<ChatInline> ProcessComplexMessage(IEnumerable<ChatInline> source)
 		{
 			List<ChatInline> processed = new List<ChatInline>();
@@ -71,11 +110,6 @@ namespace NexusIM.Managers
 			}
 
 			return processed;
-		}
-
-		private static void IMProtocol_OnMessageReceived(object sender, IMMessageEventArgs e)
-		{
-			
 		}
 	}
 }
