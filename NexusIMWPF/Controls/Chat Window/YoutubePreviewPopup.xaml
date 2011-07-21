@@ -15,18 +15,18 @@
 			<Grid Margin="3">
 				<Image x:Name="Thumbnail" />
 				<Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="11" Background="#FFD1D1D1">
-					<TextBlock x:Name="Duration" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="14" />
+					<TextBlock x:Name="Duration" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="14" Text="0:00" />
 				</Grid>
 			</Grid>
-			<TextBlock x:Name="TitleBlock" Margin="1,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="10" FontWeight="Bold" MaxWidth="140" TextTrimming="CharacterEllipsis" Grid.Column="1" />
-			<TextBlock x:Name="UploaderBlock" Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" Grid.Column="1"></TextBlock>
+			<TextBlock x:Name="TitleBlock" Margin="1,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="10" FontWeight="Bold" MaxWidth="140" TextTrimming="CharacterEllipsis" Grid.Column="1" Text="[Video Title]" />
+			<TextBlock x:Name="UploaderBlock" Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" Grid.Column="1" Text="[Uploader]" />
 			<TextBlock x:Name="RatingBlock" Margin="1,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="4 stars" Grid.Column="1">
 				<Run>?</Run>
 				<Run> stars</Run>
 			</TextBlock>
-			<TextBlock x:Name="DescriptionBlock" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" MaxWidth="190" MaxHeight="70" FontSize="10" TextWrapping="WrapWithOverflow" TextTrimming="WordEllipsis" />
+			<TextBlock x:Name="DescriptionBlock" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" MaxWidth="190" MaxHeight="70" FontSize="10" TextWrapping="WrapWithOverflow" TextTrimming="WordEllipsis" Text="[Description]" />
 		</Grid>
-		<Grid x:Name="LoadingHint" Background="White">
+		<Grid x:Name="LoadingHint" Background="White" Visibility="Collapsed">
 			<TextBlock Text="Loading Data..." HorizontalAlignment="Center" VerticalAlignment="Center" />
 		</Grid>
 	</Grid>

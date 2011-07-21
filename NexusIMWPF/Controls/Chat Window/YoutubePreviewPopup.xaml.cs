@@ -33,6 +33,8 @@ namespace NexusIM.Controls
 				request.BeginGetResponse(new AsyncCallback(OnVideoStatsDl), request);
 			} else
 				PopulateUIControls(metadata);
+
+			LoadingHint.Visibility = Visibility.Visible;
 		}
 
 		private void OnVideoStatsDl(IAsyncResult e)
