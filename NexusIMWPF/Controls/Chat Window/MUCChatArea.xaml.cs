@@ -95,7 +95,7 @@ namespace NexusIM.Controls
 		{
 			Dispatcher.InvokeIfRequired(() =>
 			{
-				Inline result = IMMessageProcessor.ProcessMessage(e.Message);
+				Inline result = IMMessageProcessor.ProcessMessage(e.Message, hyperlinkMouseEnter: new MouseEventHandler(ChatHistory.IMHyperlink_MouseEnter), hyperlinkMouseLeave: new MouseEventHandler(ChatHistory.IMHyperlink_MouseLeave));
 
 				if (e.Flags == MessageFlags.None)
 				{

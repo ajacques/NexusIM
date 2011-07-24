@@ -27,7 +27,12 @@ namespace NexusIM
 
 		public static void SetValue(string key, string value)
 		{
+			if (mCache.ContainsKey(key))
+				mCache[key] = value;
+			else
+				mCache.Add(key, value);
 
+			IMSettings.Settings[key] = value;
 		}
 
 		private static SortedDictionary<string, string> mCache;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Windows.Documents;
+using System.Windows.Input;
 using InstantMessage;
 using InstantMessage.Events;
 
@@ -30,7 +31,7 @@ namespace NexusIM.Managers
 
 		}
 
-		public static Inline ProcessMessage(string message)
+		public static Inline ProcessMessage(string message, MouseEventHandler hyperlinkMouseEnter = null, MouseEventHandler hyperlinkMouseLeave = null)
 		{
 			Span result = new Span();
 			int index = message.IndexOf("http://");
@@ -60,6 +61,11 @@ namespace NexusIM.Managers
 				Hyperlink hinline = new Hyperlink();
 				hinline.NavigateUri = href;
 				hinline.Inlines.Add(new Run(hyperlink));
+				if (hyperlinkMouseEnter != null)
+					hinline.MouseEnter += hyperlinkMouseEnter;
+				if (hyperlinkMouseLeave != null)
+					hinline.MouseLeave += hyperlinkMouseLeave;
+
 				result.Inlines.Add(hinline);
 			} else
 				result.Inlines.Add(message);

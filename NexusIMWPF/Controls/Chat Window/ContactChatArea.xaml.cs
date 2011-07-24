@@ -206,7 +206,7 @@ namespace NexusIM.Controls
 				{
 					string videoId = output.Groups[1].Value;
 					YoutubePreviewPopup ytcontent = new YoutubePreviewPopup();
-					ytcontent.PopulateUIControls(videoId);
+					ytcontent.LoadVideoMetadata(videoId);
 					LinkPreviewPopup.Child = ytcontent;
 					LinkPreviewPopup.Placement = PlacementMode.MousePoint;
 					LinkPreviewPopup.IsOpen = true;

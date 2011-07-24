@@ -12,4 +12,23 @@ namespace NexusIM
 
 		private static CEConnectionPool mPool;
 	}
+
+	partial class VideoMetadata
+	{
+		public long Likes
+		{
+			get;
+			set;
+		}
+		public long Dislikes
+		{
+			get;
+			set;
+		}
+		public long Views
+		{
+			get;
+			set;
+		}
+	}
 }

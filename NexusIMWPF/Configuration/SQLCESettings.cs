@@ -117,12 +117,12 @@ namespace NexusIM
 				get	{
 					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);
 
-					Setting setting = db.Settings.FirstOrDefault(s => s.Key == key);
+					string value = db.Settings.Where(s => s.Key == key).Select(s => s.Value).FirstOrDefault();
 
-					if (setting == null)
+					if (value == null)
 						return null;
 
-					return setting.Value;
+					return value;
 				}
 				set	{
 					UserProfile db = UserProfile.Create(SQLCESettings.ConnectionString);

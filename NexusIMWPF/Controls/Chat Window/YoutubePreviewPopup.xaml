@@ -20,9 +20,20 @@
 			</Grid>
 			<TextBlock x:Name="TitleBlock" Margin="1,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="10" FontWeight="Bold" MaxWidth="140" TextTrimming="CharacterEllipsis" Grid.Column="1" Text="[Video Title]" />
 			<TextBlock x:Name="UploaderBlock" Margin="16,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" Grid.Column="1" Text="[Uploader]" />
-			<TextBlock x:Name="RatingBlock" Margin="1,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="4 stars" Grid.Column="1">
-				<Run>?</Run>
-				<Run> stars</Run>
+			<!-- Like/Dislike Bar -->
+			<Grid Margin="1,9,5,0" Grid.Column="1" Height="5">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition x:Name="LikesBar" />
+					<ColumnDefinition Width="3"/>
+					<ColumnDefinition x:Name="DislikesBar" />
+				</Grid.ColumnDefinitions>
+				<Rectangle Fill="#FF006600" />
+				<Rectangle Grid.Column="2" Fill="#FFCC0000" />
+			</Grid>
+			<!-- View count Textbox -->
+			<TextBlock Margin="1,35,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1">
+				<Run x:Name="ViewsBlock">0</Run>
+				<Run> views</Run>
 			</TextBlock>
 			<TextBlock x:Name="DescriptionBlock" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Grid.ColumnSpan="2" MaxWidth="190" MaxHeight="70" FontSize="10" TextWrapping="WrapWithOverflow" TextTrimming="WordEllipsis" Text="[Description]" />
 		</Grid>
