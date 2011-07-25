@@ -31,7 +31,7 @@ namespace NexusIM.Managers
 
 		}
 
-		public static Inline ProcessMessage(string message, MouseEventHandler hyperlinkMouseEnter = null, MouseEventHandler hyperlinkMouseLeave = null)
+		public static Inline ProcessMessage(string message, MouseButtonEventHandler hyperlinkMouseClick = null, MouseEventHandler hyperlinkMouseEnter = null, MouseEventHandler hyperlinkMouseLeave = null)
 		{
 			Span result = new Span();
 			int index = message.IndexOf("http://");
@@ -65,6 +65,8 @@ namespace NexusIM.Managers
 					hinline.MouseEnter += hyperlinkMouseEnter;
 				if (hyperlinkMouseLeave != null)
 					hinline.MouseLeave += hyperlinkMouseLeave;
+				if (hyperlinkMouseClick != null)
+					hinline.MouseUp += hyperlinkMouseClick;
 
 				result.Inlines.Add(hinline);
 			} else

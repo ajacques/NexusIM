@@ -95,7 +95,7 @@ namespace NexusIM.Controls
 		{
 			Dispatcher.InvokeIfRequired(() =>
 			{
-				Inline result = IMMessageProcessor.ProcessMessage(e.Message, hyperlinkMouseEnter: new MouseEventHandler(ChatHistory.IMHyperlink_MouseEnter), hyperlinkMouseLeave: new MouseEventHandler(ChatHistory.IMHyperlink_MouseLeave));
+				Inline result = IMMessageProcessor.ProcessMessage(e.Message, hyperlinkMouseEnter: new MouseEventHandler(ChatHistory.IMHyperlink_MouseEnter), hyperlinkMouseLeave: new MouseEventHandler(ChatHistory.IMHyperlink_MouseLeave), hyperlinkMouseClick: new MouseButtonEventHandler(ChatHistory.IMHyperlink_MouseClick));
 
 				if (e.Flags == MessageFlags.None)
 				{
@@ -104,7 +104,7 @@ namespace NexusIM.Controls
 					if (e.Sender is SelfContact)
 						inline.UsernameColor = Color.FromRgb(255, 100, 0);
 					else
-						inline.UsernameColor = Color.FromRgb(0, 0, 255);
+						inline.UsernameColor = Color.FromRgb(0, 0, 145);
 					inline.Inlines.Add(result);
 
 					AppendChatInline(inline);
@@ -114,7 +114,7 @@ namespace NexusIM.Controls
 					if (e.Sender is SelfContact)
 						inline.UsernameColor = Color.FromRgb(255, 100, 0);
 					else
-						inline.UsernameColor = Color.FromRgb(0, 0, 255);
+						inline.UsernameColor = Color.FromRgb(0, 0, 145);
 					inline.Inlines.Add(result);
 
 					AppendChatInline(inline);

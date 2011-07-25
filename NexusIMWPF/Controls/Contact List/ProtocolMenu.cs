@@ -18,6 +18,7 @@ namespace NexusIM.Controls
 			this.Height = 16;
 			ToolTip tip = new ToolTip();
 			tip.Content = new TextBlock() { Text = this.ProtocolName };
+			this.Focusable = false;
 
 			this.ToolTip = tip;
 

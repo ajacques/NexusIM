@@ -164,7 +164,7 @@ namespace NexusIM.Controls
 				DislikesBar.Width = new GridLength(videoData.Dislikes / totalRates, GridUnitType.Star);
 			}
 
-			ViewsBlock.Text = videoData.Views.ToString("#,#", CultureInfo.InstalledUICulture);
+			ViewsBlock.Text = videoData.Views.ToString("N0", CultureInfo.InstalledUICulture);
 		}
 
 		private delegate void PopulateDelegate(VideoMetadata videoData);

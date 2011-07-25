@@ -69,8 +69,8 @@ namespace NexusIM.Controls
 						nhref.Inlines.Add(new Run(href.Body));
 						nhref.Cursor = Cursors.Hand;
 						nhref.Click += new RoutedEventHandler(IMHyperlink_Click);
-						nhref.MouseEnter += new MouseEventHandler(IMHyperlink_MouseEnter);
-						nhref.MouseLeave += new MouseEventHandler(IMHyperlink_MouseLeave);
+						//nhref.MouseEnter += new MouseEventHandler(IMHyperlink_MouseEnter);
+						//nhref.MouseLeave += new MouseEventHandler(IMHyperlink_MouseLeave);
 
 						inline.Inlines.Add(nhref);
 					}

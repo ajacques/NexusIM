@@ -7,7 +7,7 @@
 	Title="NexusIM" Height="500" Width="250" 
 	WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize" HorizontalAlignment="Right" UseLayoutRounding="True"
 	Icon="/NexusIMWPF;component/Resources/nexusim.ico"
-	Loaded="Window_Loaded" >
+	Loaded="Window_Loaded">
 	<Window.Resources>
 		<Storyboard x:Key="ShareMessageOpen">
 			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="StatusMessageGrid">

@@ -16,7 +16,7 @@ namespace NexusIM.Converters
 			if (value == null)
 				return new ArrayList();
 
-			IList<IMProtocolWrapper> source = (IList<IMProtocolWrapper>)value;
+			IEnumerable<IMProtocolWrapper> source = (IEnumerable<IMProtocolWrapper>)value;
 
 			ArrayList output = new ArrayList();
 

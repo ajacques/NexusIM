@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Markup;
-using InstantMessage;
-using System.Text.RegularExpressions;
-using System.Windows.Media.Animation;
-using System.Windows.Input;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Markup;
+using System.Windows.Media.Animation;
+using InstantMessage;
 
 namespace NexusIM.Controls
 {
@@ -26,10 +26,6 @@ namespace NexusIM.Controls
 			doc.Blocks.Add(mInlines);
 
 			this.Document = doc;
-			LinkPreviewPopup = new Popup();
-			LinkPreviewPopup.IsOpen = false;
-			LinkPreviewPopup.VerticalOffset = 10;
-			LinkPreviewPopup.AllowsTransparency = true;
 		}
 
 		public void AddChild(object value)
@@ -77,6 +73,10 @@ namespace NexusIM.Controls
 					string videoId = output.Groups[1].Value;
 					YoutubePreviewPopup ytcontent = new YoutubePreviewPopup();
 					ytcontent.LoadVideoMetadata(videoId);
+					LinkPreviewPopup = new Popup();
+					LinkPreviewPopup.IsOpen = false;
+					LinkPreviewPopup.VerticalOffset = 10;
+					LinkPreviewPopup.AllowsTransparency = true;
 					LinkPreviewPopup.Child = ytcontent;
 					LinkPreviewPopup.Placement = PlacementMode.MousePoint;
 					LinkPreviewPopup.IsOpen = true;
@@ -110,7 +110,12 @@ namespace NexusIM.Controls
 				fadeOut.Completed += onComplete;
 				fadeOut.Begin();
 				mLinkLinkPopup = false;
+				LinkPreviewPopup = null;
 			}			
+		}
+		public void IMHyperlink_MouseClick(object sender, MouseButtonEventArgs e)
+		{
+
 		}
 
 		private Paragraph mInlines;
