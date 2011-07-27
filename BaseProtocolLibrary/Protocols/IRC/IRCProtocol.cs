@@ -111,6 +111,10 @@ namespace InstantMessage.Protocols.Irc
 
 			sendData("JOIN " + room.Name);
 		}
+		public void FindRoomByName(string query, FindRoomCompleted onComplete)
+		{
+			mRoomSearchResults = new LinkedList<string>();
+		}
 
 		public override void SendMessage(string friendName, string message)
 		{
@@ -1023,6 +1027,9 @@ namespace InstantMessage.Protocols.Irc
 		private char[] mLineSplitSep = new char[] { ' ' };
 		private SortedDictionary<int, ServerResponse> mRespHandlers = new SortedDictionary<int, ServerResponse>();
 		private DuplicateNickname mOnDuplicateName;
+
+		// Channel Search Stuff
+		private LinkedList<string> mRoomSearchResults;
 
 		// Socket-related Variables
 		private string mActualServer;

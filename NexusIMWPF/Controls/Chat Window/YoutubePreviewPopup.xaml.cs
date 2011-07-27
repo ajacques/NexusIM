@@ -52,8 +52,8 @@ namespace NexusIM.Controls
 			VideoMetadata videoData = new VideoMetadata();
 			videoData.VideoId = mVideoId;
 
-			ProcessVideoStats(document, videoData);
-			ProcessTempStats(document, videoData);
+			ProcessVideoStats(document.DocumentElement, videoData);
+			ProcessTempStats(document.DocumentElement, videoData);
 			
 			Dispatcher.BeginInvoke(new PopulateDelegate(PopulateUIControls), videoData);
 
@@ -71,7 +71,7 @@ namespace NexusIM.Controls
 			document.Load(responseStream);
 
 			VideoMetadata videoData = new VideoMetadata();
-			ProcessTempStats(document, videoData);
+			ProcessTempStats(document.DocumentElement, videoData);
 
 			Dispatcher.BeginInvoke(new PopulateDelegate(PopulateTempControls), videoData);
 		}
@@ -95,31 +95,31 @@ namespace NexusIM.Controls
 			cache.SubmitChanges();
 		}
 
-		private void ProcessVideoStats(XmlDocument document, VideoMetadata videoData)
+		private void ProcessVideoStats(XmlElement root, VideoMetadata videoData)
 		{
-			XmlElement detailElem = document.DocumentElement["media:group"];
+			XmlElement detailElem = root["media:group"];
 
-			videoData.Title = document.DocumentElement["title"].InnerText;
-			videoData.Author = detailElem["media:credit"].InnerText;
-			videoData.Description = detailElem["media:description"].InnerText;
+			videoData.Title = root["title"].InnerText;
+			videoData.Author = root["author"]["name"].InnerText;
+			videoData.Description = detailElem["media:description"].InnerText.Substring(0, 350); // Only use the first 350 characters due to DataCache.sdf schema sizing and UI sizes
 
 			try {
-				string duration = document.DocumentElement["media:group"]["yt:duration"].GetAttribute("seconds");
+				string duration = detailElem["yt:duration"].GetAttribute("seconds");
 				videoData.Duration = Int32.Parse(duration);
 			} catch {
 				videoData.Duration = 0;
 			}
 		}
-		private void ProcessTempStats(XmlDocument document, VideoMetadata videoData)
+		private void ProcessTempStats(XmlElement root, VideoMetadata videoData)
 		{
 			try {
-				videoData.Views = Int64.Parse(document.DocumentElement["yt:statistics"].GetAttribute("viewCount"));
+				videoData.Views = Int64.Parse(root["yt:statistics"].GetAttribute("viewCount"));
 			} catch {
 				videoData.Views = -1;
 			}
 
 			try {
-				XmlElement rating = document.DocumentElement["yt:rating"];
+				XmlElement rating = root["yt:rating"];
 				videoData.Likes = Int64.Parse(rating.GetAttribute("numLikes"));
 				videoData.Dislikes = Int64.Parse(rating.GetAttribute("numDislikes"));
 			} catch {}
@@ -169,7 +169,7 @@ namespace NexusIM.Controls
 
 		private delegate void PopulateDelegate(VideoMetadata videoData);
 
-		private const string mVideoStatsUrl = "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&fields=title,media:group(media:description,media:credit,yt:duration),yt:statistics,yt:rating";
+		private const string mVideoStatsUrl = "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&fields=title,author,media:group(media:description,yt:duration),yt:statistics,yt:rating";
 		private const string mVideoEphemeralStatsUrl = "http://gdata.youtube.com/feeds/api/videos/{0}?v=2&fields=yt:statistics,yt:rating";
 		private const string mThumbailUrl = "http://i.ytimg.com/vi/{0}/default.jpg";
 		private string mVideoId;

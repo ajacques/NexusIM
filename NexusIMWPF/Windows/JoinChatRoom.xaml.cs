@@ -30,6 +30,14 @@ namespace NexusIM.Windows
 			}
 		}
 
+		protected override void OnPreviewKeyUp(KeyEventArgs e)
+		{
+			base.OnPreviewKeyUp(e);
+
+			if (e.Key == Key.Enter)
+				Button_Click(null, null);
+		}
+
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			IMProtocolWrapper extraData = AccountSelector.SelectedProtocol;
@@ -39,12 +47,19 @@ namespace NexusIM.Windows
 
 			this.Close();
 		}
-
 		private void RoomName_KeyUp(object sender, KeyEventArgs e)
 		{
 			if (RoomName.Text.Length >= 1)
+			{
 				JoinButton.IsEnabled = true;
-			else
+
+				IMProtocolWrapper wrapper = AccountSelector.SelectedProtocol;
+
+				if (wrapper.Protocol is IHasMUCRooms)
+				{
+
+				}
+			} else
 				JoinButton.IsEnabled = false;
 		}
 	}

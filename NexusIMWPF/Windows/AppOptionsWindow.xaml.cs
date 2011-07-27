@@ -33,7 +33,7 @@ namespace NexusIM.Windows
 				ChatMsgStampFormat.Items.Add(now.ToString(format, CultureInfo.InstalledUICulture));
 
 				if (curFormat == format)
-					ChatMsgStampFormat.SelectedIndex = index;
+					ChatMsgStampFormat.SelectedIndex = index + 1;
 				index++;
 			}
 
