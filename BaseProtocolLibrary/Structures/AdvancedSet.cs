@@ -99,7 +99,7 @@ namespace InstantMessage
 				mLock.EnterReadLock();
 
 				try	{
-					CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems));
+					CollectionChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, newItems));
 				} finally {
 					mLock.ExitReadLock();
 				}

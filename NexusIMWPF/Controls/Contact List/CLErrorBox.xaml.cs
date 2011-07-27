@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
-using System.Net.Sockets;
+using System.Windows.Documents;
 using InstantMessage;
 using NexusIM.Managers;
 using NexusIM.Windows;
-using InstantMessage.Events;
-using System.Windows.Documents;
 
 namespace NexusIM.Controls
 {

@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using NexusIM.Misc;
+using System.Text;
 
 namespace InstantMessage
 {
@@ -68,6 +70,19 @@ namespace InstantMessage
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+		public override string ToString()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendFormat("IMProtocolWrapper [Username: {0}, Type: {1}", Protocol.Username, Protocol.Protocol);
+
+			if (Enabled)
+				builder.Append(", Enabled");
+			else
+				builder.Append(", Disabled");
+			builder.Append("]");
+
+			return builder.ToString();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

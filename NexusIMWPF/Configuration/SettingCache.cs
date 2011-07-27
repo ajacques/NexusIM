@@ -13,13 +13,20 @@ namespace NexusIM
 			mCache = new SortedDictionary<string, string>();
 		}
 
-		public static string GetValue(string key)
+		public static string GetValue(string key, string defaultValue = null)
 		{
 			string output;
 			if (mCache.TryGetValue(key, out output))
 				return output;
 
 			output = IMSettings.Settings[key];
+
+			if (output == null)
+			{
+				mCache.Add(key, defaultValue);
+				return defaultValue;
+			}
+
 			mCache.Add(key, output);
 
 			return output;

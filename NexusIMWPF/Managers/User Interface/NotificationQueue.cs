@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using InstantMessage;
+using InstantMessage.Events;
 using NexusIM.Controls;
 using NexusIM.Windows;
-using System;
-using InstantMessage.Events;
-using System.Windows.Controls.Primitives;
-using System.Windows;
 
 namespace NexusIM.Managers
 {

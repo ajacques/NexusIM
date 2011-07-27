@@ -256,7 +256,7 @@
     <Compile Include="Windows\InitialSetup.xaml.cs">
       <DependentUpon>InitialSetup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\IRCSettingWindow.xaml.cs">
+    <Compile Include="Windows\IRC\IRCSettingWindow.xaml.cs">
       <DependentUpon>IRCSettingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\JoinChatRoom.xaml.cs">
@@ -265,7 +265,7 @@
     <Compile Include="Windows\SelectRecipientWindow.xaml.cs">
       <DependentUpon>SelectRecipientWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Specialized\IRC\ServerLinkWindow.xaml.cs">
+    <Compile Include="Windows\IRC\ServerLinkWindow.xaml.cs">
       <DependentUpon>ServerLinkWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SysTrayPeekWindow.xaml.cs">
@@ -459,7 +459,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\IRCSettingWindow.xaml">
+    <Page Include="Windows\IRC\IRCSettingWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -471,7 +471,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Windows\Specialized\IRC\ServerLinkWindow.xaml">
+    <Page Include="Windows\IRC\ServerLinkWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

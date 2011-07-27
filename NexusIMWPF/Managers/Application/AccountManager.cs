@@ -1,24 +1,22 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using InstantMessage;
 using InstantMessage.Events;
 using InstantMessage.Protocols.Irc;
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
+using NexusIM.Controls;
 using NexusIM.Misc;
 using NexusIM.Windows;
-using NexusIM.Controls;
-using Microsoft.Win32;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
 
 namespace NexusIM.Managers
 {
