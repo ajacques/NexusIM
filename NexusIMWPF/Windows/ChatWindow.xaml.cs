@@ -45,7 +45,7 @@ namespace NexusIM.Windows
 		{
 			Dispatcher.InvokeIfRequired(() =>
 			{
-				if (this.IsFocused)
+				if (this.IsFocused || this.IsActive)
 					return;
 
 				mUnread += step;

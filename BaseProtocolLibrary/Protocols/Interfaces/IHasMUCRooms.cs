@@ -14,7 +14,7 @@ namespace InstantMessage.Protocols
 			get;
 		}
 	}
-	public delegate void FindRoomCompleted(IEnumerable<string> roomNames);
+	public delegate void RoomListCompleted(IEnumerable<string> roomNames);
 	/// <summary>
 	/// Describes a protocol that supports instances of multi-user group chats
 	/// </summary>
@@ -22,7 +22,7 @@ namespace InstantMessage.Protocols
 	{
 		IChatRoom JoinChatRoom(string roomName);
 		void JoinChatRoom(IChatRoom room);
-		void FindRoomByName(string query, FindRoomCompleted onComplete);
+		void FindRoomByName(string query, RoomListCompleted onComplete);
 
 		IEnumerable<IChatRoom> Channels
 		{

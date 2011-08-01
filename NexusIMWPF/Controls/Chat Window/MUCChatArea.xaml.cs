@@ -23,7 +23,7 @@ namespace NexusIM.Controls
 	/// <summary>
 	/// Interaction logic for MUCChatArea.xaml
 	/// </summary>
-	public partial class MUCChatArea : UserControl, IDisposable
+	public sealed partial class MUCChatArea : UserControl, IDisposable
 	{
 		public MUCChatArea()
 		{
@@ -91,6 +91,79 @@ namespace NexusIM.Controls
 			return ChatRoom.Name;
 		}
 
+		/// <summary>
+		/// Converts an HSV color to the RGB color model.
+		/// </summary>
+		/// <param name="hue"></param>
+		private Color HsvToRgb(double hue, double saturation, double value)
+		{
+			if (saturation == 0)
+			{
+				byte v = (byte)Math.Round(value * 255);
+				return Color.FromRgb(v, v, v);
+			}
+
+			double r, g, b;
+			double i;
+			double f, p, q, t;
+
+			hue = hue / 60;
+			i = Math.Floor(hue);
+			f = hue - i;
+			p = value * (1 - saturation);
+			q = value * (1 - saturation * f);
+			t = value * (1 - saturation * (1 - f));
+
+			switch ((int)i)
+			{
+				case 0:
+					r = value;
+					g = t;
+					b = p;
+					break;
+				case 1:
+					r = q;
+					g = value;
+					b = p;
+					break;
+				case 2:
+					r = p;
+					g = value;
+					b = t;
+					break;
+				case 3:
+					r = p;
+					g = q;
+					b = value;
+					break;
+				case 4:
+					r = t;
+					g = p;
+					b = value;
+					break;
+				default:
+					r = value;
+					g = p;
+					b = q;
+					break;
+			}
+
+			byte br = (byte)(r * 255);
+			byte bg	= (byte)(g * 255);
+			byte bb = (byte)(b * 255);
+
+			return Color.FromRgb(br, bg, bb);
+		}
+
+		private Color ComputeUserColor(string username)
+		{
+			int hash = Math.Abs(username.GetHashCode());
+			hash = hash % 3504; // 1009
+			hash = hash % 360;
+
+			return HsvToRgb(hash, 83, 76);
+		}
+
 		public void ProcessChatMessage(IMMessageEventArgs e)
 		{
 			Dispatcher.InvokeIfRequired(() =>
@@ -104,7 +177,7 @@ namespace NexusIM.Controls
 					if (e.Sender is SelfContact)
 						inline.UsernameColor = Color.FromRgb(255, 100, 0);
 					else
-						inline.UsernameColor = Color.FromRgb(0, 0, 145);
+						inline.UsernameColor = ComputeUserColor(e.Sender.Username); //Color.FromRgb(0, 0, 145);
 					inline.Inlines.Add(result);
 
 					AppendChatInline(inline);
@@ -143,7 +216,13 @@ namespace NexusIM.Controls
 		}
 		private void AppendChatInline(Inline inline)
 		{
+			bool autoScroll = false;
+			if (1 - (HistoryScroller.VerticalOffset / HistoryScroller.ViewportHeight) > 0.2)
+				autoScroll = true;
+			
 			ChatHistory.AppendInline(inline);
+
+			HistoryScroller.ScrollToBottom();
 		}
 		private bool ProcessSendMessage(string message)
 		{
@@ -297,6 +376,7 @@ namespace NexusIM.Controls
 		private void MessageBody_MessageSend(object sender, SendMessageEventArgs e)
 		{
 			ProcessSendMessage(e.Message);
+			HistoryScroller.ScrollToBottom();
 		}
 		private void Hyperlink_MouseEnter(object sender, MouseEventArgs e)
 		{

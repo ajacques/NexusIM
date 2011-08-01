@@ -16,8 +16,8 @@ namespace NexusIM.Controls
 			SetupMenuItems();
 			SetupEventHandlers();
 
-			AccountManager.StatusChanged += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
-			AccountManager_onStatusChange(null, null);
+			//AccountManager.StatusChanged += new EventHandler<StatusUpdateEventArgs>(AccountManager_onStatusChange);
+			//AccountManager_onStatusChange(null, null);
 		}
 
 		private void SetupMenuItems()

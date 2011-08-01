@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
@@ -66,7 +67,11 @@ namespace InstantMessage.Protocols.Irc
 
 			Trace.WriteLine(String.Format("IRC: Beginning Login (Nickname: {0}, Server: {1})", Username, Server));
 
-			client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			IPAddress targetServer;
+			if (IPAddress.TryParse(mServer, out targetServer))
+				client = new Socket(targetServer.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+			else
+				client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);			
 			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
@@ -111,9 +116,11 @@ namespace InstantMessage.Protocols.Irc
 
 			sendData("JOIN " + room.Name);
 		}
-		public void FindRoomByName(string query, FindRoomCompleted onComplete)
+		public void FindRoomByName(string query, RoomListCompleted onComplete)
 		{
 			mRoomSearchResults = new LinkedList<string>();
+
+			SendRawMessage(String.Format("LIST -{0}-", query));
 		}
 
 		public override void SendMessage(string friendName, string message)
@@ -479,6 +486,17 @@ namespace InstantMessage.Protocols.Irc
 						case 001: // Connection setup stuff
 							mActualServer = parameters[0];
 							break;
+						case 322: // LIST item
+
+							break;
+						case 323: // End /LIST
+							if (mOnRoomListComplete != null)
+							{
+								mOnRoomListComplete(mRoomSearchResults);
+								mRoomSearchResults = null;
+								mOnRoomListComplete = null;
+							}
+							break;
 						case 332: // Channel Topic
 							{
 								string[] chunks = param[2].Split(mLineSplitSep, 3);
@@ -733,7 +751,7 @@ namespace InstantMessage.Protocols.Irc
 			{
 				IRCChannel channel = FindChannelByName(recipient);
 
-				int messageStartIndex = line.IndexOf(':', 5);
+				int messageStartIndex = line.IndexOf(':', line.IndexOf(' '));
 				string message = line.Substring(messageStartIndex + 1);
 
 				MessageFlags flags = MessageFlags.None;
@@ -979,7 +997,14 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void sendData(string data)
 		{
-			mWriter.WriteLine(data);
+			try {
+				mWriter.WriteLine(data);
+			} catch (SocketException e) {
+				Trace.WriteLine("IRC: SocketException: " + e.Message);
+				Dispose();
+				triggerOnError(new SocketErrorEventArgs(e));
+				return;
+			}
 		}
 		private string ExtractNickname(string hostmask)
 		{
@@ -1029,6 +1054,7 @@ namespace InstantMessage.Protocols.Irc
 		private DuplicateNickname mOnDuplicateName;
 
 		// Channel Search Stuff
+		private RoomListCompleted mOnRoomListComplete;
 		private LinkedList<string> mRoomSearchResults;
 
 		// Socket-related Variables
