@@ -50,9 +50,6 @@ namespace NexusIM.Managers
 			{
 				mSuspendEvent.WaitOne(); // Wait for the go-ahead, used to prevent wasted cpu cycles when the user shouldn't go to idle.
 
-				if (UserIdleTime() > idleTime)
-					;
-
 				Thread.Sleep(10000);
 			}
 		}

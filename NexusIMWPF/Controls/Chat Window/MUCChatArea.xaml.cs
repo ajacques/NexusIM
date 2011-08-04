@@ -216,9 +216,9 @@ namespace NexusIM.Controls
 		}
 		private void AppendChatInline(Inline inline)
 		{
-			bool autoScroll = false;
-			if (1 - (HistoryScroller.VerticalOffset / HistoryScroller.ViewportHeight) > 0.2)
-				autoScroll = true;
+			//bool autoScroll = false;
+			//if (1 - (HistoryScroller.VerticalOffset / HistoryScroller.ViewportHeight) > 0.2)
+			//	autoScroll = true;
 			
 			ChatHistory.AppendInline(inline);
 

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
-using System.Threading;
 using System.Data.SqlServerCe;
 using System.Diagnostics;
+using System.Threading;
 
 namespace NexusIM
 {
@@ -14,15 +12,33 @@ namespace NexusIM
 	/// </summary>
 	class CEConnectionPool : IDisposable
 	{
-		private Dictionary<int, IDbConnection> threadConnectionMap;
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConnectionPool"/> class.
+		/// </summary>
+		/// <param name="connectionString">The connection string.</param>
+		public CEConnectionPool(string connectionString)
+		{
+			threadConnectionMap = new SortedDictionary<int, IDbConnection>();
+			ConnectionString = connectionString;
+			mapWriteLock = new ReaderWriterLockSlim();
+		}
 
 		public void Dispose()
 		{
+			if (disposed)
+				return;
+
+			disposed = true;
 			if (threadConnectionMap != null)
 			{
 				foreach (var pair in threadConnectionMap)
 					pair.Value.Dispose();
 			}
+			threadConnectionMap = null;
+
+			if (mapWriteLock != null)
+				mapWriteLock.Dispose();
+			mapWriteLock = null;
 		}
 
 		/// <summary>
@@ -42,34 +58,44 @@ namespace NexusIM
 		public IDbConnection Connection
 		{
 			get	{
+				if (disposed)
+					throw new ObjectDisposedException("this");
+
 				int threadId = Thread.CurrentThread.ManagedThreadId;
+				IDbConnection connection = null;
+				bool foundValue;
 
-				lock (threadConnectionMap)
-				{
-					IDbConnection connection = null;
-					if (!threadConnectionMap.TryGetValue(threadId, out connection))
-					{
-						connection = new SqlCeConnection(ConnectionString);
-						connection.Open();
-						Trace.WriteLine(string.Format("CEConnectionPool: Opening new {0} connection (Total: {1})", connection.Database.Substring(connection.Database.LastIndexOf('\\') + 1), ++mConnections));
-						threadConnectionMap.Add(threadId, connection);
-					}
-
-					return connection;
+				// Check to see if this thread already has a connection
+				mapWriteLock.EnterReadLock();
+				try {
+					foundValue = threadConnectionMap.TryGetValue(threadId, out connection);
+				} finally {
+					mapWriteLock.ExitReadLock();
 				}
+
+				if (!foundValue)
+				{
+					// Open a new connection for the thread
+					connection = new SqlCeConnection(ConnectionString);
+					connection.Open();
+					Trace.WriteLine(String.Format("CEConnectionPool: Opening new {0} connection (Total: {1})", connection.Database.Substring(connection.Database.LastIndexOf('\\') + 1), ++mConnections));
+
+					mapWriteLock.EnterWriteLock();
+					try {
+						threadConnectionMap.Add(threadId, connection);
+					} finally {
+						mapWriteLock.ExitWriteLock();
+					}
+				}
+
+				return connection;
 			}
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="ConnectionPool"/> class.
-		/// </summary>
-		/// <param name="connectionString">The connection string.</param>
-		public CEConnectionPool(string connectionString)
-		{
-			threadConnectionMap = new Dictionary<int, IDbConnection>();
-			ConnectionString = connectionString;
-		}
-
+		// Variables
 		private int mConnections = 0;
+		private SortedDictionary<int, IDbConnection> threadConnectionMap;
+		private ReaderWriterLockSlim mapWriteLock;
+		private bool disposed;
 	}
 }

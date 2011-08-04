@@ -11,6 +11,7 @@ using InstantMessage.Protocols.Irc;
 using InstantMessage.Protocols.Yahoo;
 using Microsoft.SqlServerCe.VersionManagement;
 using NexusIM.Managers;
+using System.Data;
 
 namespace NexusIM
 {
@@ -499,27 +500,34 @@ namespace NexusIM
 				IMProtocol protocol = (IMProtocol)sender;
 				UserProfile profile = UserProfile.Create(mConnectionString);
 				IMProtocolWrapper wrapper = AccountManager.Accounts.Find(protocol);
-				Account account = FindAccById(profile, wrapper.DatabaseId);
 
-				if (account == null)
-					return;
+				//Account account = FindAccById(profile, wrapper.DatabaseId);
+
+				//if (account == null)
+				//	return;
 
 				switch (e.PropertyName)
 				{
 					case "Username":
-						account.Username = protocol.Username;
+						//account.Username = protocol.Username;
+						profile.ExecuteCommand("UPDATE [Accounts] SET [Username] = @p1 WHERE [Id] = @p0", wrapper.DatabaseId, protocol.Username);
+
 						break;
 					case "Password":
-						account.Password = protocol.Password;
+						//account.Password = protocol.Password;
+						profile.ExecuteCommand("UPDATE [Accounts] SET [Password] = @p1 WHERE [Id] = @p0", wrapper.DatabaseId, protocol.Password);
+
 						break;
 					case "Server":
-						account.Server = protocol.Server;
+						//account.Server = protocol.Server;
+						//profile.ExecuteCommand("UPDATE [Accounts] SET [Server] = @p1 WHERE [Id] = @p0", wrapper.DatabaseId, protocol.Server);
+
 						break;
 					case "Nickname":
-						protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
+						//protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
 						break;
 					case "RealName":
-						protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
+						//protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
 						break;
 					default:
 						return;

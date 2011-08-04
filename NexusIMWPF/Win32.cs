@@ -168,11 +168,11 @@ namespace NexusIM
 
 		public static bool IsWinVistaAndUp()
 		{
-			return (Environment.OSVersion.Version.Major >= 6);
+			return Environment.OSVersion.Platform == PlatformID.Win32Windows && Environment.OSVersion.Version.Major >= 6;
 		}
 		public static bool IsWin7AndUp()
 		{
-			return ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 7);
+			return Environment.OSVersion.Platform == PlatformID.Win32Windows && ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 7);
 		}
 	}
 }

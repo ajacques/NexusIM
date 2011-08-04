@@ -6,17 +6,17 @@
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ChatMessageNotification"
 	x:Name="UserControl" x:FieldModifier="private"
-	d:DesignWidth="200" d:DesignHeight="50" UseLayoutRounding="True">
+	d:DesignWidth="200" d:DesignHeight="40" UseLayoutRounding="True">
 	<Grid x:Name="LayoutRoot">
 		<Grid.RowDefinitions>
-			<RowDefinition Height="22" />
+			<RowDefinition Height="20" />
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="37" />
 			<ColumnDefinition />
 		</Grid.ColumnDefinitions>
-		<TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="2,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" FontWeight="Bold">
+		<TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="2,2,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" FontWeight="Bold">
 			<Run x:Name="DisplayName" Text="DisplayName" />
 			<Span Foreground="#FF373737">(<Run x:Name="Username" Text="username"/>)</Span>
 		</TextBlock>

@@ -1,11 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System;
-using System.Net.Sockets;
-using System.Windows.Media;
 using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace NexusIM.Controls
 {
@@ -37,11 +37,17 @@ namespace NexusIM.Controls
 		{
 			string host = Text;
 
+			if (String.IsNullOrWhiteSpace(host))
+			{
+				ClearResults();
+				return;
+			}
+
 			IPAddress ip = null;
 			if (IPAddress.TryParse(host, out ip))
 			{
 				if (ip.ToString() == host)
-					ShowResults(Color.FromRgb(190, 255, 190), () => { return new Run("The specified IP address is valid."); });
+					ShowResults(Color.FromRgb(190, 255, 190), () => new Run("The specified IP address is valid."));
 				else {
 					GenerateText exec = () => {
 						Span span = new Span();

@@ -21,18 +21,16 @@ namespace NexusIM.Managers
 		private static void BeginRestart()
 		{
 			Trace.WriteLine("Possible Crash Detected. Saving program state");
-			FileStream fstream = File.Create(Path.GetTempPath() + "\\nexusim_recovery.xml");
-			XmlDocument xml = new XmlDocument();
-			xml.AppendChild(xml.CreateXmlDeclaration("1.0", "", ""));
-			XmlElement root = xml.CreateElement("recovery");
-
-			XmlElement windows = xml.CreateElement("windows");
-
+			FileStream fstream = File.Create(Path.GetTempPath() + "\\nexusim_recovery.txt");
+			StreamWriter writer = new StreamWriter(fstream);
 			
-			root.AppendChild(windows);
+			writer.WriteLine("-windows");
+			if (WindowSystem.ContactListWindow.IsVisible)
+				writer.WriteLine("contactlist");
 
-			xml.Save(fstream);
-			fstream.Close();
+			writer.Flush();
+			writer.Close();
+
 			ApplicationRecovery.ApplicationRecoveryFinished(true);
 
 			Trace.WriteLine("Recovery information saved. Shutting down");

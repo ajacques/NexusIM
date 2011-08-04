@@ -63,6 +63,9 @@ namespace InstantMessage.Protocols.Irc
 		}
 		public override void BeginLogin()
 		{
+			if (mProtocolStatus != IMProtocolStatus.Offline)
+				return;
+
 			base.BeginLogin();
 
 			Trace.WriteLine(String.Format("IRC: Beginning Login (Nickname: {0}, Server: {1})", Username, Server));
@@ -73,7 +76,7 @@ namespace InstantMessage.Protocols.Irc
 			else
 				client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-			client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);			
+			mOngoingResult = client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);
 			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
 		}
 		public override void Disconnect()
@@ -884,6 +887,9 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{
+			if (e != mOngoingResult)
+				return;
+
 			try {
 				client.EndConnect(e);
 			} catch (SocketException x) {

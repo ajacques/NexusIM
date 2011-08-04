@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using InstantMessage;
-using System.Threading;
 using InstantMessage.Events;
 
 namespace NexusIM.Managers

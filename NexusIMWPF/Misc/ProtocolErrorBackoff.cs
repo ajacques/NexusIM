@@ -15,6 +15,9 @@ namespace NexusIM.Misc
 	{
 		public ProtocolErrorBackoff(IMProtocolWrapper protocol)
 		{
+			if (protocol == null)
+				throw new ArgumentNullException("protocol");
+
 			mAttempts = 1;
 			mInterval = TimeSpan.FromSeconds(3);
 
@@ -37,6 +40,8 @@ namespace NexusIM.Misc
 
 		public void Dispose()
 		{
+			Cleanup();
+
 			if (mTimer != null)
 				mTimer.Dispose();
 
@@ -45,11 +50,13 @@ namespace NexusIM.Misc
 		}
 		private void Cleanup()
 		{
-			mTimer.Stop();
-			mTimer.Elapsed -= new ElapsedEventHandler(Timer_Tick);
-			mProtocol.ErrorBackoff = null;
-
-			Dispose();
+			if (mTimer != null)
+			{
+				mTimer.Stop();
+				mTimer.Elapsed -= new ElapsedEventHandler(Timer_Tick);
+			}
+			if (mProtocol != null)
+				mProtocol.ErrorBackoff = null;
 		}
 		
 		// Event Handlers
@@ -97,12 +104,14 @@ namespace NexusIM.Misc
 		}
 		private void Timer_Tick(object sender, ElapsedEventArgs e)
 		{
+			mTimer.Stop();
+
+			Trace.WriteLine(String.Format("ErrorHandler: Re-attemping login now for: (Username: {0}, Type: {1})", mProtocol.Protocol, mProtocol.Protocol.Protocol));
+
 			mInterval = mInterval.Add(mInterval); // Double it
 			mAttempts++;
 			mTimer.Interval = mInterval.TotalMilliseconds;
 			mProtocol.Protocol.BeginLogin();
-
-			mTimer.Stop();
 		}
 		private void SysTrayIcon_TrayBalloonTipClicked(object sender, RoutedEventArgs e)
 		{
