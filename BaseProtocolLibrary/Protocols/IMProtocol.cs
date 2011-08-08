@@ -75,6 +75,16 @@ namespace InstantMessage
 		Permanently_Offline
 	}
 
+	[Flags]
+	public enum IMRequiredDetail
+	{
+		None = 0,
+		Username = 1,
+		Password = 2,
+		Server = 4,
+		Nickname = 8
+	}
+
 	/// <summary>
 	/// Stores information and handles communication for specific IM networks
 	/// </summary>
@@ -93,6 +103,22 @@ namespace InstantMessage
 		{
 			mProtocolStatus = IMProtocolStatus.Connecting;
 			mLoginWaitHandle = new ManualResetEvent(false);
+		}
+		public virtual bool IsReady()
+		{
+			IMRequiredDetail detail;
+			IsReady(out detail);
+
+			return detail == IMRequiredDetail.None;
+		}
+		public virtual void IsReady(out IMRequiredDetail reason)
+		{
+			reason = IMRequiredDetail.None;
+			if (String.IsNullOrEmpty(mUsername))
+				reason |= IMRequiredDetail.Username;
+
+			if (String.IsNullOrEmpty(mPassword))
+				reason |= IMRequiredDetail.Password;
 		}
 		/// <summary>
 		/// Waits for the login process to complete, then continues

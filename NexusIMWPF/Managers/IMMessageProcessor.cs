@@ -33,6 +33,8 @@ namespace NexusIM.Managers
 
 		public static Inline ProcessMessage(string message, MouseButtonEventHandler hyperlinkMouseClick = null, MouseEventHandler hyperlinkMouseEnter = null, MouseEventHandler hyperlinkMouseLeave = null)
 		{
+			message = message.TrimEnd(' ', '\t');
+
 			Span result = new Span();
 			int index = message.IndexOf("http://");
 

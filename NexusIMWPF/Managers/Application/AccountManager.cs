@@ -146,10 +146,21 @@ namespace NexusIM.Managers
 			
 			if (extraData.Enabled != (extraData.Protocol.ProtocolStatus != IMProtocolStatus.Offline))
 			{
-				if (extraData.Enabled)
-					extraData.Protocol.BeginLogin();
-				else
-					extraData.Protocol.Disconnect();
+				if (!extraData.Protocol.IsReady())
+				{
+					return;
+				}
+
+				try {
+					if (extraData.Enabled)
+						extraData.Protocol.BeginLogin();
+					else
+						extraData.Protocol.Disconnect();
+				} catch (Exception e) {
+					Trace.WriteLine(String.Format("AccountManager: Exception thrown while attempting protocol connection. [Type: {0}, Username: {1}]", extraData.Protocol.Protocol, extraData.Protocol.Username));
+					Trace.WriteLine(e.Message);
+					Trace.WriteLine(e.StackTrace);
+				}
 			}
 		}
 		private static void ConnectIfNeeded(object threadState)

@@ -2,9 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Shapes;
-using NexusIM.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace NexusIM.Windows
 {
@@ -167,16 +166,6 @@ namespace NexusIM.Windows
 
 				Title = msg;
 			});
-			/*Dispatcher.InvokeIfRequired(() => {
-				string msg;
-
-				if (mUnread == 0)
-					msg = ChatAreas.SelectedItem.ToString();
-				else
-					msg = String.Format("[{0}] {1}", mUnread, ChatAreas.SelectedItem.ToString());
-
-				Title = msg;
-			});*/
 		}
 		private void UpdateGlass()
 		{

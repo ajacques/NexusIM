@@ -45,24 +45,23 @@
 			<Run Foreground="#FF007474" x:Name="MainAccountUsername">Username</Run> - <Run x:Name="MainAccountTypeLabel">AccountType</Run>
 		</TextBlock>
 		<Grid x:Name="BehindGrid" Opacity="0" Visibility="Collapsed" Margin="70,0,0,0">
-			<Grid HorizontalAlignment="Left" Width="220">
+			<Grid x:Name="ControlBlock" HorizontalAlignment="Left" MinWidth="220" Margin="0,3,0,3">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="100"/>
 					<ColumnDefinition Width="0.623*"/>
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="27"/>
-					<RowDefinition Height="0"/>
 					<RowDefinition Height="27"/>
 					<RowDefinition Height="24"/>
 				</Grid.RowDefinitions>
-				<TextBox x:Name="UsernameBox" Margin="0,5,4,2" />
-				<Grid x:Name="ServerGrid" Margin="0,5,0,2" HorizontalAlignment="Left" Grid.Column="1">
+				<TextBox x:Name="UsernameBox" Margin="0,2,4,2" />
+				<Grid x:Name="ServerGrid" Margin="0,2,0,2" HorizontalAlignment="Left" Grid.Column="1">
 					<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="@" />
-					<nxcc:HostValidationTextbox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" Width="100" />
+					<nxcc:HostValidationTextbox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" MinWidth="100" MaxWidth="200" />
 				</Grid>
-				<PasswordBox x:Name="PasswordBox" VerticalAlignment="Top" Margin="0,2,4,0" Grid.Row="2" />
-				<TextBlock x:Name="SavedText" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,4,14,0" Text="[Saved]" IsHitTestVisible="False" Foreground="#FF787878" Visibility="Collapsed" Grid.Row="2" />
+				<PasswordBox x:Name="PasswordBox" VerticalAlignment="Top" Margin="0,2,4,0" Grid.Row="1" />
+				<TextBlock x:Name="SavedText" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,4,0,0" Text="[Saved]" IsHitTestVisible="False" Foreground="#FF787878" Visibility="Collapsed" Grid.Row="1" />
 				<CheckBox x:Name="AutoConnectCheckbox" Grid.Row="3" Content="Connect on startup" VerticalAlignment="Bottom" Margin="0,0,5,4" Grid.ColumnSpan="2" />
 			</Grid>
 			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,4,2" FontSize="11" Grid.Row="1" Grid.Column="1">
@@ -75,5 +74,8 @@
 				</Hyperlink>
 			</TextBlock>
 		</Grid>
+		<TextBlock x:Name="MissingFieldMessage" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,3,0" Foreground="#FFFF7500" FontSize="10.667">
+			<Run>This account requires more information to continue</Run>
+		</TextBlock>
 	</Grid>
 </UserControl>

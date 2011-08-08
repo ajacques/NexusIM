@@ -108,7 +108,8 @@ namespace NexusIM.Windows.IRC
 								int index = LinksList.Items.Add(info);
 							});
 
-						mServers.Add(info.ServerName, info);
+						if (!mServers.ContainsKey(info.ServerName)) // There is a weird case where two results for the same server link are returned with two different classes
+							mServers.Add(info.ServerName, info);
 
 						break;
 					}

@@ -66,6 +66,9 @@ namespace InstantMessage.Protocols.Irc
 			if (mProtocolStatus != IMProtocolStatus.Offline)
 				return;
 
+			if (mServer == null)
+				return;
+
 			base.BeginLogin();
 
 			Trace.WriteLine(String.Format("IRC: Beginning Login (Nickname: {0}, Server: {1})", Username, Server));
@@ -79,8 +82,27 @@ namespace InstantMessage.Protocols.Irc
 			mOngoingResult = client.BeginConnect(mServer, Port, new AsyncCallback(OnSocketConnect), null);
 			mLoginWaitHandle = new System.Threading.ManualResetEvent(false);
 		}
+		public override bool IsReady()
+		{
+			return !String.IsNullOrEmpty(mUsername) && !String.IsNullOrEmpty(mServer);
+		}
+		public override void IsReady(out IMRequiredDetail reason)
+		{
+			reason = IMRequiredDetail.None;
+			if (String.IsNullOrEmpty(mUsername))
+				reason |= IMRequiredDetail.Username;
+
+			if (String.IsNullOrEmpty(mNickname))
+				reason |= IMRequiredDetail.Nickname;
+
+			if (String.IsNullOrEmpty(mServer))
+				reason |= IMRequiredDetail.Server;
+		}
 		public override void Disconnect()
 		{
+			if (mProtocolStatus != IMProtocolStatus.Online)
+				return;
+
 			try	{
 				sendData("QUIT");
 			} catch (IOException) {
@@ -473,6 +495,9 @@ namespace InstantMessage.Protocols.Irc
 		// Protocol Handlers
 		private void ParseLine(string line)
 		{
+			if (String.IsNullOrEmpty(line))
+				return;
+
 			if (line[0] == ':') // Standard message type
 			{
 				string[] parameters = line.Substring(1).Split(' ');
@@ -812,6 +837,13 @@ namespace InstantMessage.Protocols.Irc
 			foreach (string line in lines)
 				ParseLine(line);
 		}
+		private void HandleIOError(IOException exception)
+		{
+			Trace.WriteLine("IRC: IOException: " + exception.Message);
+			Dispose();
+			triggerOnError(new SocketErrorEventArgs(new SocketException((int)SocketError.ConnectionReset)));
+			//triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = exception });
+		}
 
 		private IEnumerable<string> SocketHandleLineWrapAround(int bytesRead)
 		{
@@ -841,14 +873,14 @@ namespace InstantMessage.Protocols.Irc
 						string[] last = new string[] { mBufferCutoffMessage.ToString() };
 						mBufferCutoffMessage = null;
 
-						readableLines = last.Skip(1).Union(readableLines); // Skip the partial message at the beginning and append the other lines to the list
+						readableLines = last.Union(readableLines.Skip(1)); // Skip the partial message at the beginning and append the other lines to the list
 					}
 				}
 
 				if (bytesRead == mDataQueue.Length) // Check to see if we've read up until the buffer's end
 				{
-					readableLines = lines.Take(lineCount - 1);
 					mBufferCutoffMessage = new StringBuilder(lines.Last()); // The last message will be queued up for the rest of the message
+					readableLines = lines.Take(lineCount - 1);
 				}
 
 				return readableLines;
@@ -868,9 +900,7 @@ namespace InstantMessage.Protocols.Irc
 				triggerOnError(new SocketErrorEventArgs(e));
 				return;
 			} catch (IOException e)	{
-				Trace.WriteLine("IRC: SocketException: " + e.Message);
-				Dispose();
-				triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = e });
+				HandleIOError(e);
 				return;
 			}
 
@@ -883,7 +913,11 @@ namespace InstantMessage.Protocols.Irc
 			SocketProcessByteQueue(bytesRead);
 			mLastCommunication = DateTime.UtcNow;
 
-			mOngoingResult = mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+			try {
+				mOngoingResult = mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+			} catch (IOException e) {
+				HandleIOError(e);
+			}
 		}
 		private void OnSocketConnect(IAsyncResult e)
 		{

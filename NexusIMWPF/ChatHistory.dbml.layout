@@ -2,10 +2,10 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ChatHistory">
   <DataContextMoniker Name="/ChatHistory" />
   <nestedChildShapes>
-    <classShape Id="7acad701-07d6-4ff6-b52c-19c0814fa87f" absoluteBounds="0.75, 0.75, 2, 1.5785953776041666">
+    <classShape Id="7acad701-07d6-4ff6-b52c-19c0814fa87f" absoluteBounds="0.75, 0.75, 2, 1.58">
       <DataClassMoniker Name="/ChatHistory/PrivateMessage" />
       <nestedChildShapes>
-        <elementListCompartment Id="0ef8d6a7-87d7-4b93-8e5f-62443b9ab35a" absoluteBounds="0.765, 1.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="0ef8d6a7-87d7-4b93-8e5f-62443b9ab35a" absoluteBounds="0.77, 1.21, 1.97, 1.02" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

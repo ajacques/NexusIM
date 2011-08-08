@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
+using InstantMessage.Protocols;
 using InstantMessage.Protocols.Irc;
 using NexusIM.Managers;
 using NexusIM.Windows;
@@ -43,7 +44,7 @@ namespace NexusIM.Controls
 			Selected = false;
 
 			ApplyChanges();
-			PopulateUIControls(mProtocol);
+			UpdateControl();
 
 			if (!mProtocol.IsReady)
 			{
@@ -73,39 +74,68 @@ namespace NexusIM.Controls
 			mProtocol = extraData;
 			mProtocolType = mProtocol.Protocol.GetType();
 
+			BuildControl();
+			UpdateControl();
+		}
+		public void ApplyChanges()
+		{
+			if (!mProtocol.Enabled)
+			{
+				string password = PasswordBox.Password;
+				if (!String.IsNullOrEmpty(password))
+					mProtocol.Protocol.Password = password;
+
+				if (mProtocolType == typeof(IRCProtocol))
+				{
+					IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
+					ircprot.Server = ServerBox.Text;
+					ircprot.Nickname = nicknameTextBox.Text;
+					
+					if (String.IsNullOrEmpty(ircprot.Username))
+						ircprot.Username = UsernameBox.Text;
+				} else
+					mProtocol.Protocol.Username = UsernameBox.Text;
+			}
+		}
+
+		private void AdjustControlHeight(int delta)
+		{
+			Storyboard fadeIn = (Storyboard)FindResource("EditFadeIn");
+			DoubleAnimation height = (DoubleAnimation)fadeIn.Children[0];
+			height.To += delta;
+
+			Storyboard fadeOut = (Storyboard)FindResource("EditFadeOut");
+			height = (DoubleAnimation)fadeIn.Children[0];
+			height.From += delta;
+		}
+		private void UpdateControl()
+		{
 			if (mProtocolType == typeof(IRCProtocol))
 			{
 				IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
-				UsernameBox.Text = ircprot.Nickname;
+				UsernameBox.Text = ircprot.Username;
+				nicknameTextBox.Text = ircprot.Nickname;
 			} else
-				UsernameBox.Text = extraData.Protocol.Username;
+				UsernameBox.Text = mProtocol.Protocol.Username;
 
 			// Setup stuff
-			AutoConnectCheckbox.IsChecked = extraData.AutoConnect;
-			MainAccountUsername.Text = extraData.Protocol.Username;
-			MainAccountTypeLabel.Text = extraData.Protocol.Protocol;
-			EnabledCheckBox.IsChecked = extraData.Enabled;
-			if (extraData.Protocol.Password != null)
+			AutoConnectCheckbox.IsChecked = mProtocol.AutoConnect;
+			MainAccountUsername.Text = mProtocol.Protocol.Username;
+			MainAccountTypeLabel.Text = mProtocol.Protocol.Protocol;
+			EnabledCheckBox.IsChecked = mProtocol.Enabled;
+			if (mProtocol.Protocol.Password != null)
 			{
-				if (extraData.Enabled)
+				if (mProtocol.Enabled)
 					PasswordBox.IsEnabled = false;
 				PasswordBox.Password = String.Empty;
 				SavedText.Visibility = Visibility.Visible;
 				//Placeholder.SetText(ServerBox, "Server");
 			}
 
-			if (mProtocolType == typeof(IRCProtocol))
-			{
-				IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
-				ServerGrid.Visibility = Visibility.Visible;
-			} else {
-				ServerGrid.Visibility = Visibility.Collapsed;
-			}
+			if (!String.IsNullOrEmpty(mProtocol.Protocol.Server))
+				ServerBox.Text = mProtocol.Protocol.Server;
 
-			if (!String.IsNullOrEmpty(extraData.Protocol.Server))
-				ServerBox.Text = extraData.Protocol.Server;
-
-			if (extraData.Enabled)
+			if (mProtocol.Enabled)
 			{
 				UsernameBox.IsReadOnly = true;
 				PasswordBox.IsEnabled = false;
@@ -114,29 +144,47 @@ namespace NexusIM.Controls
 				PasswordBox.IsEnabled = true;
 			}
 		}
-		private void ApplyChanges()
+		private void BuildControl()
 		{
-			if (!mProtocol.Enabled)
+			if (mProtocolType == typeof(IRCProtocol))
 			{
-				string password = PasswordBox.Password;
-				if (!String.IsNullOrEmpty(password))
-				{
-					mProtocol.Protocol.Password = password;
-					PasswordBox.Password = String.Empty;
-					SavedText.Visibility = Visibility.Visible;
-				}
+				IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
+				ServerGrid.Visibility = Visibility.Visible;
 
-				if (mProtocolType == typeof(IRCProtocol))
-				{
-					IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
-					ircprot.Server = ServerBox.Text;
-					ircprot.Nickname = UsernameBox.Text;
-					
-					if (String.IsNullOrEmpty(ircprot.Username))
-						ircprot.Username = UsernameBox.Text;
-				} else
-					mProtocol.Protocol.Username = UsernameBox.Text;
+				nicknameTextBox = InsertTextBox(0, "Nickname");
+				nicknameTextBox.Text = ircprot.Nickname;
+			} else {
+				ServerGrid.Visibility = Visibility.Collapsed;
 			}
+		}
+		private TextBox InsertTextBox(int rowPos, string placeholder)
+		{
+			TextBox textBox = new TextBox();
+			textBox.Margin = new Thickness(0, 2, 4, 2);
+			textBox.ToolTip = placeholder;
+
+			RowDefinition row = new RowDefinition();
+			row.Height = new GridLength(25);
+			ControlBlock.RowDefinitions.Insert(rowPos, row);
+			
+			Placeholder.SetText(textBox, placeholder);
+
+			foreach (UIElement element in ControlBlock.Children)
+			{
+				int controlRow = Grid.GetRow(element);
+
+				if (controlRow < rowPos)
+					continue;
+
+				Grid.SetRow(element, controlRow + 1);
+			}
+
+			ControlBlock.Children.Add(textBox);
+			Grid.SetRow(textBox, rowPos);
+
+			AdjustControlHeight(30);
+
+			return textBox;
 		}
 
 		private void DeleteAccount_Click(object sender, RoutedEventArgs e)
@@ -154,9 +202,30 @@ namespace NexusIM.Controls
 		private void EnabledCheckBox_Checked(object sender, RoutedEventArgs e)
 		{
 			ApplyChanges();
-			mProtocol.Enabled = EnabledCheckBox.IsChecked.Value;
 
-			PopulateUIControls(mProtocol);
+			IMRequiredDetail reason;
+			mProtocol.Protocol.IsReady(out reason);
+
+			if (reason == IMRequiredDetail.None)
+			{
+				MissingFieldMessage.Visibility = Visibility.Collapsed;
+				mProtocol.Enabled = EnabledCheckBox.IsChecked.Value;
+
+				UpdateControl();
+			} else {
+				EnabledCheckBox.IsChecked = false;
+				MissingFieldMessage.Visibility = Visibility.Visible;
+				Brush errorBrush =new SolidColorBrush(Color.FromRgb(255, 190, 190));
+
+				if (reason.HasFlag(IMRequiredDetail.Username))
+					UsernameBox.Background = errorBrush;
+				else
+					UsernameBox.Background = Brushes.White;
+				if (reason.HasFlag(IMRequiredDetail.Nickname))
+					nicknameTextBox.Background = errorBrush;
+				if (reason.HasFlag(IMRequiredDetail.Server))
+					ServerBox.Background = errorBrush;
+			}
 		}
 		private void AutoConnectCheckbox_CheckChanged(object sender, RoutedEventArgs e)
 		{
@@ -198,5 +267,6 @@ namespace NexusIM.Controls
 		// Variables
 		private IMProtocolWrapper mProtocol;
 		private Type mProtocolType;
+		private TextBox nicknameTextBox;
 	}
 }

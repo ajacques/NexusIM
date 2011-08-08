@@ -19,7 +19,6 @@ namespace NexusIM.Controls
 
 			DoVerify();
 		}
-
 		protected override void OnKeyUp(KeyEventArgs e)
 		{
 			base.OnKeyUp(e);
@@ -32,7 +31,6 @@ namespace NexusIM.Controls
 			Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
 			ToolTip = null;
 		}
-
 		private void DoVerify()
 		{
 			string host = Text;
@@ -47,7 +45,26 @@ namespace NexusIM.Controls
 			if (IPAddress.TryParse(host, out ip))
 			{
 				if (ip.ToString() == host)
-					ShowResults(Color.FromRgb(190, 255, 190), () => new Run("The specified IP address is valid."));
+					ShowResults(Color.FromRgb(190, 255, 190), () => {
+						Span span = new Span();
+						span.Inlines.Add(new Run("The specified IP address is valid."));
+						span.Inlines.Add(new LineBreak());
+						span.Inlines.Add(new Run("Type: "));
+						switch (ip.AddressFamily)
+						{
+							case AddressFamily.InterNetwork:
+								span.Inlines.Add(new Run("IPv4"));
+								break;
+							case AddressFamily.InterNetworkV6:
+								span.Inlines.Add(new Run("IPv6"));
+								break;
+							default:
+								span.Inlines.Add(new Run(ip.AddressFamily.ToString()));
+								break;
+						}
+
+						return span;
+					});
 				else {
 					GenerateText exec = () => {
 						Span span = new Span();
@@ -64,7 +81,6 @@ namespace NexusIM.Controls
 				Dns.BeginGetHostAddresses(host, new AsyncCallback(OnDnsResolve), null);
 			}
 		}
-
 		private void ShowResults(Color color, GenerateText exec)
 		{
 			Dispatcher.BeginInvoke(new GenericEvent(() =>
@@ -80,7 +96,6 @@ namespace NexusIM.Controls
 				Background = new SolidColorBrush(color);
 			}));
 		}
-
 		private void OnDnsResolve(IAsyncResult e)
 		{
 			IPAddress[] addr;

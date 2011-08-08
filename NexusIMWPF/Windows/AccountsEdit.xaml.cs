@@ -24,7 +24,7 @@ namespace NexusIM.Windows
 		{
 			this.InitializeComponent();
 
-			mNewAccounts = new List<IMProtocolWrapper>();
+			mNewAccounts = new LinkedList<IMProtocolWrapper>();
 		}
 	
 		public void FocusProtocol(IMProtocolWrapper wrapper)
@@ -93,7 +93,7 @@ namespace NexusIM.Windows
 			DeselectAllExcept(AccountsListBox.Children, item);
 			item.Select();
 
-			mNewAccounts.Add(extraData);
+			mNewAccounts.AddLast(extraData);
 			
 			addAccount.SelectedIndex = 0;
 		}
@@ -101,7 +101,7 @@ namespace NexusIM.Windows
 		{
 			this.Close();
 
-			ThreadPool.QueueUserWorkItem(new WaitCallback(SaveNewAccounts), mNewAccounts);
+			DeselectAllExcept(AccountsListBox.Children, null);
 
 			mNewAccounts = null;
 		}
@@ -161,11 +161,6 @@ namespace NexusIM.Windows
 			AccountManager.Accounts.CollectionChanged += new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
 
-		private static void SaveNewAccounts(object accounts)
-		{
-			IList<IMProtocolWrapper> mNewAccounts = (IList<IMProtocolWrapper>)accounts;
-		}
-
 		protected override void OnMouseUp(MouseButtonEventArgs e)
 		{
 			base.OnMouseUp(e);
@@ -186,6 +181,6 @@ namespace NexusIM.Windows
 			AccountManager.Accounts.CollectionChanged -= new NotifyCollectionChangedEventHandler(Accounts_CollectionChanged);
 		}
 
-		private List<IMProtocolWrapper> mNewAccounts;
+		private LinkedList<IMProtocolWrapper> mNewAccounts;
 	}
 }

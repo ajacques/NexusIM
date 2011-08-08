@@ -322,16 +322,16 @@ namespace NexusIM
 
 			public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
 			{
-				throw new NotImplementedException();
+				return (new KeyValuePair<string, string>[1]).AsEnumerable().GetEnumerator();
 			}
 
 			#endregion
 
 			#region IEnumerable Members
 
-			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			IEnumerator IEnumerable.GetEnumerator()
 			{
-				throw new NotImplementedException();
+				return GetEnumerator();
 			}
 
 			#endregion

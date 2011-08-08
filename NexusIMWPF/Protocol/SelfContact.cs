@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using InstantMessage;
 using InstantMessage.Protocols;
+using InstantMessage.Protocols.Irc;
 
 namespace NexusIM.Protocol
 {
@@ -11,18 +12,19 @@ namespace NexusIM.Protocol
 	{
 		public SelfContact(IMProtocol protocol)
 		{
-			mProtocol = protocol;
+			Protocol = protocol;
 		}
 
 		public IMProtocol Protocol
 		{
-			get { throw new NotImplementedException(); }
+			get;
+			private set;
 		}
 
 		public string Username
 		{
 			get {
-				return mProtocol.Username;
+				return Protocol.Username;
 			}
 		}
 		public string DisplayName
@@ -35,7 +37,9 @@ namespace NexusIM.Protocol
 		public string Nickname
 		{
 			get {
-				return mProtocol.Username;
+				if (Protocol is IRCProtocol)
+					return ((IRCProtocol)Protocol).Nickname;
+				return Protocol.Username;
 			}
 			set {
 				
@@ -64,7 +68,5 @@ namespace NexusIM.Protocol
 		{
 			get { throw new NotImplementedException(); }
 		}
-
-		private IMProtocol mProtocol;
 	}
 }
