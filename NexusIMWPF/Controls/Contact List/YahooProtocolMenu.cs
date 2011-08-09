@@ -16,6 +16,12 @@ namespace NexusIM.Controls
 				return "Yahoo! Messenger";
 			}
 		}
+		protected override bool AutoCreateConnectItem
+		{
+			get	{
+				return true;
+			}
+		}
 
 		protected override void GenerateItemSet(IMProtocolWrapper wrapper, ItemCollection coll)
 		{
@@ -35,6 +41,10 @@ namespace NexusIM.Controls
 			BitmapImage image = new BitmapImage(uriSource);
 
 			return image;
+		}
+		protected override string AccountDescription(IMProtocolWrapper wrapper)
+		{
+			return wrapper.Protocol.Username;
 		}
 	}
 }

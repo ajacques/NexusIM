@@ -21,7 +21,7 @@ namespace NexusIM.Controls
 			this.InitializeComponent();
 
 			EnabledCheckBox.Checked += new RoutedEventHandler(EnabledCheckBox_Checked);
-			EnabledCheckBox.Unchecked += new RoutedEventHandler(EnabledCheckBox_Checked);
+			EnabledCheckBox.Unchecked += new RoutedEventHandler(EnabledCheckBox_Unchecked);
 			PasswordBox.PasswordChanged += new RoutedEventHandler(PasswordBox_PasswordChanged);
 			ServerBox.TextChanged += new TextChangedEventHandler(ServerBox_TextChanged);
 			ServerBox.LostFocus += new RoutedEventHandler(ServerBox_LostFocus);
@@ -209,13 +209,13 @@ namespace NexusIM.Controls
 			if (reason == IMRequiredDetail.None)
 			{
 				MissingFieldMessage.Visibility = Visibility.Collapsed;
-				mProtocol.Enabled = EnabledCheckBox.IsChecked.Value;
+				mProtocol.Enabled = true;
 
 				UpdateControl();
 			} else {
 				EnabledCheckBox.IsChecked = false;
 				MissingFieldMessage.Visibility = Visibility.Visible;
-				Brush errorBrush =new SolidColorBrush(Color.FromRgb(255, 190, 190));
+				Brush errorBrush = new SolidColorBrush(Color.FromRgb(255, 190, 190));
 
 				if (reason.HasFlag(IMRequiredDetail.Username))
 					UsernameBox.Background = errorBrush;
@@ -226,6 +226,10 @@ namespace NexusIM.Controls
 				if (reason.HasFlag(IMRequiredDetail.Server))
 					ServerBox.Background = errorBrush;
 			}
+		}
+		private void EnabledCheckBox_Unchecked(object sender, RoutedEventArgs e)
+		{
+			mProtocol.Enabled = false;
 		}
 		private void AutoConnectCheckbox_CheckChanged(object sender, RoutedEventArgs e)
 		{

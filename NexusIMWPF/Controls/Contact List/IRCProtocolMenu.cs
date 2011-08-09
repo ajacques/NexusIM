@@ -41,25 +41,6 @@ namespace NexusIM.Controls
 
 				if (protocol.IsOperator)
 					coll.Add(GenerateAdminMenu(protocol));
-			} else if (protocol.ProtocolStatus == IMProtocolStatus.Connecting) {
-				MenuItem connError = new MenuItem();
-				connError.Header = "Connecting...";
-				connError.IsEnabled = false;
-				coll.Add(connError);
-			} else {
-				MenuItem connItem = new MenuItem();
-				connItem.Header = "Connect";
-				RoutedEventHandler handler = null;
-				handler = new RoutedEventHandler((sender, args) =>
-				{
-					wrapper.Enabled = true;
-					connItem.Click -= handler;
-					handler = null;
-				});
-
-				connItem.Click += handler;
-
-				coll.Add(connItem);
 			}
 		}
 		protected override ImageSource GetImage()
@@ -68,6 +49,10 @@ namespace NexusIM.Controls
 			BitmapImage image = new BitmapImage(uriSource);
 
 			return image;
+		}
+		protected override string AccountDescription(IMProtocolWrapper wrapper)
+		{
+			return wrapper.Protocol.Username + wrapper.Protocol.Server; ;
 		}
 
 		private MenuItem GenerateAdminMenu(IRCProtocol protocol)
@@ -95,6 +80,12 @@ namespace NexusIM.Controls
 		{
 			get {
 				return "Internet Relay Chat";
+			}
+		}
+		protected override bool AutoCreateConnectItem
+		{
+			get	{
+				return true;
 			}
 		}
 	}

@@ -140,7 +140,7 @@ namespace NexusIMWPF
 
 			AggregateContactList.Setup();
 			IMMessageProcessor.Setup();
-			ThreadPool.QueueUserWorkItem(new WaitCallback(DelayedStart), null);
+			DelayedStart(null);
 			if (FirstRunSetup.IsFirstRun)
 			{
 				InitialSetupWindow window = new InitialSetupWindow();

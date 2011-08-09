@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Diagnostics;
  
 namespace NexusIM.Controls
 {
@@ -30,15 +31,11 @@ namespace NexusIM.Controls
 		/// </summary>
 		private bool _isPlaceholderVisible;
  
-		#region Dependency Property
 		/// <summary>
 		///    Identifies the Huan.WhiteDwarf.UI.Placeholder.Text attached property.
 		/// </summary>
-		public static readonly DependencyProperty TextProperty = DependencyProperty.RegisterAttached(
-			"Text", typeof(string), typeof(Placeholder),
-			new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged)));
-		#endregion
- 
+		public static readonly DependencyProperty TextProperty = DependencyProperty.RegisterAttached("Text", typeof(string), typeof(Placeholder), new FrameworkPropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged)));
+		 
 		#region Constructors
 		/// <summary>
 		///   Initializes a new instance of the <see cref="T:Huan.WhiteDwarf.UI.Placeholder"/> class.
@@ -345,6 +342,12 @@ namespace NexusIM.Controls
  
 			return false;
 		}
+		
+		private bool IsElementVisible()
+		{
+			
+			return true;
+		}
  
 		/// <summary>
 		///    Computes the text alignment of the adorned element.
@@ -403,7 +406,7 @@ namespace NexusIM.Controls
 		}
  
 		/// <summary>
-		///   Draws the content of a <see cref="T:System.Windows.Media.DrawingContext" /> object during the render pass of a <see cref="T:Huan.WhiteDwarf.UI.Placeholder"/> element.
+		///   Draws the content of a <see cref="T:System.Windows.Media.DrawingContext" /> object during the render pass of a <see cref="T:NexusIM.Controls.Placeholder"/> element.
 		/// </summary>
 		/// <param name="drawingContext">
 		///   The <see cref="T:System.Windows.Media.DrawingContext" /> object to draw. This context is provided to the layout system.
@@ -412,15 +415,10 @@ namespace NexusIM.Controls
 		{
 			Control adornedElement = this.AdornedElement as Control;
 			string placeholderText;
- 
-			if (adornedElement == null ||
-				adornedElement.IsFocused ||
-				!IsElementEmpty() ||
-				string.IsNullOrEmpty(placeholderText = (string)adornedElement.GetValue(TextProperty)))
- 
+
+			if (adornedElement == null || adornedElement.IsFocused || adornedElement.Visibility != Visibility.Visible || !IsElementVisible() || !IsElementEmpty() || string.IsNullOrEmpty(placeholderText = (string)adornedElement.GetValue(TextProperty)))
 				_isPlaceholderVisible = false;
-			else
-			{
+			else {
 				_isPlaceholderVisible = true;
 				Size size = adornedElement.RenderSize;
 				TextAlignment computedTextAlignment = ComputedTextAlignment();
@@ -428,26 +426,21 @@ namespace NexusIM.Controls
 				Brush foreground = SystemColors.GrayTextBrush.Clone();
 				foreground.Opacity = adornedElement.Foreground.Opacity;
 				Typeface typeface = new Typeface(adornedElement.FontFamily, FontStyles.Italic, adornedElement.FontWeight, adornedElement.FontStretch);
-				FormattedText formattedText = new FormattedText(placeholderText,
-												  CultureInfo.CurrentCulture,
-												  adornedElement.FlowDirection,
-												  typeface,
-												  adornedElement.FontSize,
-												  foreground);
+				FormattedText formattedText = new FormattedText(placeholderText, CultureInfo.CurrentCulture, adornedElement.FlowDirection, typeface, adornedElement.FontSize,foreground);
 				formattedText.TextAlignment = computedTextAlignment;
 				if (size.Height != 0)
 					formattedText.MaxTextHeight = size.Height - adornedElement.BorderThickness.Top - adornedElement.BorderThickness.Bottom - adornedElement.Padding.Top - adornedElement.Padding.Bottom;
 
 				if (size.Width != 0)
 					formattedText.MaxTextWidth = size.Width - adornedElement.BorderThickness.Left - adornedElement.BorderThickness.Right - adornedElement.Padding.Left - adornedElement.Padding.Right - 4.0;
- 
+
 				double left;
 				double top = 0.0;
 				if (adornedElement.FlowDirection == FlowDirection.RightToLeft)
 					left = adornedElement.BorderThickness.Right + adornedElement.Padding.Right + 2.0;
 				else
 					left = adornedElement.BorderThickness.Left + adornedElement.Padding.Left + 2.0;
- 
+
 				switch (adornedElement.VerticalContentAlignment)
 				{
 					case VerticalAlignment.Top:
@@ -461,15 +454,14 @@ namespace NexusIM.Controls
 						top = (size.Height + adornedElement.BorderThickness.Top - adornedElement.BorderThickness.Bottom + adornedElement.Padding.Top - adornedElement.Padding.Bottom - formattedText.Height) / 2.0;
 						break;
 				}
- 
+
 				if (adornedElement.FlowDirection == FlowDirection.RightToLeft)
 				{
 					// Somehow everything got drawn reflected. Add a transform to correct.
 					drawingContext.PushTransform(new ScaleTransform(-1.0, 1.0, RenderSize.Width / 2.0, 0.0));
 					drawingContext.DrawText(formattedText, new Point(left, top));
 					drawingContext.Pop();
-				}
-				else
+				} else
 					drawingContext.DrawText(formattedText, new Point(left, top));
 			}
 		}

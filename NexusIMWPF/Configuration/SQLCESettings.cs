@@ -520,14 +520,14 @@ namespace NexusIM
 						break;
 					case "Server":
 						//account.Server = protocol.Server;
-						//profile.ExecuteCommand("UPDATE [Accounts] SET [Server] = @p1 WHERE [Id] = @p0", wrapper.DatabaseId, protocol.Server);
+						profile.ExecuteCommand("UPDATE [Accounts] SET [Server] = @p1 WHERE [Id] = @p0", wrapper.DatabaseId, protocol.Server);
 
 						break;
 					case "Nickname":
-						//protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
+						protocol.ConfigurationSettings["nickname"] = ((IRCProtocol)protocol).Nickname;
 						break;
 					case "RealName":
-						//protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
+						protocol.ConfigurationSettings["realname"] = ((IRCProtocol)protocol).RealName;
 						break;
 					default:
 						return;
