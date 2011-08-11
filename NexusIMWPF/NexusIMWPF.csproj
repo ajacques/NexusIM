@@ -23,16 +23,25 @@
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.20901.0</ExpressionBlendVersion>
-    <PublishUrl>http://dev.nexus-im.com/appdeploy/</PublishUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
+    <TargetZone>Internet</TargetZone>
+    <GenerateManifests>true</GenerateManifests>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <ManifestCertificateThumbprint>9BF9B2E0E124846FD780854753B8577F6AD0AB06</ManifestCertificateThumbprint>
+    <ManifestKeyFile>NexusIMWPF_TemporaryKey.pfx</ManifestKeyFile>
+    <SignManifests>true</SignManifests>
+    <PublishUrl>\\UBUNTUSERVER\HTDocs\nexusim\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://dev.nexus-im.com/appdeploy/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>deploy.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
@@ -42,14 +51,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>false</BootstrapperEnabled>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
-    <TargetZone>Internet</TargetZone>
-    <GenerateManifests>true</GenerateManifests>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <ManifestCertificateThumbprint>9BF9B2E0E124846FD780854753B8577F6AD0AB06</ManifestCertificateThumbprint>
-    <ManifestKeyFile>NexusIMWPF_TemporaryKey.pfx</ManifestKeyFile>
-    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

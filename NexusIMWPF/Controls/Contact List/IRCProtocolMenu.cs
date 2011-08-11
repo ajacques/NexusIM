@@ -52,7 +52,7 @@ namespace NexusIM.Controls
 		}
 		protected override string AccountDescription(IMProtocolWrapper wrapper)
 		{
-			return wrapper.Protocol.Username + wrapper.Protocol.Server; ;
+			return String.Format("{0}@{1}", wrapper.Protocol.Username, wrapper.Protocol.Server);
 		}
 
 		private MenuItem GenerateAdminMenu(IRCProtocol protocol)

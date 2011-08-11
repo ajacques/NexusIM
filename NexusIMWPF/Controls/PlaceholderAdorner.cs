@@ -416,7 +416,7 @@ namespace NexusIM.Controls
 			Control adornedElement = this.AdornedElement as Control;
 			string placeholderText;
 
-			if (adornedElement == null || adornedElement.IsFocused || adornedElement.Visibility != Visibility.Visible || !IsElementVisible() || !IsElementEmpty() || string.IsNullOrEmpty(placeholderText = (string)adornedElement.GetValue(TextProperty)))
+			if (adornedElement == null || adornedElement.IsFocused || adornedElement.RenderSize == new Size(0, 0) || adornedElement.Visibility != Visibility.Visible || !IsElementEmpty() || string.IsNullOrEmpty(placeholderText = (string)adornedElement.GetValue(TextProperty)))
 				_isPlaceholderVisible = false;
 			else {
 				_isPlaceholderVisible = true;

@@ -65,6 +65,7 @@ namespace NexusIM.Controls
 			base.OnInitialized(e);
 
 			Placeholder.SetText(UsernameBox, "Username");
+			Placeholder.SetText(ServerBox, "Server");
 			
 			//Placeholder.SetText(PasswordBox, "Password");
 		}
