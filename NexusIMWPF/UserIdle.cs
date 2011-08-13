@@ -8,6 +8,7 @@ namespace NexusIM.Managers
 	static class UserIdle
 	{
 		[DllImport("user32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
 
 		private struct LASTINPUTINFO

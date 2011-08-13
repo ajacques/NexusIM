@@ -12,7 +12,6 @@ using System.Windows.Shapes;
 using InstantMessage;
 using NexusIM;
 using NexusIM.Managers;
-using NexusIMWPF;
 using System.Diagnostics;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;

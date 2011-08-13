@@ -6,14 +6,33 @@
 	x:Name="Window"
 	Title="Join Chat Room"
 	Width="250" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+	<Window.Resources>
+		<LinearGradientBrush x:Key="SuggestionSeparator" EndPoint="1,0" StartPoint="0,0">
+			<GradientStop />
+			<GradientStop Color="Black" Offset="0.4"/>
+			<GradientStop Color="Black" Offset="0.6"/>
+			<GradientStop Offset="1"/>
+		</LinearGradientBrush>
+	</Window.Resources>
 	<Grid x:Name="LayoutRoot">
 		<Grid x:Name="NoAccountsMsg" Visibility="Collapsed">
 			<TextBlock Text="No acceptable accounts are enabled" HorizontalAlignment="Center" VerticalAlignment="Center" />
 		</Grid>
 		<Grid x:Name="MainGrid">
-			<nxc:AccountSelectorControl x:Name="AccountSelector" VerticalAlignment="Top" Height="22" Margin="10,20,10,0" />
-			<TextBox x:Name="RoomName" VerticalAlignment="Top" Height="23" Margin="10,61,10,0" KeyUp="RoomName_KeyUp" />
+			<nxc:AccountSelectorControl x:Name="AccountSelector" VerticalAlignment="Top" Height="22" Margin="10,10,10,0" />
+			<TextBox x:Name="RoomName" VerticalAlignment="Top" Height="23" Margin="10,51,10,0" KeyUp="RoomName_KeyUp" />
 			<Button x:Name="JoinButton" Width="75" Height="25" Content="Join" VerticalAlignment="Bottom" Margin="0,0,0,10" Click="Button_Click" IsEnabled="False" />
+			<Grid VerticalAlignment="Top" MaxHeight="73" Margin="10,74,10,0">
+				<Rectangle Fill="#FFDEDEDE" RadiusX="2" RadiusY="2" Margin="0,-1,0,0" >
+				<Rectangle.OpacityMask>
+					<LinearGradientBrush EndPoint="0,10" StartPoint="0,0" MappingMode="Absolute">
+						<GradientStop Color="#00000000" Offset="0.11"/>
+						<GradientStop Color="White" Offset="0.11"/>
+					</LinearGradientBrush>
+				</Rectangle.OpacityMask>
+			</Rectangle>
+			<StackPanel x:Name="SuggestResults" />
+			</Grid>
 		</Grid>
 	</Grid>
 </Window>

@@ -164,11 +164,16 @@ namespace NexusIM.Controls
 			textBox.Margin = new Thickness(0, 2, 4, 2);
 			textBox.ToolTip = placeholder;
 
+			InsertControl(rowPos, textBox);
+			Placeholder.SetText(textBox, placeholder);
+
+			return textBox;
+		}
+		private void InsertControl(int rowPos, Control control)
+		{
 			RowDefinition row = new RowDefinition();
 			row.Height = new GridLength(25);
 			ControlBlock.RowDefinitions.Insert(rowPos, row);
-			
-			Placeholder.SetText(textBox, placeholder);
 
 			foreach (UIElement element in ControlBlock.Children)
 			{
@@ -180,12 +185,10 @@ namespace NexusIM.Controls
 				Grid.SetRow(element, controlRow + 1);
 			}
 
-			ControlBlock.Children.Add(textBox);
-			Grid.SetRow(textBox, rowPos);
+			ControlBlock.Children.Add(control);
+			Grid.SetRow(control, rowPos);
 
 			AdjustControlHeight(30);
-
-			return textBox;
 		}
 
 		private void DeleteAccount_Click(object sender, RoutedEventArgs e)

@@ -10,14 +10,15 @@ using InstantMessage;
 using NexusIM;
 using NexusIM.Managers;
 using NexusIM.Windows;
+using System.Globalization;
 
-namespace NexusIMWPF
+namespace NexusIM
 {
 	/// <summary>
 	/// The entry point for NexusIM
 	/// Initializes all required managers and classes
 	/// </summary>
-	public partial class App : Application, IDisposable
+	public sealed partial class App : Application, IDisposable
 	{
 		[STAThread]
 		public static void Main()
@@ -52,6 +53,14 @@ namespace NexusIMWPF
 			this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 		}
 
+		public void Dispose()
+		{
+			if (mSingleInstanceMutex != null)
+				mSingleInstanceMutex.Dispose();
+
+			GC.SuppressFinalize(this);
+		}
+
 		private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
 			Exception exception = (Exception)e.ExceptionObject;
@@ -65,12 +74,6 @@ namespace NexusIMWPF
 		{
 			Trace.WriteLine("Unhandled Exception: " + e.Exception.Message);
 			Trace.WriteLine(e.Exception.StackTrace);
-		}
-
-		public void Dispose()
-		{
-			if (mSingleInstanceMutex != null)
-				mSingleInstanceMutex.Dispose();
 		}
 
 		protected override void OnExit(ExitEventArgs e)
@@ -128,9 +131,10 @@ namespace NexusIMWPF
 			Trace.WriteLine("Operating System: " + Environment.OSVersion.ToString());
 			Trace.WriteLine("Working Directory: " + Environment.CurrentDirectory);
 			Trace.WriteLine("CLR Version: " + Environment.Version.ToString());
-			Trace.WriteLine(string.Format("OS Is64Bit: {0} (Current Process Is64Bit: {1})", Environment.Is64BitOperatingSystem, Environment.Is64BitProcess));
+			Trace.WriteLine(string.Format(CultureInfo.InvariantCulture, "OS Is64Bit: {0} (Current Process Is64Bit: {1})", Environment.Is64BitOperatingSystem, Environment.Is64BitProcess));
 			Trace.WriteLineIf(Debugger.IsAttached, "Debugger is attached");
 			Trace.WriteLineIf(!Debugger.IsAttached, "No debugger attached");
+
 
 			// Load the configuration file
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserProfile.sdf");

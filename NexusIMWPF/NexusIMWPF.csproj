@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <StartupObject>NexusIMWPF.App</StartupObject>
+    <StartupObject>NexusIM.App</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -174,7 +174,6 @@
       <DependentUpon>YoutubePreviewPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ContactToUIContact.cs" />
-    <Compile Include="Converters\IMAvatarToImage.cs" />
     <Compile Include="Converters\IMBuddyStatusToSmallIcon.cs" />
     <Compile Include="Converters\IntToBoolConverter.cs" />
     <Compile Include="Controls\SetupAccountItem.xaml.cs">
@@ -559,13 +558,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\NexusCore\CoreService.disco" />
-    <None Include="Service References\NexusCore\configuration91.svcinfo" />
-    <None Include="Service References\NexusCore\configuration.svcinfo" />
-    <None Include="Service References\NexusCore\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <Content Include="ChatHistory.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -578,12 +570,6 @@
     <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\NexusCore\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

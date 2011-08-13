@@ -11,7 +11,7 @@ namespace NexusIM
 		public static void ExtendGlass(Window window, Thickness thickness)
 		{
 			try	{
-				if (Environment.OSVersion.Version.Major > 5 && DwmIsCompositionEnabled())
+				if (Environment.OSVersion.Version.Major > 5 && NativeMethods.DwmIsCompositionEnabled())
 				{
 					// Get the window handle
 					WindowInteropHelper helper = new WindowInteropHelper(window);
@@ -32,7 +32,7 @@ namespace NexusIM
 
 					window.Background = Brushes.Transparent;
 
-					DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+					NativeMethods.DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
 				} else
 					window.Background = SystemColors.WindowBrush;
 			} catch (DllNotFoundException) {
@@ -64,11 +64,17 @@ namespace NexusIM
 			public int TopHeight;
 			public int BottomHeight;
 		}
-		[DllImport("dwmapi.dll")]
-		private static extern void DwmEnableBlurBehindWindow(IntPtr hwnd, ref DWM_BLURBEHIND blurBehind);
-		[DllImport("dwmapi.dll")]
-		private static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
-		[DllImport("dwmapi.dll", PreserveSig = false)]
-		private static extern bool DwmIsCompositionEnabled();
+
+		private static class NativeMethods
+		{
+			[DllImport("dwmapi.dll")]
+			public static extern void DwmEnableBlurBehindWindow(IntPtr hwnd, ref DWM_BLURBEHIND blurBehind);
+			[DllImport("dwmapi.dll")]
+			public static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
+
+			[DllImport("dwmapi.dll", PreserveSig = false)]
+			[return: MarshalAs(UnmanagedType.Bool)]
+			public static extern bool DwmIsCompositionEnabled();
+		}		
 	}
 }

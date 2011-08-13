@@ -17,6 +17,7 @@ using Microsoft.WindowsAPICodePack.Net;
 using NexusIM.Controls;
 using NexusIM.Misc;
 using NexusIM.Windows;
+using System.Globalization;
 
 namespace NexusIM.Managers
 {
@@ -157,7 +158,7 @@ namespace NexusIM.Managers
 					else
 						extraData.Protocol.Disconnect();
 				} catch (Exception e) {
-					Trace.WriteLine(String.Format("AccountManager: Exception thrown while attempting protocol connection. [Type: {0}, Username: {1}]", extraData.Protocol.Protocol, extraData.Protocol.Username));
+					Trace.WriteLine(String.Format(CultureInfo.InstalledUICulture, "AccountManager: Exception thrown while attempting protocol connection. [Type: {0}, Username: {1}]", extraData.Protocol.Protocol, extraData.Protocol.Username));
 					Trace.WriteLine(e.Message);
 					Trace.WriteLine(e.StackTrace);
 				}

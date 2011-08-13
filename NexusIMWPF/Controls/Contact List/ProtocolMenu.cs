@@ -37,7 +37,7 @@ namespace NexusIM.Controls
 			{
 				MenuItem menuItem = (MenuItem)sender;
 				IMProtocolWrapper wrapper = (IMProtocolWrapper)menuItem.Tag;
-				wrapper.Protocol.BeginLogin();
+				wrapper.Enabled = true;
 			}
 
 			protected override void OnOpened(RoutedEventArgs e)

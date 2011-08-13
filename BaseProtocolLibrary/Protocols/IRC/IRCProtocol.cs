@@ -145,7 +145,7 @@ namespace InstantMessage.Protocols.Irc
 		{
 			mRoomSearchResults = new LinkedList<string>();
 
-			SendRawMessage(String.Format("LIST -{0}-", query));
+			SendRawMessage(String.Format("LIST {0}", query));
 		}
 
 		public override void SendMessage(string friendName, string message)
@@ -181,8 +181,15 @@ namespace InstantMessage.Protocols.Irc
 					handler(endNumeric, line);
 				};
 
-			mRespHandlers.Add(dataNumeric, handler);
-			mRespHandlers.Add(endNumeric, endHandler);
+			if (mRespHandlers.ContainsKey(dataNumeric))
+				mRespHandlers[dataNumeric] = handler;
+			else
+				mRespHandlers.Add(dataNumeric, handler);
+
+			if (mRespHandlers.ContainsKey(endNumeric))
+				mRespHandlers[endNumeric] = endHandler;
+			else
+				mRespHandlers.Add(endNumeric, endHandler);
 
 			SendRawMessage(command);
 		}
