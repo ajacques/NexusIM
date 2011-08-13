@@ -370,7 +370,8 @@ namespace NexusIM.Managers
 					mGeneralStatus = value;
 #if DEBUG
 					StackTrace trace = new StackTrace();
-					Debug.WriteLine(String.Format("AccountManager: Status Change ({0} to {1}) requested by {2}.{3}", oldStatus, value, trace.GetFrame(1).GetMethod().DeclaringType.FullName, trace.GetFrame(1).GetMethod().Name));
+					var method = trace.GetFrame(1).GetMethod();
+					Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "AccountManager: Status Change ({0} to {1}) requested by {2}.{3}", oldStatus, value, method.DeclaringType.FullName, method.Name));
 #endif
 
 					foreach (IMProtocolWrapper account in accounts)

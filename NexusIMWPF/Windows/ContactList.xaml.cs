@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +15,6 @@ using InstantMessage;
 using InstantMessage.Events;
 using NexusIM.Controls;
 using NexusIM.Managers;
-using NexusIM.Misc;
 
 namespace NexusIM.Windows
 {
@@ -227,11 +227,12 @@ namespace NexusIM.Windows
 
 			story.Begin();
 
+			// Remove all but one
 			for (int i = StatusTargetSelector.Items.Count - 1; i >= 3; i--)
 				StatusTargetSelector.Items.RemoveAt(i);
 
 			int count = 0;
-			foreach (IMProtocolWrapper protocol in AccountManager.Accounts/*.Where(a => a.Enabled && a.Protocol.ProtocolStatus == IMProtocolStatus.Online)*/)
+			foreach (IMProtocolWrapper protocol in AccountManager.Accounts.Where(a => a.Enabled && a.Protocol.ProtocolStatus == IMProtocolStatus.Online))
 			{
 				CheckBox check = new CheckBox();
 				TextBlock label = new TextBlock();

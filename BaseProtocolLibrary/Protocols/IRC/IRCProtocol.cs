@@ -1039,8 +1039,8 @@ namespace InstantMessage.Protocols.Irc
 
 			OnLogin();
 
-			CreatePingThread();
-			mWatchThread.Start();
+			if (mWatchThread.ThreadState != System.Threading.ThreadState.Running)
+				mWatchThread.Start();
 		}
 		private void sendData(string data)
 		{

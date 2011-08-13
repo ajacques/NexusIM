@@ -31,7 +31,7 @@
     <ManifestCertificateThumbprint>9BF9B2E0E124846FD780854753B8577F6AD0AB06</ManifestCertificateThumbprint>
     <ManifestKeyFile>NexusIMWPF_TemporaryKey.pfx</ManifestKeyFile>
     <SignManifests>true</SignManifests>
-    <PublishUrl>\\UBUNTUSERVER\HTDocs\nexusim\</PublishUrl>
+    <PublishUrl>\\UBUNTUSERVER\HTDocs\appdeploy\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -191,7 +191,6 @@
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="Misc\IPAddressExtensions.cs" />
     <Compile Include="ITabbedArea.cs" />
-    <Compile Include="Misc\LazyWeak.cs" />
     <Compile Include="Managers\AggregateContactList.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />

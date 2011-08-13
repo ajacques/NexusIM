@@ -1,17 +1,15 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using InstantMessage;
 using InstantMessage.Protocols;
-using NexusIM.Controls;
-using NexusIM.Managers;
-using System.Linq;
 using InstantMessage.Protocols.Irc;
-using System;
-using System.Collections.Generic;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Shapes;
-using System.Windows.Media;
+using NexusIM.Managers;
 
 namespace NexusIM.Windows
 {
@@ -37,6 +35,10 @@ namespace NexusIM.Windows
 			}
 
 			mRooms = new LinkedList<RoomInfo>();
+		}
+
+		public void SelectAccount(IMProtocolWrapper wrapper)
+		{
 		}
 
 		protected override void OnPreviewKeyUp(KeyEventArgs e)

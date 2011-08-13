@@ -15,9 +15,13 @@ namespace NexusIM.Controls
 		// Event handlers
 		private void joinItem_Click(object sender, RoutedEventArgs e)
 		{
+			MenuItem menuItem = (MenuItem)sender;
+			IMProtocolWrapper wrapper = (IMProtocolWrapper)menuItem.Tag;
+
 			JoinChatRoom window = new JoinChatRoom();
 			window.Owner = Window.GetWindow(this);
 			window.ShowDialog();
+			window.SelectAccount(wrapper);
 		}
 		
 		protected override void GenerateItemSet(IMProtocolWrapper wrapper, ItemCollection coll)
@@ -36,6 +40,7 @@ namespace NexusIM.Controls
 			{
 				MenuItem joinItem = new MenuItem();
 				joinItem.Header = "Join Chat Room";
+				joinItem.Tag = wrapper;
 				joinItem.Click += new RoutedEventHandler(joinItem_Click);
 				coll.Add(joinItem);
 

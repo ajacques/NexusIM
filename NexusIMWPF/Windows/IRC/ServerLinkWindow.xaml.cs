@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using InstantMessage.Protocols.Irc;
-using System.ComponentModel;
-using NexusIM.Controls;
-using System.Diagnostics;
 using InstantMessage.Events;
+using InstantMessage.Protocols.Irc;
+using NexusIM.Controls;
 
 namespace NexusIM.Windows.IRC
 {
@@ -128,15 +127,15 @@ namespace NexusIM.Windows.IRC
 		}
 		private void ConnectButton_Click(object sender, RoutedEventArgs e)
 		{
-			Trace.WriteLine(String.Format("User has requested connect to irc server : {0}:{1}", ConnectHostname.Text, ConnectPort.Text));
-			mProtocol.SendRawMessage(string.Format("CONNECT {0} {1}", ConnectHostname.Text, ConnectPort.Text));
+			Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "User has requested connect to irc server : {0}:{1}", ConnectHostname.Text, ConnectPort.Text));
+			mProtocol.SendRawMessage(String.Format(CultureInfo.InvariantCulture, "CONNECT {0} {1}", ConnectHostname.Text, ConnectPort.Text));
 
 			ConnectHostname.Text = String.Empty;
 			ConnectPort.Text = String.Empty;
 		}
 		private void protocol_OnNoticeReceive(object sender, IMChatRoomGenericEventArgs e)
 		{
-			if (e.Message.StartsWith("*** Connect"))
+			if (e.Message.StartsWith("*** Connect", StringComparison.Ordinal))
 				Dispatcher.InvokeIfRequired(() => ConnectOutput.Text = e.Message);
 		}
 
@@ -177,7 +176,7 @@ namespace NexusIM.Windows.IRC
 			{
 				ServerInfo mServerInfo = mView.LinksList.SelectedItem as ServerInfo;
 
-				mProtocol.SendRawMessage(String.Format("SQUIT {0}", mServerInfo.ServerName));
+				mProtocol.SendRawMessage(String.Format(CultureInfo.InvariantCulture, "SQUIT {0}", mServerInfo.ServerName));
 
 				mView.RefreshStatus();
 			}
@@ -185,7 +184,7 @@ namespace NexusIM.Windows.IRC
 			{
 				ServerInfo mServerInfo = mView.LinksList.SelectedItem as ServerInfo;
 
-				mProtocol.SendRawMessage(string.Format("CONNECT {0} {1}", mServerInfo.ServerName, mServerInfo.Port));
+				mProtocol.SendRawMessage(String.Format(CultureInfo.InvariantCulture, "CONNECT {0} {1}", mServerInfo.ServerName, mServerInfo.Port));
 			}
 			
 			private IRCProtocol mProtocol;
@@ -199,7 +198,7 @@ namespace NexusIM.Windows.IRC
 			}
 			public int CompareTo(ServerInfo other)
 			{
-				return ServerName.CompareTo(other);
+				return String.CompareOrdinal(ServerName, other.ServerName);
 			}
 
 			public event PropertyChangedEventHandler PropertyChanged;
@@ -265,11 +264,6 @@ namespace NexusIM.Windows.IRC
 						NotifyPropertyChanged("Address");
 					}
 				}
-			}
-			public ContextMenu ContextMenu
-			{
-				get;
-				set;
 			}
 
 			private string mServerName;

@@ -46,6 +46,7 @@ namespace NexusIM.Controls
 			mChatRoom.OnUserJoin += new EventHandler<IMChatRoomGenericEventArgs>(ChatRoom_OnUserJoin);
 
 			mProtocol.onDisconnect += new EventHandler<IMDisconnectEventArgs>(Protocol_OnDisconnect);
+			mProtocol.LoginCompleted += new EventHandler(Protocol_LoginCompleted);
 
 			if (mProtocol is IRCProtocol)
 			{
@@ -579,6 +580,11 @@ namespace NexusIM.Controls
 		private void Protocol_OnDisconnect(object sender, IMDisconnectEventArgs e)
 		{
 			Dispatcher.BeginInvoke(new GenericEvent(() => ChatHistory.AppendInline(new AccountDisconnectedInline())));
+		}
+		private void Protocol_LoginCompleted(object sender, EventArgs e)
+		{
+			IHasMUCRooms iface = (IHasMUCRooms)mProtocol;
+			iface.JoinChatRoom(mChatRoom);
 		}
 		
 		// Protocol Event Handlers
