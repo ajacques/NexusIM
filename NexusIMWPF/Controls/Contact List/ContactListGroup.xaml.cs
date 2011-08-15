@@ -17,7 +17,7 @@ namespace NexusIM.Controls
 	/// <summary>
 	/// Interaction logic for ContactListGroup.xaml
 	/// </summary>
-	public partial class ContactListGroup : UserControl, INotifyPropertyChanged, IDisposable
+	public sealed partial class ContactListGroup : UserControl, INotifyPropertyChanged, IDisposable
 	{
 		public ContactListGroup()
 		{
@@ -83,7 +83,7 @@ namespace NexusIM.Controls
 		{
 			public int Compare(IContact x, IContact y)
 			{
-				return x.Username.CompareTo(y.Username);
+				return String.Compare(x.Username, y.Username, StringComparison.CurrentCulture);
 			}
 		}
 		private sealed class StatusComparer : IComparer<IContact>
@@ -91,7 +91,7 @@ namespace NexusIM.Controls
 			public int Compare(IContact x, IContact y)
 			{
 				if (x.Status == y.Status)
-					return x.Username.CompareTo(y.Username);
+					return String.Compare(x.Username, y.Username, StringComparison.CurrentCulture);
 				return x.Status.CompareTo(y.Status);
 			}
 		}

@@ -51,17 +51,21 @@ namespace NexusIM.Managers
 				RESTART_NO_REBOOT = 8
 			}
 
-			[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-			private static extern uint RegisterApplicationRestart(string pwsCommandLine, RestartFlags dwFlags);
+			[DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+			[return: MarshalAs(UnmanagedType.U4)]
+			private static extern int RegisterApplicationRestart(string pwsCommandLine, RestartFlags dwFlags);
 
 			[DllImport("kernel32.dll")]
-			private static extern uint RegisterApplicationRecoveryCallback(IntPtr pRecoveryCallback, IntPtr pvParameter, int dwPingInterval, int dwFlags);
+			[return: MarshalAs(UnmanagedType.U4)]
+			private static extern int RegisterApplicationRecoveryCallback(IntPtr pRecoveryCallback, IntPtr pvParameter, int dwPingInterval, int dwFlags);
 
 			[DllImport("kernel32.dll")]
-			private static extern uint ApplicationRecoveryInProgress(out bool pbCancelled);
+			[return: MarshalAs(UnmanagedType.U4)]
+			private static extern int ApplicationRecoveryInProgress(out bool pbCancelled);
 
 			[DllImport("kernel32.dll")]
-			public static extern uint ApplicationRecoveryFinished(bool bSuccess);
+			[return: MarshalAs(UnmanagedType.U4)]
+			public static extern int ApplicationRecoveryFinished(bool bSuccess);
 			#endregion
 
 			#region Delegates & Events
@@ -84,7 +88,7 @@ namespace NexusIM.Managers
 			/// <returns>true if successfully registered for restart notification</returns>   
 			public static bool RegisterForRestart()
 			{
-				uint i = RegisterApplicationRestart(APPLICATION_CRASHED, RestartFlags.NONE);
+				int i = RegisterApplicationRestart(APPLICATION_CRASHED, RestartFlags.NONE);
 
 				if (i == 0)
 				{

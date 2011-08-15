@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using InstantMessage.Protocols.Irc;
+using System.Globalization;
 
 namespace InstantMessage.Events
 {
@@ -44,7 +45,7 @@ namespace InstantMessage.Events
 }
 namespace InstantMessage.Protocols.Irc
 {
-	public class IRCUserMask : IContact, IComparable
+	public class IRCUserMask : IContact, IComparable, IEquatable<IContact>
 	{
 		internal IRCUserMask(IRCProtocol protocol)
 		{
@@ -58,14 +59,14 @@ namespace InstantMessage.Protocols.Irc
 				Nickname = input.Substring(0);
 				return;
 			}
-			int exclaim = input.IndexOf("!");
+			int exclaim = input.IndexOf("!", StringComparison.Ordinal);
 
 			if (!input.Contains('@'))
 			{
 				Username = input.Substring(exclaim + 1);
 				return;
 			}
-			int at = input.IndexOf("@");
+			int at = input.IndexOf("@", StringComparison.Ordinal);
 
 			Nickname = input.Substring(0, exclaim);
 			Username = input.Substring(exclaim + 1, at - exclaim - 1);
@@ -95,33 +96,33 @@ namespace InstantMessage.Protocols.Irc
 			return mask;
 		}
 
-		public int CompareTo(object other)
+		public int CompareTo(object obj)
 		{
-			if (other.GetType() != this.GetType())
-				throw new ArgumentException();
+			if (obj.GetType() != this.GetType())
+				throw new ArgumentException("You can only compare this object with another IRCUserMask object.", "other");
 
-			IContact othr = (IContact)other;
+			IContact other = (IContact)obj;
 
-			if (Protocol != othr.Protocol)
-				return Protocol.CompareTo(othr.Protocol);
+			if (Protocol != other.Protocol)
+				return Protocol.CompareTo(other.Protocol);
 
-			return Nickname.CompareTo(othr.Nickname);
+			return String.Compare(Nickname, other.Nickname, StringComparison.Ordinal);
 		}
 
-		public bool Equals(IContact right)
+		public bool Equals(IContact other)
 		{
-			if (right == null)
+			if (other == null)
 				throw new ArgumentNullException("right");
 
-			if (!(right is IRCUserMask))
+			if (!(other is IRCUserMask))
 				throw new ArgumentException("right must be of type IRCUserMask");
 
-			return object.ReferenceEquals(Protocol, right.Protocol) && Username.Equals(right.Username);
+			return Object.ReferenceEquals(Protocol, other.Protocol) && Username.Equals(other.Username);
 		}
 
 		public override string ToString()
 		{
-			return String.Format("{0}!{1}@{2}", Nickname, Username, Hostname);
+			return String.Format(CultureInfo.InvariantCulture, "{0}!{1}@{2}", Nickname, Username, Hostname);
 		}
 		public string Nickname
 		{
@@ -160,19 +161,16 @@ namespace InstantMessage.Protocols.Irc
 			get;
 			private set;
 		}
+		public string StatusMessage
+		{
+			get {
+				return null;
+			}
+		}
 
 		#region IContact Members
 
 		public string Group
-		{
-			get { throw new NotImplementedException(); }
-		}
-
-		#endregion
-
-		#region IHasPresence Members
-
-		public string StatusMessage
 		{
 			get { throw new NotImplementedException(); }
 		}

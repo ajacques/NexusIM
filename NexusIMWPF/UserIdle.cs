@@ -7,10 +7,13 @@ namespace NexusIM.Managers
 {
 	static class UserIdle
 	{
-		[DllImport("user32.dll")]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
-
+		private static class SafeNativeMethods
+		{
+			[DllImport("user32.dll")]
+			[return: MarshalAs(UnmanagedType.Bool)]
+			public static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+		}
+		
 		private struct LASTINPUTINFO
 		{
 			public void Init()
@@ -19,7 +22,7 @@ namespace NexusIM.Managers
 			}
 			public uint cbSize;
 			public uint dwTime;
-		};
+		}
 
 		// Public Methods
 		/// <summary>
@@ -40,7 +43,7 @@ namespace NexusIM.Managers
 		{
 			LASTINPUTINFO lastInput = new LASTINPUTINFO();
 			lastInput.Init();
-			GetLastInputInfo(ref lastInput);
+			SafeNativeMethods.GetLastInputInfo(ref lastInput);
 			return TimeSpan.FromTicks(Environment.TickCount - Convert.ToInt32(lastInput.dwTime));
 		}
 		

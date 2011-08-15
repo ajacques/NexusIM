@@ -36,10 +36,10 @@ namespace NexusIM.Managers
 			message = message.TrimEnd(' ', '\t');
 
 			Span result = new Span();
-			int index = message.IndexOf("http://");
+			int index = message.IndexOf("http://", StringComparison.Ordinal);
 
-			index = index == -1 ? message.IndexOf("https://") : index;
-			index = index == -1 ? message.IndexOf("ftp://") : index;
+			index = index == -1 ? message.IndexOf("https://", StringComparison.Ordinal) : index;
+			index = index == -1 ? message.IndexOf("ftp://", StringComparison.Ordinal) : index;
 
 			if (index != -1)
 			{
@@ -88,10 +88,10 @@ namespace NexusIM.Managers
 				}
 
 				IMRun run = (IMRun)inline;
-				int index = run.Body.IndexOf("http://");
+				int index = run.Body.IndexOf("http://", StringComparison.Ordinal);
 
-				index = index == -1 ? run.Body.IndexOf("https://") : index;
-				index = index == -1 ? run.Body.IndexOf("ftp://") : index;
+				index = index == -1 ? run.Body.IndexOf("https://", StringComparison.Ordinal) : index;
+				index = index == -1 ? run.Body.IndexOf("ftp://", StringComparison.Ordinal) : index;
 
 				if (index != -1)
 				{

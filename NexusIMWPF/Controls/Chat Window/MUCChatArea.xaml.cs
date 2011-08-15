@@ -17,6 +17,7 @@ using NexusIM.Controls.Inlines;
 using NexusIM.Protocol;
 using NexusIM.Windows;
 using NexusIM.Managers;
+using System.Globalization;
 
 namespace NexusIM.Controls
 {
@@ -59,11 +60,11 @@ namespace NexusIM.Controls
 				ircChannel.OnUserPart += new EventHandler<IMChatRoomGenericEventArgs>(IrcChannel_OnUserPart);
 
 				RoomDescription.Text = ircChannel.Topic;
-				mNickSearch = new Regex(String.Format(@"(?:^|\ ){0}(?:$|\ |')", ircProtocol.Nickname));
+				mNickSearch = new Regex(String.Format(CultureInfo.InvariantCulture, @"(?:^|\ ){0}(?:$|\ |')", ircProtocol.Nickname));
 
 				mUserContextMenu = new IrcChanUserContextMenu();
 			} else
-				mNickSearch = new Regex(String.Format(@"(?:^|\ ){0}(?:$|\ |')", mProtocol.Username));
+				mNickSearch = new Regex(String.Format(CultureInfo.InvariantCulture, @"(?:^|\ ){0}(?:$|\ |')", mProtocol.Username));
 			RoomName.Text = mChatRoom.Name;
 
 			UpdateParentWindowData();

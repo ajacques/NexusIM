@@ -169,7 +169,7 @@ namespace NexusIM.Managers
 		}
 
 		// Nested Classes
-		private class AreaSortPoolKey : IComparable<AreaSortPoolKey>
+		private sealed class AreaSortPoolKey : IComparable<AreaSortPoolKey>
 		{
 			public AreaSortPoolKey(IMProtocol protocol, string poolId)
 			{
@@ -179,14 +179,11 @@ namespace NexusIM.Managers
 
 			public int CompareTo(AreaSortPoolKey other)
 			{
-				if (mProtocol.Protocol != other.mProtocol.Protocol)
-					return mProtocol.Protocol.CompareTo(other.mProtocol.Protocol);
-
-				if (mProtocol.Username != other.mProtocol.Username)
-					return mProtocol.Username.CompareTo(other.mProtocol.Username);
+				if (mProtocol != other.mProtocol)
+					return mProtocol.CompareTo(other.mProtocol);
 
 				if (mPoolId != other.mPoolId)
-					return mPoolId.CompareTo(other.mPoolId);
+					return String.CompareOrdinal(mPoolId, other.mPoolId);
 
 				return 0;
 			}

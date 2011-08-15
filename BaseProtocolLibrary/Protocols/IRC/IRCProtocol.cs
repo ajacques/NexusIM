@@ -549,7 +549,7 @@ namespace InstantMessage.Protocols.Irc
 								string[] chunks = param[2].Split(mLineSplitSep, 4);
 								string channelName = chunks[1];
 								string username = chunks[2];
-								long stamp = Convert.ToInt64(chunks[3]);
+								long stamp = Int64.Parse(chunks[3], CultureInfo.InvariantCulture);
 
 								IRCChannel channel = FindChannelByName(channelName);
 								channel.TriggerTopicChange(channel.Topic, username);
@@ -557,7 +557,7 @@ namespace InstantMessage.Protocols.Irc
 								break;
 							}
 						case 353: // Users in the channel
-							HandleChannelNamesList(parameters.First(s => s.StartsWith("#")), line.Substring(line.LastIndexOf(':') + 1));
+							HandleChannelNamesList(parameters.First(s => s.StartsWith("#", StringComparison.Ordinal)), line.Substring(line.LastIndexOf(':') + 1));
 							break;
 						case 352:
 							HandleWhoReply(parameters.Skip(3).ToArray());
@@ -583,7 +583,7 @@ namespace InstantMessage.Protocols.Irc
 					if (mRespHandlers.TryGetValue(numericReply, out resp))
 						resp(numericReply, param[2].Split(mLineSplitSep, 2)[1]);
 				} else {
-					switch (parameters[1].ToUpper())
+					switch (parameters[1].ToUpperInvariant())
 					{
 						case "PRIVMSG":
 							HandleMessagePacket(line, parameters);
@@ -611,9 +611,9 @@ namespace InstantMessage.Protocols.Irc
 					}
 				}
 			} else {
-				if (line.StartsWith("PING"))
+				if (line.StartsWith("PING", StringComparison.Ordinal))
 				{
-					string destination = line.Substring(line.IndexOf(":") + 1);
+					string destination = line.Substring(line.IndexOf(':') + 1);
 					HandlePingPacket(destination);
 				}
 			}
@@ -863,7 +863,7 @@ namespace InstantMessage.Protocols.Irc
 				// Check to see if there was a command that was cutoff at the end of the previous buffer read.
 				IEnumerable<string> readableLines = lines;
 
-				if (streamBuf.StartsWith("\r\n")) // Uncommon - The line was completed, but the newlines fell right after the 1024 mark
+				if (streamBuf.StartsWith("\r\n", StringComparison.Ordinal)) // Uncommon - The line was completed, but the newlines fell right after the 1024 mark
 				{
 					string[] last = new string[] { mBufferCutoffMessage.ToString() };
 					mBufferCutoffMessage = null;
@@ -991,7 +991,7 @@ namespace InstantMessage.Protocols.Irc
 
 				string line = mTextEncoder.GetString(buffer, 0, bytesRead);
 
-				if (line.StartsWith("ERROR"))
+				if (line.StartsWith("ERROR", StringComparison.Ordinal))
 				{
 					Trace.WriteLine("IRC: Server Reported error : " + line);
 					triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.Unknown, line));
@@ -1055,7 +1055,7 @@ namespace InstantMessage.Protocols.Irc
 		}
 		private string ExtractNickname(string hostmask)
 		{
-			return hostmask.Substring(0, hostmask.IndexOf("!"));
+			return hostmask.Substring(0, hostmask.IndexOf('!'));
 		}
 		private bool VerifyServerCertificate(object sender, X509Certificate certificates, X509Chain chain, SslPolicyErrors errors)
 		{

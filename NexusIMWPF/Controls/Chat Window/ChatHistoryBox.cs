@@ -36,11 +36,6 @@ namespace NexusIM.Controls
 			mInlines.Inlines.Add((Inline)value);
 		}
 
-		public void AttachToProtocol(IMProtocolWrapper protocol)
-		{
-			
-		}
-
 		public void AppendInline(Inline inline)
 		{
 			if (mInlines.Inlines.Count >= 1)

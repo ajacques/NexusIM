@@ -55,14 +55,14 @@
 					<RowDefinition Height="27"/>
 					<RowDefinition Height="24"/>
 				</Grid.RowDefinitions>
-				<TextBox x:Name="UsernameBox" Margin="0,2,4,2" />
+				<TextBox x:Name="UsernameBox" Margin="0,2,4,2" TabIndex="0" />
 				<Grid x:Name="ServerGrid" Margin="0,2,0,2" HorizontalAlignment="Left" Grid.Column="1">
 					<TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="@" />
-					<nxcc:HostValidationTextbox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" MinWidth="100" MaxWidth="200" />
+					<nxcc:HostValidationTextBox x:Name="ServerBox" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0" MinWidth="100" MaxWidth="200" TabIndex="1" />
 				</Grid>
-				<PasswordBox x:Name="PasswordBox" VerticalAlignment="Top" Margin="0,2,4,0" Grid.Row="1" />
+				<PasswordBox x:Name="PasswordBox" VerticalAlignment="Top" Margin="0,2,4,0" Grid.Row="1" TabIndex="2" />
 				<TextBlock x:Name="SavedText" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,4,0,0" Text="[Saved]" IsHitTestVisible="False" Foreground="#FF787878" Visibility="Collapsed" Grid.Row="1" />
-				<CheckBox x:Name="AutoConnectCheckbox" Grid.Row="3" Content="Connect on startup" VerticalAlignment="Bottom" Margin="0,0,5,8" Grid.ColumnSpan="2" />
+				<CheckBox x:Name="AutoConnectCheckbox" Grid.Row="3" Content="Connect on startup" VerticalAlignment="Bottom" Margin="0,0,5,8" Grid.ColumnSpan="2" TabIndex="3" />
 			</Grid>
 			<TextBlock HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,4,2" FontSize="11" Grid.Row="1" Grid.Column="1">
 				<Hyperlink TextDecorations="None" Click="SettingsLink_Click">

@@ -211,9 +211,9 @@ namespace InstantMessage
 		public int CompareTo(IMProtocol other)
 		{
 			if (Protocol != other.Protocol)
-				return Protocol.CompareTo(other.Protocol);
+				return String.Compare(Protocol, other.Protocol, StringComparison.Ordinal);
 
-			return Username.CompareTo(other.Username);
+			return String.Compare(Username, other.Username, StringComparison.CurrentCulture);
 		}
 		public ContactCollection ContactList
 		{

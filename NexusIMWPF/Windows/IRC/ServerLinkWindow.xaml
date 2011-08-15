@@ -36,7 +36,7 @@
 						<ColumnDefinition Width="60" />
 						<ColumnDefinition Width="60"/>
 					</Grid.ColumnDefinitions>
-					<nxc:HostValidationTextbox x:Name="ConnectHostname" Margin="2" />
+					<nxc:HostValidationTextBox x:Name="ConnectHostname" Margin="2" />
 					<TextBox x:Name="ConnectPort" Margin="2" Grid.Column="1" />
 					<Button Margin="2" Grid.Column="2" Content="Connect" Click="ConnectButton_Click" />
 					<TextBlock x:Name="ConnectOutput" Grid.Row="1" Grid.ColumnSpan="3" Foreground="#FF17AFFF" TextWrapping="WrapWithOverflow" MaxHeight="35" HorizontalAlignment="Stretch" />

@@ -4,7 +4,7 @@
 	Height="130" Width="200">
 	<Grid>
 		<Rectangle Stroke="Black" RadiusX="2" RadiusY="2" Fill="White" />
-		<Grid x:Name="DataGrid">
+		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="74" />
 				<ColumnDefinition />

@@ -94,7 +94,7 @@ namespace NexusIM.Controls
 				int sldpoint = input.Host.LastIndexOf('.', input.Host.Length - 5);
 				string sld = input.Host.Substring(sldpoint + 1);
 
-				if (sld.StartsWith("co."))
+				if (sld.StartsWith("co.", StringComparison.Ordinal))
 				{
 					sldpoint = input.Host.LastIndexOf('.', sldpoint - 1);
 					sld = input.Host.Substring(sldpoint + 1);

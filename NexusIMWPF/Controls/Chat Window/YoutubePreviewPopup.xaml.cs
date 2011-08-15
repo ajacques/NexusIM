@@ -27,17 +27,21 @@ namespace NexusIM.Controls
 			DataCache cache = DataCache.Create(mConnectionString);
 			VideoMetadata metadata = cache.VideoMetadata.FirstOrDefault(vm => vm.VideoId == videoId);
 
+			Uri uri;
+			AsyncCallback callback;
 			if (metadata == null)
 			{
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format(mVideoStatsUrl, videoId));
-				request.BeginGetResponse(new AsyncCallback(OnVideoStatsDl), request);
+				LoadingHint.Visibility = Visibility.Visible;
+				uri = new Uri(String.Format(CultureInfo.InvariantCulture, mVideoStatsUrl, videoId));
+				callback = new AsyncCallback(OnVideoStatsDl);
 			} else {
 				PopulateUIControls(metadata);
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format(mVideoEphemeralStatsUrl, videoId));
-				request.BeginGetResponse(new AsyncCallback(OnTempStatsDl), request);
+				uri = new Uri(String.Format(CultureInfo.InvariantCulture, mVideoEphemeralStatsUrl, videoId));
+				callback = new AsyncCallback(OnTempStatsDl);
 			}
 
-			LoadingHint.Visibility = Visibility.Visible;
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+			request.BeginGetResponse(callback, request);
 		}
 
 		private void OnVideoStatsDl(IAsyncResult e)
@@ -57,7 +61,7 @@ namespace NexusIM.Controls
 			
 			Dispatcher.BeginInvoke(new PopulateDelegate(PopulateUIControls), videoData);
 
-			HttpWebRequest thumbrequest = (HttpWebRequest)WebRequest.Create(string.Format(mThumbailUrl, mVideoId));
+			HttpWebRequest thumbrequest = (HttpWebRequest)WebRequest.Create(String.Format(CultureInfo.InvariantCulture, mThumbailUrl, mVideoId));
 			thumbrequest.BeginGetResponse(new AsyncCallback(OnThumbnailDownload), new object[] { videoData, thumbrequest });
 		}
 		private void OnTempStatsDl(IAsyncResult e)
@@ -85,7 +89,7 @@ namespace NexusIM.Controls
 			Stream thumbstream = response.GetResponseStream();
 			byte[] thumbdata = new byte[response.ContentLength];
 
-			int bytesRead = thumbstream.Read(thumbdata, 0, thumbdata.Length);
+			thumbstream.Read(thumbdata, 0, thumbdata.Length);
 			
 			videoData.Thumbnail = thumbdata;
 			Dispatcher.BeginInvoke(new GenericEvent(() => Thumbnail.Source = (ImageSource)new ImageSourceConverter().ConvertFrom(videoData.Thumbnail) ));
@@ -95,34 +99,37 @@ namespace NexusIM.Controls
 			cache.SubmitChanges();
 		}
 
-		private void ProcessVideoStats(XmlElement root, VideoMetadata videoData)
+		private static void ProcessVideoStats(XmlElement root, VideoMetadata videoData)
 		{
 			XmlElement detailElem = root["media:group"];
 
 			videoData.Title = root["title"].InnerText;
 			videoData.Author = root["author"]["name"].InnerText;
-			videoData.Description = detailElem["media:description"].InnerText.Substring(0, 350); // Only use the first 350 characters due to DataCache.sdf schema sizing and UI sizes
+			videoData.Description = detailElem["media:description"].InnerText;
+			
+			if (videoData.Description.Length > 350)
+				videoData.Description = videoData.Description.Substring(0, 350); // Only use the first 350 characters due to DataCache.sdf schema sizing and UI sizes
 
+			string duration = detailElem["yt:duration"].GetAttribute("seconds");
 			try {
-				string duration = detailElem["yt:duration"].GetAttribute("seconds");
-				videoData.Duration = Int32.Parse(duration);
-			} catch {
+				videoData.Duration = Int32.Parse(duration, NumberStyles.None, CultureInfo.InvariantCulture);
+			} catch (FormatException) {
 				videoData.Duration = 0;
 			}
 		}
-		private void ProcessTempStats(XmlElement root, VideoMetadata videoData)
+		private static void ProcessTempStats(XmlElement root, VideoMetadata videoData)
 		{
 			try {
-				videoData.Views = Int64.Parse(root["yt:statistics"].GetAttribute("viewCount"));
-			} catch {
+				videoData.Views = Int64.Parse(root["yt:statistics"].GetAttribute("viewCount"), NumberStyles.None, CultureInfo.InvariantCulture);
+			} catch (FormatException) {
 				videoData.Views = -1;
 			}
 
 			try {
 				XmlElement rating = root["yt:rating"];
-				videoData.Likes = Int64.Parse(rating.GetAttribute("numLikes"));
-				videoData.Dislikes = Int64.Parse(rating.GetAttribute("numDislikes"));
-			} catch {}
+				videoData.Likes = Int64.Parse(rating.GetAttribute("numLikes"), NumberStyles.None, CultureInfo.InvariantCulture);
+				videoData.Dislikes = Int64.Parse(rating.GetAttribute("numDislikes"), NumberStyles.None, CultureInfo.InvariantCulture);
+			} catch (FormatException) {}
 		}
 		/// <summary>
 		/// Takes the input video data and updates the UI to show the video metadata
@@ -136,9 +143,9 @@ namespace NexusIM.Controls
 		{
 			TimeSpan duration = TimeSpan.FromSeconds(videoData.Duration);
 			if (duration.Hours > 1)
-				Duration.Text = duration.ToString("h\\:mm\\:ss");
+				Duration.Text = duration.ToString("h\\:mm\\:ss", CultureInfo.InstalledUICulture);
 			else
-				Duration.Text = duration.ToString("m\\:ss");
+				Duration.Text = duration.ToString("m\\:ss", CultureInfo.InstalledUICulture);
 
 			if (videoData.Thumbnail != null)
 				Thumbnail.Source = (ImageSource)new ImageSourceConverter().ConvertFrom(videoData.Thumbnail);

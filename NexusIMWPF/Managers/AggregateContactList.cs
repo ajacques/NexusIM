@@ -37,7 +37,7 @@ namespace NexusIM.Managers
 				if (x.Protocol != y.Protocol)
 					return x.Protocol.CompareTo(y.Protocol);
 
-				return x.Username.CompareTo(y.Username);
+				return String.Compare(x.Username, y.Username, StringComparison.CurrentCulture);
 			}
 		}
 		private class GroupComparer : IComparer<GroupOfContacts>

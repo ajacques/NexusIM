@@ -12,6 +12,7 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using InstantMessage.Events;
+using System.Globalization;
 
 namespace InstantMessage.Protocols.Yahoo
 {
@@ -563,7 +564,7 @@ namespace InstantMessage.Protocols.Yahoo
 
 						if (endMark != -1) // Make sure we have an end
 						{
-							int facePosition = rawData.IndexOf("face=", i, endMark - i);
+							int facePosition = rawData.IndexOf("face=", i, endMark - i, StringComparison.Ordinal);
 
 							if (facePosition != -1)
 							{
@@ -583,7 +584,7 @@ namespace InstantMessage.Protocols.Yahoo
 								}
 							}
 
-							int sizePosition = rawData.IndexOf("size=", i, endMark - i);
+							int sizePosition = rawData.IndexOf("size=", i, endMark - i, StringComparison.Ordinal);
 							if (sizePosition != -1)
 							{
 								sizePosition += 6;
@@ -993,7 +994,7 @@ namespace InstantMessage.Protocols.Yahoo
 			Stream stream = response.GetResponseStream();
 			StreamReader reader = new StreamReader(stream);
 
-			int status = Convert.ToInt32(reader.ReadLine());
+			int status = Int32.Parse(reader.ReadLine(), NumberStyles.None, CultureInfo.InvariantCulture);
 			
 			int validfor = 0;
 
@@ -1019,9 +1020,9 @@ namespace InstantMessage.Protocols.Yahoo
 				// cookievalidfor=86400
 				string validTime = reader.ReadLine();
 				validTime = validTime.Substring(15);
-				validfor = Convert.ToInt32(validTime);
+				validfor = Int32.Parse(validTime, NumberStyles.None, CultureInfo.InvariantCulture);
 
-				//  [                ]
+				//  [                    ]
 				// B=6c68lnh6vdmm5...tUjK; expires=Tue, 02-Jun
 				bcookie = reader.ReadLine();
 				bcookie = "B\t" + bcookie.Substring(2, bcookie.IndexOf(';') - 2);

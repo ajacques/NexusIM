@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace NexusIM.Controls
 {
-	public class HostValidationTextbox : TextBox
+	public class HostValidationTextBox : TextBox
 	{
 		protected override void OnLostFocus(RoutedEventArgs e)
 		{
@@ -98,9 +98,8 @@ namespace NexusIM.Controls
 		}
 		private void OnDnsResolve(IAsyncResult e)
 		{
-			IPAddress[] addr;
 			try {
-				addr = Dns.EndGetHostAddresses(e);
+				Dns.EndGetHostAddresses(e);
 			} catch (SocketException x) {
 				GenerateText exec = () => {
 					Span span = new Span();
