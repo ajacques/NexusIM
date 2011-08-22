@@ -40,6 +40,21 @@ namespace NexusIM
 			}
 		}
 
+		public static Color GetColorizationColor()
+		{
+			int color;
+			bool isOpaque;
+			NativeMethods.DwmGetColorizationColor(out color, out isOpaque);
+
+			// Format: 0xAARRGGBB
+			byte blue = (byte)(color & 0xff); // 0xBB
+			byte green = (byte)((color & 0xff00) >> 8); // 0x0000GG00 -> 0xGG
+			byte red = (byte)((color & 0xff0000) >> 16); // 0x00RR0000 -> 0xRR
+			byte alpha = (byte)((color & 0xff000000) >> 24); // 0xAA000000 -> 0xAA
+
+			return Color.FromArgb(alpha, red, green, blue);
+		}
+
 		public const int WM_DWMCOMPOSITIONCHANGED = 798;
 
 		private enum DWM_BB
@@ -75,6 +90,9 @@ namespace NexusIM
 			[DllImport("dwmapi.dll", PreserveSig = false)]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool DwmIsCompositionEnabled();
+
+			[DllImport("dwmapi.dll", PreserveSig = false)]
+			public static extern void DwmGetColorizationColor([MarshalAs(UnmanagedType.U4)] out int ColorizationColor, [MarshalAs(UnmanagedType.Bool)] out bool ColorizationOpaqueBlend); 
 		}		
 	}
 }

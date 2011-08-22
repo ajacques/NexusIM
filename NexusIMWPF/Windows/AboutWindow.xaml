@@ -15,6 +15,6 @@
 		</TextBlock>
 		<TextBlock Foreground="#FF7C7C7C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,90,0,0" Text="Pre-Alpha Software" />
 		<TextBlock Foreground="#FF7C7C7C" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,105,0,0" Text="Stalker Edition" />
-		<Button HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="OK" Margin="0,0,0,10" Width="40" Click="CloseButton_Click" />
+		<Button x:Name="CloseButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="OK" Margin="0,0,0,10" Width="40" Click="CloseButton_Click" />
 	</Grid>
 </Window>

@@ -474,10 +474,7 @@ namespace InstantMessage.Protocols.Yahoo
 				blocks.Add(block);
 				i += 20 + length;
 
-				if (bytesRead - i < 20 && bytesRead == dataqueue.Length && nsStream.DataAvailable)
-				{
-
-				}
+				
 			}
 		
 			int len = blocks.Count;

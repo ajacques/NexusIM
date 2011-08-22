@@ -1046,11 +1046,13 @@ namespace InstantMessage.Protocols.Irc
 		{
 			try {
 				mWriter.WriteLine(data);
+			} catch (IOException e) {
+				Trace.WriteLine("IRC: IOException: " + e.Message);
+				HandleIOError(e);
 			} catch (SocketException e) {
 				Trace.WriteLine("IRC: SocketException: " + e.Message);
 				Dispose();
 				triggerOnError(new SocketErrorEventArgs(e));
-				return;
 			}
 		}
 		private string ExtractNickname(string hostmask)

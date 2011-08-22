@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Threading;
 using InstantMessage;
 using InstantMessage.Protocols.Irc;
-using System.Threading;
 
 namespace NexusIM.Windows
 {
@@ -40,6 +39,7 @@ namespace NexusIM.Windows
 
 				Hostname.Text = mProtocol.Server;
 				Port.Text = mProtocol.Port.ToString();
+				UseSsl.IsChecked = mProtocol.SslEnabled;
 
 				UsernameBox.Text = mProtocol.Username;
 				RealNameBox.Text = mProtocol.RealName;
@@ -54,6 +54,7 @@ namespace NexusIM.Windows
 			mProtocol.Server = Hostname.Text;
 			mProtocol.Username = UsernameBox.Text;
 			mProtocol.RealName = RealNameBox.Text;
+			mProtocol.SslEnabled = UseSsl.IsChecked.Value;
 			
 			int port;
 			if (Int32.TryParse(Port.Text, out port))

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -34,6 +36,78 @@ namespace NexusIM
 			NativeMethods.FlashWindowEx(ref fInfo);
 		}
 
+		public static void WriteMiniDump()
+		{
+			string fileName = String.Format("{0}_mini.dmp", Assembly.GetEntryAssembly().Location, DateTime.Now);
+
+			FileStream file = new FileStream(fileName, FileMode.Create);
+			MinidumpExceptionInfo info = new MinidumpExceptionInfo();
+			info.ClientPointers = false;
+			info.ExceptionPointers = Marshal.GetExceptionPointers();
+			info.ThreadId = SafeNativeMethods.GetCurrentThreadId();
+			MiniDumpType type = MiniDumpType.WithoutOptionalData | MiniDumpType.IncludeDataSegments | MiniDumpType.WithThreadInfo;
+			NativeMethods.MiniDumpWriteDump(NativeMethods.GetCurrentProcess(), SafeNativeMethods.GetCurrentProcessId(), file.SafeFileHandle.DangerousGetHandle(), type, ref info, IntPtr.Zero, IntPtr.Zero);
+			file.Close();
+		}
+
+		public static TimeSpan GetDoubleClickSpeed()
+		{
+			return TimeSpan.FromMilliseconds(SafeNativeMethods.GetDoubleClickTime());
+		}
+		public static Point GetScreenMousePosition()
+		{
+			Win32Point w32Mouse = new Win32Point();
+			SafeNativeMethods.GetCursorPos(ref w32Mouse);
+			return new Point(w32Mouse.X, w32Mouse.Y);
+		}
+		private static QUERY_USER_NOTIFICATION_STATE SHQueryUserNotificationState()
+		{
+			QUERY_USER_NOTIFICATION_STATE returnState = 0;
+
+			SafeNativeMethods.SHQueryUserNotificationState(ref returnState);
+
+			return returnState;
+		}
+
+		// OS Version Helper Functions
+		public static bool IsWinVistaAndUp()
+		{
+			return IsWindows() && Environment.OSVersion.Version.Major >= 6;
+		}
+		public static bool IsWin7AndUp()
+		{
+			return IsWindows() && (IsWinVistaAndUp() || Environment.OSVersion.Version.Major >= 7);
+		}
+		public static bool IsWindows()
+		{
+			return Environment.OSVersion.Platform == PlatformID.Win32NT;
+		}
+
+		[Flags]
+		private enum MiniDumpType
+		{
+			Normal,
+			IncludeDataSegments = 1,
+			FullMemory = 2,
+			WithHandleData = 4,
+			FilterMemory = 8,
+			ScanMemory = 16,
+			WithUnloadedModules = 32,
+			WithIndirectlyReferencedMemory = 64,
+			FilterModulePaths = 128,
+			WithProcessThreadData = 256,
+			WithPrivateReadWriteMemory = 512,
+			WithoutOptionalData = 1024,
+			WithFullMemoryInfo = 2048,
+			WithThreadInfo = 4096,
+			WithCodeSegs = 8192,
+			WithoutAuxiliaryState = 16384,
+			WithFullAuxiliaryState = 0x8000,
+			WithPrivateWriteCopyMemory = 0x10000,
+			IgnoreInaccessibleMemory = 0x20000,
+			WithTokenInformation = 0x40000
+		}
+
 		[Flags]
 		private enum WindowFlashFlags
 		{
@@ -63,7 +137,7 @@ namespace NexusIM
 			Flash_All = 3
 		}
 
-		public enum QUERY_USER_NOTIFICATION_STATE
+		private enum QUERY_USER_NOTIFICATION_STATE
 		{
 			QUNS_NOT_PRESENT = 1,
 			QUNS_BUSY = 2,
@@ -88,8 +162,17 @@ namespace NexusIM
 		[StructLayout(LayoutKind.Sequential)]
 		private struct Win32Point
 		{
-			public Int32 X;
-			public Int32 Y;
+			public int X;
+			public int Y;
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack = 4)]
+		private struct MinidumpExceptionInfo
+		{
+			public uint ThreadId;
+			public IntPtr ExceptionPointers;
+			[MarshalAs(UnmanagedType.Bool)]
+			public bool ClientPointers;
 		}
 
 		private static class NativeMethods
@@ -110,20 +193,15 @@ namespace NexusIM
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
 
-			/// <param name="hWnd">Window Handle</param>
-			/// <param name="hWndInsertAfter">Placement-order Handle</param>
-			/// <param name="X">Horizontal Position</param>
-			/// <param name="Y">Vertical Position</param>
-			/// <param name="cx">Window Width</param>
-			/// <param name="cy">Window Height</param>
-			/// <param name="uFlags">Window Positioning Flags</param>
-			[DllImport("user32.dll", EntryPoint = "SetWindowPos")]
-			[return: MarshalAs(UnmanagedType.Bool)]
-			public static extern bool SetWindowPos(int hWnd, int hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
 			[DllImport("user32.dll")]
 			[return: MarshalAs(UnmanagedType.Bool)]
 			public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+			[DllImport("kernel32.dll")]
+			public static extern IntPtr GetCurrentProcess();
+
+			[DllImport("dbghelp.dll")]
+			public static extern bool MiniDumpWriteDump(IntPtr hProcess, uint ProcessId, IntPtr hFile, MiniDumpType DumpType, ref MinidumpExceptionInfo ExceptionParam, IntPtr UserStreamParam, IntPtr CallbackParam);
 		}
 		private static class SafeNativeMethods
 		{
@@ -149,38 +227,12 @@ namespace NexusIM
 			[DllImport("user32.dll", ExactSpelling = true)]
 			[return: MarshalAs(UnmanagedType.U4)]
 			public static extern int GetDoubleClickTime();
-		}
 
-		public static TimeSpan GetDoubleClickSpeed()
-		{
-			return TimeSpan.FromMilliseconds(SafeNativeMethods.GetDoubleClickTime());
-		}
-		public static Point GetScreenMousePosition()
-		{
-			Win32Point w32Mouse = new Win32Point();
-			SafeNativeMethods.GetCursorPos(ref w32Mouse);
-			return new Point(w32Mouse.X, w32Mouse.Y);
-		}
-		public static QUERY_USER_NOTIFICATION_STATE SHQueryUserNotificationState()
-		{
-			QUERY_USER_NOTIFICATION_STATE returnState = 0;
+			[DllImport("kernel32.dll")]
+			public static extern uint GetCurrentProcessId();
 
-			SafeNativeMethods.SHQueryUserNotificationState(ref returnState);
-
-			return returnState;
-		}
-
-		public static bool IsWinVistaAndUp()
-		{
-			return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 6;
-		}
-		public static bool IsWin7AndUp()
-		{
-			return Environment.OSVersion.Platform == PlatformID.Win32NT && ((Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 7);
-		}
-		public static bool IsWindows()
-		{
-			return Environment.OSVersion.Platform == PlatformID.Win32NT;
+			[DllImport("kernel32.dll")]
+			public static extern uint GetCurrentThreadId();
 		}
 
 		// Constants

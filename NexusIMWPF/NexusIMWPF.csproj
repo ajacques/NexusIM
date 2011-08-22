@@ -131,6 +131,7 @@
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
       <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DnsResolver.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Misc\MiscExtensions.cs" />
     <Compile Include="Misc\ProtocolCollection.cs" />

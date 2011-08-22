@@ -277,14 +277,14 @@ namespace NexusIM.Managers
 				CertErrorEventArgs certError = (CertErrorEventArgs)e;
 				// Do some logging
 				StringBuilder error = new StringBuilder();
-				error.Append("AccountManager: X.509 Certificate Chain Error");
+				error.Append("X.509 Certificate Chain Error");
 				error.AppendFormat(" ({0}) ", certError.PolicyErrors.ToString());
 				error.AppendLine("Certificate Chain:");
 
 				foreach (var cert in certError.Chain.ChainElements)
 					error.AppendLine("\t" + cert.Certificate.SubjectName.Name);
 
-				Trace.Write(error);
+				Trace.Write(error, "AccountManager");
 
 				// Now verify the thumbprint
 				string thumbprint = certError.Certificate.GetCertHashString();
@@ -300,16 +300,18 @@ namespace NexusIM.Managers
 								CLErrorBox box = new CLErrorBox();
 								box.PopulateProtocolControls(protocol);
 								box.SetErrorString("The server's certificate has changed.");
-								box.AddLink("Accept", (t, g) => {} );
+								box.AddLink("Accept", (t, g) => { });
 								box.AddLink("View Details", (t, g) => OpenCertDetailsWindow(certData));
 
 								WindowSystem.ContactListWindow.OpenErrorBox(box);
 							});
 					} else
 						certError.Continue = true; // The user previously accepted this certificate
+				} else { // We don't have a recorded thumbprint. Alert the user
+					Trace.WriteLine("X.509 (cont.) No saved thumbprint for this account.", "AccountManager");
 				}
 			} else
-				Trace.WriteLine("AccountManager: An IMProtocol.Error event was thrown that the AccountManager can not handle (Type: " + e.GetType().FullName + ")");
+				Trace.WriteLine("AccountManager: An IMProtocol.Error event was thrown that the AccountManager can not handle (Type: " + e.GetType().FullName + ")", "AccountManager");
 		}
 		private static void OpenCertDetailsWindow(byte[] certdata)
 		{

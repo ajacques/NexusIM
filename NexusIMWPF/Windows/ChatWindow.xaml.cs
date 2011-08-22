@@ -173,10 +173,12 @@ namespace NexusIM.Windows
 		}
 		private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
 		{
-			if (msg == Aero.WM_DWMCOMPOSITIONCHANGED)
+			switch (msg)
 			{
-				UpdateGlass();
-				handled = true;
+				case Aero.WM_DWMCOMPOSITIONCHANGED:
+					UpdateGlass();
+					handled = true;
+					break;
 			}
 			return IntPtr.Zero;
 		}

@@ -235,7 +235,7 @@ namespace InstantMessage
 					if (ProtocolStatus == IMProtocolStatus.Online)
 						OnStatusChange(mStatus, value);
 					mStatus = value;
-				}				
+				}
 			}
 		}
 		
@@ -300,7 +300,7 @@ namespace InstantMessage
 					//mPassword = Encoding.Default.GetString(passArr);
 
 					NotifyPropertyChanged("Password");
-				}		
+				}
 			}
 		}
 		/// <summary>

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System;
 
 namespace NexusIM.Windows
 {
@@ -10,6 +11,13 @@ namespace NexusIM.Windows
 		public AboutWindow()
 		{
 			InitializeComponent();
+		}
+
+		protected override void OnInitialized(EventArgs e)
+		{
+			base.OnInitialized(e);
+
+			CloseButton.Focus();
 		}
 
 		private void CloseButton_Click(object sender, RoutedEventArgs e)
