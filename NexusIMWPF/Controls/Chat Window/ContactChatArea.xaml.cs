@@ -20,7 +20,7 @@ namespace NexusIM.Controls
 	/// <summary>
 	/// Interaction logic for ContactChatArea.xaml
 	/// </summary>
-	public partial class ContactChatArea : UserControl, ITabbedArea
+	public partial class ContactChatArea : UserControl
 	{
 		public ContactChatArea()
 		{

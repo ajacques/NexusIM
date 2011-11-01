@@ -234,13 +234,5 @@ namespace NexusIM
 			[DllImport("kernel32.dll")]
 			public static extern uint GetCurrentThreadId();
 		}
-
-		// Constants
-		private const int WM_DISPLAYCHANGE = 0x007E;
-		private const int WM_POWERBROADCAST = 0x0218;
-		private const int WM_SIZING = 0x0214;
-		private const int SW_SHOWNOACTIVATE = 4;
-		private const uint SWP_NOACTIVATE = 0x0010;
-		private const int HWND_TOPMOST = -1;
 	}
 }

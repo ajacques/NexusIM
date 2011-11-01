@@ -62,8 +62,13 @@ namespace NexusIM
 				setting.Key = key;
 				setting.Value = value;
 
-				db.Settings.InsertOnSubmit(setting);
-				db.SubmitChanges();
+				try {
+					db.Settings.InsertOnSubmit(setting);
+					db.SubmitChanges();
+				} catch (SqlCeException e) {
+					Trace.WriteLine(e.Message, "SQLCE");
+				}
+
 				db.Dispose();
 			}
 			public bool ContainsKey(string key)
@@ -216,8 +221,12 @@ namespace NexusIM
 				setting.Key = key;
 				setting.Value = value;
 
-				mSource.Add(setting);
-				mContext.SubmitChanges();
+				try {
+					mSource.Add(setting);
+					mContext.SubmitChanges();
+				} catch (SqlCeException e) {
+					Trace.WriteLine(e.Message, "SQLCE");
+				}
 			}
 			public bool ContainsKey(string key)
 			{

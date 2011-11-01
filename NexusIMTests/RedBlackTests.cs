@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NexusIM.Misc;
 using System.Globalization;
 using System.Diagnostics;
+using InstantMessage;
 
 namespace NexusIMTests
 {
@@ -32,12 +33,13 @@ namespace NexusIMTests
 			
 			public bool Find(char find)
 			{
+				throw new NotImplementedException();
 				string f = find.ToString();
 				Comparer comp = (Comparer)Comparer;
-				return !String.IsNullOrEmpty(base.SearchNoStack(base.RootNode, (i) => {					
-					comp.compareCount++;
-					return i.CompareTo(f);
-				}));
+				//return !String.IsNullOrEmpty(base.SearchNoStack(base.RootNode, (i) => {					
+				//	comp.compareCount++;
+				//	return i.CompareTo(f);
+				//}));
 			}
 		}
 

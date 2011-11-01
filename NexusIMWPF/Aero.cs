@@ -46,6 +46,7 @@ namespace NexusIM
 			bool isOpaque;
 			NativeMethods.DwmGetColorizationColor(out color, out isOpaque);
 
+			// Use some bitwise operator magic to extract each separate color value
 			// Format: 0xAARRGGBB
 			byte blue = (byte)(color & 0xff); // 0xBB
 			byte green = (byte)((color & 0xff00) >> 8); // 0x0000GG00 -> 0xGG
@@ -84,6 +85,7 @@ namespace NexusIM
 		{
 			[DllImport("dwmapi.dll")]
 			public static extern void DwmEnableBlurBehindWindow(IntPtr hwnd, ref DWM_BLURBEHIND blurBehind);
+
 			[DllImport("dwmapi.dll")]
 			public static extern void DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
 

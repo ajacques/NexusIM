@@ -102,10 +102,7 @@ namespace NexusIM.Windows.IRC
 						info.ServerName = sData[3];
 						info.Port = sData[4];
 
-						Dispatcher.InvokeIfRequired(() =>
-							{
-								int index = LinksList.Items.Add(info);
-							});
+						Dispatcher.InvokeIfRequired(() => LinksList.Items.Add(info));
 
 						if (!mServers.ContainsKey(info.ServerName)) // There is a weird case where two results for the same server link are returned with two different classes
 							mServers.Add(info.ServerName, info);
@@ -127,7 +124,7 @@ namespace NexusIM.Windows.IRC
 		}
 		private void ConnectButton_Click(object sender, RoutedEventArgs e)
 		{
-			Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "User has requested connect to irc server : {0}:{1}", ConnectHostname.Text, ConnectPort.Text));
+			Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "User has requested server-to-server connection to: {0}:{1}", ConnectHostname.Text, ConnectPort.Text));
 			mProtocol.SendRawMessage(String.Format(CultureInfo.InvariantCulture, "CONNECT {0} {1}", ConnectHostname.Text, ConnectPort.Text));
 
 			ConnectHostname.Text = String.Empty;
@@ -158,13 +155,13 @@ namespace NexusIM.Windows.IRC
 				if (mServerInfo == null)
 					return;
 
-				if (mServerInfo.Status == "Up")
+				if (String.Equals(mServerInfo.Status, "Up", StringComparison.Ordinal))
 				{
 					MenuItem disconnect = new MenuItem();
 					disconnect.Header = "Disconnect";
 					disconnect.Click += new RoutedEventHandler(DisconnectServer_Click);
 					Items.Add(disconnect);
-				} else if (mServerInfo.Status == "Down") {
+				} else if (String.Equals(mServerInfo.Status, "Down", StringComparison.Ordinal)) {
 					MenuItem connect = new MenuItem();
 					connect.Header = "Connect";
 					connect.Click += new RoutedEventHandler(ConnectServer_Click);
@@ -254,6 +251,9 @@ namespace NexusIM.Windows.IRC
 			public string Address
 			{
 				get	{
+					if (String.Equals(mAddress, "*", StringComparison.Ordinal))
+						return "[Listen Only]";
+
 					return mAddress;
 				}
 				set	{

@@ -191,7 +191,6 @@
     </Compile>
     <Compile Include="FirstRunSetup.cs" />
     <Compile Include="Misc\IPAddressExtensions.cs" />
-    <Compile Include="ITabbedArea.cs" />
     <Compile Include="Managers\AggregateContactList.cs" />
     <Compile Include="Managers\Application\AccountManager.cs" />
     <Compile Include="Managers\Application\CMDArgsHandler.cs" />
