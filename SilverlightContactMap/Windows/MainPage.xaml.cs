@@ -238,13 +238,15 @@ namespace SilverlightContactMap.Windows
 			point.OpenPlacard();
 			point.Ready = true;
 
+			Canvas.SetZIndex(point.Placard, -2);
+
 			pLayer.Children.Add(point.RadiusPolygon);
 			pLayer.AddChild(point.Placard, point.Location, PositionOrigin.BottomCenter);
 			pLayer.AddChild(point.Popup, point.Location, PositionOrigin.BottomCenter);
 		}
 		private void NexusCore_onComplete()
 		{
-			FixZIndexes();
+			//FixZIndexes();
 			JSLogger.WriteLine("Completed");
 			mTimeUpdateTimer.Start();
 		}

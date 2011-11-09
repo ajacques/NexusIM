@@ -27,7 +27,7 @@
 	function loadMapControl()
 	{
 		recomputeHeight();
-		Silverlight.createObjectEx({
+		var result = Silverlight.createObjectEx({
 			source: "ClientBin/SilverlightContactMap.xap",
 			parentElement: document.getElementById('silverlightHost'),
 			id: "slPlugin",
@@ -40,6 +40,7 @@
 			},
 			events: { onError: onSLError, onLoad: onSLLoad }
 		});
+		$("div#mapHost").html(result);
 		recomputeHeight();
 	}
 	</script>

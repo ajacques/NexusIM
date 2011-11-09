@@ -309,6 +309,7 @@ namespace NexusIM.Managers
 						certError.Continue = true; // The user previously accepted this certificate
 				} else { // We don't have a recorded thumbprint. Alert the user
 					Trace.WriteLine("X.509 (cont.) No saved thumbprint for this account.", "AccountManager");
+					certError.Continue = true;
 				}
 			} else
 				Trace.WriteLine("AccountManager: An IMProtocol.Error event was thrown that the AccountManager can not handle (Type: " + e.GetType().FullName + ")", "AccountManager");

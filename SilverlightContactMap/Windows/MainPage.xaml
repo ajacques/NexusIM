@@ -12,7 +12,7 @@
 	Loaded="UserControl_Loaded">
 	<Grid x:Name="LayoutRoot">
 		<!--AsS2Xi9W1iyJWYJv67X3CnPtgqpQrITIGqlBqKBuSkRh0benHS3vkAaC2V-s_2nP -->
-		<m:Map x:Name="contacts" CredentialsProvider="AQ-tZjljjHzYxbrItPoDyDoAAAAAAAAAAAAAAAAAAAAAj2EvJF0Ot2vG40vLS2Nx" Mode="Road" ScaleVisibility="Collapsed">
+		<m:Map x:Name="contacts" CredentialsProvider="AsS2Xi9W1iyJWYJv67X3CnPtgqpQrITIGqlBqKBuSkRh0benHS3vkAaC2V-s_2nP" Mode="Road" ScaleVisibility="Collapsed">
 			<m:MapLayer x:Name="pLayer" />
 		</m:Map>
 		<Grid VerticalAlignment="Top" HorizontalAlignment="Right" Background="#BE000000" Height="23">
@@ -21,7 +21,7 @@
 				<ColumnDefinition Width="60" />
 			</Grid.ColumnDefinitions>
 			<TextBlock x:Name="Name" Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="White" FontSize="12" Text="Test Name" Margin="8,0,8,0" />
-			<Path Grid.Column="0" Data="M 0,0 l -10,5 -10,-5" Fill="LightBlue" Stretch="Fill" VerticalAlignment="Bottom" Height="5" Width="10" UseLayoutRounding="True" HorizontalAlignment="Center" d:LayoutOverrides="Width" />
+			<Path Grid.Column="0" Data="M 0,0 l -10,5 -10,-5" Fill="LightBlue" Stretch="Fill" VerticalAlignment="Bottom" Height="5" Width="10" UseLayoutRounding="True" HorizontalAlignment="Center" />
 			<Polyline Grid.Column="1" Points="0,6 0,18" Stroke="LightBlue" Margin="-1,0,0,0" />
 			<TextBlock x:Name="signout" Grid.Column="1" Text="Sign Out" TextWrapping="Wrap" Foreground="White" Cursor="Hand" MouseEnter="TextBlock_MouseEnter" MouseLeave="signout_MouseLeave" FontSize="12" MouseLeftButtonUp="signout_MouseLeftButtonUp" VerticalAlignment="Center" HorizontalAlignment="Center" />
 		</Grid>
