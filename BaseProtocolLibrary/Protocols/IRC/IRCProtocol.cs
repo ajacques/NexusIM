@@ -851,6 +851,17 @@ namespace InstantMessage.Protocols.Irc
 			triggerOnError(new SocketErrorEventArgs(new SocketException((int)SocketError.ConnectionReset)));
 			//triggerOnDisconnect(new IMDisconnectEventArgs(DisconnectReason.NetworkProblem) { Exception = exception });
 		}
+		private void SocketReadLoop()
+		{
+			StreamReader reader = new StreamReader(mTextStream);
+			while (client.Connected)
+			{
+				string line = reader.ReadLine();
+				ParseLine(line);
+			}
+
+			reader.Peek();
+		}
 
 		private IEnumerable<string> SocketHandleLineWrapAround(int bytesRead)
 		{
@@ -977,7 +988,10 @@ namespace InstantMessage.Protocols.Irc
 			CompleteLogin();
 
 			mDataQueue = new byte[mBufferSize];
-			mOngoingResult = mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
+
+			Thread loopThread = new Thread(new ThreadStart(SocketReadLoop));
+			loopThread.Start();
+			//mOngoingResult = mTextStream.BeginRead(mDataQueue, 0, mBufferSize, new AsyncCallback(readDataAsync), null);
 		}
 		private void CompleteLogin()
 		{
@@ -1039,8 +1053,8 @@ namespace InstantMessage.Protocols.Irc
 
 			OnLogin();
 
-			if (mWatchThread.ThreadState != System.Threading.ThreadState.Running)
-				mWatchThread.Start();
+			//if (mWatchThread.ThreadState != System.Threading.ThreadState.Running)
+				//mWatchThread.Start();
 		}
 		private void sendData(string data)
 		{
@@ -1115,7 +1129,7 @@ namespace InstantMessage.Protocols.Irc
 		private Stream mTextStream;
 		private StringBuilder mBufferCutoffMessage;
 		private IAsyncResult mOngoingResult;
-		private const int mBufferSize = 1024;
+		private const int mBufferSize = 2048;
 		private static Encoding mTextEncoder = Encoding.UTF8;
 	}
 }

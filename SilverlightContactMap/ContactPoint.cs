@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
 using Microsoft.Maps.MapControl;
 using SilverlightContactMap.NexusCore;
 using SilverlightContactMap.Windows;
-using System.Diagnostics;
-using System.Windows.Media;
 
 namespace SilverlightContactMap
 {
