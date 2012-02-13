@@ -472,7 +472,7 @@ namespace InstantMessage.Protocols.Irc
 			}
 		}
 
-		public new string ToString()
+		public override string ToString()
 		{
 			return String.Format("{0}@{1} - IRC", Nickname, Server);
 		}
