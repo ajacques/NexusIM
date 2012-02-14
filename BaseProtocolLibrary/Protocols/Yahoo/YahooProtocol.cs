@@ -27,6 +27,7 @@ namespace InstantMessage.Protocols.Yahoo
 			supportsMUC = true;
 			supportsIntroMsg = true;
 			supportsUserInvisiblity = true;
+			socketWriteLock = new object();
 			mLoginWaitHandle = new ManualResetEvent(false);
 		}
 
@@ -70,7 +71,7 @@ namespace InstantMessage.Protocols.Yahoo
 			CleanupBuddyList();
 			CleanupTransientData();
 
-			if (mProtocolStatus == IMProtocolStatus.Online) // Check to see if we were even connected.
+			if (mConnected) // Check to see if we were even connected.
 			{
 				YPacket packet = new YPacket();
 				packet.Service = YahooServices.ymsg_pager_logoff;
@@ -473,8 +474,6 @@ namespace InstantMessage.Protocols.Yahoo
 				ArraySegment<byte> block = new ArraySegment<byte>(dataqueue, i, 20 + length);
 				blocks.Add(block);
 				i += 20 + length;
-
-				
 			}
 		
 			int len = blocks.Count;
@@ -535,10 +534,14 @@ namespace InstantMessage.Protocols.Yahoo
 			if (mProtocolStatus == IMProtocolStatus.Offline)
 				return;
 
+			if (disconnecting)
+				return;
+
 			try {
 				nsStream.BeginRead(dataqueue, 0, dataqueue.Length, new AsyncCallback(readDataAsync), null);
-			} catch (Exception) {
-				//Login();
+			} catch (InvalidOperationException) {
+				// Caused by a race condition while disconnecting
+				// No need to handle it
 			}
 		}
 
@@ -1285,17 +1288,19 @@ namespace InstantMessage.Protocols.Yahoo
 		}
 		private void sendPacket(YPacket packet)
 		{
-			if (client == null)
-				throw new NullReferenceException("Client is null");
-
 			if (sessionByte != null)
 				packet.SessionByte = sessionByte;
+
+			if (client == null)
+				throw new NullReferenceException("Client is null");
 
 			byte[] packetdata = packet.ToBytes();
 
 			try	{
+				Monitor.Enter(socketWriteLock);
 				nsStream.Write(packetdata, 0, packetdata.Length);
-			} catch (IOException) {				
+			} catch (IOException) {
+				Monitor.Exit(socketWriteLock);
 				authenticated = false;
 				triggerOnError(new IMErrorEventArgs(IMProtocolErrorReason.CONNERROR));
 			}
@@ -1314,11 +1319,13 @@ namespace InstantMessage.Protocols.Yahoo
 		private TcpClient client;
 		private NetworkStream nsStream;
 		private IPAddress connectServer;
+		private object socketWriteLock;
 
 		// State Information
 		private bool yaddrbookdld;
 		private bool authenticated;
 		private bool disposed;
+		private bool disconnecting;
 
 		// Authentication Information
 		private string token;

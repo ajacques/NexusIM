@@ -18,6 +18,9 @@ namespace NexusIM
 			SRVRecord record = (SRVRecord)Marshal.PtrToStructure(resultPtr, typeof(SRVRecord));
 
 			//IPAddress address = new IPAddress(record.address);
+
+			SafeNativeMethods.DnsRecordListFree(resultPtr, 1);
+			resultPtr = IntPtr.Zero;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
