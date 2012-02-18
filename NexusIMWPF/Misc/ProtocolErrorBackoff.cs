@@ -106,7 +106,7 @@ namespace NexusIM.Misc
 		{
 			mTimer.Stop();
 
-			Trace.WriteLine(String.Format("ErrorHandler: Re-attemping login now for: (Username: {0}, Type: {1})", mProtocol.Protocol, mProtocol.Protocol.Protocol));
+			Trace.WriteLine(String.Format("ErrorHandler: Re-attemping login now for: (Username: {0}, Type: {1})", mProtocol.Protocol.Username, mProtocol.Protocol.Protocol));
 
 			mInterval = mInterval.Add(mInterval); // Double it
 			mAttempts++;
