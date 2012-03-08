@@ -9,7 +9,8 @@
 			-moz-transition-property: border, -moz-box-shadow;
 			-moz-transition-timing-function: linear, linear;
 			-moz-box-shadow: 0 0 20px rgba(255, 85, 66, 0.85);
-			border: 1px solid rgba(255, 128, 66, 0.75);
+			-webkit-box-shadow: 0 0 20px rgba(255, 85, 66, 0.85);
+			border: 2px solid rgba(255, 128, 66, 0.75);
 			outline-color: -moz-use-text-color;
 			outline-style: none;
 			outline-width: thick;
@@ -70,8 +71,8 @@
 			<label for="txtEmail">Email</label>&nbsp;<span id="registerEmailInUse" class="errorhint">Already in-use</span><br />
 			<input type="text" class="validatable" id="txtEmail" placeholder="user@example.com" style="width: 210px" onblur="LoginPage.ValidateEmail();" /><br />
 			<label for="txtRegisterPassword" style="width: 210px">Password</label><br />
-			<input type="password" class="validatable" id="txtRegisterPassword" style="width: 210px" /><br />
-			<input type="checkbox" id="showPwdChars" /><label for="showPwdChars" style="font-size: 10pt; margin-left: 5px;">Show characters</label><br />
+			<input type="password" class="validatable" id="txtRegisterPassword" style="width: 210px" onchange="LoginPage.UpdatePassword();" /><br />
+			<input type="checkbox" id="showPwdChars" name="showPwdChars" onchange="LoginPage.TogglePasswordVisibility();" /><label for="showPwdChars" style="font-size: 10pt; margin-left: 5px;">Show characters</label><br />
 			<label for="gender">Gender</label><br />
 			<span id="gender">
 				<input type="radio" name="gender" id="genderMale" value="2" /><label for="genderMale" style="margin-left: 2px">Male</label> 

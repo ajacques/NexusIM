@@ -51,6 +51,11 @@ LoginPage.DoLogin = function()
 	});
 }
 
+LoginPage.TogglePasswordVisibility = function ()
+{
+	var pwd = $("input#txtRegisterPassword");
+}
+
 LoginPage.ValidateEmail = function()
 {
 	ValidationFunctions.UsernameInUse($("#txtEmail").val(), function(result)
