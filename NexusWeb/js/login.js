@@ -56,6 +56,14 @@ LoginPage.TogglePasswordVisibility = function ()
 	var pwd = $("input#txtRegisterPassword");
 }
 
+LoginPage.UpdatePassword = function ()
+{
+	var pwd = $("input#txtRegisterPassword");
+	var meter = $("div#registerPasswordStrength");
+
+	meter.css("width", ((pwd.length / 8.0) * 250) + "px");
+}
+
 LoginPage.ValidateEmail = function()
 {
 	ValidationFunctions.UsernameInUse($("#txtEmail").val(), function(result)

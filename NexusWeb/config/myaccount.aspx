@@ -4,7 +4,15 @@
 		<span runat="Server" ID="Span1" />
 	<div class="colheadline">Tasks</div>
 </asp:Content>
+<asp:Content ContentPlaceHolderID="head" runat="server">
+	<script type="text/javascript" src="../js/myaccount.js"></script>
+	<script type="text/javascript" src="../js/Silverlight.js"></script>
+	<script type="text/javascript" src="../js/Silverlight.supportedUserAgent.js"></script>
+	<script type="text/javascript" src="../Services/Accounts.svc/jsdebug"></script>
+	
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
+<form runat="server">
 	<div style="width: 400px;">
 		<asp:Hyperlink runat="server" NavigateUrl="~/main.aspx" Text="Buddy List" />
 		<!-- My Accounts -->
@@ -40,4 +48,5 @@
 			<div runat="Server" id="locationstatusoff" style="color: red">Location sharing is currently disabled.</div>
 		</div>
 	</div>
+</form>
 </asp:Content>

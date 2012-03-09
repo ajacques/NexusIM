@@ -5,19 +5,12 @@
 <head runat="server">
 	<title></title>
 	<link rel="StyleSheet" href="css/main.css" type="text/css" />
-	<script type="text/javascript" src="http://ajax.microsoft.com/ajax/jQuery/jquery-1.4.4.js"></script>
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.js"></script>
 	<script type="text/javascript" src="http://ajax.microsoft.com/ajax/4.0/1/MicrosoftAjax.js"></script>
+	<script type="text/javascript" src="/locales/strings.en-US.js"></script>
 	<asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
-	<form id="form1" runat="server">
-	<asp:ScriptManager runat="Server" AjaxFrameworkMode="Disabled">
-		<Scripts>
-			<asp:ScriptReference Path="~/locales/strings.en-US.js" />
-			<asp:ScriptReference Path="~/js/popup.js" />
-		</Scripts>
-	</asp:ScriptManager>
-	</form>
 	<asp:ContentPlaceHolder ID="ErrorMessagePlaceHolder" runat="server" />
 	<div id="header" style="background-color: #000">
 		<table id="gradientheader" style="width: 100%; height: 50px; border: 0; border-collapse: collapse">
@@ -44,6 +37,6 @@
 			<asp:ContentPlaceHolder ID="body" runat="server" />
 		</div>
 	</div>
-	<div id="footer">&copy; Copyright 2010 Adam Jacques</div>
+	<div id="footer">&copy; Copyright 2012 Adam Jacques</div>
 	</body>
 </html>

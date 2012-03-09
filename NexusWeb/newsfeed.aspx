@@ -6,6 +6,9 @@
 	<script type="text/javascript" src="js/newsfeed.js"></script>
 	<script type="text/javascript" src="js/LocationBuilder.js"></script>
 	<script type="text/javascript" src="js/jStorage.js"></script>
+	<script type="text/javascript" src="Services/MessageFeed.svc/jsdebug"></script>
+	<script type="text/javascript" src="Services/Accounts.svc/jsdebug"></script>
+	<script type="text/javascript" src="Services/GeoServices.svc/jsdebug"></script>
 </asp:Content>
 <asp:Content ContentPlaceHolderID="rightcolcontent" runat="server">
 	<div class="colheadline">Search</div>

@@ -18,12 +18,6 @@ namespace NexusWeb.Pages
 				Response.Redirect("../login.aspx?redirect=config/myaccount.aspx", true);
 
 			int userid = (int)Session["userid"];
-
-			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/myaccount.js"));
-			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/Silverlight.js") { ScriptMode = ScriptMode.Auto });
-			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/Silverlight.supportedUserAgent.js") { ScriptMode = ScriptMode.Auto });
-
-			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/Accounts.svc"));
 			
 			NexusCoreDataContext db = new NexusCoreDataContext();
 

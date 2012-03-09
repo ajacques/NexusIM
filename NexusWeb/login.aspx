@@ -71,7 +71,8 @@
 			<label for="txtEmail">Email</label>&nbsp;<span id="registerEmailInUse" class="errorhint">Already in-use</span><br />
 			<input type="text" class="validatable" id="txtEmail" placeholder="user@example.com" style="width: 210px" onblur="LoginPage.ValidateEmail();" /><br />
 			<label for="txtRegisterPassword" style="width: 210px">Password</label><br />
-			<input type="password" class="validatable" id="txtRegisterPassword" style="width: 210px" onchange="LoginPage.UpdatePassword();" /><br />
+			<input type="password" class="validatable" id="txtRegisterPassword" style="width: 210px" onkeyup="LoginPage.UpdatePassword();" /><br />
+			<div id="registerPasswordStrength" style="height: 5px; margin: 0; padding: 0; width: 50px; background-color: Green;"></div>
 			<input type="checkbox" id="showPwdChars" name="showPwdChars" onchange="LoginPage.TogglePasswordVisibility();" /><label for="showPwdChars" style="font-size: 10pt; margin-left: 5px;">Show characters</label><br />
 			<label for="gender">Gender</label><br />
 			<span id="gender">
@@ -109,7 +110,7 @@
 			<a href="forgotpassword.aspx" style="font-size: 10pt; margin-bottom: 10px">Forgot your password?</a>
 			<div style="height: 12pt"></div>
 			<input type="checkbox" id="rememberMe" /><label for="rememberMe" style="font-size: 10pt; padding-left: 5px">Remember me</label><br /><br />
-			<input type="button" onclick="LoginPage.DoLogin();return false;" Value="Login" style="" />&nbsp;<span id="logininprogress" style="font-size: 10pt; color: #3333CC; display: none">Please Wait...</span>
+			<input id="loginButton" type="button" onclick="LoginPage.DoLogin();return false;" Value="Login" style="" />&nbsp;<span id="logininprogress" style="font-size: 10pt; color: #3333CC; display: none">Please Wait...</span>
 		</td>
 	</tr>
 	</table>

@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="Location Service Configuration" Language="C#" MasterPageFile="../centered.master" AutoEventWireup="true" CodeBehind="locationconfig.aspx.cs" Inherits="NexusWeb.Pages.LocationConfig" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 	<link rel="StyleSheet" href="../css/location.css" type="text/css" />
+	<script type="text/javascript" src="../js/location.js"></script>
+	<script type="text/javascript" src="../Services/Accounts.svc/jsdebug"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ErrorMessagePlaceHolder" runat="server">
 	<div id="errormessage" class="errormessage" runat="Server" visible="false" />
@@ -20,6 +22,7 @@
 	</ul>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="body" runat="server">
+<form id="Form1" runat="server">
 	<asp:SiteMapPath ID="SiteMapPath1" runat="server" Font-Names="Verdana" 
 	Font-Size="0.8em" PathSeparator=" : ">
 		<PathSeparatorStyle Font-Bold="True" ForeColor="#5D7B9D" />
@@ -59,4 +62,5 @@
 			</div>
 		</div>
 	</div>
+</form>
 </asp:Content>

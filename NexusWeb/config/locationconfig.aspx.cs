@@ -20,10 +20,6 @@ namespace NexusWeb.Pages
 
 			int userid = (int)Session["userid"];
 
-			ScriptManager.GetCurrent(this).Scripts.Add(new ScriptReference("~/js/location.js"));
-
-			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/Accounts.svc"));
-
 			NexusCoreDataContext db = new NexusCoreDataContext();
 
 			bool locationShareState = db.Users.Where(ul => ul.id == userid).Select(ul => ul.locationsharestate).First();

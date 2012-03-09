@@ -19,10 +19,6 @@ namespace NexusWeb.Pages
 
 			ver = dbUser.FriendListVersion;
 			selfid = dbUser.id;
-
-			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/MessageFeed.svc"));
-			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/Accounts.svc"));
-			ScriptManager.GetCurrent(this).Services.Add(new ServiceReference("~/Services/GeoServices.svc"));
 		}
 
 		protected User dbUser;
