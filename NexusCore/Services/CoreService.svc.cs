@@ -130,7 +130,6 @@ namespace NexusCore.Services
 
 			bool isImSignedIn = (from a in db.Accounts
 									 where a.userid == userid 
-									 && WebIMProtocolManager.StorageBin.Any(si => si.ProtocolId == a.id && si.Protocol.ProtocolStatus == InstantMessage.IMProtocolStatus.Online)
 									 select a).Any();
 				
 				//(from u in db.Users where u.id == userid select u.IsIMSignedIn).First();

@@ -88,7 +88,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Services\WebIM.svc" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -97,7 +96,6 @@
   <ItemGroup>
     <Compile Include="Controllers\SettingDbSerializer.cs" />
     <Compile Include="Controllers\PushCallbackFactory.cs" />
-    <Compile Include="Controllers\WebIMProtocolManager.cs" />
     <Compile Include="DataContracts\ContactInfo.cs" />
     <Compile Include="DataContracts\PhoneNumber.cs" />
     <Compile Include="NamedPipeProtocol.cs" />
@@ -139,9 +137,6 @@
     <Compile Include="Support\PushChannelStuff\PushChannelContract.cs" />
     <Compile Include="Support\PushChannelStuff\PushChannelHelpers.cs" />
     <Compile Include="DataContracts\SupportClasses.cs" />
-    <Compile Include="Services\WebIM.svc.cs">
-      <DependentUpon>WebIM.svc</DependentUpon>
-    </Compile>
     <Compile Include="Support\LocationServices.cs" />
     <Compile Include="DataContracts\UserStateResult.cs" />
     <Compile Include="DataContracts\WCFWebPrettyFault.cs" />
@@ -172,11 +167,12 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>57909</DevelopmentServerPort>
+          <DevelopmentServerPort>27653</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://core.nexus-im.com/</IISUrl>
+          <IISUrl>
+          </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

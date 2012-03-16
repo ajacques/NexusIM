@@ -139,7 +139,6 @@ namespace NexusCore.DataContracts
 	{
 		public ProtocolReadyMessage(IMProtocol protocol)
 		{
-			mProtocolId = protocol.Guid;
 			mInfo = new AccountInfo(protocol.Protocol, protocol.Username, protocol.Password);
 		}
 
