@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
 using System.Net;
 using System.Security.Permissions;
@@ -86,9 +87,13 @@ namespace NexusIM
 			public long address;
 		}
 
+		/// <summary>
+		/// Specifies what DNS record should be resolved.
+		/// </summary>
 		private enum QueryTypes
 		{
 			A = 1,
+			PTR = 0x0c,
 			TXT = 0x10,
 			AAAA = 0x1c,
 			SRV = 0x21
@@ -103,10 +108,13 @@ namespace NexusIM
 		private static class SafeNativeMethods
 		{
 			[DllImport("dnsapi.dll", EntryPoint = "DnsQuery_W", CharSet = CharSet.Unicode, SetLastError = true, ExactSpelling = true)]
-			public static extern int DnsQuery([MarshalAs(UnmanagedType.LPWStr)] string name, QueryTypes wType, QueryOptions options, int extra, out IntPtr ppQueryResults, int pReserved);
+			public static extern int DnsQuery([MarshalAs(UnmanagedType.LPWStr)] string name, [MarshalAs(UnmanagedType.U2)] QueryTypes wType, [MarshalAs(UnmanagedType.U2)] QueryOptions options, int extra, out IntPtr ppQueryResults, int pReserved);
 
 			[DllImport("dnsapi.dll", CharSet = CharSet.Auto, SetLastError = true)]
 			public static extern void DnsRecordListFree(IntPtr pRecordList, int FreeType);
 		}
+
+		private static Thread queryThread;
+		private static AutoResetEvent queryEvent;
 	}
 }

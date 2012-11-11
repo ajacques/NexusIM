@@ -13,7 +13,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using System.Web;
 using System.Web.SessionState;
-using Microsoft.ApplicationServer.Caching;
+//using Microsoft.ApplicationServer.Caching;
 using NexusCore.Databases;
 using NexusWeb.Properties;
 using NexusWeb.Services.DataContracts;
@@ -43,8 +43,8 @@ namespace NexusWeb.Services
 	{
 		public MessageFeed()
 		{
-			if (Settings.Default.EnableAppFabricCache)
-				mAppFabricFactory = new DataCacheFactory();
+			//if (Settings.Default.EnableAppFabricCache)
+				//mAppFabricFactory = new DataCacheFactory();
 
 			if (mDbToUsableStatusUpdate == null)
 				SetupDelegate();
@@ -312,15 +312,15 @@ HttpSessionState session = HttpContext.Current.Session;
 			if (!Settings.Default.EnableAppFabricCache)
 				return db.GetFriends(userid).Select(u => u.id).ToArray();
 
-			DataCache cache = mAppFabricFactory.GetCache("Friends");
+			//DataCache cache = mAppFabricFactory.GetCache("Friends");
 
-			int[] friends = (int[])cache.Get(userid.ToString());
+			int[] friends = null;//(int[])cache.Get(userid.ToString());
 
 			if (friends == null || friends.Length == 0)
 			{
 				friends = db.GetFriends(userid).Select(u => u.id).ToArray();
 
-				cache.Put(userid.ToString(), friends);
+				//cache.Put(userid.ToString(), friends);
 			}
 
 			return friends;
@@ -397,7 +397,7 @@ HttpSessionState session = HttpContext.Current.Session;
 
 		private static Func<StatusUpdate, ClientStatusUpdate> mDbToUsableStatusUpdate;
 		private static Dictionary<int, ArticlePollDelegate> mStatusUpdateCallbacks = new Dictionary<int, ArticlePollDelegate>();
-		private static DataCacheFactory mAppFabricFactory;
+		//private static DataCacheFactory mAppFabricFactory;
 		private static Encoding mEncoding = Encoding.Unicode;
 	}
 }

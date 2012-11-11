@@ -9,7 +9,6 @@ using System.ServiceModel;
 using System.ServiceModel.Activation;
 using System.Web;
 using System.Web.SessionState;
-using Microsoft.ApplicationServer.Caching;
 using NexusCore.Databases;
 using System.Runtime.Serialization;
 using System.IO;
