@@ -17,7 +17,7 @@ namespace InstantMessage.Protocols.XMPP
 			writerSettings = new XmlWriterSettings();
 			writerSettings.NamespaceHandling = NamespaceHandling.OmitDuplicates;
 			writerSettings.Encoding = Encoding.UTF8;
-			xmlWriter = XmlWriter.Create(transportLayerStream, writerSettings);
+			ResetWriterState();
 
 			mMsgReader = new XmppMessageReader();
 			mMsgReader.NewReaderState();
@@ -32,6 +32,12 @@ namespace InstantMessage.Protocols.XMPP
 		public void InitReader()
 		{
 			mMsgReader.UnderlyingStream = protocolLayerStream;
+			mMsgReader.NewReaderState();
+		}
+
+		public void ResetWriterState()
+		{
+			xmlWriter = XmlWriter.Create(transportLayerStream, writerSettings);
 		}
 
 		public XmppMessage ReadMessage()
@@ -49,7 +55,6 @@ namespace InstantMessage.Protocols.XMPP
 			TimeSpan protocol = sw.Elapsed;
 			xmlWriter = XmlWriter.Create(protocolLayerStream, writerSettings);
 			InitReader();
-			mMsgReader.NewReaderState();
 
 			sw.Stop();
 			Trace.WriteLine(String.Format("XMPP: TLS Negotiation complete (TotalTime: {0}; Protocol Cost: {1}; Client-side: {2})", sw.Elapsed, protocol, sw.Elapsed - protocol));

@@ -41,6 +41,9 @@ namespace InstantMessage.Protocols.XMPP
 					case XmppNamespaces.Tls:
 						features.Add(new TlsCapableFeature());
 						break;
+					case XmppNamespaces.Bind:
+						features.Add(BindFeature.Parse(reader));
+						break;
 				}
 			}
 		}

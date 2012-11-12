@@ -59,11 +59,11 @@ namespace InstantMessage.Protocols.XMPP
 				}
 			}
 		}
-		private void WriteMessage(XmppMessage message)
+		internal void WriteMessage(XmppMessage message)
 		{
 			xmppStream.WriteMessage(message);
 		}
-		private void WriteMessage(IqMessage message)
+		internal void WriteMessage(IqMessage message)
 		{
 			message.Id = correlator.GetNextId();
 			message.Source = new Jid("adam", "adamjacques.com");
@@ -74,11 +74,20 @@ namespace InstantMessage.Protocols.XMPP
 		private void ProcessStreamInitMessage(XmppMessage message)
 		{
 			StreamInitMessage msg = message as StreamInitMessage;
-			if (msg.Features.Any(f => f is StreamInitMessage.TlsCapableFeature) && !xmppStream.IsEncrypted)
+			if (enableTls && msg.Features.Any(f => f is StreamInitMessage.TlsCapableFeature) && !xmppStream.IsEncrypted)
 			{
 				WriteMessage(new StartTlsMessage());
 			} else if (msg.Features.Any(f => f is StreamInitMessage.AuthMechanismFeature)) {
-				WriteMessage(new PlainAuthMessage(Username, Password));
+				StreamInitMessage.AuthMechanismFeature authmech = msg.Features.First(s => s is StreamInitMessage.AuthMechanismFeature) as StreamInitMessage.AuthMechanismFeature;
+
+				if (authmech.Mechanisms.Contains("SCRAM-SHA-1"))
+				{
+					authStrategy = new ScramAuthStrategy();
+				} else if (authmech.Mechanisms.Contains("PLAIN")) {
+					authStrategy = new PlainAuthStrategy();
+				}
+
+				authStrategy.StartAuthentication(this);
 			}
 		}
 		private void ProcessTlsProceedMessage(XmppMessage message)
@@ -88,6 +97,9 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		private void ProcessSaslSuccessMessage(XmppMessage message)
 		{
+			authStrategy = null;
+			xmppStream.InitReader();
+			xmppStream.ResetWriterState();
 			WriteMessage(new StreamInitMessage(Server));
 		}
 
@@ -111,11 +123,13 @@ namespace InstantMessage.Protocols.XMPP
 		}
 
 		// Variables
+		private bool enableTls;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
 		private bool mRunMsgThread;
 		private Thread mBGMessageThread;
 		private Socket networkSocket;
 		private XmppStream xmppStream;
 		private MessageCorrelator correlator;
+		private IAuthStrategy authStrategy;
 	}
 }

@@ -31,6 +31,11 @@ namespace InstantMessage.Protocols.XMPP
 
 			PropertyInfo pinfo = mReaderSettings.GetType().GetProperty("Async");
 			pinfo.SetValue(mReaderSettings, true, null);
+
+			if (mStream != null)
+			{
+				mReader = XmlReader.Create(mStream, mReaderSettings, mContext);
+			}
 		}
 
 		public Stream UnderlyingStream

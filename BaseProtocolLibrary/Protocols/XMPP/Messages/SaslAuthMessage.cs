@@ -4,12 +4,6 @@ namespace InstantMessage.Protocols.XMPP
 {
 	internal abstract class SaslAuthMessage : XmppMessage
 	{
-		public SaslAuthMessage(string username, string password)
-		{
-			Username = username;
-			Password = password;
-		}
-
 		public override void WriteMessage(XmlWriter writer)
 		{
 			writer.WriteStartElement("auth", Namespace);
@@ -24,18 +18,6 @@ namespace InstantMessage.Protocols.XMPP
 		protected abstract string Mechanism
 		{
 			get;
-		}
-
-		// Properties
-		protected string Username
-		{
-			get;
-			private set;
-		}
-		protected string Password
-		{
-			get;
-			private set;
 		}
 
 		// Nested Classes
