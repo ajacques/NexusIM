@@ -8,6 +8,6 @@ namespace InstantMessage.Protocols.XMPP
 	internal interface IAuthStrategy
 	{
 		void StartAuthentication(XmppProtocol protocol);
-		void PerformStep(XmppMessage message);
+		void PerformStep(SaslChallengeMessage message);
 	}
 }

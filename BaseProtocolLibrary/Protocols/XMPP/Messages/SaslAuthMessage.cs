@@ -1,4 +1,9 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -36,7 +41,7 @@ namespace InstantMessage.Protocols.XMPP
 
 			public override void WriteMessage(XmlWriter writer)
 			{
-				throw new System.NotImplementedException();
+				throw new NotImplementedException();
 			}
 		}
 

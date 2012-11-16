@@ -19,6 +19,7 @@ namespace InstantMessage.Protocols.XMPP
 			mMessageFactories.Add("http://etherx.jabber.org/streamsstream", StreamInitMessage.GetMessageFactory());
 			mMessageFactories.Add("urn:ietf:params:xml:ns:xmpp-tlsproceed", StartTlsMessage.ProceedMessage.GetMessageFactory());
 			mMessageFactories.Add(SaslAuthMessage.Namespace + "success", SaslAuthMessage.SuccessMessage.GetMessageFactory());
+			mMessageFactories.Add(SaslAuthMessage.Namespace + "challenge", SaslChallengeMessage.GetMessageFactory());
 		}
 
 		public void NewReaderState()

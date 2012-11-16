@@ -208,6 +208,12 @@ namespace InstantMessage.Protocols.Yahoo
 				service = value;
 			}
 		}
+		public byte[] Version
+		{
+			get	{
+				return version;
+			}
+		}
 		public IDictionary<int, string> Parameters
 		{
 			get	{

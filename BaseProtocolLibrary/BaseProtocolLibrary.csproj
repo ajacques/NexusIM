@@ -78,6 +78,7 @@
     <Compile Include="Protocols\XMPP\Messages\IqMessage.cs" />
     <Compile Include="Protocols\XMPP\Jid.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslAuthMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\SaslChallengeMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\StartTlsMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\StreamInitMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\XmppMessage.cs" />
@@ -130,7 +131,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

@@ -20,6 +20,7 @@ namespace InstantMessage.Protocols.XMPP
 			messageProcessors.Add(typeof(StreamInitMessage), ProcessStreamInitMessage);
 			messageProcessors.Add(typeof(StartTlsMessage.ProceedMessage), ProcessTlsProceedMessage);
 			messageProcessors.Add(typeof(SaslAuthMessage.SuccessMessage), ProcessSaslSuccessMessage);
+			messageProcessors.Add(typeof(SaslChallengeMessage), ProcessSaslChallengeMessage);
 
 			Resource = "Test";
 		}
@@ -94,6 +95,12 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			xmppStream.ActivateTLS(Server);
 			WriteMessage(new StreamInitMessage(Server));
+		}
+		private void ProcessSaslChallengeMessage(XmppMessage message)
+		{
+			SaslChallengeMessage msg = message as SaslChallengeMessage;
+
+			authStrategy.PerformStep(msg);
 		}
 		private void ProcessSaslSuccessMessage(XmppMessage message)
 		{

@@ -13,7 +13,7 @@ namespace InstantMessage.Protocols.XMPP
 			protocol.WriteMessage(new PlainAuthMessage(protocol.Username, protocol.Password));
 		}
 
-		public void PerformStep(XmppMessage message)
+		public void PerformStep(SaslChallengeMessage message)
 		{
 			throw new NotSupportedException("PLAIN Authentication does support multiple steps.");
 		}

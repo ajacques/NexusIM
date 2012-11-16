@@ -13,7 +13,7 @@ namespace ProtocolTests
 		[TestMethod]
 		public void AddTest()
 		{
-			YPacketParamCollection_Accessor acc = new YPacketParamCollection_Accessor();
+			YPacketParamCollection acc = new YPacketParamCollection();
 			acc.Add(1, "value1");
 			acc.Add(new KeyValuePair<int,string>(2, "value2"));
 
@@ -24,7 +24,7 @@ namespace ProtocolTests
 		[TestMethod]
 		public void RemoveTest()
 		{
-			YPacketParamCollection_Accessor acc = new YPacketParamCollection_Accessor();
+			YPacketParamCollection acc = new YPacketParamCollection();
 			acc.Add(1, "value1");
 			Assert.IsTrue(acc.ContainsKey(1));
 			Assert.IsTrue(acc.Remove(1));
