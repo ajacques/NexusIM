@@ -123,7 +123,16 @@
 					</Grid>
 				</StackPanel>
 			</Grid>
-			<StackPanel x:Name="BottomFillPanel" Grid.Row="1" MaxHeight="90" />
+			<StackPanel x:Name="BottomFillPanel" Grid.Row="1" MaxHeight="90">
+				<TextBlock Foreground="#FF555555">
+					<Run x:Name="NumAccountsOnline">?</Run>
+					<Run>online,</Run>
+					<Run x:Name="NumAccountsConnecting">?</Run>
+					<Run>connecting,</Run>
+					<Run x:Name="NumAccountsOffline">?</Run>
+					<Run>offline</Run>
+				</TextBlock>
+			</StackPanel>
 		</Grid>
 		<!-- Menu Bar-->
 		<Menu VerticalAlignment="Top">

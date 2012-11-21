@@ -20,7 +20,7 @@ namespace NexusIM
 	public sealed partial class App : Application, IDisposable
 	{
 		[STAThread]
-		public static void Main()
+		private static void Main()
 		{
 			StopwatchManager.Start("AppInit");
 			App app = new App();
@@ -88,7 +88,7 @@ namespace NexusIM
 		{
 			IPCHandler.StartServer();
 			AccountManager.Setup();
-			//NotificationQueue.EventWireup();
+			NotificationQueue.EventWireup();
 		}
 		private static void LoadAccounts(object state)
 		{
@@ -134,7 +134,6 @@ namespace NexusIM
 			Trace.WriteLineIf(Debugger.IsAttached, "Debugger is attached");
 			Trace.WriteLineIf(!Debugger.IsAttached, "No debugger attached");
 
-
 			// Load the configuration file
 			string configuri = Path.Combine(Environment.CurrentDirectory, "UserProfile.sdf");
 			Trace.WriteLine("Configuration File: " + configuri);
@@ -171,9 +170,6 @@ namespace NexusIM
 				Stream file = new FileStream("nexusim_log.txt", FileMode.OpenOrCreate | FileMode.Truncate, FileAccess.Write);
 				Trace.Listeners.Add(new TextWriterTraceListener(file, "Local File Logger"));
 			} catch (IOException) { }
-
-			Trace.Listeners.Add(new SocketTraceListener("pub.nexus-im.com", 6536));
-			//Trace.Listeners.Add(new SocketTraceListener("192.101.0.197", 6536));
 		}
 
 		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

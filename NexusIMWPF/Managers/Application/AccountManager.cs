@@ -265,7 +265,7 @@ namespace NexusIM.Managers
 						WindowSystem.DispatcherInvoke(() => {
 							SocketErrorTrayTip tip = new SocketErrorTrayTip();
 							tip.PopulateControls(exception, protocol);
-							WindowSystem.SysTrayIcon.ShowCustomBalloon(tip, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+							WindowSystem.SysTrayIcon.ShowTrayTip(tip);
 						});
 
 						break;

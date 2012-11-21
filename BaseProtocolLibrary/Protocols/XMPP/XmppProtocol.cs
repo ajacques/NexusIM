@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
+using InstantMessage.Events;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -22,6 +24,8 @@ namespace InstantMessage.Protocols.XMPP
 			messageProcessors.Add(typeof(SaslAuthMessage.SuccessMessage), ProcessSaslSuccessMessage);
 			messageProcessors.Add(typeof(SaslChallengeMessage), ProcessSaslChallengeMessage);
 
+			protocolType = "XMPP";
+			mProtocolTypeShort = "xmpp";
 			Resource = "Test";
 		}
 
@@ -31,18 +35,26 @@ namespace InstantMessage.Protocols.XMPP
 			base.BeginLogin();
 
 			networkSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-			networkSocket.Connect(Server, 5222);
 			networkSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
 			networkSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 0);
+			networkSocket.BeginConnect(hostResolver.Resolve(this), new AsyncCallback(OnSocketConnect), null);
+		}
 
+		// Private Methods
+		private void OnSocketConnect(IAsyncResult a)
+		{
+			try {
+				networkSocket.EndConnect(a);
+			} catch (SocketException e) {
+				base.triggerOnError(new SocketErrorEventArgs(e));
+				return;
+			}
 			xmppStream = new XmppStream(new NetworkStream(networkSocket));
 
 			mRunMsgThread = true;
 			mBGMessageThread.Start();
 			WriteMessage(new StreamInitMessage(Server));
 		}
-
-		// Private Methods
 		private void MessageLoop()
 		{
 			xmppStream.InitReader();
@@ -67,7 +79,7 @@ namespace InstantMessage.Protocols.XMPP
 		internal void WriteMessage(IqMessage message)
 		{
 			message.Id = correlator.GetNextId();
-			message.Source = new Jid("adam", "adamjacques.com");
+			message.Source = new Jid(Username, Server);
 			WriteMessage(message as XmppMessage);
 		}
 
@@ -115,7 +127,7 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			public int Compare(Type x, Type y)
 			{
-				return x.GUID.CompareTo(y.GUID);
+				return x.GetHashCode().CompareTo(y.GetHashCode());
 			}
 		}
 		
@@ -128,9 +140,19 @@ namespace InstantMessage.Protocols.XMPP
 			get;
 			set;
 		}
+		public IHostnameResolver HostnameResolver
+		{
+			get {
+				return hostResolver;
+			}
+			set {
+				hostResolver = value;
+			}
+		}
 
 		// Variables
-		private bool enableTls;
+		private IHostnameResolver hostResolver;
+		private bool enableTls = true;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
 		private bool mRunMsgThread;
 		private Thread mBGMessageThread;

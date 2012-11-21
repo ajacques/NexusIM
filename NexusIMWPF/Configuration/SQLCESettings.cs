@@ -9,6 +9,7 @@ using System.Linq;
 using InstantMessage;
 using InstantMessage.Protocols.Irc;
 using InstantMessage.Protocols.Yahoo;
+using InstantMessage.Protocols.XMPP;
 using Microsoft.SqlServerCe.VersionManagement;
 using NexusIM.Managers;
 using System.Data;
@@ -584,6 +585,14 @@ namespace NexusIM
 									irc.SslEnabled = bSsl;
 
 								protocol = irc;
+								break;
+							case "xmpp":
+								XmppProtocol xmpp = new XmppProtocol();
+								xmpp.HostnameResolver = new Misc.ServiceRecordHostnameResolver();
+								string resource = current.AccountSettings.Where(ac => ac.Key == "resource").Select(ac => ac.Value).FirstOrDefault();
+								if (resource != null)
+									xmpp.Resource = resource;
+								protocol = xmpp;
 								break;
 #if DEBUG
 							case "test":

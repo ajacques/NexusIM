@@ -12,6 +12,7 @@ using InstantMessage.Protocols.Irc;
 using InstantMessage.Protocols.Yahoo;
 using NexusIM.Controls;
 using NexusIM.Managers;
+using InstantMessage.Protocols.XMPP;
 
 namespace NexusIM.Windows
 {
@@ -75,6 +76,9 @@ namespace NexusIM.Windows
 					break;
 				case 2:
 					protocol = new IRCProtocol();
+					break;
+				case 3:
+					protocol = new XmppProtocol() { HostnameResolver = new Misc.ServiceRecordHostnameResolver() };
 					break;
 				default:
 					return;

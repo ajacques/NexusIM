@@ -8,8 +8,7 @@ namespace InstantMessage.Events
 {
 	public class SocketErrorEventArgs : IMErrorEventArgs
 	{
-		public SocketErrorEventArgs(SocketException exception)
-			: base(IMProtocolErrorReason.CONNERROR)
+		public SocketErrorEventArgs(SocketException exception) : base(IMProtocolErrorReason.CONNERROR)
 		{
 			Exception = exception;
 		}

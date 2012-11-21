@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using InstantMessage;
-using InstantMessage.Protocols;
 using InstantMessage.Protocols.Irc;
 using NexusIM.Managers;
 using NexusIM.Windows;
@@ -86,16 +86,24 @@ namespace NexusIM.Controls
 				if (!String.IsNullOrEmpty(password))
 					mProtocol.Protocol.Password = password;
 
-				if (mProtocolType == typeof(IRCProtocol))
+				PropertyInfo serverProperty = mProtocolType.GetProperty("Server", BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+
+				if (serverProperty != null)
 				{
-					IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
-					ircprot.Server = ServerBox.Text;
-					ircprot.Nickname = nicknameTextBox.Text;
-					
-					if (String.IsNullOrEmpty(ircprot.Username))
-						ircprot.Username = UsernameBox.Text;
-				} else
-					mProtocol.Protocol.Username = UsernameBox.Text;
+					if (serverProperty.PropertyType == typeof(string))
+					{
+						serverProperty.SetValue(mProtocol.Protocol, ServerBox.Text);
+					}
+				}
+				PropertyInfo nicknameProperty = mProtocolType.GetProperty("Nickname", BindingFlags.Public | BindingFlags.FlattenHierarchy);
+
+				if (nicknameProperty != null)
+				{
+					if (nicknameProperty.PropertyType == typeof(string))
+						nicknameProperty.SetValue(mProtocol.Protocol, nicknameTextBox.Text);
+				}
+				
+				mProtocol.Protocol.Username = UsernameBox.Text;
 			}
 		}
 
@@ -147,15 +155,22 @@ namespace NexusIM.Controls
 		}
 		private void BuildControl()
 		{
+			PropertyInfo serverProperty = mProtocolType.GetProperty("Server");
+
+			if (serverProperty != null)
+			{
+				ServerGrid.Visibility = Visibility.Visible;
+				ServerBox.Text = (string)serverProperty.GetValue(mProtocol.Protocol, null);
+			} else {
+				ServerGrid.Visibility = Visibility.Collapsed;
+			}
+
 			if (mProtocolType == typeof(IRCProtocol))
 			{
 				IRCProtocol ircprot = (IRCProtocol)mProtocol.Protocol;
-				ServerGrid.Visibility = Visibility.Visible;
 
 				nicknameTextBox = InsertTextBox(0, "Nickname");
 				nicknameTextBox.Text = ircprot.Nickname;
-			} else {
-				ServerGrid.Visibility = Visibility.Collapsed;
 			}
 		}
 		private TextBox InsertTextBox(int rowPos, string placeholder)

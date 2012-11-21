@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{CC48D5C9-E769-4835-82B4-435AA1CDC8AB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{4796554E-5940-4DDB-82C6-FB945728D462}"
@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1FDEE444-9864-425B-A92D-376315827B06}"
 	ProjectSection(SolutionItems) = preProject
 		InstantMessage.snk = InstantMessage.snk
+		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specialized", "Specialized", "{132DC845-7C7B-4585-A851-06BCEC013610}"
@@ -41,8 +42,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "WebTests\WebTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsFeedPushServer", "NewsFeedPushServer\NewsFeedPushServer.csproj", "{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusPhone", "NexusPhone\NexusPhone.csproj", "{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtocolTests", "ProtocolTests\ProtocolTests.csproj", "{77CD6071-AB8D-45E0-949E-A35F81AAAD18}"
@@ -58,10 +57,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIMTests", "NexusIMTests\NexusIMTests.csproj", "{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = InstantMessage.vsmdi
 	EndGlobalSection
@@ -142,15 +137,6 @@ Global
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}.Release|x86.ActiveCfg = Release|Any CPU
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Debug|x86.ActiveCfg = Debug|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Debug|x86.Build.0 = Debug|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Release|Any CPU.ActiveCfg = Release|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Release|Mixed Platforms.Build.0 = Release|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Release|x86.ActiveCfg = Release|x86
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1}.Release|x86.Build.0 = Release|x86
 		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
@@ -229,7 +215,6 @@ Global
 		{1C832122-C1CC-4A12-A906-5CE4020F7D28} = {CC48D5C9-E769-4835-82B4-435AA1CDC8AB}
 		{493C7BAB-7C93-49DD-96B9-F881AD20C100} = {CC48D5C9-E769-4835-82B4-435AA1CDC8AB}
 		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB} = {4796554E-5940-4DDB-82C6-FB945728D462}
-		{4DC5EEEF-2603-4A14-9E5F-D56C2D4A13B1} = {4796554E-5940-4DDB-82C6-FB945728D462}
 		{132DC845-7C7B-4585-A851-06BCEC013610} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{1802A725-59E0-4C4C-AE74-0D901A9FEB38} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{80D4A705-5573-46DD-BC98-5E80F8DA2752} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
@@ -243,5 +228,12 @@ Global
 		{77CD6071-AB8D-45E0-949E-A35F81AAAD18} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
 		{25D06793-6B31-4CF5-8204-B67D4DFED61F} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
 		{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal

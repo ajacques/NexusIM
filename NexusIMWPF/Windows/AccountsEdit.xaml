@@ -26,6 +26,7 @@
 			<ComboBoxItem Content="Add Account" Visibility="Hidden" Height="0" />
 			<ComboBoxItem Content="Yahoo! IM" />
 			<ComboBoxItem Content="IRC" />
+			<ComboBoxItem Content="XMPP/Jabber" />
 		</ComboBox>
 	</Grid>
 </Window>

@@ -16,6 +16,11 @@ namespace NexusIM.Controls
 			TrayMouseDoubleClick += new RoutedEventHandler(SysTrayIcon_TrayMouseDoubleClick);
 		}
 
+		public void ShowTrayTip(SocketErrorTrayTip tip)
+		{
+			ShowCustomBalloon(tip, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+		}
+
 		private void SysTrayIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
 		{
 			WindowSystem.OpenContactListWindow();

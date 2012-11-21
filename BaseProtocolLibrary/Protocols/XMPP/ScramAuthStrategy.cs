@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
-using System.Xml;
-using System.Text;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Xml;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -20,10 +20,10 @@ namespace InstantMessage.Protocols.XMPP
 		public void StartAuthentication(XmppProtocol protocol)
 		{
 			ScramAuthMessage mesg = new ScramAuthMessage();
-			mesg.Parameters.Add("n", String.Format("{0}", protocol.Username, protocol.Server));
+			mesg.Parameters.Add("n", protocol.Username);
 			mesg.Parameters.Add("r", GenerateRandomNonce());
-			mesg.initMessage = true;
 			clientFirstMessage = mesg.BuildParameterList();
+			mesg.initMessage = true;
 
 			protocol.WriteMessage(mesg);
 			currentStatus = Status.ClientFirstMessage;
@@ -37,7 +37,7 @@ namespace InstantMessage.Protocols.XMPP
 				currentStatus = Status.ServerFirstMessage;
 
 				string nonce = message.Parameters["r"];
-				string salt = message.Parameters["s"];
+				string salt = Encoding.ASCII.GetString(Convert.FromBase64String(message.Parameters["s"]));
 				int iterations = Int32.Parse(message.Parameters["i"]);
 
 				ScramAuthMessage mesg = new ScramAuthMessage();
@@ -90,19 +90,24 @@ namespace InstantMessage.Protocols.XMPP
 			byte[] str = new byte[salt.Length + 4];
 			byte[] nonceBytes = Encoding.ASCII.GetBytes(salt);
 			Buffer.BlockCopy(nonceBytes, 0, str, 0, nonceBytes.Length);
-			str[str.Length - 4] = 1;
+			str[str.Length - 1] = 1;
 
 			hmac.Key = Encoding.UTF8.GetBytes(protocol.Password);
 
-			// U1 := HMAC(str, salt + INT(1))
-			// U2 := HMAC(str, U1)
+			// U1   := HMAC(str, salt + INT(1))
+			// U2   := HMAC(str, U1)
+			// ...
+			// Ui-1 := HMAC(str, Ui-2)
+			// Ui   := HMAC(str, Ui-1)
+			// Hi   := U1 XOR U2 XOR ... XOR Ui
 
-			for (int i = 0; i < iterations; i++)
+			byte[] result = hmac.ComputeHash(str);
+			for (int i = 1; i < iterations; i++)
 			{
-				str = hmac.ComputeHash(str);
+				result = XorArray(result, hmac.ComputeHash(result));
 			}
 
-			return str;
+			return result;
 		}
 		private byte[] GenerateClientKey(byte[] saltedPassword)
 		{

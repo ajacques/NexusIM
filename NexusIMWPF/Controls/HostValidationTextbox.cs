@@ -50,18 +50,21 @@ namespace NexusIM.Controls
 						span.Inlines.Add(new Run("The specified IP address is valid."));
 						span.Inlines.Add(new LineBreak());
 						span.Inlines.Add(new Run("Type: "));
+						Run iptyperun = new Run();
+						iptyperun.FontWeight = FontWeight.FromOpenTypeWeight(700);
 						switch (ip.AddressFamily)
 						{
 							case AddressFamily.InterNetwork:
-								span.Inlines.Add(new Run("IPv4"));
+								iptyperun.Text = "IPv4";
 								break;
 							case AddressFamily.InterNetworkV6:
-								span.Inlines.Add(new Run("IPv6"));
+								iptyperun.Text = "IPv6";
 								break;
 							default:
-								span.Inlines.Add(new Run(ip.AddressFamily.ToString()));
+								iptyperun.Text = ip.AddressFamily.ToString();
 								break;
 						}
+						span.Inlines.Add(iptyperun);
 
 						return span;
 					});
@@ -114,7 +117,7 @@ namespace NexusIM.Controls
 				return;
 			}
 
-			ShowResults(Color.FromRgb(190, 255, 190), () => { return new Run("DNS Lookup succeeded.\r\nThe specified hostname appears to be valid."); });
+			ShowResults(Color.FromRgb(190, 255, 190), () => new Run("DNS Lookup succeeded.\r\nThe specified hostname appears to be valid."));
 		}
 
 		private delegate Inline GenerateText();
