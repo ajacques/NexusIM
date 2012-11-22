@@ -59,6 +59,10 @@ namespace InstantMessage.Protocols.XMPP
 			}
 		}
 
+		public void Finalize(SaslAuthMessage.SuccessMessage message)
+		{
+		}
+
 		private static string ImplodeDictionary(IDictionary<string, string> input)
 		{
 			return input.Aggregate(String.Empty, (acculm, next) => String.Concat(acculm, acculm != String.Empty ? "," : "", next.Key, '=', next.Value));

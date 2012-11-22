@@ -78,11 +78,14 @@
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
     <Compile Include="Protocols\XMPP\IAuthStrategy.cs" />
+    <Compile Include="Protocols\XMPP\IqResponseFactory.cs" />
     <Compile Include="Protocols\XMPP\MessageCorrelator.cs" />
     <Compile Include="Protocols\XMPP\Messages\BindToResourceMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\FetchVCardMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\GetRosterMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\IqMessage.cs" />
     <Compile Include="Protocols\XMPP\Jid.cs" />
+    <Compile Include="Protocols\XMPP\Messages\IqResponseMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslAuthMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslChallengeMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\StartTlsMessage.cs" />
@@ -137,7 +140,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

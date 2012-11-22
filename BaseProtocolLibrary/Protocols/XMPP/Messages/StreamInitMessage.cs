@@ -13,8 +13,8 @@ namespace InstantMessage.Protocols.XMPP
 
 		public override void WriteMessage(XmlWriter writer)
 		{
-			writer.WriteStartElement("stream", "stream", "http://etherx.jabber.org/streams");
-			WriteAttribute(writer, "xmlns", "jabber:client");
+			writer.WriteStartElement("stream", "stream", XmppNamespaces.Streams);
+			WriteAttribute(writer, "xmlns", XmppNamespaces.JabberClient);
 			WriteAttribute(writer, "version", "1.0");
 			WriteAttribute(writer, "to", Server);
 			writer.WriteString(String.Empty);

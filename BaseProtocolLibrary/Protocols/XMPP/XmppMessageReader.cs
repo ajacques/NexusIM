@@ -16,8 +16,9 @@ namespace InstantMessage.Protocols.XMPP
 		public XmppMessageReader()
 		{
 			mMessageFactories = new SortedDictionary<string, MessageFactory>();
-			mMessageFactories.Add("http://etherx.jabber.org/streamsstream", StreamInitMessage.GetMessageFactory());
-			mMessageFactories.Add("urn:ietf:params:xml:ns:xmpp-tlsproceed", StartTlsMessage.ProceedMessage.GetMessageFactory());
+			mMessageFactories.Add(XmppNamespaces.Streams + "stream", StreamInitMessage.GetMessageFactory());
+			mMessageFactories.Add(XmppNamespaces.Tls + "proceed", StartTlsMessage.ProceedMessage.GetMessageFactory());
+			mMessageFactories.Add(XmppNamespaces.JabberClient + "iq", IqResponseFactory.GetMessageFactory());
 			mMessageFactories.Add(SaslAuthMessage.Namespace + "success", SaslAuthMessage.SuccessMessage.GetMessageFactory());
 			mMessageFactories.Add(SaslAuthMessage.Namespace + "failure", SaslAuthMessage.FailureMessage.GetMessageFactory());
 			mMessageFactories.Add(SaslAuthMessage.Namespace + "challenge", SaslChallengeMessage.GetMessageFactory());

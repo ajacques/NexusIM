@@ -15,8 +15,8 @@ namespace InstantMessage.Protocols.XMPP
 
 		protected override void WriteBody(XmlWriter writer)
 		{
-			writer.WriteStartElement("bind", Namespace);
-			writer.WriteStartElement("resource", Namespace);
+			writer.WriteStartElement("bind", XmppNamespaces.Bind);
+			writer.WriteStartElement("resource", XmppNamespaces.Bind);
 			writer.WriteString(Resource);
 			writer.WriteEndElement();
 			writer.WriteEndElement();
@@ -29,7 +29,21 @@ namespace InstantMessage.Protocols.XMPP
 			}
 		}
 
-		public const string Namespace = "urn:ietf:params:xml:ns:xmpp-bind";
+		public class ResponseMessage : IqResponseMessage
+		{
+			public static MessageFactory GetMessageFactory()
+			{
+				return ParseMessage;
+			}
+
+			private static XmppMessage ParseMessage(XmlReader reader)
+			{
+				while (!(reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "bind"))
+					reader.Read();
+				return new ResponseMessage();
+			}
+		}
+
 		public string Resource
 		{
 			get;

@@ -31,6 +31,11 @@ namespace InstantMessage.Protocols.XMPP
 			protocolType = "XMPP";
 			mProtocolTypeShort = "xmpp";
 			Resource = "Test";
+			connectTimer = new Stopwatch();
+		}
+		static XmppProtocol()
+		{
+			IdentityHandler = (response, userState) => { };
 		}
 
 		// Public Methods
@@ -49,9 +54,8 @@ namespace InstantMessage.Protocols.XMPP
 			SocketPermission permission = new SocketPermission(NetworkAccess.Connect, TransportType.Tcp, ep.Address.ToString(), ep.Port);
 			permission.Demand();
 
-			Stopwatch sw = new Stopwatch();
-			sw.Start();
-			networkSocket.BeginConnect(ep, new AsyncCallback(OnSocketConnect), sw);
+			connectTimer.Start();
+			networkSocket.BeginConnect(ep, new AsyncCallback(OnSocketConnect), null);
 		}
 
 		// Private Methods
@@ -63,9 +67,7 @@ namespace InstantMessage.Protocols.XMPP
 				base.triggerOnError(new SocketErrorEventArgs(e));
 				return;
 			} finally {
-				Stopwatch sw = (Stopwatch)a.AsyncState;
-				sw.Stop();
-				Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "XMPP: TCP Handshake completed in {0}", sw.Elapsed));
+				Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "XMPP: TCP Handshake completed in {0:N0}ms", connectTimer.Elapsed.TotalMilliseconds));
 			}
 			xmppStream = new XmppStream(new NetworkStream(networkSocket));
 
@@ -81,6 +83,9 @@ namespace InstantMessage.Protocols.XMPP
 			{
 				XmppMessage message = xmppStream.ReadMessage();
 
+				if (message == null)
+					continue;
+
 				ProcessMessage proc;
 				if (messageProcessors.TryGetValue(message.GetType(), out proc))
 				{
@@ -94,17 +99,24 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			xmppStream.WriteMessage(message);
 		}
-		internal void WriteMessage(IqMessage message)
+		internal void WriteMessage(IqMessage message, HandleResponse respHandler, object userState)
 		{
 			message.Id = correlator.GetNextId();
 			message.Source = new Jid(Username, Server);
+
+			correlator.CreateRequest(message, respHandler, userState);
+
 			WriteMessage(message as XmppMessage);
+		}
+		internal void WriteMessage(IqMessage message)
+		{
+			WriteMessage(message, IdentityHandler, null);
 		}
 
 		// Message Processors
 		private void ProcessStreamInitMessage(XmppMessage message)
 		{
-			StreamInitMessage msg = message as StreamInitMessage;
+			StreamInitMessage msg = (StreamInitMessage)message;
 			if (enableTls && msg.Features.Any(f => f is StreamInitMessage.TlsCapableFeature) && !xmppStream.IsEncrypted)
 			{
 				WriteMessage(new StartTlsMessage());
@@ -119,6 +131,10 @@ namespace InstantMessage.Protocols.XMPP
 				}
 
 				authStrategy.StartAuthentication(this);
+			} else if (msg.Features.Any(f => f is StreamInitMessage.BindFeature)) {
+				StreamInitMessage.BindFeature bindfeature = msg.Features.First(s => s is StreamInitMessage.BindFeature) as StreamInitMessage.BindFeature;
+
+				WriteMessage(new BindToResourceMessage(Resource));
 			}
 		}
 		private void ProcessTlsProceedMessage(XmppMessage message)
@@ -128,16 +144,23 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		private void ProcessSaslChallengeMessage(XmppMessage message)
 		{
-			SaslChallengeMessage msg = message as SaslChallengeMessage;
+			SaslChallengeMessage msg = (SaslChallengeMessage)message;
 
 			authStrategy.PerformStep(msg);
 		}
 		private void ProcessSaslSuccessMessage(XmppMessage message)
 		{
-			authStrategy = null;
+			if (authStrategy != null)
+			{
+				authStrategy.Finalize(message as SaslAuthMessage.SuccessMessage);
+				authStrategy = null;
+			}
 			xmppStream.InitReader();
 			xmppStream.ResetWriterState();
 			WriteMessage(new StreamInitMessage(Server));
+
+			connectTimer.Stop();
+			Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "XMPP: Connect to Authenticated took: {0:N0}ms", connectTimer.Elapsed.TotalMilliseconds));
 
 			base.OnLogin();
 		}
@@ -176,6 +199,9 @@ namespace InstantMessage.Protocols.XMPP
 		}
 
 		// Variables
+		// Profiling
+		private Stopwatch connectTimer;
+		// Misc.
 		private IHostnameResolver hostResolver;
 		private bool enableTls = false;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
@@ -185,5 +211,8 @@ namespace InstantMessage.Protocols.XMPP
 		private XmppStream xmppStream;
 		private MessageCorrelator correlator;
 		private IAuthStrategy authStrategy;
+
+		// Consts
+		private static HandleResponse IdentityHandler;
 	}
 }
