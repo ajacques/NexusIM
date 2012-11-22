@@ -534,9 +534,6 @@ namespace InstantMessage.Protocols.Yahoo
 			if (mProtocolStatus == IMProtocolStatus.Offline)
 				return;
 
-			if (disconnecting)
-				return;
-
 			try {
 				nsStream.BeginRead(dataqueue, 0, dataqueue.Length, new AsyncCallback(readDataAsync), null);
 			} catch (InvalidOperationException) {
@@ -1240,8 +1237,6 @@ namespace InstantMessage.Protocols.Yahoo
 				info.maxchars = Convert.ToInt32(carrier.GetAttribute("maxchars"));
 				mCarriers.Add(info);
 			}
-
-			mCompletedCarrierSetup = true;
 		}
 		/// <summary>
 		/// Downloads an xml file from Yahoo! containing information on SMS data
@@ -1325,7 +1320,6 @@ namespace InstantMessage.Protocols.Yahoo
 		private bool yaddrbookdld;
 		private bool authenticated;
 		private bool disposed;
-		private bool disconnecting;
 
 		// Authentication Information
 		private string token;
@@ -1336,7 +1330,6 @@ namespace InstantMessage.Protocols.Yahoo
 		
 		// SMS Carrier Information
 		private List<CarrierInfo> mCarriers;// = new List<CarrierInfo>();
-		private bool mCompletedCarrierSetup = false;
 		
 		private Dictionary<string, string> addbuddygroups = new Dictionary<string, string>(); // Remembers what group the buddy goes into
 		private const string mSMSrequest = "http://insider.msg.yahoo.com/ycontent/?&sms={crc}&intl=us&os=win&ver=10.0.0.1102";

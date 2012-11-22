@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
@@ -63,37 +65,40 @@ namespace NexusIM
 	{
 		public static IEnumerable<ServiceRecordInfo> ResolveService(string hostname)
 		{
-			IntPtr resultPtr;
-
-			QueryResult result = SafeNativeMethods.DnsQuery(hostname, DnsQueryType.SRV, QueryOptions.None, 0, out resultPtr, 0);
-
-			ICollection<ServiceRecordInfo> records = new SortedSet<ServiceRecordInfo>(ServiceRecordInfo.Comparer);
-
-			SRVRecord record;
-			do {
-				record = (SRVRecord)Marshal.PtrToStructure(resultPtr, typeof(SRVRecord));
-				records.Add(new ServiceRecordInfo(record.pNameTarget, record.wPort, record.wPriority, record.wWeight));
-			} while (record.pNext.ToInt32() != 0);
-
-			SafeNativeMethods.DnsRecordListFree(resultPtr, 1);
-			resultPtr = IntPtr.Zero;
-
-			return records;
+			return ResolveMany<SRVRecord, ServiceRecordInfo>(hostname, DnsQueryType.SRV, (record) => new ServiceRecordInfo(record.pNameTarget, record.wPort, record.wPriority, record.wWeight));
 		}
 
 		public static IEnumerable<IPAddress> ResolveIP(string hostname)
 		{
+			IEnumerable<IPAddress> ipv4Addr = ResolveMany<ARecord, IPAddress>(hostname, DnsQueryType.A, (record) => new IPAddress(record.address));
+			IEnumerable<IPAddress> ipv6Addr = ResolveMany<AAAARecord, IPAddress>(hostname, DnsQueryType.AAAA, (record) => new IPAddress(record.Address));
+
+			return ipv4Addr.Concat(ipv6Addr);
+		}
+
+		private static IEnumerable<TResult> ResolveMany<TRecord, TResult>(string hostname, DnsQueryType type, Func<TRecord, TResult> translator)
+		{
 			IntPtr resultPtr;
 
-			QueryResult result = SafeNativeMethods.DnsQuery(hostname, DnsQueryType.A, QueryOptions.none, 0, out resultPtr, 0);
+			QueryResult result = SafeNativeMethods.DnsQuery(hostname, type, QueryOptions.None, 0, out resultPtr, 0);
 
-			IList<IPAddress> records = new List<IPAddress>();
+			IList<TResult> records = new List<TResult>();
 
-			ARecord record;
-			do {
-				record = (ARecord)Marshal.PtrToStructure(resultPtr, typeof(ARecord));
-				records.Add(new IPAddress(record.address));
-			} while (record.pNext.ToInt32() != 0);
+			if (result == QueryResult.NoRecords)
+				return records;
+
+			TRecord record;
+			FieldInfo pNextField = typeof(TRecord).GetField("pNext");
+
+			while (true) {
+				record = (TRecord)Marshal.PtrToStructure(resultPtr, typeof(TRecord));
+				records.Add(translator(record));
+
+				resultPtr = (IntPtr)pNextField.GetValue(record);
+
+				if (resultPtr == IntPtr.Zero)
+					break;
+			}
 
 			SafeNativeMethods.DnsRecordListFree(resultPtr, 1);
 			resultPtr = IntPtr.Zero;
@@ -148,6 +153,19 @@ namespace NexusIM
 			public ushort wWeight;
 			public ushort wPort;
 			public ushort Pad;
+
+			public DnsQueryType QueryType
+			{
+				get {
+					return (DnsQueryType)wType;
+				}
+			}
+			public TimeSpan Ttl
+			{
+				get {
+					return TimeSpan.FromSeconds(dwTtl);
+				}
+			}
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -161,7 +179,20 @@ namespace NexusIM
 			public int flags;
 			public int dwTtl;
 			public int dwReserved;
-			public long address;
+			public long addressLow;
+			public long addressHigh;
+
+			public byte[] Address
+			{
+				get {
+					byte[] array = new byte[16];
+
+					Buffer.BlockCopy(BitConverter.GetBytes(addressLow), 0, array, 0, 8);
+					Buffer.BlockCopy(BitConverter.GetBytes(addressHigh), 0, array, 8, 8);
+
+					return array;
+				}
+			}
 		}
 
 		/// <summary>
@@ -185,7 +216,10 @@ namespace NexusIM
 		private enum QueryResult
 		{
 			None = 0,
-			NameDoesNotExist = 9003
+			ServerFailure = 9002,
+			NameDoesNotExist = 9003,
+			QueryRefused = 9005,
+			NoRecords = 9501
 		}
 
 		private static class SafeNativeMethods

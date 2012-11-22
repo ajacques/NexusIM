@@ -101,10 +101,12 @@ namespace InstantMessage.Protocols.XMPP
 			// Ui   := HMAC(str, Ui-1)
 			// Hi   := U1 XOR U2 XOR ... XOR Ui
 
-			byte[] result = hmac.ComputeHash(str);
+			byte[] ust = hmac.ComputeHash(str);
+			byte[] result = ust;
 			for (int i = 1; i < iterations; i++)
 			{
-				result = XorArray(result, hmac.ComputeHash(result));
+				ust = hmac.ComputeHash(ust);
+				result = XorArray(result, ust);
 			}
 
 			return result;
@@ -128,6 +130,9 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		private byte[] XorArray(byte[] left, byte[] right)
 		{
+			if (left.Length != right.Length)
+				throw new ArgumentOutOfRangeException("Both arrays must be of the same length.");
+
 			byte[] result = new byte[left.Length];
 
 			for (int i = 0; i < left.Length; i++)
@@ -178,6 +183,12 @@ namespace InstantMessage.Protocols.XMPP
 			{
 				get {
 					return mechanism;
+				}
+			}
+			protected override string ElementName
+			{
+				get {
+					return initMessage ? "auth" : "response";
 				}
 			}
 			public IDictionary<string, string> Parameters

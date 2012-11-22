@@ -736,7 +736,7 @@ namespace InstantMessage.Protocols.Irc
 					IRCChannel channel = new IRCChannel(name, this);
 					try	{
 						mChannels.Add(channel);
-					} catch (ArgumentException e) {
+					} catch (ArgumentException) {
 
 					}
 

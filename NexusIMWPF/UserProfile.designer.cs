@@ -198,7 +198,7 @@ namespace NexusIM
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Password", DbType="NVarChar(32)", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Password", DbType="NVarChar(100)", UpdateCheck=UpdateCheck.Never)]
 		public string Password
 		{
 			get

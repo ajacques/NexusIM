@@ -4,10 +4,10 @@
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="AccountType" Type="System.String" DbType="NVarChar(8) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Username" Type="System.String" DbType="NVarChar(32) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Password" Type="System.String" DbType="NVarChar(32)" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" UpdateCheck="Never" />
       <Column Name="AutoConnect" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Server" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="true" UpdateCheck="Never" />
-      <Column Member="Port" Type="System.Int32" DbType="smallint" CanBeNull="true" UpdateCheck="WhenChanged" />
+      <Column Name="Port" Type="System.Int32" DbType="smallint" CanBeNull="true" UpdateCheck="WhenChanged" />
       <Association Name="Account_AccountSetting" Member="AccountSettings" ThisKey="Id" OtherKey="AccountId" Type="AccountSetting" />
       <Association Name="ChatWindowPool_Account" Member="ChatWindowPool" ThisKey="Id" OtherKey="AccountId" Type="ChatWindowPool" IsForeignKey="true" />
     </Type>

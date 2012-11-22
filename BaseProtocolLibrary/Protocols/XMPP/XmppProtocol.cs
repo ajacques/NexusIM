@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using InstantMessage.Events;
@@ -22,6 +25,7 @@ namespace InstantMessage.Protocols.XMPP
 			messageProcessors.Add(typeof(StreamInitMessage), ProcessStreamInitMessage);
 			messageProcessors.Add(typeof(StartTlsMessage.ProceedMessage), ProcessTlsProceedMessage);
 			messageProcessors.Add(typeof(SaslAuthMessage.SuccessMessage), ProcessSaslSuccessMessage);
+			messageProcessors.Add(typeof(SaslAuthMessage.FailureMessage), ProcessSaslFailureMessage);
 			messageProcessors.Add(typeof(SaslChallengeMessage), ProcessSaslChallengeMessage);
 
 			protocolType = "XMPP";
@@ -37,7 +41,17 @@ namespace InstantMessage.Protocols.XMPP
 			networkSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
 			networkSocket.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.NoDelay, true);
 			networkSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, 0);
-			networkSocket.BeginConnect(hostResolver.Resolve(this), new AsyncCallback(OnSocketConnect), null);
+
+			IPEndPoint ep = hostResolver.Resolve(this);
+
+			Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "XMPP: Beginning connection for account {0} to endpoint {1} (Resolved by: {2})", Username, ep, hostResolver.GetType().FullName));
+
+			SocketPermission permission = new SocketPermission(NetworkAccess.Connect, TransportType.Tcp, ep.Address.ToString(), ep.Port);
+			permission.Demand();
+
+			Stopwatch sw = new Stopwatch();
+			sw.Start();
+			networkSocket.BeginConnect(ep, new AsyncCallback(OnSocketConnect), sw);
 		}
 
 		// Private Methods
@@ -48,6 +62,10 @@ namespace InstantMessage.Protocols.XMPP
 			} catch (SocketException e) {
 				base.triggerOnError(new SocketErrorEventArgs(e));
 				return;
+			} finally {
+				Stopwatch sw = (Stopwatch)a.AsyncState;
+				sw.Stop();
+				Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "XMPP: TCP Handshake completed in {0}", sw.Elapsed));
 			}
 			xmppStream = new XmppStream(new NetworkStream(networkSocket));
 
@@ -120,6 +138,13 @@ namespace InstantMessage.Protocols.XMPP
 			xmppStream.InitReader();
 			xmppStream.ResetWriterState();
 			WriteMessage(new StreamInitMessage(Server));
+
+			base.OnLogin();
+		}
+		private void ProcessSaslFailureMessage(XmppMessage message)
+		{
+			triggerBadCredentialsError();
+			mRunMsgThread = false;
 		}
 
 		// Nested Classes
@@ -152,7 +177,7 @@ namespace InstantMessage.Protocols.XMPP
 
 		// Variables
 		private IHostnameResolver hostResolver;
-		private bool enableTls = true;
+		private bool enableTls = false;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
 		private bool mRunMsgThread;
 		private Thread mBGMessageThread;

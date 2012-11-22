@@ -138,8 +138,8 @@ namespace NexusIM.Windows
 
 			AddGroups(AggregateContactList.Groups);
 
-			//if (!AccountManager.Accounts.Any(i => i.Enabled))
-			//	NoEnabledAccountsWarning.Visibility = Visibility.Visible;
+			if (!AccountManager.Accounts.Any(i => i.Enabled))
+				NoEnabledAccountsWarning.Visibility = Visibility.Visible;
 
 			try	{
 				StopwatchManager.Stop("AppInit", "{0} - Time to contact list window loaded: {1}");

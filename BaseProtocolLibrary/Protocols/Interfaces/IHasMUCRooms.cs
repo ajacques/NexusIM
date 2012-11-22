@@ -7,9 +7,9 @@ namespace InstantMessage.Protocols
 {
 	public interface IHasMUCRooms<T> : IHasMUCRooms
 	{
-		T JoinChatRoom(string roomName);
+		new T JoinChatRoom(string roomName);
 		void JoinChatRoom(T room);
-		IEnumerable<T> Channels
+		new IEnumerable<T> Channels
 		{
 			get;
 		}

@@ -11,9 +11,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProtocolTests</RootNamespace>
     <AssemblyName>ProtocolTests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -69,23 +72,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="SQLCEGenericSettingsTests.cs" />
+    <Compile Include="XmppProtocolTests.cs" />
     <Compile Include="YahooProtocolTests.cs" />
     <Compile Include="YPacketTests.cs" />
     <Compile Include="YParamCollTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
-      <Project>{80D4A705-5573-46DD-BC98-5E80F8DA2752}</Project>
-      <Name>BaseProtocolLibrary</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NexusIMWPF\NexusIMWPF.csproj">
-      <Project>{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4}</Project>
-      <Name>NexusIMWPF</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="UserProfile.sdf">
@@ -101,6 +91,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Test References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BaseProtocolLibrary\BaseProtocolLibrary.csproj">
+      <Project>{80d4a705-5573-46dd-bc98-5e80f8da2752}</Project>
+      <Name>BaseProtocolLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{c7160d19-c079-4f3a-aba9-8e27bd61cd90}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NexusIMWPF\NexusIMWPF.csproj">
+      <Project>{9b97b80f-19a6-4da8-9bf6-febab72e2ca4}</Project>
+      <Name>NexusIMWPF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

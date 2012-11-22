@@ -7,7 +7,7 @@ namespace InstantMessage
 {
 	public interface IRequiresUsername : IProtocol
 	{
-		string Username
+		new string Username
 		{
 			get;
 			set;
@@ -15,7 +15,7 @@ namespace InstantMessage
 	}
 	public interface IRequiresPassword : IProtocol
 	{
-		string Password
+		new string Password
 		{
 			get;
 			set;

@@ -11,7 +11,7 @@ namespace InstantMessage.Protocols.XMPP
 	{
 		public override void WriteMessage(XmlWriter writer)
 		{
-			writer.WriteStartElement("auth", Namespace);
+			writer.WriteStartElement(ElementName, Namespace);
 			writer.WriteStartAttribute("mechanism");
 			writer.WriteString(Mechanism);
 			writer.WriteEndAttribute();
@@ -23,6 +23,12 @@ namespace InstantMessage.Protocols.XMPP
 		protected abstract string Mechanism
 		{
 			get;
+		}
+		protected virtual string ElementName
+		{
+			get {
+				return "auth";
+			}
 		}
 
 		// Nested Classes
@@ -37,6 +43,24 @@ namespace InstantMessage.Protocols.XMPP
 			{
 				reader.Read();
 				return new SuccessMessage();
+			}
+
+			public override void WriteMessage(XmlWriter writer)
+			{
+				throw new NotImplementedException();
+			}
+		}
+		public sealed class FailureMessage : XmppMessage
+		{
+			public static MessageFactory GetMessageFactory()
+			{
+				return new MessageFactory(GetMessage);
+			}
+
+			private static XmppMessage GetMessage(XmlReader reader)
+			{
+				reader.Read();
+				return new FailureMessage();
 			}
 
 			public override void WriteMessage(XmlWriter writer)

@@ -7,7 +7,7 @@
 			<Run FontSize="32">NexusIM</Run>
 			<Run FontSize="13" Foreground="#FF7C7C7C">v0.1-SVN</Run>
 		</TextBlock>
-		<TextBlock Text="© 2010-2011 Adam Jacques" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" />
+		<TextBlock Text="© 2010-2012 Adam Jacques" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" />
 		<TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,70,0,0">
 			<Hyperlink TextDecorations="None">Homepage</Hyperlink>
 			<Run>-</Run>

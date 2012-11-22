@@ -272,13 +272,13 @@ namespace InstantMessage
 			get {
 				return mPassword;
 
-				if (mPasswordEnc == null)
+				/*if (mPasswordEnc == null)
 					return null;
 
 				ProtectedMemory.Unprotect(mPasswordEnc, MemoryProtectionScope.SameProcess);
 
 				return Encoding.Default.GetString(mPasswordEnc, 0, mPasswordEnc.Length - mPaddingAmount);
-				//return mPassword;
+				//return mPassword;*/
 			}
 			set {
 				if (mPassword != value)

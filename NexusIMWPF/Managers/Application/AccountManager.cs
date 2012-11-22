@@ -154,11 +154,14 @@ namespace NexusIM.Managers
 
 				try {
 					if (extraData.Enabled)
+					{
+						Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "AccountManager: Requesting login for account {0} ({1}) by request", extraData.Protocol.Username, extraData.Protocol.Protocol));
 						extraData.Protocol.BeginLogin();
-					else
+					} else {
 						extraData.Protocol.Disconnect();
+					}
 				} catch (Exception e) {
-					Trace.WriteLine(String.Format(CultureInfo.InstalledUICulture, "AccountManager: Exception thrown while attempting protocol connection. [Type: {0}, Username: {1}]", extraData.Protocol.Protocol, extraData.Protocol.Username));
+					Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "AccountManager: Exception thrown while attempting protocol connection. [Type: {0}, Username: {1}]", extraData.Protocol.Protocol, extraData.Protocol.Username));
 					Trace.WriteLine(e.Message);
 					Trace.WriteLine(e.StackTrace);
 				}
