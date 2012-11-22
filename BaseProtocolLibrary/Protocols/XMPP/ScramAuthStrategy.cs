@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
+using InstantMessage.Protocols.XMPP.Messages;
 
 namespace InstantMessage.Protocols.XMPP
 {

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using InstantMessage.Events;
+using InstantMessage.Protocols.XMPP.Messages;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -69,7 +71,7 @@ namespace InstantMessage.Protocols.XMPP
 			} finally {
 				Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "XMPP: TCP Handshake completed in {0:N0}ms", connectTimer.Elapsed.TotalMilliseconds));
 			}
-			xmppStream = new XmppStream(new NetworkStream(networkSocket));
+			xmppStream = new XmppStream(new NetworkStream(networkSocket), this);
 
 			mRunMsgThread = true;
 			mBGMessageThread.Start();
@@ -111,6 +113,15 @@ namespace InstantMessage.Protocols.XMPP
 		internal void WriteMessage(IqMessage message)
 		{
 			WriteMessage(message, IdentityHandler, null);
+		}
+
+		internal bool TriggerTlsVerifyEvent(X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+		{
+			CertErrorEventArgs args = new CertErrorEventArgs(certificate, chain, sslPolicyErrors);
+
+			triggerOnError(args);
+
+			return args.Continue; // Ignore all Ssl errors
 		}
 
 		// Message Processors
@@ -203,7 +214,7 @@ namespace InstantMessage.Protocols.XMPP
 		private Stopwatch connectTimer;
 		// Misc.
 		private IHostnameResolver hostResolver;
-		private bool enableTls = false;
+		private bool enableTls = true;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
 		private bool mRunMsgThread;
 		private Thread mBGMessageThread;

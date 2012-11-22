@@ -2,9 +2,11 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -17,7 +19,6 @@ using Microsoft.WindowsAPICodePack.Net;
 using NexusIM.Controls;
 using NexusIM.Misc;
 using NexusIM.Windows;
-using System.Globalization;
 
 namespace NexusIM.Managers
 {
@@ -278,6 +279,14 @@ namespace NexusIM.Managers
 				Trace.WriteLine(traceString);
 			} else if (e is CertErrorEventArgs) { // Certificate Errors warn us about problems with the transport layer authentication
 				CertErrorEventArgs certError = (CertErrorEventArgs)e;
+
+				if (certError.PolicyErrors == SslPolicyErrors.None)
+				{
+					certError.Continue = true;
+					Trace.WriteLine("AccountManager: Encountered trusted certificate chain. Continuing without errors.");
+					return;
+				}
+
 				// Do some logging
 				StringBuilder error = new StringBuilder();
 				error.Append("X.509 Certificate Chain Error");

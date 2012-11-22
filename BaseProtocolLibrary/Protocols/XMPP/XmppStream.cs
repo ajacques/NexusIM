@@ -5,14 +5,16 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml;
+using InstantMessage.Protocols.XMPP.Messages;
 
 namespace InstantMessage.Protocols.XMPP
 {
 	internal class XmppStream
 	{
-		public XmppStream(Stream targetWriteStream)
+		public XmppStream(Stream targetWriteStream, XmppProtocol protocol)
 		{
 			protocolLayerStream = transportLayerStream = targetWriteStream;
+			this.protocol = protocol;
 
 			writerSettings = new XmlWriterSettings();
 			writerSettings.NamespaceHandling = NamespaceHandling.OmitDuplicates;
@@ -37,7 +39,7 @@ namespace InstantMessage.Protocols.XMPP
 
 		public void ResetWriterState()
 		{
-			xmlWriter = XmlWriter.Create(transportLayerStream, writerSettings);
+			xmlWriter = XmlWriter.Create(protocolLayerStream, writerSettings);
 		}
 
 		public XmppMessage ReadMessage()
@@ -55,6 +57,7 @@ namespace InstantMessage.Protocols.XMPP
 			TimeSpan protocol = sw.Elapsed;
 			xmlWriter = XmlWriter.Create(protocolLayerStream, writerSettings);
 			InitReader();
+			ResetWriterState();
 
 			sw.Stop();
 			Trace.WriteLine(String.Format("XMPP: TLS Negotiation complete (TotalTime: {0}; Protocol Cost: {1}; Client-side: {2})", sw.Elapsed, protocol, sw.Elapsed - protocol));
@@ -62,7 +65,7 @@ namespace InstantMessage.Protocols.XMPP
 
 		private bool OnRemoteCertVerify(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
 		{
-			return true;
+			return protocol.TriggerTlsVerifyEvent(certificate, chain, sslPolicyErrors);
 		}
 		
 		public bool IsEncrypted
@@ -76,6 +79,7 @@ namespace InstantMessage.Protocols.XMPP
 		private XmlWriterSettings writerSettings;
 		private XmppMessageReader mMsgReader;
 
+		private XmppProtocol protocol;
 		private SslStream sslStream;
 		private Stream protocolLayerStream; // Highest level stream - No transforms, clear-text
 		private Stream transportLayerStream; // Lowest level stream

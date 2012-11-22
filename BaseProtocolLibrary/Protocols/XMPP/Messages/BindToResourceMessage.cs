@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace InstantMessage.Protocols.XMPP
+namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal class BindToResourceMessage : IqMessage
 	{

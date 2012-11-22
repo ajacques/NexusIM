@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using System.Text;
 
-namespace InstantMessage.Protocols.XMPP
+namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal abstract class XmppMessage
 	{

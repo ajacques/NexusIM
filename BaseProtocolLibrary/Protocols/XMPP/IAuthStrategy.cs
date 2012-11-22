@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using InstantMessage.Protocols.XMPP.Messages;
 
 namespace InstantMessage.Protocols.XMPP
 {

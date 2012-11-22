@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace InstantMessage.Protocols.XMPP
+namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal abstract class SaslAuthMessage : XmppMessage
 	{
