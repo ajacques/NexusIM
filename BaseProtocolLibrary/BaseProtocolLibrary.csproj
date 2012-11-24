@@ -83,6 +83,7 @@
     <Compile Include="Protocols\XMPP\Messages\BindToResourceMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\FetchVCardMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\GetRosterMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\IqFragmentMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\IqMessage.cs" />
     <Compile Include="Protocols\XMPP\Jid.cs" />
     <Compile Include="Protocols\XMPP\Messages\IqResponseMessage.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Protocols\XMPP\Messages\SaslChallengeMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\StartTlsMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\StreamInitMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\UnknownFragmentMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\XmppMessage.cs" />
     <Compile Include="Protocols\XMPP\PlainAuthStrategy.cs" />
     <Compile Include="Protocols\XMPP\ScramAuthStrategy.cs" />
@@ -140,7 +142,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

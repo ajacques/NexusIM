@@ -27,15 +27,19 @@ namespace InstantMessage.Protocols.XMPP
 			string lookup = reader.NamespaceURI + reader.LocalName;
 
 			MessageFactory factory;
+			IqMessage message;
 			if (messageFactories.TryGetValue(lookup, out factory))
 			{
-				IqMessage message = factory(reader) as IqMessage;
+				message = factory(reader) as IqMessage;
 				reader.Read();
-				message.Id = msgid;
-				return message;
+			} else {
+				UnknownFragmentMessage msg = (UnknownFragmentMessage)UnknownFragmentMessage.GetMessageFactory()(reader);
+
+				message = new IqFragmentMessage(msg.Document);
 			}
 
-			return null;
+			message.Id = msgid;
+			return message;
 		}
 
 		private static IDictionary<string, MessageFactory> messageFactories;
