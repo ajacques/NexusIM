@@ -77,7 +77,11 @@
     <Compile Include="Protocols\IRC\IRCProtocol.cs" />
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
+    <Compile Include="Protocols\XMPP\Messages\PingMessage.cs" />
+    <Compile Include="Protocols\XMPP\RosterItem.cs" />
+    <Compile Include="Protocols\XMPP\Attributes\XmppMessageFactoryEntryAttribute.cs" />
     <Compile Include="Protocols\XMPP\IAuthStrategy.cs" />
+    <Compile Include="Protocols\XMPP\Attributes\IqMessageBodyAttribute.cs" />
     <Compile Include="Protocols\XMPP\IqResponseFactory.cs" />
     <Compile Include="Protocols\XMPP\MessageCorrelator.cs" />
     <Compile Include="Protocols\XMPP\Messages\BindToResourceMessage.cs" />
@@ -87,6 +91,7 @@
     <Compile Include="Protocols\XMPP\Messages\IqMessage.cs" />
     <Compile Include="Protocols\XMPP\Jid.cs" />
     <Compile Include="Protocols\XMPP\Messages\IqResponseMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\PresenceMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslAuthMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslChallengeMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\StartTlsMessage.cs" />
@@ -95,6 +100,8 @@
     <Compile Include="Protocols\XMPP\Messages\XmppMessage.cs" />
     <Compile Include="Protocols\XMPP\PlainAuthStrategy.cs" />
     <Compile Include="Protocols\XMPP\ScramAuthStrategy.cs" />
+    <Compile Include="Protocols\XMPP\Attributes\ReadableXmppMessageAttribute.cs" />
+    <Compile Include="Protocols\XMPP\XmppContact.cs" />
     <Compile Include="Protocols\XMPP\XmppMessageReader.cs" />
     <Compile Include="Protocols\XMPP\XmppNamespaces.cs" />
     <Compile Include="Protocols\XMPP\XmppProtocol.cs" />

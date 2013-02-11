@@ -5,21 +5,16 @@ namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal class StartTlsMessage : XmppMessage
 	{
+		[ReadableXmppMessage(XmppNamespaces.Tls, "proceed")]
 		public class ProceedMessage : XmppMessage
 		{
+			private ProceedMessage(XmlReader reader)
+			{
+			}
+
 			public override void WriteMessage(XmlWriter writer)
 			{
 				throw new NotImplementedException();
-			}
-
-			public static MessageFactory GetMessageFactory()
-			{
-				return new MessageFactory(ProcessMessage);
-			}
-
-			private static XmppMessage ProcessMessage(XmlReader reader)
-			{
-				return new ProceedMessage();
 			}
 		}
 

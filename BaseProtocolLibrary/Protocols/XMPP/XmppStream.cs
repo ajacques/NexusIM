@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using InstantMessage.Protocols.XMPP.Messages;
 
@@ -23,12 +24,18 @@ namespace InstantMessage.Protocols.XMPP
 
 			mMsgReader = new XmppMessageReader();
 			mMsgReader.NewReaderState();
+
+			writeLock = new object();
+			readLock = new object();
 		}
 
 		public void WriteMessage(XmppMessage message)
 		{
-			message.WriteMessage(xmlWriter);
-			xmlWriter.Flush();
+			lock (writeLock)
+			{
+				message.WriteMessage(xmlWriter);
+				xmlWriter.Flush();
+			}
 		}
 
 		public void InitReader()
@@ -44,7 +51,10 @@ namespace InstantMessage.Protocols.XMPP
 
 		public XmppMessage ReadMessage()
 		{
-			return mMsgReader.ReadMessage();
+			lock (readLock)
+			{
+				return mMsgReader.ReadMessage();
+			}
 		}
 
 		public void ActivateTLS(string targetHost)
@@ -52,8 +62,14 @@ namespace InstantMessage.Protocols.XMPP
 			Trace.WriteLine("XMPP: Beginning TLS Negotiaton");
 			Stopwatch sw = new Stopwatch();
 			sw.Start();
-			protocolLayerStream = sslStream = new SslStream(protocolLayerStream, true, new RemoteCertificateValidationCallback(OnRemoteCertVerify));
-			sslStream.AuthenticateAsClient(targetHost);
+			lock (readLock)
+			{
+				lock (writeLock)
+				{
+					protocolLayerStream = sslStream = new SslStream(protocolLayerStream, true, new RemoteCertificateValidationCallback(OnRemoteCertVerify));
+					sslStream.AuthenticateAsClient(targetHost);
+				}
+			}
 			TimeSpan protocol = sw.Elapsed;
 			xmlWriter = XmlWriter.Create(protocolLayerStream, writerSettings);
 			InitReader();
@@ -78,6 +94,10 @@ namespace InstantMessage.Protocols.XMPP
 		private XmlWriter xmlWriter;
 		private XmlWriterSettings writerSettings;
 		private XmppMessageReader mMsgReader;
+
+		// Thread Safety
+		private object writeLock;
+		private object readLock;
 
 		private XmppProtocol protocol;
 		private SslStream sslStream;

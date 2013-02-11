@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Xml;
+using System.Linq;
 using InstantMessage.Protocols.XMPP.Messages;
+using System.Diagnostics;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -9,7 +13,19 @@ namespace InstantMessage.Protocols.XMPP
 		static IqResponseFactory()
 		{
 			messageFactories = new SortedDictionary<string, MessageFactory>();
-			messageFactories.Add(XmppNamespaces.Bind + "bind", BindToResourceMessage.ResponseMessage.GetMessageFactory());
+
+			var msgtypes = from type in Assembly.GetAssembly(typeof(IqMessage)).GetTypes()
+						   let attrib = type.GetCustomAttribute<IqMessageBodyAttribute>()
+						   let entry = (from method in type.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)
+										where method.GetCustomAttribute<XmppMessageFactoryEntryAttribute>() != null
+										select MessageFactory.CreateDelegate(typeof(MessageFactory), method)).FirstOrDefault() as MessageFactory
+						   where type.IsSubclassOf(typeof(IqMessage)) && attrib != null && entry != null
+						   select new KeyValuePair<string, MessageFactory>(attrib.Namespace + attrib.LocalName, entry);
+
+			foreach (var msgtype in msgtypes)
+			{
+				messageFactories.Add(msgtype);
+			}
 		}
 
 		public static MessageFactory GetMessageFactory()
@@ -22,20 +38,34 @@ namespace InstantMessage.Protocols.XMPP
 			reader.MoveToAttribute("id");
 			string msgid = reader.Value;
 
-			reader.Read();
-
-			string lookup = reader.NamespaceURI + reader.LocalName;
-
-			MessageFactory factory;
 			IqMessage message;
-			if (messageFactories.TryGetValue(lookup, out factory))
+			if (reader.Read())
 			{
-				message = factory(reader) as IqMessage;
-				reader.Read();
-			} else {
-				UnknownFragmentMessage msg = (UnknownFragmentMessage)UnknownFragmentMessage.GetMessageFactory()(reader);
+				XmlReader subtree = reader.ReadSubtree();
+				subtree.Read();
 
-				message = new IqFragmentMessage(msg.Document);
+				string lookup = subtree.NamespaceURI + subtree.LocalName;
+
+				MessageFactory factory;
+				if (messageFactories.TryGetValue(lookup, out factory))
+				{
+					message = factory(subtree) as IqMessage;
+					subtree.Read();
+
+					int i = 0;
+					while (subtree.Read() && subtree.NodeType != XmlNodeType.None)
+					{
+						i++;
+					}
+
+					Debug.WriteLineIf(i >= 1, String.Format("IQ Message Factory for type {0} did not balance the stack correctly. Had to manually collapse {1} steps", lookup, i));
+				} else {
+					UnknownFragmentMessage msg = (UnknownFragmentMessage)UnknownFragmentMessage.GetMessageFactory()(subtree);
+
+					message = IqFragmentMessage.FromWire(msg.Document);
+				}
+			} else {
+				message = IqFragmentMessage.FromWire(new XmlDocument());
 			}
 
 			message.Id = msgid;

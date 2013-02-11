@@ -29,13 +29,10 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			}
 		}
 
+		[IqMessageBody(XmppNamespaces.Bind, "bind")]
 		public class ResponseMessage : IqResponseMessage
 		{
-			public static MessageFactory GetMessageFactory()
-			{
-				return ParseMessage;
-			}
-
+			[XmppMessageFactoryEntry]
 			private static XmppMessage ParseMessage(XmlReader reader)
 			{
 				while (!(reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "bind"))

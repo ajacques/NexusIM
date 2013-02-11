@@ -9,20 +9,36 @@ namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal class IqFragmentMessage : IqMessage
 	{
-		public IqFragmentMessage(XmlDocument doc)
+		private IqFragmentMessage(XmlDocument doc)
 		{
 			Document = doc;
 		}
 
-		protected override void WriteBody(System.Xml.XmlWriter writer)
+		public static IqFragmentMessage FromWire(XmlDocument doc)
 		{
-			throw new NotImplementedException();
+			return new IqFragmentMessage(doc)
+			{
+				type = IqType.result
+			};
+		}
+
+		public static IqFragmentMessage CreateNew(XmlDocument root)
+		{
+			return new IqFragmentMessage(root)
+			{
+				type = IqType.set
+			};
+		}
+
+		protected override void WriteBody(XmlWriter writer)
+		{
+			Document.DocumentElement.WriteTo(writer);
 		}
 
 		protected override IqMessage.IqType Type
 		{
 			get {
-				return IqType.result;
+				return type;
 			}
 		}
 
@@ -31,5 +47,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			get;
 			private set;
 		}
+
+		private IqType type;
 	}
 }

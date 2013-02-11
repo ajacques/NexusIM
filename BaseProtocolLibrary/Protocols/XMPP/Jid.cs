@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace InstantMessage.Protocols.XMPP
 {
-	sealed class Jid
+	public sealed class Jid : IEquatable<Jid>
 	{
 		static Jid()
 		{
@@ -36,19 +36,47 @@ namespace InstantMessage.Protocols.XMPP
 			if (!match.Success)
 				return false;
 
-			result = new Jid(match.Groups[0].Value, match.Groups[1].Value, match.Groups[2].Value);
+			result = new Jid(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value);
 			return true;
 		}
 
+		// IEquatable<Jid>
+		public bool Equals(Jid other)
+		{
+			return Equals(other, false);
+		}
+		public bool Equals(Jid other, bool ignoreResource)
+		{
+			return this.Server == other.Server && this.Username == other.Username && (ignoreResource || this.Resource == other.Resource);
+		}
+
+		// Object
+		public override bool Equals(object obj)
+		{
+			return Equals(obj as Jid);
+		}
+		public override int GetHashCode()
+		{
+			return Username.GetHashCode() ^ Server.GetHashCode() ^ Resource.GetHashCode();
+		}
 		public override string ToString()
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.AppendFormat("{0}@{1}", Username, Server);
 
-			if (Resource != null)
+			if (!String.IsNullOrEmpty(Resource))
 				sb.AppendFormat("/{0}", Resource);
 
 			return sb.ToString();
+		}
+
+		public static bool operator ==(Jid left, Jid right)
+		{
+			return left.Equals(right);
+		}
+		public static bool operator !=(Jid left, Jid right)
+		{
+			return !left.Equals(right);
 		}
 
 		public string Username

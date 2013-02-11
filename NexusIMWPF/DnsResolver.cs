@@ -60,7 +60,6 @@ namespace NexusIM
 		}
 	}
 
-	[DnsPermission(SecurityAction.Demand)]
 	static class DnsResolver
 	{
 		public static IEnumerable<ServiceRecordInfo> ResolveService(string hostname)
@@ -76,6 +75,7 @@ namespace NexusIM
 			return ipv4Addr.Concat(ipv6Addr);
 		}
 
+		[DnsPermission(SecurityAction.Demand)]
 		private static IEnumerable<TResult> ResolveMany<TRecord, TResult>(string hostname, DnsQueryType type, Func<TRecord, TResult> translator)
 		{
 			IntPtr resultPtr;
@@ -90,14 +90,12 @@ namespace NexusIM
 			TRecord record;
 			FieldInfo pNextField = typeof(TRecord).GetField("pNext");
 
-			while (true) {
+			while (resultPtr != IntPtr.Zero)
+			{
 				record = (TRecord)Marshal.PtrToStructure(resultPtr, typeof(TRecord));
 				records.Add(translator(record));
 
 				resultPtr = (IntPtr)pNextField.GetValue(record);
-
-				if (resultPtr == IntPtr.Zero)
-					break;
 			}
 
 			SafeNativeMethods.DnsRecordListFree(resultPtr, 1);

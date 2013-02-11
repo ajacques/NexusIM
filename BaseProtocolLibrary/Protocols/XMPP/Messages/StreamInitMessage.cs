@@ -4,11 +4,34 @@ using System.Xml;
 
 namespace InstantMessage.Protocols.XMPP.Messages
 {
+	[ReadableXmppMessage(XmppNamespaces.Streams, "stream")]
 	internal class StreamInitMessage : XmppMessage
 	{
 		public StreamInitMessage(string targetDomain)
 		{
 			Server = targetDomain;
+		}
+
+		private StreamInitMessage(XmlReader reader)
+		{
+			reader.MoveToAttribute("from");
+
+			reader.MoveToContent();
+			while (reader.Read())
+			{
+				switch (reader.NodeType)
+				{
+					case XmlNodeType.Element:
+						ParseFeatureList(reader);
+						goto exit;
+					case XmlNodeType.EndElement:
+						if (reader.LocalName == "features")
+							goto exit;
+						break;
+				}
+			}
+			exit:
+			return;
 		}
 
 		public override void WriteMessage(XmlWriter writer)
@@ -20,15 +43,10 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			writer.WriteString(String.Empty);
 		}
 
-		public static MessageFactory GetMessageFactory()
+		private void ParseFeatureList(XmlReader reader)
 		{
-			return new MessageFactory(ParseMessage);
-		}
-
-		private static void ParseFeatureList(XmlReader reader, StreamInitMessage message)
-		{
-			IList<StreamFeature> features = new List<StreamFeature>();
-			message.Features = features;
+			ICollection<StreamFeature> features = new List<StreamFeature>();
+			Features = features;
 			while (reader.Read())
 			{
 				if (reader.NodeType == XmlNodeType.EndElement && reader.LocalName == "features")
@@ -46,30 +64,6 @@ namespace InstantMessage.Protocols.XMPP.Messages
 						break;
 				}
 			}
-		}
-		private static XmppMessage ParseMessage(XmlReader reader)
-		{
-			reader.MoveToAttribute("from");
-
-			StreamInitMessage message = new StreamInitMessage(reader.Value);
-
-			reader.MoveToContent();
-			while (reader.Read())
-			{
-				switch (reader.NodeType)
-				{
-					case XmlNodeType.Element:
-						ParseFeatureList(reader, message);
-						goto exit;
-					case XmlNodeType.EndElement:
-						if (reader.LocalName == "features")
-							goto exit;
-						break;
-				}
-			}
-
-			exit:
-			return message;
 		}
 
 		public abstract class StreamFeature

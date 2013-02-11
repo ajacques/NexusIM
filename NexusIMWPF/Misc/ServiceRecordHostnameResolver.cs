@@ -9,6 +9,15 @@ namespace NexusIM.Misc
 	{
 		public override IPEndPoint Resolve(IMProtocol protocol)
 		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException("protocol");
+			}
+			if (protocol.Server == null)
+			{
+				throw new ArgumentNullException("protocol.Server");
+			}
+
 			string hostname = String.Format("_xmpp-client._tcp.{0}", protocol.Server);
 
 			var targets = DnsResolver.ResolveService(hostname).GroupBy(s => s.Priority);

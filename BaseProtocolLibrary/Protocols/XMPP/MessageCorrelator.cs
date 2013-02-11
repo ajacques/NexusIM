@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using InstantMessage.Protocols.XMPP.Messages;
 
-namespace InstantMessage.Protocols.XMPP.Messages
+namespace InstantMessage.Protocols.XMPP
 {
 	internal delegate void HandleResponse(IqMessage response, object userState);
 
