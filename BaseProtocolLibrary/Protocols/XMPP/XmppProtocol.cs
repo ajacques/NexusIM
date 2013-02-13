@@ -32,6 +32,10 @@ namespace InstantMessage.Protocols.XMPP
 			messageProcessors.Add(typeof(SaslChallengeMessage), ProcessSaslChallengeMessage);
 			messageProcessors.Add(typeof(PresenceMessage), ProcessPresenceMessage);
 
+			iqProcessors = new SortedDictionary<string, ProcessIqMessage>();
+			iqProcessors.Add("jabber:iq:version:query", HandleGetClientVersion);
+			iqProcessors.Add("urn:xmpp:time:time", HandleGetClientTime);
+
 			protocolType = "XMPP";
 			mProtocolTypeShort = "xmpp";
 			Resource = "Test";
@@ -97,7 +101,16 @@ namespace InstantMessage.Protocols.XMPP
 				{
 					proc(message);
 				} else if (message is IqMessage) {
-					correlator.TryHandleResponse(message as IqMessage);
+					IqMessage iq = (IqMessage)message;
+					switch (iq.Type)
+					{
+						case IqMessage.IqType.get:
+							HandleUnsolicitedIqMessage(iq);
+							break;
+						case IqMessage.IqType.result:
+							correlator.TryHandleResponse(message as IqMessage);
+							break;
+					}
 				}
 			}
 		}
@@ -143,6 +156,7 @@ namespace InstantMessage.Protocols.XMPP
 			foreach (RosterItem roster in resp.RosterItems)
 			{
 				XmppContact buddy = new XmppContact(this, roster.Jid);
+				buddy.Nickname = roster.Name;
 
 				buddylist.Add(buddy);
 			}
@@ -169,6 +183,10 @@ namespace InstantMessage.Protocols.XMPP
 
 			WriteMessage(IqFragmentMessage.CreateNew(doc));
 			RequestRosterUpdate();
+
+			mConnected = true;
+			ProtocolStatus = IMProtocolStatus.Online;
+			OnLogin();
 		}
 		private void ProcessPingResponse(IqMessage message, object userState)
 		{
@@ -177,6 +195,40 @@ namespace InstantMessage.Protocols.XMPP
 
 			Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "Ping Latency (RTT to server): {0:N1}ms", lastMeasuredRTT.TotalMilliseconds));
 		}
+		private void HandleUnsolicitedIqMessage(IqMessage message)
+		{
+			string key = String.Format("{0}:{1}", message.Namespace, message.LocalName);
+
+			ProcessIqMessage processor;
+			if (iqProcessors.TryGetValue(key, out processor))
+			{
+				processor(message);
+			}
+		}
+		private void HandleGetClientVersion(IqMessage message)
+		{
+			XmlDocument xml = new XmlDocument();
+			XmlElement root = xml.CreateElement("query", "jabber:iq:version");
+			xml.AppendChild(root);
+			XmlElement name = xml.CreateElement("name", "jabber:iq:version");
+			root.AppendChild(name);
+			XmlElement version = xml.CreateElement("version", "jabber:iq:version");
+			root.AppendChild(version);
+			XmlElement os = xml.CreateElement("os", "jabber:iq:version");
+			root.AppendChild(os);
+
+			name.AppendChild(xml.CreateTextNode("NexusIM"));
+			version.AppendChild(xml.CreateTextNode("Unknown"));
+			os.AppendChild(xml.CreateTextNode(Environment.OSVersion.ToString()));
+
+			IqFragmentMessage frag = IqFragmentMessage.CreateInReplyTo(xml, message);
+
+			WriteMessage(frag);
+		}
+		private void HandleGetClientTime(IqMessage message)
+		{
+			ReplyWith(message, new ClientTimeMessage.Response(DateTime.Now));
+		}
 
 		internal void WriteMessage(XmppMessage message)
 		{
@@ -184,16 +236,26 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		internal void WriteMessage(IqMessage message, HandleResponse respHandler, object userState)
 		{
-			message.Id = correlator.GetNextId();
 			message.Source = new Jid(Username, Server);
 
-			correlator.CreateRequest(message, respHandler, userState);
+			if (message.Type == IqMessage.IqType.get || message.Type == IqMessage.IqType.set)
+			{
+				message.Id = correlator.GetNextId();
+				correlator.CreateRequest(message, respHandler, userState);
+			}
 
 			WriteMessage(message as XmppMessage);
 		}
 		internal void WriteMessage(IqMessage message)
 		{
 			WriteMessage(message, IdentityHandler, null);
+		}
+		internal void ReplyWith(IqMessage original, IqMessage reply)
+		{
+			reply.Id = original.Id;
+			reply.To = original.Source;
+
+			WriteMessage(reply);
 		}
 
 		internal bool TriggerTlsVerifyEvent(X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
@@ -286,6 +348,7 @@ namespace InstantMessage.Protocols.XMPP
 		
 		// Delegates
 		private delegate void ProcessMessage(XmppMessage message);
+		private delegate void ProcessIqMessage(IqMessage message);
 
 		// Properties
 		public string Resource
@@ -311,6 +374,7 @@ namespace InstantMessage.Protocols.XMPP
 		private IHostnameResolver hostResolver;
 		private bool enableTls = false;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
+		private IDictionary<string, ProcessIqMessage> iqProcessors;
 		private bool mRunMsgThread;
 		private Thread mBGMessageThread;
 		private System.Timers.Timer pingTimer;

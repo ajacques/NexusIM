@@ -9,9 +9,18 @@ namespace InstantMessage.Protocols.XMPP.Messages
 		public override void WriteMessage(XmlWriter writer)
 		{
 			writer.WriteStartElement("iq");
-			//WriteAttribute(writer, "from", Source.ToString());
 			WriteAttribute(writer, "type", Type.ToString());
 			WriteAttribute(writer, "id", Id);
+
+			if (Source != null)
+			{
+				WriteAttribute(writer, "from", Source.ToString());
+			}
+
+			if (To != null)
+			{
+				WriteAttribute(writer, "to", To.ToString());
+			}
 
 			WriteBody(writer);
 			writer.WriteEndElement();
@@ -19,7 +28,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 
 		protected abstract void WriteBody(XmlWriter writer);
 
-		protected enum IqType
+		public enum IqType
 		{
 			get,
 			set,
@@ -27,14 +36,27 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			result
 		}
 
+		public abstract string Namespace
+		{
+			get;
+		}
+		public abstract string LocalName
+		{
+			get;
+		}
 		public Jid Source
 		{
 			get;
 			set;
 		}
-		protected abstract IqType Type
+		public abstract IqType Type
 		{
 			get;
+		}
+		public virtual Jid To
+		{
+			get;
+			set;
 		}
 		public string Id
 		{

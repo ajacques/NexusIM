@@ -149,7 +149,7 @@ namespace NexusIM.Controls
 				return;
 
 			ContactListItem item = sender as ContactListItem;
-			IMBuddy contact = item.DataContext as IMBuddy;
+			IContact contact = item.DataContext as IContact;
 
 			ThreadPool.QueueUserWorkItem((state) => {
 				WindowSystem.OpenContactWindow(contact, true);

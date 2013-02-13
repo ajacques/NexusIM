@@ -223,8 +223,6 @@ namespace InstantMessage
 				if (mStatus != value)
 				{
 					mStatus = value;
-					if (mProtocol.ProtocolStatus == IMProtocolStatus.Online)
-						mStatusChange = DateTime.Now;
 					NotifyPropertyChanged("Status");
 
 					if (onStatusChange != null)

@@ -11,14 +11,28 @@ namespace InstantMessage.Protocols.XMPP.Messages
 	{
 		protected override void WriteBody(XmlWriter writer)
 		{
-			writer.WriteStartElement("ping", XmppNamespaces.Ping);
+			writer.WriteStartElement(LocalName, Namespace);
 			writer.WriteEndElement();
 		}
 
-		protected override IqType Type
+		public override IqType Type
 		{
 			get {
 				return IqType.get;
+			}
+		}
+
+		public override string Namespace
+		{
+			get {
+				return XmppNamespaces.Ping;
+			}
+		}
+
+		public override string LocalName
+		{
+			get {
+				return "ping";
 			}
 		}
 	}

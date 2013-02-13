@@ -8,7 +8,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 	{
 		protected override void WriteBody(XmlWriter writer)
 		{
-			writer.WriteStartElement("query", "jabber:iq:roster");
+			writer.WriteStartElement(LocalName, Namespace);
 			writer.WriteEndElement();
 		}
 
@@ -55,7 +55,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 				throw new NotImplementedException();
 			}
 
-			protected override IqType Type
+			public override IqType Type
 			{
 				get {
 					return IqType.result;
@@ -67,12 +67,40 @@ namespace InstantMessage.Protocols.XMPP.Messages
 				get;
 				private set;
 			}
+
+			public override string Namespace
+			{
+				get {
+					return XmppNamespaces.Iq + "roster";
+				}
+			}
+
+			public override string LocalName
+			{
+				get {
+					return "query";
+				}
+			}
 		}
 
-		protected override IqMessage.IqType Type
+		public override IqMessage.IqType Type
 		{
 			get {
 				return IqType.get;
+			}
+		}
+
+		public override string Namespace
+		{
+			get {
+				return "jabber:iq:roster";
+			}
+		}
+
+		public override string LocalName
+		{
+			get {
+				return "query";
 			}
 		}
 	}

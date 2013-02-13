@@ -257,7 +257,7 @@ namespace ProtocolTests
 
 		private static object InvokeMethod(object obj, string methodName, params object[] parameters)
 		{
-			MethodInfo minfo = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic);
+			MethodInfo minfo = obj.GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 			Assert.IsNotNull(minfo, String.Format("Function {0} not found on type {1}", methodName, obj.GetType().FullName));
 			return minfo.Invoke(obj, parameters);
 		}

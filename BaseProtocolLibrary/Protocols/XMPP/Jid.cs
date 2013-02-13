@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -47,7 +45,7 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		public bool Equals(Jid other, bool ignoreResource)
 		{
-			return this.Server == other.Server && this.Username == other.Username && (ignoreResource || this.Resource == other.Resource);
+			return other != null && this.Server == other.Server && this.Username == other.Username && (ignoreResource || this.Resource == other.Resource);
 		}
 
 		// Object
@@ -72,11 +70,16 @@ namespace InstantMessage.Protocols.XMPP
 
 		public static bool operator ==(Jid left, Jid right)
 		{
+			if ((Object)left == null)
+			{
+				return (Object)left == (Object)right;
+			}
+
 			return left.Equals(right);
 		}
 		public static bool operator !=(Jid left, Jid right)
 		{
-			return !left.Equals(right);
+			return !(left == right);
 		}
 
 		public string Username

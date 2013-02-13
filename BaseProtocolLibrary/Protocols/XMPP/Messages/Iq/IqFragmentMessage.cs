@@ -14,11 +14,13 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			Document = doc;
 		}
 
-		public static IqFragmentMessage FromWire(XmlDocument doc)
+		public static IqFragmentMessage FromWire(string msgid, Jid from, XmlDocument doc, IqType msgtype)
 		{
 			return new IqFragmentMessage(doc)
 			{
-				type = IqType.result
+				Id = msgid,
+				Source = from,
+				type = msgtype
 			};
 		}
 
@@ -26,7 +28,17 @@ namespace InstantMessage.Protocols.XMPP.Messages
 		{
 			return new IqFragmentMessage(root)
 			{
-				type = IqType.set
+				type = IqType.get
+			};
+		}
+
+		public static IqFragmentMessage CreateInReplyTo(XmlDocument root, IqMessage original)
+		{
+			return new IqFragmentMessage(root)
+			{
+				type = IqType.result,
+				Id = original.Id,
+				to = original.Source
 			};
 		}
 
@@ -35,10 +47,17 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			Document.DocumentElement.WriteTo(writer);
 		}
 
-		protected override IqMessage.IqType Type
+		public override IqMessage.IqType Type
 		{
 			get {
 				return type;
+			}
+		}
+
+		public override Jid To
+		{
+			get {
+				return to;
 			}
 		}
 
@@ -48,6 +67,21 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			private set;
 		}
 
+		public override string Namespace
+		{
+			get {
+				return Document.DocumentElement.NamespaceURI;
+			}
+		}
+
+		public override string LocalName
+		{
+			get {
+				return Document.DocumentElement.LocalName;
+			}
+		}
+
 		private IqType type;
+		private Jid to;
 	}
 }

@@ -38,6 +38,15 @@ namespace InstantMessage.Protocols.XMPP
 			reader.MoveToAttribute("id");
 			string msgid = reader.Value;
 
+			reader.MoveToAttribute("type");
+			IqMessage.IqType type = (IqMessage.IqType)Enum.Parse(typeof(IqMessage.IqType), reader.Value);
+
+			Jid jid = null;
+			if (reader.MoveToAttribute("from"))
+			{
+				jid = Jid.Parse(reader.Value);
+			}
+
 			IqMessage message;
 			if (reader.Read())
 			{
@@ -62,10 +71,10 @@ namespace InstantMessage.Protocols.XMPP
 				} else {
 					UnknownFragmentMessage msg = (UnknownFragmentMessage)UnknownFragmentMessage.GetMessageFactory()(subtree);
 
-					message = IqFragmentMessage.FromWire(msg.Document);
+					message = IqFragmentMessage.FromWire(msgid, jid, msg.Document, type);
 				}
 			} else {
-				message = IqFragmentMessage.FromWire(new XmlDocument());
+				message = IqFragmentMessage.FromWire(msgid, jid, new XmlDocument(), type);
 			}
 
 			message.Id = msgid;

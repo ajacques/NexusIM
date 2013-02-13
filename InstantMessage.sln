@@ -1,22 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{CC48D5C9-E769-4835-82B4-435AA1CDC8AB}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{4796554E-5940-4DDB-82C6-FB945728D462}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cloud", "Cloud", "{25A1A61A-0023-4192-9B71-72C5AEEEE82A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows Mobile", "Windows Mobile", "{1C832122-C1CC-4A12-A906-5CE4020F7D28}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zune", "Zune", "{493C7BAB-7C93-49DD-96B9-F881AD20C100}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1FDEE444-9864-425B-A92D-376315827B06}"
 	ProjectSection(SolutionItems) = preProject
 		InstantMessage.snk = InstantMessage.snk
-		Performance1.psess = Performance1.psess
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Specialized", "Specialized", "{132DC845-7C7B-4585-A851-06BCEC013610}"
@@ -25,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Standard", "Standard", "{18
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Testing", "Unit Testing", "{B06929F7-6BD1-4167-B95B-29955A6F00DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusCore", "NexusCore\NexusCore.csproj", "{A42A82EB-0CEF-4A38-A187-676005434BD6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusWeb", "NexusWeb\NexusWeb.csproj", "{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseProtocolLibrary", "BaseProtocolLibrary\BaseProtocolLibrary.csproj", "{80D4A705-5573-46DD-BC98-5E80F8DA2752}"
@@ -34,15 +23,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIM_Icons", "NexusIM_Icons\NexusIM_Icons.csproj", "{E851D4D7-09AB-4A1B-BCE6-5BA5AB7D9832}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudTests", "CloudTests\CloudTests.csproj", "{3A3471A3-0520-4455-B2CB-3085C56D98AF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A42A82EB-0CEF-4A38-A187-676005434BD6} = {A42A82EB-0CEF-4A38-A187-676005434BD6}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTests", "WebTests\WebTests.csproj", "{2EDD4E27-C303-4B43-9952-D134E10C4D71}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusPhone", "NexusPhone\NexusPhone.csproj", "{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtocolTests", "ProtocolTests\ProtocolTests.csproj", "{77CD6071-AB8D-45E0-949E-A35F81AAAD18}"
 EndProject
@@ -52,11 +36,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIMWPF", "NexusIMWPF\Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseReferences", "DatabaseReferences\DatabaseReferences.csproj", "{9110CC1D-228A-4D53-B02D-5BE731951554}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Word_SendVia", "Word_SendVia\Word_SendVia.csproj", "{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIMTests", "NexusIMTests\NexusIMTests.csproj", "{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = InstantMessage.vsmdi
 	EndGlobalSection
@@ -69,16 +55,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A42A82EB-0CEF-4A38-A187-676005434BD6}.Release|x86.ActiveCfg = Release|Any CPU
 		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -137,16 +113,6 @@ Global
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90}.Release|x86.ActiveCfg = Release|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404}.Release|x86.ActiveCfg = Release|Any CPU
 		{77CD6071-AB8D-45E0-949E-A35F81AAAD18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77CD6071-AB8D-45E0-949E-A35F81AAAD18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77CD6071-AB8D-45E0-949E-A35F81AAAD18}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -187,16 +153,6 @@ Global
 		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9110CC1D-228A-4D53-B02D-5BE731951554}.Release|x86.ActiveCfg = Release|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A9D3FDE3-DEEB-4EE6-9AB8-24009CC79FE0}.Release|x86.ActiveCfg = Release|Any CPU
 		{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -212,15 +168,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{1C832122-C1CC-4A12-A906-5CE4020F7D28} = {CC48D5C9-E769-4835-82B4-435AA1CDC8AB}
-		{493C7BAB-7C93-49DD-96B9-F881AD20C100} = {CC48D5C9-E769-4835-82B4-435AA1CDC8AB}
 		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB} = {4796554E-5940-4DDB-82C6-FB945728D462}
 		{132DC845-7C7B-4585-A851-06BCEC013610} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{1802A725-59E0-4C4C-AE74-0D901A9FEB38} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{80D4A705-5573-46DD-BC98-5E80F8DA2752} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
-		{A42A82EB-0CEF-4A38-A187-676005434BD6} = {25A1A61A-0023-4192-9B71-72C5AEEEE82A}
-		{3B28B6BB-7EE7-46CF-9EA2-C78111E40404} = {1C832122-C1CC-4A12-A906-5CE4020F7D28}
 		{E851D4D7-09AB-4A1B-BCE6-5BA5AB7D9832} = {1802A725-59E0-4C4C-AE74-0D901A9FEB38}
 		{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4} = {1802A725-59E0-4C4C-AE74-0D901A9FEB38}
 		{3A3471A3-0520-4455-B2CB-3085C56D98AF} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
@@ -231,9 +183,5 @@ Global
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal

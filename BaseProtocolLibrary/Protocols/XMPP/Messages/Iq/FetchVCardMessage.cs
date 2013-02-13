@@ -6,14 +6,28 @@ namespace InstantMessage.Protocols.XMPP.Messages
 	{
 		protected override void WriteBody(XmlWriter writer)
 		{
-			writer.WriteStartElement("vCard", "vcard-temp");
+			writer.WriteStartElement(LocalName, Namespace);
 			writer.WriteEndElement();
 		}
 
-		protected override IqMessage.IqType Type
+		public override IqMessage.IqType Type
 		{
 			get {
 				return IqType.get;
+			}
+		}
+
+		public override string Namespace
+		{
+			get {
+				return "vcard-temp";
+			}
+		}
+
+		public override string LocalName
+		{
+			get {
+				return "vCard";
 			}
 		}
 	}

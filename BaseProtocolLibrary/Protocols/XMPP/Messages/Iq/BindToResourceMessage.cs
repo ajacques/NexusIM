@@ -22,7 +22,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			writer.WriteEndElement();
 		}
 
-		protected override IqMessage.IqType Type
+		public override IqMessage.IqType Type
 		{
 			get {
 				return IqType.set;
@@ -39,12 +39,36 @@ namespace InstantMessage.Protocols.XMPP.Messages
 					reader.Read();
 				return new ResponseMessage();
 			}
+
+			public override string Namespace
+			{
+				get {
+					return XmppNamespaces.Bind;
+				}
+			}
+
+			public override string LocalName
+			{
+				get {
+					return "bind";
+				}
+			}
 		}
 
 		public string Resource
 		{
 			get;
 			private set;
+		}
+
+		public override string Namespace
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public override string LocalName
+		{
+			get { throw new NotImplementedException(); }
 		}
 	}
 }

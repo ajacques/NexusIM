@@ -31,18 +31,14 @@ namespace InstantMessage.Protocols.XMPP
 
 		public string Nickname
 		{
-			get {
-				throw new NotImplementedException();
-			}
-			set	{
-				throw new NotImplementedException();
-			}
+			get;
+			set;
 		}
 
 		public string DisplayName
 		{
 			get {
-				return String.Empty;
+				return Username;
 			}
 		}
 

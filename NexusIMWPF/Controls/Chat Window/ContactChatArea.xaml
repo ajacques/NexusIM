@@ -5,11 +5,13 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:im="clr-namespace:InstantMessage;assembly=BaseProtocolLibrary"
 	xmlns:nxc="clr-namespace:NexusIM.Controls"
+	xmlns:nxcnv="clr-namespace:NexusIM.Converters"
 	mc:Ignorable="d"
 	x:Class="NexusIM.Controls.ContactChatArea"
 	x:Name="UserControl" x:FieldModifier="private" UseLayoutRounding="True"
 	d:DesignWidth="600" d:DesignHeight="500" MouseUp="UserControl_MouseUp">
 	<UserControl.Resources>
+		<nxcnv:GeneralIMStatusConverter x:Key="StatusToAccentConverter" />
 		<Color x:Key="AvailableColor">#90C1FF99</Color>
 		<Color x:Key="BusyColor">#00FFC9C9</Color>
 		<Color x:Key="AwayColor">#00FFED99</Color>
@@ -36,9 +38,9 @@
 	<Grid x:Name="LayoutRoot">
 		<Grid.Background>
 			<LinearGradientBrush EndPoint="0.9,1" StartPoint="0.2,0" SpreadMethod="Repeat">
-				<GradientStop Color="{DynamicResource AvailableColor}" Offset="0" />
+				<GradientStop Color="{Binding Path=Status, Converter={StaticResource ResourceKey=StatusToAccentConverter}}" Offset="0" />
 				<GradientStop Color="#FFFFFFFF" Offset="0.5" />
-				<GradientStop Color="{DynamicResource AvailableColor}" Offset="1" />
+				<GradientStop Color="{Binding Path=Status, Converter={StaticResource ResourceKey=StatusToAccentConverter}}" Offset="1" />
 			</LinearGradientBrush>
 		</Grid.Background>
 		<Grid.RowDefinitions>

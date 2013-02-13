@@ -121,6 +121,9 @@
     <Compile Include="Controls\Contact List\CLErrorBox.xaml.cs">
       <DependentUpon>CLErrorBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Contact List\Emblems\AndroidClient.xaml.cs">
+      <DependentUpon>AndroidClient.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Contact List\ProtocolMenu.cs" />
     <Compile Include="Controls\Contact List\YahooProtocolMenu.cs" />
     <Compile Include="Controls\HostValidationTextBox.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="Controls\SocketErrorTrayTip.xaml.cs">
       <DependentUpon>SocketErrorTrayTip.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\GeneralIMStatusConverter.cs" />
     <Compile Include="DnsResolver.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Misc\MiscExtensions.cs" />
@@ -403,6 +407,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Chat Window\MUCChatArea.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Contact List\Emblems\AndroidClient.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

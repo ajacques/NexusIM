@@ -364,6 +364,9 @@ namespace InstantMessage
 			get {
 				return mProtocolStatus;
 			}
+			protected set {
+				mProtocolStatus = value;
+			}
 		}
 #if !SILVERLIGHT
 		/// <summary>

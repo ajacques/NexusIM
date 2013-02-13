@@ -77,20 +77,26 @@
     <Compile Include="Protocols\IRC\IRCProtocol.cs" />
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
-    <Compile Include="Protocols\XMPP\Messages\PingMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\ClientTimeMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\IqResponseMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Jingle\IJingleDescriptionType.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Jingle\JingleBaseMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Jingle\JingleInviteMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\PingMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Jingle\JingleRtpDescription.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Jingle\JingleStubDescription.cs" />
     <Compile Include="Protocols\XMPP\RosterItem.cs" />
     <Compile Include="Protocols\XMPP\Attributes\XmppMessageFactoryEntryAttribute.cs" />
     <Compile Include="Protocols\XMPP\IAuthStrategy.cs" />
     <Compile Include="Protocols\XMPP\Attributes\IqMessageBodyAttribute.cs" />
     <Compile Include="Protocols\XMPP\IqResponseFactory.cs" />
     <Compile Include="Protocols\XMPP\MessageCorrelator.cs" />
-    <Compile Include="Protocols\XMPP\Messages\BindToResourceMessage.cs" />
-    <Compile Include="Protocols\XMPP\Messages\FetchVCardMessage.cs" />
-    <Compile Include="Protocols\XMPP\Messages\GetRosterMessage.cs" />
-    <Compile Include="Protocols\XMPP\Messages\IqFragmentMessage.cs" />
-    <Compile Include="Protocols\XMPP\Messages\IqMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\BindToResourceMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\FetchVCardMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\GetRosterMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\IqFragmentMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\IqMessage.cs" />
     <Compile Include="Protocols\XMPP\Jid.cs" />
-    <Compile Include="Protocols\XMPP\Messages\IqResponseMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\PresenceMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslAuthMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\SaslChallengeMessage.cs" />
@@ -149,7 +155,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
