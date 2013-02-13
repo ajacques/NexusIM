@@ -20,15 +20,5 @@ namespace ProtocolTests
 			Assert.IsTrue(acc.ContainsKey(1));
 			Assert.IsTrue(acc.ContainsKey(2));
 		}
-
-		[TestMethod]
-		public void RemoveTest()
-		{
-			YPacketParamCollection acc = new YPacketParamCollection();
-			acc.Add(1, "value1");
-			Assert.IsTrue(acc.ContainsKey(1));
-			Assert.IsTrue(acc.Remove(1));
-			Assert.IsFalse(acc.ContainsKey(1));
-		}
 	}
 }

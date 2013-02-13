@@ -23,10 +23,6 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			foreach (var node in DescriptionNodes)
 			{
 				writer.WriteStartElement("description", ComputeNamespace("apps:" + node.SubNamespace));
-				if (node.MediaType != null)
-				{
-					WriteAttribute(writer, "media", node.MediaType);
-				}
 				node.WriteBody(writer);
 				writer.WriteEndElement();
 			}

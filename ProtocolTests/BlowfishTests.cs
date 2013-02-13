@@ -69,7 +69,7 @@ namespace ProtocolTests
 		
 		public void SendMessage(string message, MessageFlags flags = MessageFlags.None)
 		{
-			throw new NotImplementedException();
+			OnMessageSendAttempt(this, new IMMessageEventArgs(null, message));
 		}
 	}
 

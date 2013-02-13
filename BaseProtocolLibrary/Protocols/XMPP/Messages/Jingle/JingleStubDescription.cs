@@ -14,13 +14,6 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			
 		}
 
-		public string MediaType
-		{
-			get {
-				return null;
-			}
-		}
-
 		public string SubNamespace
 		{
 			get {

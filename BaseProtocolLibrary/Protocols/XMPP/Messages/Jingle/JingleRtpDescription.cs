@@ -16,6 +16,10 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 
 		public void WriteBody(XmlWriter writer)
 		{
+			writer.WriteStartAttribute("media");
+			writer.WriteString(MediaType);
+			writer.WriteEndAttribute();
+			
 			foreach (var payload in PayloadTypes)
 			{
 				payload.Write(writer);
@@ -44,9 +48,23 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				writer.WriteString(XmlConvert.ToString(Id));
 				writer.WriteEndAttribute();
 
-				writer.WriteStartElement("name");
+				writer.WriteStartAttribute("name");
 				writer.WriteString(Name);
-				writer.WriteEndElement();
+				writer.WriteEndAttribute();
+
+				if (ClockRate.HasValue)
+				{
+					writer.WriteStartAttribute("clockrate");
+					writer.WriteString(ClockRate.Value.ToString());
+					writer.WriteEndAttribute();
+				}
+
+				if (Channels >= 2)
+				{
+					writer.WriteStartAttribute("channels");
+					writer.WriteString(Channels.ToString());
+					writer.WriteEndAttribute();
+				}
 
 				writer.WriteEndElement();
 			}
@@ -61,13 +79,23 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				get;
 				set;
 			}
+
+			public int? ClockRate
+			{
+				get;
+				set;
+			}
+			public int Channels
+			{
+				get;
+				set;
+			}
 		}
 
 		public string MediaType
 		{
-			get {
-				return null;
-			}
+			get;
+			set;
 		}
 	}
 }

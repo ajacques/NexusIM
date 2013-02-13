@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using InstantMessage.Protocols.XMPP;
 using InstantMessage.Protocols.XMPP.Messages;
@@ -67,18 +63,27 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 		public void RtpSerializeTest()
 		{
 			JingleRtpDescription descriptor = BasicRtpDescription;
+			descriptor.MediaType = "audio";
 			XmlDocument xml = SerializeObject((writer) => {
-				writer.WriteStartElement("content");
+				writer.WriteStartElement("description");
 				descriptor.WriteBody(writer);
 				writer.WriteEndElement();
 			});
 
 			XmlElement content = xml.DocumentElement;
+			Assert.IsTrue(content.HasAttribute("media"), "Content node did not have media attribute");
+			Assert.AreEqual("audio", content.GetAttribute("media"));
 
 			foreach (XmlElement element in content)
 			{
 				Assert.IsTrue(element.HasAttribute("id"), "Payload type did not have attribute name 'id'");
 				Assert.IsTrue(element.HasAttribute("name"), "Payload type node did not have attribute 'name'");
+
+				if (element.HasAttribute("clockrate"))
+				{
+					int clockrate;
+					Assert.IsTrue(Int32.TryParse(element.GetAttribute("clockrate"), out clockrate), "Attribute clockrate did not have integer value: {0}", element.GetAttribute("clockrate"));
+				}
 
 				int id;
 				Assert.IsTrue(Int32.TryParse(element.GetAttribute("id"), out id), "Attribute id did not have integer value: {0}", element.GetAttribute("id"));
@@ -96,18 +101,23 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 		{
 			get {
 				JingleRtpDescription descriptor = new JingleRtpDescription();
-				descriptor.PayloadTypes.Add(NewPayloadType(96, "speex"));
+				descriptor.MediaType = "audio";
+				descriptor.PayloadTypes.Add(NewPayloadType(96, "speex",	16000));
+				descriptor.PayloadTypes.Add(NewPayloadType(97, "speex", 8000));
+				descriptor.PayloadTypes.Add(NewPayloadType(103, "L16", 16000, 2));
 
 				return descriptor;
 			}
 		}
 
-		private JingleRtpDescription.PayloadType NewPayloadType(int id, string codecName)
+		private JingleRtpDescription.PayloadType NewPayloadType(int id, string codecName, int? clockrate = null, int channels = 1)
 		{
 			return new JingleRtpDescription.PayloadType()
 			{
 				Id = id,
-				Name = codecName
+				Name = codecName,
+				ClockRate = clockrate,
+				Channels = channels
 			};
 		}
 	}
