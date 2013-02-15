@@ -78,6 +78,7 @@
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
     <Compile Include="Protocols\XMPP\Messages\Iq\ClientTimeMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Iq\EntityDiscoveryMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\Iq\IqResponseMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\Jingle\IJingleDescriptionType.cs" />
     <Compile Include="Protocols\XMPP\Messages\Jingle\JingleBaseMessage.cs" />
@@ -85,6 +86,9 @@
     <Compile Include="Protocols\XMPP\Messages\Iq\PingMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\Jingle\JingleRtpDescription.cs" />
     <Compile Include="Protocols\XMPP\Messages\Jingle\JingleStubDescription.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Jingle\JingleTransportDescription.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Message\ChatMessageMessage.cs" />
+    <Compile Include="Protocols\XMPP\Messages\Message\MessageMessage.cs" />
     <Compile Include="Protocols\XMPP\RosterItem.cs" />
     <Compile Include="Protocols\XMPP\Attributes\XmppMessageFactoryEntryAttribute.cs" />
     <Compile Include="Protocols\XMPP\IAuthStrategy.cs" />
@@ -155,7 +159,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

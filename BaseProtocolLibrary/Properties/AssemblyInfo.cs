@@ -11,7 +11,7 @@ using System;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adren Software")]
 [assembly: AssemblyProduct("BaseProtocolLibrary")]
-[assembly: AssemblyCopyright("Copyright © Adren Software 2011")]
+[assembly: AssemblyCopyright("Copyright © Adren Software 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
@@ -38,8 +38,5 @@ using System;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 
-#if WINDOWS
-// Private assembly for now, if we release this will probably have to change this
 [assembly: ObfuscateAssembly(assemblyIsPrivate: true)]
-#endif
 [assembly: CLSCompliant(true)]

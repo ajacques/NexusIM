@@ -52,15 +52,6 @@ namespace InstantMessage.Protocols.Yahoo
 	// YPacket 2 Engine - Now uses arrays... lots and lots of arrays... and BlockCopy...
 	internal sealed class YPacket
 	{
-		/// <summary>
-		/// Disassembles a Y! MSG packet from the string and returns a YPacket built from the input
-		/// </summary>
-		/// <param name="packetdata">String containing the packet data (Ex. "YMSG...")</param>
-		/// <returns>YPacket class based on the input</returns>
-		public static YPacket FromPacket(string packetdata)
-		{
-			return FromPacket(dEncoding.GetBytes(packetdata));
-		}
 		public static YPacket FromPacket(byte[] packetdata, int startPosition, int count)
 		{
 			if (count < 20)

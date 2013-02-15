@@ -8,7 +8,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 	{
 		public override void WriteMessage(XmlWriter writer)
 		{
-			writer.WriteStartElement("iq");
+			writer.WriteStartElement("iq", XmppNamespaces.JabberClient);
 			WriteAttribute(writer, "type", Type.ToString());
 			WriteAttribute(writer, "id", Id);
 
@@ -27,6 +27,38 @@ namespace InstantMessage.Protocols.XMPP.Messages
 		}
 
 		protected abstract void WriteBody(XmlWriter writer);
+
+		private class IqAckMessage : IqMessage
+		{
+			protected override void WriteBody(XmlWriter writer) {}
+			public override string Namespace
+			{
+				get {
+					throw new NotSupportedException();
+				}
+			}
+			public override string LocalName
+			{
+				get {
+					throw new NotSupportedException();
+				}
+			}
+			public override IqType Type
+			{
+				get {
+					return IqType.result;
+				}
+			}
+		}
+
+		public IqMessage Ack()
+		{
+			return new IqAckMessage()
+			{
+				Id = this.Id,
+				To = this.Source
+			};
+		}
 
 		public enum IqType
 		{

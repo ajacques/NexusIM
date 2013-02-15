@@ -5,10 +5,10 @@ namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal abstract class XmppMessage
 	{
-		protected void WriteAttribute(XmlWriter writer, string name, string value)
+		protected void WriteAttribute(XmlWriter writer, string name, object value)
 		{
 			writer.WriteStartAttribute(name);
-			writer.WriteString(value);
+			writer.WriteValue(value);
 			writer.WriteEndAttribute();
 		}
 

@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Xml;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 
 namespace InstantMessage.Protocols.XMPP.Messages
 {

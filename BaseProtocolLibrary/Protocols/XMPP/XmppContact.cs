@@ -51,7 +51,7 @@ namespace InstantMessage.Protocols.XMPP
 
 		public void SendMessage(string message, MessageFlags flags = MessageFlags.None)
 		{
-			throw new NotImplementedException();
+			(Protocol as XmppProtocol).SendMessage(this, message);
 		}
 
 		public bool Equals(IContact other)

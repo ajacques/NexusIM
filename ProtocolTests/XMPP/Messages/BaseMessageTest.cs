@@ -12,6 +12,7 @@ namespace ProtocolTests.XMPP.Messages
 		protected readonly Jid Romeo = new Jid("romeo", "montague.lit", "orchard");
 		protected readonly Jid Juliet = new Jid("juliet", "capulet.lit", "balcony");
 		protected const string MessageId = "testid";
+		protected const string Domain = "example.com";
 
 		internal XmlDocument SerializeMessage(XmppMessage message)
 		{
@@ -28,7 +29,6 @@ namespace ProtocolTests.XMPP.Messages
 				return xml;
 			}
 		}
-
 		internal XmlDocument SerializeObject(Action<XmlWriter> target)
 		{
 			using (MemoryStream ms = new MemoryStream())
@@ -45,19 +45,29 @@ namespace ProtocolTests.XMPP.Messages
 			}
 		}
 
-		internal void VerifyIqAttributes(XmlDocument document, Jid from, Jid to, string id, IqMessage.IqType type)
+		internal void VerifyIqAttributes(XmlElement root, Jid from, Jid to, string id, IqMessage.IqType type)
 		{
-			XmlElement element = document.DocumentElement;
+			Assert.AreEqual(XmppNamespaces.JabberClient, root.NamespaceURI, "Iq element did not have correct XML namespace");
 
-			Assert.IsTrue(element.HasAttribute("from"), "Message did not have a from attribute set");
-			Assert.IsTrue(element.HasAttribute("to"), "Message did not have a to attribute set");
-			Assert.IsTrue(element.HasAttribute("id"), "Message did not have an id attribute set");
-			Assert.IsTrue(element.HasAttribute("type"), "Message did not have a type attribute set");
+			Assert.IsTrue(root.HasAttribute("from"), "Message did not have a from attribute set");
 
-			Assert.AreEqual(from.ToString(), element.GetAttribute("from"));
-			Assert.AreEqual(to.ToString(), element.GetAttribute("to"));
-			Assert.AreEqual(id, element.GetAttribute("id"));
-			Assert.AreEqual(type.ToString(), element.GetAttribute("type"));
+			if (to != null)
+			{
+				Assert.IsTrue(root.HasAttribute("to"), "Message did not have a to attribute set");
+				Assert.AreEqual(to.ToString(), root.GetAttribute("to"));
+			}
+
+			Assert.IsTrue(root.HasAttribute("id"), "Message did not have an id attribute set");
+			Assert.IsTrue(root.HasAttribute("type"), "Message did not have a type attribute set");
+
+			Assert.AreEqual(from.ToString(), root.GetAttribute("from"));
+			Assert.AreEqual(id, root.GetAttribute("id"));
+			Assert.AreEqual(type.ToString(), root.GetAttribute("type"));
+		}
+		protected void VerifyInt32(XmlNode attribute)
+		{
+			int value;
+			Assert.IsTrue(Int32.TryParse(attribute.InnerText, out value), "Value for attribute name {0} was not an integer. Actual: {1}", attribute.Name, attribute.Value);
 		}
 	}
 }

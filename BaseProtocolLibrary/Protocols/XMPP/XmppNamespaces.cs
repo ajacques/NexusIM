@@ -10,5 +10,6 @@
 		public const string Ping = "urn:xmpp:ping";
 		public const string Sessions = "urn:ietf:params:xml:ns:xmpp-session";
 		public const string Streams = "http://etherx.jabber.org/streams";
+		public const string DiscoInfo = "http://jabber.org/protocol/disco#info";
 	}
 }

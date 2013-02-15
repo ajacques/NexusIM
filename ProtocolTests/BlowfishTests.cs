@@ -198,7 +198,7 @@ namespace ProtocolTests
 				waitHandle.Set();
 			});
 
-			waitHandle.Wait(1000);
+			waitHandle.Wait(500);
 			handler.SendMessage("Hi bob!");
 
 			if (!waitHandle.IsSet)

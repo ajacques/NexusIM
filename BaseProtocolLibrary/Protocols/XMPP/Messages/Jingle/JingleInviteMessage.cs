@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Xml;
 
 namespace InstantMessage.Protocols.XMPP.Messages.Jingle
@@ -12,6 +8,7 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 		protected JingleInviteMessage()
 		{
 			DescriptionNodes = new List<IJingleDescriptionType>();
+			TransportNodes = new List<IJingleDescriptionType>();
 		}
 
 		protected override void WritePayload(XmlWriter writer)
@@ -27,8 +24,12 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				writer.WriteEndElement();
 			}
 
-			writer.WriteStartElement("transport", ComputeNamespace("transports:stub:0"));
-			writer.WriteEndElement();
+			foreach (var node in TransportNodes)
+			{
+				writer.WriteStartElement("transport", ComputeNamespace("transports:" + node.SubNamespace));
+				node.WriteBody(writer);
+				writer.WriteEndElement();
+			}
 
 			writer.WriteEndElement(); // </content>
 		}
@@ -48,6 +49,22 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				}
 			}
 		}
+		public class AcceptMessage : JingleInviteMessage
+		{
+			protected override string Action
+			{
+				get {
+					return "session-initiate";
+				}
+			}
+
+			protected override bool IsInitiating
+			{
+				get {
+					return false;
+				}
+			}
+		}
 
 		protected override string SubNamespace
 		{
@@ -56,6 +73,11 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			}
 		}
 		public ICollection<IJingleDescriptionType> DescriptionNodes
+		{
+			get;
+			private set;
+		}
+		public ICollection<IJingleDescriptionType> TransportNodes
 		{
 			get;
 			private set;

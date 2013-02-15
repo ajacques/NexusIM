@@ -97,6 +97,12 @@ namespace InstantMessage.Protocols.XMPP
 			get;
 			private set;
 		}
+		public Jid Bared
+		{
+			get {
+				return new Jid(Username, Server);
+			}
+		}
 
 		private static Regex parseRegex;
 	}

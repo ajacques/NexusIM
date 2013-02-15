@@ -11,6 +11,7 @@ using System.Threading;
 using System.Xml;
 using InstantMessage.Events;
 using InstantMessage.Protocols.XMPP.Messages;
+using InstantMessage.Protocols.XMPP.Messages.Message;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -35,6 +36,7 @@ namespace InstantMessage.Protocols.XMPP
 			iqProcessors = new SortedDictionary<string, ProcessIqMessage>();
 			iqProcessors.Add("jabber:iq:version:query", HandleGetClientVersion);
 			iqProcessors.Add("urn:xmpp:time:time", HandleGetClientTime);
+			iqProcessors.Add(XmppNamespaces.DiscoInfo + ":query", HandleDiscoInfo);
 
 			protocolType = "XMPP";
 			mProtocolTypeShort = "xmpp";
@@ -66,6 +68,12 @@ namespace InstantMessage.Protocols.XMPP
 
 			connectTimer.Start();
 			networkSocket.BeginConnect(ep, new AsyncCallback(OnSocketConnect), null);
+		}
+		public void SendMessage(XmppContact contact, string message)
+		{
+			ChatMessageMessage msg = new ChatMessageMessage(contact.Jid, message);
+
+			WriteMessage(msg);
 		}
 
 		// Private Methods
@@ -147,6 +155,10 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			WriteMessage(new PingMessage(), ProcessPingResponse, DateTime.Now);
 		}
+		private void SendPing(Jid target)
+		{
+			WriteMessage(new PingMessage(target), ProcessPingResponse, DateTime.Now);
+		}
 
 		// IQ Response Handlers
 		private void HandleRosterResponse(IqMessage message, object userState)
@@ -191,9 +203,17 @@ namespace InstantMessage.Protocols.XMPP
 		private void ProcessPingResponse(IqMessage message, object userState)
 		{
 			DateTime startTime = (DateTime)userState;
-			lastMeasuredRTT = DateTime.Now - startTime;
 
-			Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "Ping Latency (RTT to server): {0:N1}ms", lastMeasuredRTT.TotalMilliseconds));
+			if (message.Source == null)
+			{
+				lastMeasuredRTT = DateTime.Now - startTime;
+
+				Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "Ping Latency (RTT to server): {0:N1}ms", lastMeasuredRTT.TotalMilliseconds));
+			} else { // User targeted
+				TimeSpan rtt = DateTime.Now - startTime;
+
+				Debug.WriteLine(String.Format(CultureInfo.InvariantCulture, "Ping Latency (RTT to {0}): {1:N1}ms", message.Source, lastMeasuredRTT.TotalMilliseconds));
+			}
 		}
 		private void HandleUnsolicitedIqMessage(IqMessage message)
 		{
@@ -228,6 +248,13 @@ namespace InstantMessage.Protocols.XMPP
 		private void HandleGetClientTime(IqMessage message)
 		{
 			ReplyWith(message, new ClientTimeMessage.Response(DateTime.Now));
+		}
+		private void HandleDiscoInfo(IqMessage message)
+		{
+			EntityDiscoveryMessage.Request msg = (EntityDiscoveryMessage.Request)message;
+			EntityDiscoveryMessage.Response response = msg.Respond();
+
+			ReplyWith(msg, response);
 		}
 
 		internal void WriteMessage(XmppMessage message)

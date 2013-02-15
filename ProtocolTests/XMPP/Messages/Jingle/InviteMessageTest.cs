@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Xml;
 using InstantMessage.Protocols.XMPP;
 using InstantMessage.Protocols.XMPP.Messages;
@@ -29,7 +31,7 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 		[TestCategory("XMPP")]
 		[TestCategory("Messages")]
 		[TestMethod]
-		public void BasicInviteTest()
+		public void BasicStubInviteTest()
 		{
 			JingleInviteMessage.AttemptMessage msg = new JingleInviteMessage.AttemptMessage();
 			msg.Source = Romeo;
@@ -37,14 +39,16 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 			msg.Id = MessageId;
 			msg.SessionId = "sessionid";
 			msg.DescriptionNodes.Add(StubDescription);
+			msg.TransportNodes.Add(StubDescription);
 
 			XmlDocument xml = SerializeMessage(msg);
-			VerifyIqAttributes(xml, Romeo, Juliet, MessageId, IqMessage.IqType.set);
-
 			XmlElement iq = xml.DocumentElement;
+
+			VerifyIqAttributes(iq, Romeo, Juliet, MessageId, IqMessage.IqType.set);;
 			VerifyJingleAttributes(iq, Romeo, "session-initiate", "1", "sessionid");
 
 			XmlElement jingle = iq["jingle"];
+			Assert.AreEqual(JingleNamespaceRoot, jingle.NamespaceURI);
 
 			XmlElement content = jingle["content"];
 			Assert.IsNotNull(content, "Jingle node did not have a subnode called content");
@@ -54,9 +58,11 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 
 			XmlElement description = content["description"];
 			Assert.IsNotNull(description, "Content node did not have a subnode called description");
+			Assert.AreEqual("urn:xmpp:jingle:apps:stub:0", description.NamespaceURI);
 
 			XmlElement transport = content["transport"];
 			Assert.IsNotNull(transport, "Content node did not have a subnode called transport");
+			Assert.AreEqual("urn:xmpp:jingle:transports:stub:0", transport.NamespaceURI);
 		}
 
 		[TestMethod]
@@ -81,12 +87,34 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 
 				if (element.HasAttribute("clockrate"))
 				{
-					int clockrate;
-					Assert.IsTrue(Int32.TryParse(element.GetAttribute("clockrate"), out clockrate), "Attribute clockrate did not have integer value: {0}", element.GetAttribute("clockrate"));
+					uint clockrate;
+					Assert.IsTrue(UInt32.TryParse(element.GetAttribute("clockrate"), out clockrate), "Attribute clockrate did not have integer value: {0}", element.GetAttribute("clockrate"));
 				}
 
-				int id;
-				Assert.IsTrue(Int32.TryParse(element.GetAttribute("id"), out id), "Attribute id did not have integer value: {0}", element.GetAttribute("id"));
+				byte id;
+				Assert.IsTrue(Byte.TryParse(element.GetAttribute("id"), out id), "Attribute id did not have integer value: {0}", element.GetAttribute("id"));
+			}
+		}
+
+		[TestMethod]
+		public void TransportSerializeTest()
+		{
+			JingleTransportDescription descriptor = BasicTransportDescription;
+			XmlDocument xml = SerializeObject((writer) =>
+			{
+				writer.WriteStartElement("transport");
+				descriptor.WriteBody(writer);
+				writer.WriteEndElement();
+			});
+
+			XmlElement content = xml.DocumentElement;
+
+			foreach (XmlElement element in content)
+			{
+				Assert.IsTrue(element.HasAttribute("priority"), "Payload type did not have attribute name 'priority'");
+				Assert.IsTrue(element.HasAttribute("ip"), "Payload type node did not have attribute 'ip'");
+
+				VerifyInt32(element.GetAttributeNode("priority"));
 			}
 		}
 
@@ -96,7 +124,6 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 				return new JingleStubDescription();
 			}
 		}
-		
 		private JingleRtpDescription BasicRtpDescription
 		{
 			get {
@@ -105,6 +132,15 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 				descriptor.PayloadTypes.Add(NewPayloadType(96, "speex",	16000));
 				descriptor.PayloadTypes.Add(NewPayloadType(97, "speex", 8000));
 				descriptor.PayloadTypes.Add(NewPayloadType(103, "L16", 16000, 2));
+
+				return descriptor;
+			}
+		}
+		private JingleTransportDescription BasicTransportDescription
+		{
+			get {
+				JingleTransportDescription descriptor = new JingleTransportDescription();
+				descriptor.Candidates.Add(NewCandidate(1, new IPEndPoint(IPAddress.Loopback, 500)));
 
 				return descriptor;
 			}
@@ -120,5 +156,18 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 				Channels = channels
 			};
 		}
+		private JingleTransportDescription.Candidate NewCandidate(int priority, IPEndPoint ep)
+		{
+			return new JingleTransportDescription.Candidate()
+			{
+				Priority = priority,
+				Address = ep.Address,
+				ProtocolType = ProtocolType.Udp,
+				Port = ep.Port
+			};
+		}
+
+		private const string JingleNamespace = "urn:xmpp:jingle:";
+		private const string JingleNamespaceRoot = JingleNamespace + "1";
 	}
 }

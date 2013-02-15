@@ -11,6 +11,13 @@ namespace InstantMessage.Protocols.XMPP
 		public MessageCorrelator()
 		{
 			responseHandlers = new SortedDictionary<string, ResponseAttributes>();
+
+			Random rand = new Random();
+
+			byte[] bytes = new byte[8];
+			rand.NextBytes(bytes);
+
+			messageId = BitConverter.ToInt64(bytes, 0);
 		}
 
 		public void CreateRequest(IqMessage message, HandleResponse response, object userState)
@@ -36,11 +43,16 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		public string GetNextId()
 		{
+			// This is a Pseudo-random number generator based on the linear feedback shift register algorithm
+			// Will generate up to 2^61 unique message identifiers
+
+			// Polynomial: x^62 + x^61 + x^6 + x^5
+			messageId = (messageId >> 1) ^ (-(messageId & 1) & 0x1800000000000030);
+
 			byte[] id = BitConverter.GetBytes(messageId);
 
 			string result = Convert.ToBase64String(id);
 			result = result.TrimEnd('=');
-			messageId++;
 
 			return result;
 		}

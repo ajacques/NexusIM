@@ -37,7 +37,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 		public override void WriteMessage(XmlWriter writer)
 		{
 			writer.WriteStartElement("stream", "stream", XmppNamespaces.Streams);
-			WriteAttribute(writer, "xmlns", XmppNamespaces.JabberClient);
+			WriteAttribute(writer, "xmlns", XmppNamespaces.JabberClient); // Hack to get XmlWriter to establish that the default NS is jabber:client. Prevents us from having to send an xmlns on every single packet
 			WriteAttribute(writer, "version", "1.0");
 			WriteAttribute(writer, "to", Server);
 			writer.WriteString(String.Empty);

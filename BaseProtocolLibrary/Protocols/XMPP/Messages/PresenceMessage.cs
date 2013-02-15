@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace InstantMessage.Protocols.XMPP.Messages
@@ -15,13 +11,27 @@ namespace InstantMessage.Protocols.XMPP.Messages
 		}
 		public PresenceMessage(XmlReader reader)
 		{
+			ParseMessage(reader, this);
+		}
+
+		[XmppMessageFactoryEntry]
+		public static PresenceMessage ParseMessage(XmlReader reader)
+		{
+			PresenceMessage msg = new PresenceMessage();
+			ParseMessage(reader, msg);
+
+			return msg;
+		}
+
+		private static void ParseMessage(XmlReader reader, PresenceMessage message)
+		{
 			reader.MoveToAttribute("from");
-			From = Jid.Parse(reader.Value);
+			message.From = Jid.Parse(reader.Value);
 
 			if (reader.MoveToAttribute("SHOW"))
 			{
 				reader.Read();
-				Show = reader.Value;
+				message.Show = reader.Value;
 			}
 
 			while (reader.Read())
@@ -33,10 +43,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 						{
 							case "priority":
 								reader.Read(); // Content
-								Priority = reader.ReadContentAsInt();
-								break;
-							case "c":
-
+								message.Priority = reader.ReadContentAsInt();
 								break;
 						}
 						break;
@@ -46,18 +53,31 @@ namespace InstantMessage.Protocols.XMPP.Messages
 
 		public override void WriteMessage(XmlWriter writer)
 		{
-			writer.WriteStartElement("presence");
+			writer.WriteStartElement("presence", XmppNamespaces.JabberClient);
 			
 			writer.WriteStartElement("priority");
 			writer.WriteValue(Priority);
 			writer.WriteEndElement();
 
+			writer.WriteStartElement("show");
+			writer.WriteValue(Show);
 			writer.WriteEndElement();
-		}
 
-		private static XmppMessage GetMessage(XmlReader reader)
-		{
-			throw new NotImplementedException();
+			if (!String.IsNullOrEmpty(Status))
+			{
+				writer.WriteStartElement("status");
+				writer.WriteValue(Status);
+				writer.WriteEndElement();
+			}
+
+			writer.WriteStartElement("c", "http://jabber.org/protocol/caps");
+			WriteAttribute(writer, "node", "http://nexus-im.com");
+			WriteAttribute(writer, "ver", "q4J68Jgr/wVkZIcA9TDqNZbgq7s=");
+			WriteAttribute(writer, "hash", "sha-1");
+			WriteAttribute(writer, "ext", "voice-v1 video-v1 camera-v1");
+			writer.WriteEndElement();
+
+			writer.WriteEndElement();
 		}
 
 		public int Priority
@@ -66,6 +86,11 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			set;
 		}
 		public string Show
+		{
+			get;
+			set;
+		}
+		public string Status
 		{
 			get;
 			set;

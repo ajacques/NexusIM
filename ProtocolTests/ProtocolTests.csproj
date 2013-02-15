@@ -69,8 +69,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="XMPP\Messages\BaseMessageTest.cs" />
+    <Compile Include="XMPP\Messages\EntityDiscoMessageTests.cs" />
     <Compile Include="XMPP\Messages\Jingle\InviteMessageTest.cs" />
     <Compile Include="XMPP\JidTests.cs" />
+    <Compile Include="XMPP\Messages\ControlMessageTests.cs" />
+    <Compile Include="XMPP\Messages\PresenceMessageTests.cs" />
+    <Compile Include="XMPP\Messages\SaslMessageTests.cs" />
     <Compile Include="YahooProtocolTests.cs" />
     <Compile Include="YPacketTests.cs" />
     <Compile Include="YParamCollTests.cs" />

@@ -20,7 +20,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 
 		public override void WriteMessage(XmlWriter writer)
 		{
-			writer.WriteStartElement("starttls", "urn:ietf:params:xml:ns:xmpp-tls");
+			writer.WriteStartElement("starttls", XmppNamespaces.Tls);
 			writer.WriteEndElement();
 		}
 	}

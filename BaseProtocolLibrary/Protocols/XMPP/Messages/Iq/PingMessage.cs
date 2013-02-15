@@ -9,6 +9,14 @@ namespace InstantMessage.Protocols.XMPP.Messages
 {
 	internal class PingMessage : IqMessage
 	{
+		public PingMessage(Jid target)
+		{
+			To = target;
+		}
+		public PingMessage()
+		{
+		}
+
 		protected override void WriteBody(XmlWriter writer)
 		{
 			writer.WriteStartElement(LocalName, Namespace);

@@ -77,7 +77,10 @@ namespace InstantMessage.Protocols.XMPP
 				message = IqFragmentMessage.FromWire(msgid, jid, new XmlDocument(), type);
 			}
 
-			message.Id = msgid;
+			if (message != null)
+			{
+				message.Id = msgid;
+			}
 			return message;
 		}
 
