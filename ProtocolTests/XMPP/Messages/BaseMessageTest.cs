@@ -49,16 +49,13 @@ namespace ProtocolTests.XMPP.Messages
 		{
 			Assert.AreEqual(XmppNamespaces.JabberClient, root.NamespaceURI, "Iq element did not have correct XML namespace");
 
-			Assert.IsTrue(root.HasAttribute("from"), "Message did not have a from attribute set");
+			VerifyRequiredAttributes(root, "id", "type", "from");
 
 			if (to != null)
 			{
 				Assert.IsTrue(root.HasAttribute("to"), "Message did not have a to attribute set");
 				Assert.AreEqual(to.ToString(), root.GetAttribute("to"));
 			}
-
-			Assert.IsTrue(root.HasAttribute("id"), "Message did not have an id attribute set");
-			Assert.IsTrue(root.HasAttribute("type"), "Message did not have a type attribute set");
 
 			Assert.AreEqual(from.ToString(), root.GetAttribute("from"));
 			Assert.AreEqual(id, root.GetAttribute("id"));
@@ -68,6 +65,29 @@ namespace ProtocolTests.XMPP.Messages
 		{
 			int value;
 			Assert.IsTrue(Int32.TryParse(attribute.InnerText, out value), "Value for attribute name {0} was not an integer. Actual: {1}", attribute.Name, attribute.Value);
+		}
+		protected void VerifyByte(XmlNode attribute)
+		{
+			byte value;
+			Assert.IsTrue(Byte.TryParse(attribute.InnerText, out value), "Value for attribute name {0} was not a byte. Actual: {1}", attribute.Name, attribute.Value);
+		}
+		protected void VerifyInt32(XmlNode attribute, int expectedValue)
+		{
+			VerifyInt32(attribute);
+
+			Assert.AreEqual(expectedValue, XmlConvert.ToInt32(attribute.Value));
+		}
+		protected void VerifyByte(XmlNode attribute, byte expectedValue)
+		{
+			VerifyByte(attribute);
+			Assert.AreEqual(expectedValue, XmlConvert.ToByte(attribute.Value));
+		}
+		protected void VerifyRequiredAttributes(XmlElement host, params string[] expectedAttributes)
+		{
+			foreach (string attributeName in expectedAttributes)
+			{
+				Assert.IsTrue(host.HasAttribute(attributeName), "Element '{0}' did not have expected attribute named '{1}'", host.LocalName, attributeName);
+			}
 		}
 	}
 }

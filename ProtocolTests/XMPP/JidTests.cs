@@ -24,5 +24,12 @@ namespace ProtocolTests
 			Assert.AreEqual("test.com", jid.Server);
 			Assert.AreEqual("test", jid.Resource);
 		}
+
+		[TestMethod]
+		public void ParseServerTest()
+		{
+			Jid jid = Jid.Parse("test.com");
+			Assert.AreEqual("test.com", jid.Server);
+		}
 	}
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using InstantMessage.Protocols.AudioVideo;
 
 namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 {
@@ -11,19 +12,33 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 	{
 		public JingleRtpDescription()
 		{
-			PayloadTypes = new List<PayloadType>();
+			PayloadTypes = new List<JinglePayloadType>();
 		}
 
 		public void WriteBody(XmlWriter writer)
 		{
-			writer.WriteStartAttribute("media");
-			writer.WriteString(MediaType);
-			writer.WriteEndAttribute();
-			
 			foreach (var payload in PayloadTypes)
 			{
 				payload.Write(writer);
 			}
+		}
+
+		public static JingleRtpDescription ParseRoot(XmlReader reader)
+		{
+			JingleRtpDescription rtp = new JingleRtpDescription();
+			reader.Read();
+
+			rtp.MediaType = reader.GetAttribute("media");
+
+			while (reader.Read())
+			{
+				if (reader.LocalName == "payload-type")
+				{
+					rtp.PayloadTypes.Add(JinglePayloadType.Parse(reader));
+				}
+			}
+
+			return rtp;
 		}
 
 		public string SubNamespace
@@ -33,14 +48,19 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			}
 		}
 
-		public ICollection<PayloadType> PayloadTypes
+		public ICollection<JinglePayloadType> PayloadTypes
 		{
 			get;
 			private set;
 		}
 
-		public class PayloadType
+		public class JinglePayloadType : SdpPayloadType
 		{
+			public JinglePayloadType(int id, string name)
+				: base(id, name)
+			{
+			}
+
 			public void Write(XmlWriter writer)
 			{
 				writer.WriteStartElement("payload-type");
@@ -69,26 +89,22 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				writer.WriteEndElement();
 			}
 
-			public int Id
+			public static JinglePayloadType Parse(XmlReader reader)
 			{
-				get;
-				set;
-			}
-			public string Name
-			{
-				get;
-				set;
-			}
+				int id = Int32.Parse(reader.GetAttribute("id"));
+				string name = null;
 
-			public int? ClockRate
-			{
-				get;
-				set;
-			}
-			public int Channels
-			{
-				get;
-				set;
+				if (reader.MoveToAttribute("name"))
+					name = reader.Value;
+
+				JinglePayloadType payload = new JinglePayloadType(id, name);
+
+				if (reader.MoveToAttribute("channels"))
+					payload.Channels = Int32.Parse(reader.Value);
+				if (reader.MoveToAttribute("clockrate"))
+					payload.ClockRate = Int32.Parse(reader.Value);
+
+				return payload;
 			}
 		}
 

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Net.Sockets;
@@ -13,6 +14,7 @@ using System.Text;
 using System.Threading;
 using InstantMessage;
 using InstantMessage.Events;
+using InstantMessage.Protocols;
 using InstantMessage.Protocols.Irc;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Net;
@@ -136,11 +138,18 @@ namespace NexusIM.Managers
 							protocol.NicknameCollisionHandler = new IRCProtocol.DuplicateNickname(IrcProtocol_OnNickCollision);
 						}
 
+						if (extraData.Protocol is IAudioVideoCapableProtocol)
+						{
+							IAudioVideoCapableProtocol avcap = (IAudioVideoCapableProtocol)extraData.Protocol;
+							avcap.IncomingCall += AVCapableProtocol_IncomingCall;
+						}
+
 						ConnectIfNeeded(extraData); // Now connect
 					}
 				}
 			}));
 		}
+
 		private static void ConnectIfNeeded(IMProtocolWrapper extraData)
 		{
 			if (!Connected)
@@ -227,6 +236,20 @@ namespace NexusIM.Managers
 			});
 
 			return originalNick + "_";
+		}
+		private static void AVCapableProtocol_IncomingCall(object sender, IncomingCallEventArgs e)
+		{
+			e.Accepted = true;
+			e.AcceptedPayloadTypes.Add(e.IncomingAudioPayloadTypes.First());
+
+			var ips = from netface in NetworkInterface.GetAllNetworkInterfaces().SelectMany(ni => ni.GetIPProperties().UnicastAddresses)
+					  where !netface.Address.IsIPv6LinkLocal
+					  select netface.Address;
+
+			foreach (var ip in ips)
+			{
+				e.AddCandidate(0, new IPEndPoint(ip, 60000));
+			}
 		}
 
 		private static void IMProtocol_AnyErrorOccurred(object sender, IMErrorEventArgs e)

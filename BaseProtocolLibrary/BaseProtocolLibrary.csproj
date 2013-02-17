@@ -58,14 +58,19 @@
     <Compile Include="Events\Errors\SocketErrorEventArgs.cs" />
     <Compile Include="Events\Group Chat\IMChatRoomEventArgs.cs" />
     <Compile Include="Events\Group Chat\IMRoomInviteEventArgs.cs" />
+    <Compile Include="Events\IncomingCallEventArgs.cs" />
+    <Compile Include="Events\XmppIncomingCallEventArgs.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HostnameResolverBase.cs" />
     <Compile Include="IHostnameResolver.cs" />
     <Compile Include="Json.cs" />
+    <Compile Include="Protocols\AudioVideo\SdpPayloadType.cs" />
+    <Compile Include="Protocols\AudioVideo\SdpTransportCandidates.cs" />
     <Compile Include="Protocols\ContactCollection.cs" />
     <Compile Include="Protocols\Enums.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
     <Compile Include="Protocols\IMNetworkFeatures.cs" />
+    <Compile Include="Protocols\Interfaces\IAudioVideoCapableProtocol.cs" />
     <Compile Include="Protocols\Interfaces\IChatRoom.cs" />
     <Compile Include="Protocols\Interfaces\IContact.cs" />
     <Compile Include="Protocols\Interfaces\IHasPresence.cs" />
@@ -77,6 +82,7 @@
     <Compile Include="Protocols\IRC\IRCProtocol.cs" />
     <Compile Include="Protocols\IRC\IRCSupportClasses.cs" />
     <Compile Include="Protocols\Interfaces\IHasMUCRooms.cs" />
+    <Compile Include="Protocols\XMPP\Jingle\XmppSdpCandidate.cs" />
     <Compile Include="Protocols\XMPP\Messages\Iq\ClientTimeMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\Iq\EntityDiscoveryMessage.cs" />
     <Compile Include="Protocols\XMPP\Messages\Iq\IqResponseMessage.cs" />
@@ -159,7 +165,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
+      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

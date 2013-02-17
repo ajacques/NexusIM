@@ -38,7 +38,7 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 			msg.To = Juliet;
 			msg.Id = MessageId;
 			msg.SessionId = "sessionid";
-			msg.DescriptionNodes.Add(StubDescription);
+			msg.DescriptionNodes.Add("audio", StubDescription);
 			msg.TransportNodes.Add(StubDescription);
 
 			XmlDocument xml = SerializeMessage(msg);
@@ -70,20 +70,18 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 		{
 			JingleRtpDescription descriptor = BasicRtpDescription;
 			descriptor.MediaType = "audio";
-			XmlDocument xml = SerializeObject((writer) => {
-				writer.WriteStartElement("description");
+			XmlDocument xml = SerializeObject((writer) =>
+			{
+				writer.WriteStartElement("content");
 				descriptor.WriteBody(writer);
 				writer.WriteEndElement();
 			});
 
 			XmlElement content = xml.DocumentElement;
-			Assert.IsTrue(content.HasAttribute("media"), "Content node did not have media attribute");
-			Assert.AreEqual("audio", content.GetAttribute("media"));
 
 			foreach (XmlElement element in content)
 			{
-				Assert.IsTrue(element.HasAttribute("id"), "Payload type did not have attribute name 'id'");
-				Assert.IsTrue(element.HasAttribute("name"), "Payload type node did not have attribute 'name'");
+				VerifyRequiredAttributes(element, "id", "name");
 
 				if (element.HasAttribute("clockrate"))
 				{
@@ -99,22 +97,33 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 		[TestMethod]
 		public void TransportSerializeTest()
 		{
-			JingleTransportDescription descriptor = BasicTransportDescription;
-			XmlDocument xml = SerializeObject((writer) =>
-			{
+			JingleTransportDescription descriptor = new JingleTransportDescription();
+			descriptor.Candidates.Add(NewCandidate(1, new IPEndPoint(IPAddress.Loopback, 500)));
+			descriptor.Candidates.Add(NewCandidate(2, new IPEndPoint(IPAddress.Loopback, 500)));
+
+			XmlDocument xml = SerializeObject((writer) => {
 				writer.WriteStartElement("transport");
 				descriptor.WriteBody(writer);
 				writer.WriteEndElement();
 			});
-
 			XmlElement content = xml.DocumentElement;
+
+			VerifyTransportElement(content);
+		}
+
+		private void VerifyTransportElement(XmlElement content)
+		{
+			Assert.IsNotNull(content["candidate"], "Transport node must have one or more elements labelled 'candidate'");
 
 			foreach (XmlElement element in content)
 			{
-				Assert.IsTrue(element.HasAttribute("priority"), "Payload type did not have attribute name 'priority'");
-				Assert.IsTrue(element.HasAttribute("ip"), "Payload type node did not have attribute 'ip'");
+				VerifyRequiredAttributes(element, "component", "foundation", "generation", "id", "ip", "network", "port", "priority", "protocol", "type");
+				Assert.AreEqual(IPAddress.Loopback, IPAddress.Parse(element.GetAttribute("ip")));
+				Assert.AreEqual("host", element.GetAttribute("type"));
 
-				VerifyInt32(element.GetAttributeNode("priority"));
+				VerifyByte(element.GetAttributeNode("component"), 1);
+				VerifyByte(element.GetAttributeNode("component"), 1);
+				VerifyInt32(element.GetAttributeNode("port"), 500);
 			}
 		}
 
@@ -146,25 +155,17 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 			}
 		}
 
-		private JingleRtpDescription.PayloadType NewPayloadType(int id, string codecName, int? clockrate = null, int channels = 1)
+		private JingleRtpDescription.JinglePayloadType NewPayloadType(int id, string codecName, int? clockrate = null, int channels = 1)
 		{
-			return new JingleRtpDescription.PayloadType()
+			return new JingleRtpDescription.JinglePayloadType(id, codecName)
 			{
-				Id = id,
-				Name = codecName,
 				ClockRate = clockrate,
 				Channels = channels
 			};
 		}
-		private JingleTransportDescription.Candidate NewCandidate(int priority, IPEndPoint ep)
+		private XmppSdpCandidate NewCandidate(int priority, IPEndPoint ep)
 		{
-			return new JingleTransportDescription.Candidate()
-			{
-				Priority = priority,
-				Address = ep.Address,
-				ProtocolType = ProtocolType.Udp,
-				Port = ep.Port
-			};
+			return new XmppSdpCandidate(ProtocolType.Udp, ep.Address, ep.Port, priority, priority, JingleCandidateType.host);
 		}
 
 		private const string JingleNamespace = "urn:xmpp:jingle:";

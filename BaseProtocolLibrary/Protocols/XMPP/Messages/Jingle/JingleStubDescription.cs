@@ -11,7 +11,8 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 	{
 		public void WriteBody(XmlWriter writer)
 		{
-			
+			writer.WriteStartElement("transport", XmppNamespaces.JingleTransportRoot + SubNamespace);
+			writer.WriteEndElement();
 		}
 
 		public string SubNamespace

@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 {
+	[IqMessageBody(XmppNamespaces.Jingle, "jingle")]
 	internal abstract class JingleInviteMessage : JingleBaseMessage
 	{
 		protected JingleInviteMessage()
 		{
-			DescriptionNodes = new List<IJingleDescriptionType>();
+			DescriptionNodes = new Dictionary<string, IJingleDescriptionType>();
 			TransportNodes = new List<IJingleDescriptionType>();
 		}
 
@@ -15,12 +17,14 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 		{
 			writer.WriteStartElement("content", Namespace);
 			WriteAttribute(writer, "creator", "initiator");
-			WriteAttribute(writer, "name", "this-is-a-stub");
+			WriteAttribute(writer, "name", "audio");
 
 			foreach (var node in DescriptionNodes)
 			{
-				writer.WriteStartElement("description", ComputeNamespace("apps:" + node.SubNamespace));
-				node.WriteBody(writer);
+				writer.WriteStartElement("description", ComputeNamespace("apps:" + node.Value.SubNamespace));
+				WriteAttribute(writer, "media", node.Key);
+
+				node.Value.WriteBody(writer);
 				writer.WriteEndElement();
 			}
 
@@ -34,8 +38,50 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			writer.WriteEndElement(); // </content>
 		}
 
+		[XmppMessageFactoryEntry]
+		public static XmppMessage ParseMessage(XmlReader reader)
+		{
+			string action = reader.GetAttribute("action");
+			string sid = reader.GetAttribute("sid");
+			
+			JingleInviteMessage msg;
+			if (action == "session-initiate")
+			{
+				msg = AttemptMessage.ParseMessage(reader);
+			} else {
+				throw new NotImplementedException();
+			}
+
+			msg.SessionId = sid;
+
+			return msg;
+		}
+
 		public class AttemptMessage : JingleInviteMessage
 		{
+			public new static AttemptMessage ParseMessage(XmlReader reader)
+			{
+				AttemptMessage msg = new AttemptMessage();
+
+				while (reader.Read())
+				{
+					if (reader.NodeType == XmlNodeType.Element && reader.LocalName == "description")
+					{
+						XmlReader description = reader.ReadSubtree();
+
+						JingleRtpDescription rtp = JingleRtpDescription.ParseRoot(description);
+
+						msg.DescriptionNodes.Add(rtp.MediaType, rtp);
+					} else if (reader.NodeType == XmlNodeType.Element && reader.LocalName == "transport") {
+						XmlReader subtree = reader.ReadSubtree();
+
+						msg.TransportNodes.Add(JingleTransportDescription.Parse(subtree));
+					}
+				}
+
+				return msg;
+			}
+
 			protected override string Action
 			{
 				get	{
@@ -54,7 +100,7 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			protected override string Action
 			{
 				get {
-					return "session-initiate";
+					return "session-accept";
 				}
 			}
 
@@ -72,12 +118,12 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				return "1";
 			}
 		}
-		public ICollection<IJingleDescriptionType> DescriptionNodes
+		public IDictionary<string, IJingleDescriptionType> DescriptionNodes
 		{
 			get;
 			private set;
 		}
-		public ICollection<IJingleDescriptionType> TransportNodes
+		public IList<IJingleDescriptionType> TransportNodes
 		{
 			get;
 			private set;

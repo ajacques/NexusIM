@@ -11,5 +11,7 @@
 		public const string Sessions = "urn:ietf:params:xml:ns:xmpp-session";
 		public const string Streams = "http://etherx.jabber.org/streams";
 		public const string DiscoInfo = "http://jabber.org/protocol/disco#info";
+		public const string Jingle = "urn:xmpp:jingle:1";
+		public const string JingleTransportRoot = "urn:xmpp:jingle:transports:";
 	}
 }

@@ -8,7 +8,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 		protected void WriteAttribute(XmlWriter writer, string name, object value)
 		{
 			writer.WriteStartAttribute(name);
-			writer.WriteValue(value);
+			writer.WriteValue(value.ToString());
 			writer.WriteEndAttribute();
 		}
 

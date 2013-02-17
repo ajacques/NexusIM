@@ -83,6 +83,11 @@ namespace InstantMessage.Protocols.XMPP.Messages
 				}
 			}
 
+			public void AddFeature(string ns)
+			{
+				Features.Add(new XmppFeature(ns));
+			}
+
 			public override IqMessage.IqType Type
 			{
 				get {

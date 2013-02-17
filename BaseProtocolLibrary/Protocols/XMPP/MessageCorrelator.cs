@@ -18,6 +18,7 @@ namespace InstantMessage.Protocols.XMPP
 			rand.NextBytes(bytes);
 
 			messageId = BitConverter.ToInt64(bytes, 0);
+			syncroot = new object();
 		}
 
 		public void CreateRequest(IqMessage message, HandleResponse response, object userState)
@@ -45,9 +46,11 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			// This is a Pseudo-random number generator based on the linear feedback shift register algorithm
 			// Will generate up to 2^61 unique message identifiers
-
-			// Polynomial: x^62 + x^61 + x^6 + x^5
-			messageId = (messageId >> 1) ^ (-(messageId & 1) & 0x1800000000000030);
+			lock (syncroot)
+			{
+				// Polynomial: x^62 + x^61 + x^6 + x^5
+				messageId = (messageId >> 1) ^ (-(messageId & 1) & 0x1800000000000030);
+			}
 
 			byte[] id = BitConverter.GetBytes(messageId);
 
@@ -65,6 +68,7 @@ namespace InstantMessage.Protocols.XMPP
 		}
 
 		private long messageId;
+		private object syncroot;
 		private IDictionary<string, ResponseAttributes> responseHandlers;
 	}
 }

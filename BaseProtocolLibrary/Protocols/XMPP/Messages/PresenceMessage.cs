@@ -74,7 +74,7 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			WriteAttribute(writer, "node", "http://nexus-im.com");
 			WriteAttribute(writer, "ver", "q4J68Jgr/wVkZIcA9TDqNZbgq7s=");
 			WriteAttribute(writer, "hash", "sha-1");
-			WriteAttribute(writer, "ext", "voice-v1 video-v1 camera-v1");
+			//WriteAttribute(writer, "ext", "voice-v1 video-v1 camera-v1");
 			writer.WriteEndElement();
 
 			writer.WriteEndElement();

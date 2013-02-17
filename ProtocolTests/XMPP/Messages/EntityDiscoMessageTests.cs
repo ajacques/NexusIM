@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using InstantMessage.Protocols.XMPP.Messages;
 using System.Xml;
 using InstantMessage.Protocols.XMPP;
+using InstantMessage.Protocols.XMPP.Messages;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ProtocolTests.XMPP.Messages
 {
@@ -57,9 +53,8 @@ namespace ProtocolTests.XMPP.Messages
 					switch (caps.Name)
 					{
 						case "identity":
-							Assert.IsTrue(caps.HasAttribute("category"), "Identity feature element did not have a category attribute");
-							Assert.IsTrue(caps.HasAttribute("name"), "Identity feature element did not have a name attribute");
-							Assert.IsTrue(caps.HasAttribute("type"), "Identity feature element did not have a type attribute");
+							VerifyRequiredAttributes(caps, "category", "name", "type");
+
 							Assert.AreNotEqual(caps.GetAttribute("category").Length >= 1, "Category attribute must be non-empty");
 							Assert.AreNotEqual(caps.GetAttribute("type").Length >= 1, "Type attribute must be non-empty");
 							break;
@@ -85,7 +80,7 @@ namespace ProtocolTests.XMPP.Messages
 		private void VerifyDiscoFeature(XmlElement feature)
 		{
 			Assert.AreEqual(XmppNamespaces.DiscoInfo, feature.NamespaceURI);
-			Assert.IsTrue(feature.HasAttribute("var"), "Feature element did not have a var attribute");
+			VerifyRequiredAttributes(feature, "var");
 		}
 
 		private void VerifyQueryNode(XmlElement iq)
@@ -94,7 +89,7 @@ namespace ProtocolTests.XMPP.Messages
 			Assert.IsNotNull(query, "Query subnode does not exist. OuterXml: {0}", iq.OuterXml);
 			Assert.AreEqual(XmppNamespaces.DiscoInfo, query.NamespaceURI);
 
-			Assert.IsTrue(query.HasAttribute("node"), "Query element must have an attribute 'node'");
+			VerifyRequiredAttributes(query, "node");
 			Assert.AreEqual(String.Format("{0}#{1}", Namespace, Node), query.GetAttribute("node"));
 		}
 	}

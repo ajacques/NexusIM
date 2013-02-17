@@ -80,6 +80,7 @@ namespace InstantMessage.Protocols.XMPP
 			if (message != null)
 			{
 				message.Id = msgid;
+				message.Source = jid;
 			}
 			return message;
 		}

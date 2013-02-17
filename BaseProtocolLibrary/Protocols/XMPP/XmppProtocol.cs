@@ -11,12 +11,13 @@ using System.Threading;
 using System.Xml;
 using InstantMessage.Events;
 using InstantMessage.Protocols.XMPP.Messages;
+using InstantMessage.Protocols.XMPP.Messages.Jingle;
 using InstantMessage.Protocols.XMPP.Messages.Message;
 
 namespace InstantMessage.Protocols.XMPP
 {
 	[IMNetwork("xmpp")]
-	public class XmppProtocol : IMProtocol
+	public class XmppProtocol : IMProtocol, IAudioVideoCapableProtocol
 	{
 		// Constructors
 		public XmppProtocol()
@@ -37,6 +38,7 @@ namespace InstantMessage.Protocols.XMPP
 			iqProcessors.Add("jabber:iq:version:query", HandleGetClientVersion);
 			iqProcessors.Add("urn:xmpp:time:time", HandleGetClientTime);
 			iqProcessors.Add(XmppNamespaces.DiscoInfo + ":query", HandleDiscoInfo);
+			iqProcessors.Add(XmppNamespaces.Jingle + ":jingle", HandleJingleInvite);
 
 			protocolType = "XMPP";
 			mProtocolTypeShort = "xmpp";
@@ -72,6 +74,7 @@ namespace InstantMessage.Protocols.XMPP
 		public void SendMessage(XmppContact contact, string message)
 		{
 			ChatMessageMessage msg = new ChatMessageMessage(contact.Jid, message);
+			msg.Id = correlator.GetNextId();
 
 			WriteMessage(msg);
 		}
@@ -112,6 +115,7 @@ namespace InstantMessage.Protocols.XMPP
 					IqMessage iq = (IqMessage)message;
 					switch (iq.Type)
 					{
+						case IqMessage.IqType.set:
 						case IqMessage.IqType.get:
 							HandleUnsolicitedIqMessage(iq);
 							break;
@@ -254,7 +258,78 @@ namespace InstantMessage.Protocols.XMPP
 			EntityDiscoveryMessage.Request msg = (EntityDiscoveryMessage.Request)message;
 			EntityDiscoveryMessage.Response response = msg.Respond();
 
+			//response.AddFeature("urn:xmp:jingle:apps:rtp:rtp-hdrext:0");
+			response.AddFeature("urn:xmpp:jingle:1");
+			//response.AddFeature("urn:xmpp:jingle:transports:raw-udp:1");
+			response.AddFeature("urn:xmpp:jingle:transports:ice-udp:1");
+			response.AddFeature("urn:xmpp:jingle:apps:rtp:1");
+			response.AddFeature("urn:xmpp:jingle:apps:rtp:audio");
+			response.AddFeature("urn:xmpp:jingle:apps:rtp:video");
+			response.AddFeature("urn:ietf:rfc:3264");
+			//response.AddFeature("http://jabber.org/protocol/jinglenodes");
+			//response.AddFeature("urn:xmpp:jingle:apps:rtp:zrtp:1");
+			response.AddFeature("http://jabber.org/protocol/disco#info");
+			response.AddFeature("urn:xmpp:jingle:transfer:0");
+
 			ReplyWith(msg, response);
+		}
+		private void HandleJingleInvite(IqMessage message)
+		{
+			WriteMessage(message.Ack()); // Acknowledge that we received the request
+
+			if (IncomingCall != null)
+			{
+				JingleInviteMessage.AttemptMessage msg = (JingleInviteMessage.AttemptMessage)message;
+				XmppContact contact = FindContact(message.Source);
+				
+				XmppIncomingCallEventArgs args = new XmppIncomingCallEventArgs(contact);
+
+				IJingleDescriptionType rtp_type;
+				if (msg.DescriptionNodes.TryGetValue("audio", out rtp_type))
+				{
+					JingleRtpDescription rtp = (JingleRtpDescription)rtp_type;
+
+					foreach (var payloadType in rtp.PayloadTypes)
+					{
+						args.IncomingAudioPayloadTypes.Add(payloadType);
+					}
+				}
+
+				JingleTransportDescription transport = (JingleTransportDescription)msg.TransportNodes.First();
+
+				foreach (var candidate in transport.Candidates)
+				{
+					args.IncomingTransportCandidates.Add(candidate);
+				}
+
+				IncomingCall(this, args);
+
+				if (args.Accepted)
+				{
+					JingleInviteMessage.AcceptMessage acceptmsg = new JingleInviteMessage.AcceptMessage();
+					acceptmsg.SessionId = msg.SessionId;
+					JingleRtpDescription rtpDescipt = new JingleRtpDescription();
+					rtpDescipt.MediaType = "audio";
+
+					foreach (var payload in args.AcceptedPayloadTypes)
+					{
+						rtpDescipt.PayloadTypes.Add((JingleRtpDescription.JinglePayloadType)payload);
+					}
+
+					acceptmsg.DescriptionNodes.Add("audio", rtpDescipt);
+
+					JingleTransportDescription ourtransport = new JingleTransportDescription();
+
+					foreach (var trans in args.OurTransportCandidates)
+					{
+						ourtransport.Candidates.Add((XmppSdpCandidate)trans);
+					}
+
+					acceptmsg.TransportNodes.Add(ourtransport);
+
+					ReplyWith(msg, acceptmsg);
+				}
+			}
 		}
 
 		internal void WriteMessage(XmppMessage message)
@@ -263,7 +338,7 @@ namespace InstantMessage.Protocols.XMPP
 		}
 		internal void WriteMessage(IqMessage message, HandleResponse respHandler, object userState)
 		{
-			message.Source = new Jid(Username, Server);
+			message.Source = new Jid(Username, Server, Resource);
 
 			if (message.Type == IqMessage.IqType.get || message.Type == IqMessage.IqType.set)
 			{
@@ -283,6 +358,13 @@ namespace InstantMessage.Protocols.XMPP
 			reply.To = original.Source;
 
 			WriteMessage(reply);
+		}
+		internal void ReplyWith(IqMessage original, IqMessage reply, HandleResponse response, object userState)
+		{
+			reply.Id = original.Id;
+			reply.To = original.Source;
+
+			WriteMessage(reply, response, userState);
 		}
 
 		internal bool TriggerTlsVerifyEvent(X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
@@ -392,6 +474,9 @@ namespace InstantMessage.Protocols.XMPP
 				hostResolver = value;
 			}
 		}
+
+		// Events
+		public event EventHandler<IncomingCallEventArgs> IncomingCall;
 
 		// Variables
 		// Profiling
