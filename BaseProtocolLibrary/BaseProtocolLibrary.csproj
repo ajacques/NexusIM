@@ -64,8 +64,14 @@
     <Compile Include="HostnameResolverBase.cs" />
     <Compile Include="IHostnameResolver.cs" />
     <Compile Include="Json.cs" />
+    <Compile Include="Misc\CRC32.cs" />
+    <Compile Include="Misc\EndianAwareBinaryReader.cs" />
+    <Compile Include="Misc\EndianAwareBinaryWriter.cs" />
     <Compile Include="Protocols\AudioVideo\SdpPayloadType.cs" />
-    <Compile Include="Protocols\AudioVideo\SdpTransportCandidates.cs" />
+    <Compile Include="Protocols\AudioVideo\SdpTransportCandidate.cs" />
+    <Compile Include="Protocols\AudioVideo\StunBindingRequest.cs" />
+    <Compile Include="Protocols\AudioVideo\StunBindingResponse.cs" />
+    <Compile Include="Protocols\AudioVideo\StunPacket.cs" />
     <Compile Include="Protocols\ContactCollection.cs" />
     <Compile Include="Protocols\Enums.cs" />
     <Compile Include="Protocols\IMBuddy.cs" />
@@ -165,7 +171,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_StartDate="2009/6/28" />
+      <UserProperties BuildVersion_StartDate="2009/6/28" BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

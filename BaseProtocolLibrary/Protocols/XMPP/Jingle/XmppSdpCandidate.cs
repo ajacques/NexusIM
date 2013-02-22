@@ -24,10 +24,9 @@ namespace InstantMessage.Protocols.XMPP
 		srflx
 	}
 
-	public class XmppSdpCandidate : SdpTransportCandidates, IComparable<XmppSdpCandidate>
+	public class XmppSdpCandidate : SdpTransportCandidate, IComparable<XmppSdpCandidate>
 	{
-		public XmppSdpCandidate(ProtocolType type, IPAddress address, int port, int priority, int id, JingleCandidateType ctype)
-			: base(type, address, port, priority)
+		public XmppSdpCandidate(ProtocolType type, IPEndPoint ep, int priority, int id, int component, JingleCandidateType ctype) : base(type, ep, priority, component)
 		{
 			Type = ctype;
 			Id = id;
@@ -36,15 +35,15 @@ namespace InstantMessage.Protocols.XMPP
 		public void Write(XmlWriter writer)
 		{
 			writer.WriteStartElement("candidate");
-			WriteAttribute(writer, "ip", Address);
+			WriteAttribute(writer, "ip", EndPoint.Address);
 			WriteAttribute(writer, "protocol", ProtocolType.ToString().ToLower());
 			WriteAttribute(writer, "priority", Priority);
 			WriteAttribute(writer, "type", Type);
-			WriteAttribute(writer, "component", 1);
+			WriteAttribute(writer, "component", Component);
 			WriteAttribute(writer, "foundation", 1);
 			WriteAttribute(writer, "generation", 0);
 			WriteAttribute(writer, "network", 0);
-			WriteAttribute(writer, "port", Port);
+			WriteAttribute(writer, "port", EndPoint.Port);
 			WriteAttribute(writer, "id", Id);
 
 			writer.WriteEndElement();
@@ -62,6 +61,7 @@ namespace InstantMessage.Protocols.XMPP
 			int priority = Int32.Parse(reader.GetAttribute("priority"));
 			int port = Int32.Parse(reader.GetAttribute("port"));
 			IPAddress address = IPAddress.Parse(reader.GetAttribute("ip"));
+			int component = Int32.Parse(reader.GetAttribute("component"));
 
 			ProtocolType ptype = ProtocolType.Unspecified;
 			int id = Int32.Parse(reader.GetAttribute("id"));
@@ -78,7 +78,7 @@ namespace InstantMessage.Protocols.XMPP
 					break;
 			}
 
-			XmppSdpCandidate cand = new XmppSdpCandidate(ptype, address, port, priority, id, ctype);
+			XmppSdpCandidate cand = new XmppSdpCandidate(ptype, new IPEndPoint(address, port), priority, id, component, ctype);
 
 			cand.Type = (JingleCandidateType)Enum.Parse(typeof(JingleCandidateType), reader.GetAttribute("type"));
 
@@ -87,12 +87,12 @@ namespace InstantMessage.Protocols.XMPP
 
 		public int CompareTo(XmppSdpCandidate other)
 		{
-			return Priority.CompareTo(other.Priority) + Priority == other.Priority ? Id.CompareTo(other.Id) : 0;
+			return Priority.CompareTo(other.Priority) + (Priority == other.Priority ? Id.CompareTo(other.Id) : 0);
 		}
 
 		public override string ToString()
 		{
-			return String.Format("Candidate: {0}:[{1}:{2}] - Priority: {3}", ProtocolType, Address, Port, Priority);
+			return String.Format("Candidate: {0}:[{1}:{2}] - Priority: {3}", ProtocolType, EndPoint.Address, EndPoint.Port, Priority);
 		}
 
 		public JingleCandidateType Type

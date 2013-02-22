@@ -141,7 +141,6 @@ namespace NexusIM.Managers
 						if (extraData.Protocol is IAudioVideoCapableProtocol)
 						{
 							IAudioVideoCapableProtocol avcap = (IAudioVideoCapableProtocol)extraData.Protocol;
-							avcap.IncomingCall += AVCapableProtocol_IncomingCall;
 						}
 
 						ConnectIfNeeded(extraData); // Now connect
@@ -236,20 +235,6 @@ namespace NexusIM.Managers
 			});
 
 			return originalNick + "_";
-		}
-		private static void AVCapableProtocol_IncomingCall(object sender, IncomingCallEventArgs e)
-		{
-			e.Accepted = true;
-			e.AcceptedPayloadTypes.Add(e.IncomingAudioPayloadTypes.First());
-
-			var ips = from netface in NetworkInterface.GetAllNetworkInterfaces().SelectMany(ni => ni.GetIPProperties().UnicastAddresses)
-					  where !netface.Address.IsIPv6LinkLocal
-					  select netface.Address;
-
-			foreach (var ip in ips)
-			{
-				e.AddCandidate(0, new IPEndPoint(ip, 60000));
-			}
 		}
 
 		private static void IMProtocol_AnyErrorOccurred(object sender, IMErrorEventArgs e)

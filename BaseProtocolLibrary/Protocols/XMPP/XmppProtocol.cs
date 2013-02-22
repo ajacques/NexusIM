@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
 using System.Xml;
 using InstantMessage.Events;
@@ -39,6 +41,21 @@ namespace InstantMessage.Protocols.XMPP
 			iqProcessors.Add("urn:xmpp:time:time", HandleGetClientTime);
 			iqProcessors.Add(XmppNamespaces.DiscoInfo + ":query", HandleDiscoInfo);
 			iqProcessors.Add(XmppNamespaces.Jingle + ":jingle", HandleJingleInvite);
+
+			discoFeatures = new SortedSet<string>();
+			//discoFeatures.Add("urn:xmp:jingle:apps:rtp:rtp-hdrext:0");
+			discoFeatures.Add("urn:xmpp:jingle:1");
+			//discoFeatures.Add("urn:xmpp:jingle:transports:raw-udp:1");
+			discoFeatures.Add("urn:xmpp:jingle:transports:ice-udp:1");
+			discoFeatures.Add("urn:xmpp:jingle:apps:rtp:1");
+			discoFeatures.Add("urn:xmpp:jingle:apps:rtp:audio");
+			discoFeatures.Add("urn:xmpp:jingle:apps:rtp:video");
+			discoFeatures.Add("urn:ietf:rfc:3264");
+			//discoFeatures.Add("http://jabber.org/protocol/jinglenodes");
+			//discoFeatures.Add("urn:xmpp:jingle:apps:rtp:zrtp:1");
+			discoFeatures.Add("http://jabber.org/protocol/disco#info");
+			discoFeatures.Add("urn:xmpp:jingle:transfer:0");
+
 
 			protocolType = "XMPP";
 			mProtocolTypeShort = "xmpp";
@@ -135,6 +152,7 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			PresenceMessage msg = new PresenceMessage();
 			msg.Priority = priority;
+			msg.CapsHash = GenerateCapsHash();
 
 			WriteMessage(msg);
 		}
@@ -162,6 +180,24 @@ namespace InstantMessage.Protocols.XMPP
 		private void SendPing(Jid target)
 		{
 			WriteMessage(new PingMessage(target), ProcessPingResponse, DateTime.Now);
+		}
+		private string GenerateCapsHash()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			foreach (var feature in discoFeatures)
+			{
+				sb.Append(feature);
+				sb.Append('<');
+			}
+
+			byte[] hash;
+			using (SHA1 sha = new SHA1Managed())
+			{
+				hash = sha.ComputeHash(Encoding.UTF8.GetBytes(sb.ToString()));
+			}
+
+			return Convert.ToBase64String(hash);
 		}
 
 		// IQ Response Handlers
@@ -258,19 +294,11 @@ namespace InstantMessage.Protocols.XMPP
 			EntityDiscoveryMessage.Request msg = (EntityDiscoveryMessage.Request)message;
 			EntityDiscoveryMessage.Response response = msg.Respond();
 
-			//response.AddFeature("urn:xmp:jingle:apps:rtp:rtp-hdrext:0");
-			response.AddFeature("urn:xmpp:jingle:1");
-			//response.AddFeature("urn:xmpp:jingle:transports:raw-udp:1");
-			response.AddFeature("urn:xmpp:jingle:transports:ice-udp:1");
-			response.AddFeature("urn:xmpp:jingle:apps:rtp:1");
-			response.AddFeature("urn:xmpp:jingle:apps:rtp:audio");
-			response.AddFeature("urn:xmpp:jingle:apps:rtp:video");
-			response.AddFeature("urn:ietf:rfc:3264");
-			//response.AddFeature("http://jabber.org/protocol/jinglenodes");
-			//response.AddFeature("urn:xmpp:jingle:apps:rtp:zrtp:1");
-			response.AddFeature("http://jabber.org/protocol/disco#info");
-			response.AddFeature("urn:xmpp:jingle:transfer:0");
-
+			foreach (var feature in discoFeatures)
+			{
+				response.AddFeature(feature);
+			}
+			
 			ReplyWith(msg, response);
 		}
 		private void HandleJingleInvite(IqMessage message)
@@ -283,6 +311,7 @@ namespace InstantMessage.Protocols.XMPP
 				XmppContact contact = FindContact(message.Source);
 				
 				XmppIncomingCallEventArgs args = new XmppIncomingCallEventArgs(contact);
+				args.Id = msg.SessionId;
 
 				IJingleDescriptionType rtp_type;
 				if (msg.DescriptionNodes.TryGetValue("audio", out rtp_type))
@@ -484,7 +513,7 @@ namespace InstantMessage.Protocols.XMPP
 		private TimeSpan lastMeasuredRTT;
 		// Misc.
 		private IHostnameResolver hostResolver;
-		private bool enableTls = false;
+		private bool enableTls = true;
 		private IDictionary<Type, ProcessMessage> messageProcessors;
 		private IDictionary<string, ProcessIqMessage> iqProcessors;
 		private bool mRunMsgThread;
@@ -494,6 +523,7 @@ namespace InstantMessage.Protocols.XMPP
 		private XmppStream xmppStream;
 		private MessageCorrelator correlator;
 		private IAuthStrategy authStrategy;
+		private SortedSet<string> discoFeatures;
 
 		// Consts
 		private static HandleResponse IdentityHandler;

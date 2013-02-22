@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="Converters\GeneralIMStatusConverter.cs" />
     <Compile Include="DnsResolver.cs" />
+    <Compile Include="Managers\Protocol\AudioVideoCallManager.cs" />
     <Compile Include="Misc\ChatWindowCollection.cs" />
     <Compile Include="Misc\MiscExtensions.cs" />
     <Compile Include="Misc\ProtocolCollection.cs" />

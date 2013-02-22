@@ -165,7 +165,7 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 		}
 		private XmppSdpCandidate NewCandidate(int priority, IPEndPoint ep)
 		{
-			return new XmppSdpCandidate(ProtocolType.Udp, ep.Address, ep.Port, priority, priority, JingleCandidateType.host);
+			return new XmppSdpCandidate(ProtocolType.Udp, ep, priority, priority, 1, JingleCandidateType.host);
 		}
 
 		private const string JingleNamespace = "urn:xmpp:jingle:";

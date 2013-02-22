@@ -104,6 +104,9 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				if (reader.MoveToAttribute("clockrate"))
 					payload.ClockRate = Int32.Parse(reader.Value);
 
+				reader.MoveToElement();
+				reader.Skip();
+
 				return payload;
 			}
 		}

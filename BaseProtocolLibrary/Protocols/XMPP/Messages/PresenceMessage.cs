@@ -59,9 +59,12 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			writer.WriteValue(Priority);
 			writer.WriteEndElement();
 
-			writer.WriteStartElement("show");
-			writer.WriteValue(Show);
-			writer.WriteEndElement();
+			if (!String.IsNullOrEmpty(Show))
+			{
+				writer.WriteStartElement("show");
+				writer.WriteValue(Show);
+				writer.WriteEndElement();
+			}
 
 			if (!String.IsNullOrEmpty(Status))
 			{
@@ -72,7 +75,8 @@ namespace InstantMessage.Protocols.XMPP.Messages
 
 			writer.WriteStartElement("c", "http://jabber.org/protocol/caps");
 			WriteAttribute(writer, "node", "http://nexus-im.com");
-			WriteAttribute(writer, "ver", "q4J68Jgr/wVkZIcA9TDqNZbgq7s=");
+			if (CapsHash != null)
+				WriteAttribute(writer, "ver", CapsHash);
 			WriteAttribute(writer, "hash", "sha-1");
 			//WriteAttribute(writer, "ext", "voice-v1 video-v1 camera-v1");
 			writer.WriteEndElement();
@@ -96,6 +100,11 @@ namespace InstantMessage.Protocols.XMPP.Messages
 			set;
 		}
 		public Jid From
+		{
+			get;
+			set;
+		}
+		public string CapsHash
 		{
 			get;
 			set;

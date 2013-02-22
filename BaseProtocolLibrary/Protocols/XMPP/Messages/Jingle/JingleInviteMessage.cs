@@ -100,7 +100,7 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 			protected override string Action
 			{
 				get {
-					return "session-accept";
+					return "transport-info";
 				}
 			}
 

@@ -89,6 +89,7 @@ namespace NexusIM
 			IPCHandler.StartServer();
 			AccountManager.Setup();
 			NotificationQueue.EventWireup();
+			AudioVideoCallManager.Init();
 		}
 		private static void LoadAccounts(object state)
 		{

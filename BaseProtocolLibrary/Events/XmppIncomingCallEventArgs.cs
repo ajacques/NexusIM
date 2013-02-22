@@ -10,9 +10,9 @@ namespace InstantMessage.Events
 		{
 		}
 
-		public override void AddCandidate(int priority, IPEndPoint ep)
+		public override void AddCandidate(int priority, int component, IPEndPoint ep)
 		{
-			OurTransportCandidates.Add(new XmppSdpCandidate(ProtocolType.Udp, ep.Address, ep.Port, priority, OurTransportCandidates.Count, JingleCandidateType.host));
+			OurTransportCandidates.Add(new XmppSdpCandidate(ProtocolType.Udp, ep, priority, OurTransportCandidates.Count, component, JingleCandidateType.host));
 		}
 	}
 }

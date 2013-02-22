@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace InstantMessage.Protocols.AudioVideo
 {
-	public abstract class SdpTransportCandidates
+	public abstract class SdpTransportCandidate
 	{
-		public SdpTransportCandidates(ProtocolType protocolType, IPAddress address, int port, int priority)
+		public SdpTransportCandidate(ProtocolType protocolType, IPEndPoint ep, int priority, int component)
 		{
 			ProtocolType = protocolType;
-			Address = address;
-			Port = port;
+			EndPoint = ep;
 			Priority = priority;
+			Component = component;
 		}
 
 		public ProtocolType ProtocolType
@@ -23,17 +23,17 @@ namespace InstantMessage.Protocols.AudioVideo
 			get;
 			private set;
 		}
-		public IPAddress Address
-		{
-			get;
-			private set;
-		}
-		public int Port
+		public IPEndPoint EndPoint
 		{
 			get;
 			private set;
 		}
 		public int Priority
+		{
+			get;
+			private set;
+		}
+		public int Component
 		{
 			get;
 			private set;

@@ -68,6 +68,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="STUN\BindingRequestTests.cs" />
     <Compile Include="XMPP\Messages\BaseMessageTest.cs" />
     <Compile Include="XMPP\Messages\EntityDiscoMessageTests.cs" />
     <Compile Include="XMPP\Messages\Jingle\InviteMessageTest.cs" />

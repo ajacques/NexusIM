@@ -11,19 +11,25 @@ namespace InstantMessage.Events
 		{
 			Caller = caller;
 			IncomingAudioPayloadTypes = new List<SdpPayloadType>();
-			OurTransportCandidates = new List<SdpTransportCandidates>();
-			IncomingTransportCandidates = new List<SdpTransportCandidates>();
+			OurTransportCandidates = new List<SdpTransportCandidate>();
+			IncomingTransportCandidates = new List<SdpTransportCandidate>();
 			AcceptedPayloadTypes = new List<SdpPayloadType>();
 		}
 
-		public abstract void AddCandidate(int priority, IPEndPoint ep);
+		public abstract void AddCandidate(int priority, int candidate, IPEndPoint ep);
+
+		public EventHandler BeginIceSelection;
 
 		public bool Accepted
 		{
 			get;
 			set;
 		}
-
+		public string Id
+		{
+			get;
+			set;
+		}
 		/// <summary>
 		/// Gets the contact that is attempting to initiate a VoIP call with us.
 		/// </summary>
@@ -32,7 +38,6 @@ namespace InstantMessage.Events
 			get;
 			private set;
 		}
-
 		/// <summary>
 		/// Gets a list of payload types that the initator supports
 		/// </summary>
@@ -41,7 +46,6 @@ namespace InstantMessage.Events
 			get;
 			protected set;
 		}
-
 		/// <summary>
 		/// Represents a list of payload types that we support.
 		/// </summary>
@@ -50,14 +54,12 @@ namespace InstantMessage.Events
 			get;
 			protected set;
 		}
-
-		public IList<SdpTransportCandidates> IncomingTransportCandidates
+		public IList<SdpTransportCandidate> IncomingTransportCandidates
 		{
 			get;
 			private set;
 		}
-
-		public IList<SdpTransportCandidates> OurTransportCandidates
+		public IList<SdpTransportCandidate> OurTransportCandidates
 		{
 			get;
 			private set;
