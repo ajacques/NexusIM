@@ -57,6 +57,8 @@ namespace InstantMessage.Protocols.XMPP
 
 				protocol.WriteMessage(mesg);
 				currentStatus = Status.ClientFinalMessage;
+			} else {
+				throw new NotSupportedException(String.Format("ScramAuthStrategy can not transition from state {0}.", currentStatus));
 			}
 		}
 

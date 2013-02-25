@@ -14,6 +14,10 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 		{
 			JingleTransportDescription transport = new JingleTransportDescription();
 			reader.Read();
+			if (reader.MoveToAttribute("ufrag"))
+				transport.Ufrag = reader.Value;
+			if (reader.MoveToAttribute("pwd"))
+				transport.Password = reader.Value;
 
 			while (reader.Read())
 			{
@@ -28,6 +32,14 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 
 		public void WriteBody(XmlWriter writer)
 		{
+			writer.WriteStartAttribute("ufrag");
+			writer.WriteString(Ufrag);
+			writer.WriteEndAttribute();
+
+			writer.WriteStartAttribute("pwd");
+			writer.WriteString(Password);
+			writer.WriteEndAttribute();
+
 			foreach (var candidate in Candidates)
 			{
 				candidate.Write(writer);
@@ -40,7 +52,19 @@ namespace InstantMessage.Protocols.XMPP.Messages.Jingle
 				return "ice-udp:1";
 			}
 		}
-
+		/// <summary>
+		/// Gets or sets the ICE-UDP username fragment. Required for correct SDP operation.
+		/// </summary>
+		public string Ufrag
+		{
+			get;
+			set;
+		}
+		public string Password
+		{
+			get;
+			set;
+		}
 		public ICollection<XmppSdpCandidate> Candidates
 		{
 			get;

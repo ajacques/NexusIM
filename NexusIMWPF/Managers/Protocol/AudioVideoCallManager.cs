@@ -52,6 +52,14 @@ namespace NexusIM.Managers
 			e.BeginIceSelection = context.BeginIceSelection;
 			calls.Add(e.Id, context);
 
+			byte[] ufrag = new byte[6];
+			Random rand = new Random();
+			rand.NextBytes(ufrag);
+			e.IceUfrag = Convert.ToBase64String(ufrag);
+			byte[] pwd = new byte[12];
+			rand.NextBytes(pwd);
+			e.IcePassword = Convert.ToBase64String(pwd);
+
 			int cursor = 0;
 			foreach (var ip in ips)
 			{
@@ -125,6 +133,15 @@ namespace NexusIM.Managers
 			private void Socket_Receive(IAsyncResult a)
 			{
 				int bytesRead = RtpSocket.EndReceive(a);
+
+				MemoryStream ms = new MemoryStream(buffer, 0, bytesRead);
+
+				StunPacket packet = StunPacket.ParseBody(new EndianAwareBinaryReader(ms, Endianness.BigEndian));
+				if (packet is StunBindingRequest)
+				{
+					StunBindingRequest bindRequest = packet as StunBindingRequest;
+
+				}
 			}
 
 			private void RtcpSocket_Receive(IAsyncResult a)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Xml;
@@ -28,8 +30,6 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 			Assert.AreEqual(sessionid, jingle.GetAttribute("sid"));
 		}
 
-		[TestCategory("XMPP")]
-		[TestCategory("Messages")]
 		[TestMethod]
 		public void BasicStubInviteTest()
 		{
@@ -100,6 +100,8 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 			JingleTransportDescription descriptor = new JingleTransportDescription();
 			descriptor.Candidates.Add(NewCandidate(1, new IPEndPoint(IPAddress.Loopback, 500)));
 			descriptor.Candidates.Add(NewCandidate(2, new IPEndPoint(IPAddress.Loopback, 500)));
+			descriptor.Ufrag = "test";
+			descriptor.Password = "test";
 
 			XmlDocument xml = SerializeObject((writer) => {
 				writer.WriteStartElement("transport");
@@ -111,9 +113,54 @@ namespace ProtocolTests.XMPP.Messages.Jingle
 			VerifyTransportElement(content);
 		}
 
+		[TestMethod]
+		public void SdpCandidateIPv6DeserializeTest()
+		{
+			string xml = GenerateIceCandidateXml(6, 1, "udp", 2113937151, 0, 1, new IPEndPoint(IPAddress.Parse("fe80:0:0:0:e954:4b2c:368a:6fba"), 5002), "host", 0);
+
+			XmlReader reader = XmlReader.Create(new StringReader(xml));
+			reader.Read();
+
+			XmppSdpCandidate sdp = XmppSdpCandidate.Parse(reader);
+			Assert.AreEqual(1, sdp.Component, "Incorrect component id");
+			Assert.AreEqual(ProtocolType.Udp, sdp.ProtocolType, "Incorrect protocol type");
+			Assert.AreEqual(2113937151, sdp.Priority, "Incorrect priority");
+			Assert.AreEqual(1, sdp.Id, "Incorrect Id");
+			Assert.AreEqual(IPAddress.Parse("fe80::e954:4b2c:368a:6fba"), sdp.EndPoint.Address, "Incorrect IP Address");
+			Assert.AreEqual(5002, sdp.EndPoint.Port, "Incorrect port");
+			Assert.AreEqual(JingleCandidateType.host, sdp.Type, "Incorrect candidate type");
+		}
+
+		[TestMethod]
+		public void TransportDeserializeTest()
+		{
+			string ufrag = "5noj0";
+			string pwd = "6sotfp1lj611k61pfndkljb79u";
+
+			StringWriter writer = new StringWriter();
+			writer.Write("<transport xmlns='urn:xmpp:jingle:transports:ice-udp:1' ufrag='{0}' pwd='{1}'>", ufrag, pwd);
+			writer.Write(GenerateIceCandidateXml(6, 1, "udp", 2113937151, 0, 1, new IPEndPoint(IPAddress.Parse("fe80:0:0:0:e954:4b2c:368a:6fba"), 5002), "host", 0));
+			writer.Write(GenerateIceCandidateXml(1, 1, "udp", 2113932031, 0, 3, new IPEndPoint(IPAddress.Parse("10.0.0.3"), 5002), "host", 0));
+			writer.Write(GenerateIceCandidateXml(7, 2, "udp", 1677724415, 0, 2, new IPEndPoint(IPAddress.Parse("1.2.3.4"), 5002), "srflx", 0));
+			writer.Write("</transport>");
+
+			XmlReader reader = XmlReader.Create(new StringReader(writer.ToString()));
+			JingleTransportDescription transport = JingleTransportDescription.Parse(reader);
+
+			Assert.AreEqual(3, transport.Candidates.Count, "Expected '3' decoded candidates");
+			Assert.AreEqual("6sotfp1lj611k61pfndkljb79u", transport.Password);
+			Assert.AreEqual("5noj0", transport.Ufrag);
+		}
+
+		private string GenerateIceCandidateXml(int foundation, int component, string protocol, int priority, int generation, int id, IPEndPoint ep, string type, int network)
+		{
+			return String.Format("<candidate foundation='{0}' component='{1}' protocol='{2}' priority='{3}' generation='{4}' id='{5}' ip='{6}' port='{7}' type='{8}' network='{9}'/>", foundation, component, protocol, priority, generation, id, ep.Address, ep.Port, type, network);
+		}
+
 		private void VerifyTransportElement(XmlElement content)
 		{
 			Assert.IsNotNull(content["candidate"], "Transport node must have one or more elements labelled 'candidate'");
+			VerifyRequiredAttributes(content, "ufrag", "pwd");
 
 			foreach (XmlElement element in content)
 			{

@@ -30,6 +30,16 @@ namespace InstantMessage.Events
 			get;
 			set;
 		}
+		public string IceUfrag
+		{
+			get;
+			set;
+		}
+		public string IcePassword
+		{
+			get;
+			set;
+		}
 		/// <summary>
 		/// Gets the contact that is attempting to initiate a VoIP call with us.
 		/// </summary>

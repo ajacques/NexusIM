@@ -87,6 +87,7 @@ namespace ProtocolTests.XMPP.Messages
 			foreach (string attributeName in expectedAttributes)
 			{
 				Assert.IsTrue(host.HasAttribute(attributeName), "Element '{0}' did not have expected attribute named '{1}'", host.LocalName, attributeName);
+				Assert.IsFalse(String.IsNullOrEmpty(host.GetAttribute(attributeName)), "Attribute '{0}' value was null or empty", attributeName);
 			}
 		}
 	}

@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using InstantMessage.Misc;
 
 namespace InstantMessage.Protocols.AudioVideo
 {
+	/// <summary>
+	/// Represents a STUN (Session Traversal Utilities for NAT) packet as described by RFC5389.
+	/// </summary>
+	/// <remarks>
+	/// Commonly used by RTP applications to establish end-to-end connectivity.
+	/// </remarks>
+	/// <seealso cref="http://tools.ietf.org/html/rfc5389"/>
 	internal abstract class StunPacket
 	{
 		public StunPacket()
@@ -12,7 +20,7 @@ namespace InstantMessage.Protocols.AudioVideo
 			TransactionId = new byte[12];
 			Attributes = new SortedDictionary<ushort, byte[]>();
 
-			Attributes[FingerprintAttributeId] = new byte[4];
+			//ApplicationName = "nexus-im.com";
 		}
 
 		public static StunPacket ParseBody(BinaryReader reader)
@@ -28,6 +36,8 @@ namespace InstantMessage.Protocols.AudioVideo
 			if (messageMethod == 1 && messageClass == 2) // Binding Success Response
 			{
 				packet = new StunBindingResponse();
+			} else if (messageMethod == 1 && messageClass == 0) { // Binding Request
+				packet = new StunBindingRequest();
 			} else {
 				throw new NotSupportedException();
 			}
@@ -40,9 +50,12 @@ namespace InstantMessage.Protocols.AudioVideo
 				{
 					ushort attributeType = reader.ReadUInt16();
 					ushort attributeLength = reader.ReadUInt16();
+					int paddingChars = ComputeTotalLength(attributeLength) - attributeLength;
 					byte[] attributes = reader.ReadBytes(attributeLength);
 
 					packet.Attributes[attributeType] = attributes;
+
+					reader.ReadBytes(paddingChars);
 				}
 			}
 
@@ -50,20 +63,15 @@ namespace InstantMessage.Protocols.AudioVideo
 		}
 
 		// Methods
+		/// <summary>
+		/// Writes the message 
+		/// </summary>
+		/// <param name="writer"></param>
+		/// <param name="targetEndian"></param>
 		public void WriteBody(BinaryWriter writer, Endianness targetEndian)
 		{
-			MemoryStream ms = new MemoryStream();
-			BinaryWriter innerWriter = new EndianAwareBinaryWriter(ms, targetEndian);
-			DoWriteBody(innerWriter);
-			innerWriter.Flush();
-
-			ms.Seek(0, SeekOrigin.Begin);
-			Crc32 crc = new Crc32(FingerprintCrcPolynomial, Crc32.DefaultSeed);
-			byte[] crcbytes = crc.ComputeHash(ms.GetBuffer(), 0, Convert.ToInt32(ms.Length));
-			uint computedcrc = BitConverter.ToUInt32(crcbytes, 0);
-			computedcrc = Endian.SwapUInt32(computedcrc) ^ FingerprintCrcMask;
-
-			Attributes[FingerprintAttributeId] = BitConverter.GetBytes(computedcrc);
+			Attributes.Remove(FingerprintAttributeId);
+			//Attributes.Add(FingerprintAttributeId, ComputeCrcChecksum(targetEndian));
 
 			DoWriteBody(writer);
 		}
@@ -80,7 +88,7 @@ namespace InstantMessage.Protocols.AudioVideo
 			foreach (var pair in Attributes)
 			{
 				writer.Write(pair.Key);
-				int length = ((int)Math.Ceiling(pair.Value.Length / 4.0) * 4);
+				int length = ComputeTotalLength(pair.Value.Length);
 				writer.Write((ushort)pair.Value.Length);
 				writer.Write(pair.Value);
 
@@ -94,10 +102,58 @@ namespace InstantMessage.Protocols.AudioVideo
 			int size = 0;
 			foreach (var pair in Attributes)
 			{
-				size += 4 + ((int)Math.Ceiling(pair.Value.Length / 4.0) * 4);
+				size += 4 + ComputeTotalLength(pair.Value.Length);
 			}
 
 			return (ushort)size;
+		}
+		private static int ComputeTotalLength(int attribLength)
+		{
+			return ((int)Math.Ceiling(attribLength / 4.0) * 4);
+		}
+		private byte[] ComputeCrcChecksum(Endianness targetEndian)
+		{
+			MemoryStream ms = new MemoryStream();
+			BinaryWriter innerWriter = new EndianAwareBinaryWriter(ms, targetEndian);
+			DoWriteBody(innerWriter);
+			innerWriter.Flush();
+
+			ms.Seek(0, SeekOrigin.Begin);
+			Crc32 crc = new Crc32(FingerprintCrcPolynomial, Crc32.DefaultSeed);
+			byte[] crcbytes = crc.ComputeHash(ms.GetBuffer(), 0, Convert.ToInt32(ms.Length));
+			uint computedcrc = BitConverter.ToUInt32(crcbytes, 0);
+
+			//if (targetEndian != (BitConverter.IsLittleEndian ? Endianness.LittleEndian : Endianness.BigEndian))
+				//computedcrc = Endian.SwapUInt32(computedcrc);
+
+			computedcrc ^= FingerprintCrcMask;
+
+			return BitConverter.GetBytes(computedcrc);
+		}
+		private void 
+
+		protected void SetAttribute(ushort attributeId, byte[] value)
+		{
+			if (Attributes.ContainsKey(attributeId))
+				Attributes[attributeId] = value;
+			else
+				Attributes.Add(attributeId, value);
+		}
+		protected byte[] GetAttribute(ushort attributeId)
+		{
+			byte[] value;
+			Attributes.TryGetValue(attributeId, out value);
+
+			return value;
+		}
+		protected string GetAttributeAsString(ushort attributeId)
+		{
+			byte[] value = GetAttribute(attributeId);
+
+			if (value == null)
+				return null;
+
+			return DefaultEncoding.GetString(value);
 		}
 
 		// Properties
@@ -119,10 +175,27 @@ namespace InstantMessage.Protocols.AudioVideo
 			get;
 			private set;
 		}
+		public string ApplicationName
+		{
+			get {
+				return GetAttributeAsString(SoftwareNameAttributeId);
+			}
+			set {
+				SetAttribute(SoftwareNameAttributeId, DefaultEncoding.GetBytes(value));
+			}
+		}
+		public string IcePassword
+		{
+			get;
+			set;
+		}
 
 		// Constants
 		private const ushort FingerprintAttributeId = 0x8028;
+		private const ushort SoftwareNameAttributeId = 0x8022;
 		private const uint FingerprintCrcPolynomial = 0x04c11db7;
 		private const int FingerprintCrcMask = 0x5354554e;
+
+		private readonly Encoding DefaultEncoding = Encoding.ASCII;
 	}
 }

@@ -23,34 +23,18 @@ namespace InstantMessage.Misc
 
 		protected override void HashCore(byte[] buffer, int start, int length)
 		{
-			hash = CalculateHash(table, hash, buffer, start, length);
+			{
+				for (int i = start; i < start + length; i++)
+				{
+					hash = (hash >> 8) ^ table[(hash ^ buffer[i]) & 0xff];
+				}
+			}
 		}
 
 		protected override byte[] HashFinal()
 		{
-			byte[] hashBuffer = uintToBigEndianBytes(~hash);
-			this.HashValue = hashBuffer;
-			return hashBuffer;
-		}
-
-		public override int HashSize
-		{
-			get { return 32; }
-		}
-
-		public static uint Compute(byte[] buffer)
-		{
-			return ~CalculateHash(InitializeTable(DefaultPolynomial), DefaultSeed, buffer, 0, buffer.Length);
-		}
-
-		public static uint Compute(uint seed, byte[] buffer)
-		{
-			return ~CalculateHash(InitializeTable(DefaultPolynomial), seed, buffer, 0, buffer.Length);
-		}
-
-		public static uint Compute(uint polynomial, uint seed, byte[] buffer)
-		{
-			return ~CalculateHash(InitializeTable(polynomial), seed, buffer, 0, buffer.Length);
+			HashValue = BitConverter.GetBytes(~hash);
+			return HashValue;
 		}
 
 		private static uint[] InitializeTable(uint polynomial)
@@ -76,27 +60,11 @@ namespace InstantMessage.Misc
 			return createTable;
 		}
 
-		private static uint CalculateHash(uint[] table, uint seed, byte[] buffer, int start, int size)
+		public override int HashSize
 		{
-			uint crc = seed;
-			for (int i = start; i < size; i++)
-			{
-				unchecked
-				{
-					crc = (crc >> 8) ^ table[buffer[i] ^ crc & 0xff];
-				}
+			get {
+				return 32;
 			}
-			return crc;
-		}
-
-		private byte[] uintToBigEndianBytes(uint x)
-		{
-			return new byte[] {
-				(byte)((x >> 24) & 0xff),
-				(byte)((x >> 16) & 0xff),
-				(byte)((x >> 8) & 0xff),
-				(byte)(x & 0xff)
-			};
 		}
 
 		public const uint DefaultPolynomial = 0xedb88320;

@@ -348,6 +348,8 @@ namespace InstantMessage.Protocols.XMPP
 					acceptmsg.DescriptionNodes.Add("audio", rtpDescipt);
 
 					JingleTransportDescription ourtransport = new JingleTransportDescription();
+					ourtransport.Ufrag = args.IceUfrag;
+					ourtransport.Password = args.IcePassword;
 
 					foreach (var trans in args.OurTransportCandidates)
 					{
