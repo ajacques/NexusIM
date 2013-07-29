@@ -17,7 +17,7 @@ namespace InstantMessage.Protocols.XMPP
 			throw new NotSupportedException("PLAIN Authentication does support multiple steps.");
 		}
 
-		public void Finalize(SaslAuthMessage.SuccessMessage message)
+		public void FinalizeStep(SaslAuthMessage.SuccessMessage message)
 		{
 			
 		}

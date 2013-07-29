@@ -130,7 +130,6 @@ namespace InstantMessage.Protocols.AudioVideo
 
 			return BitConverter.GetBytes(computedcrc);
 		}
-		private void 
 
 		protected void SetAttribute(ushort attributeId, byte[] value)
 		{

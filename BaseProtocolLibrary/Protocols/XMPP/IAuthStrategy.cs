@@ -10,6 +10,6 @@ namespace InstantMessage.Protocols.XMPP
 	{
 		void StartAuthentication(XmppProtocol protocol);
 		void PerformStep(SaslChallengeMessage message);
-		void Finalize(SaslAuthMessage.SuccessMessage message);
+		void FinalizeStep(SaslAuthMessage.SuccessMessage message);
 	}
 }

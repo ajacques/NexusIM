@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using InstantMessage.Protocols.AudioVideo;
+using System.Diagnostics;
 
 namespace InstantMessage.Protocols.XMPP
 {
@@ -24,6 +25,7 @@ namespace InstantMessage.Protocols.XMPP
 		srflx
 	}
 
+	[DebuggerDisplay("Candidate: {ProtocolType}:[{EndPoint.Address}:{EndPoint.Port}] - Priority: {Priority}")]
 	public class XmppSdpCandidate : SdpTransportCandidate, IComparable<XmppSdpCandidate>
 	{
 		public XmppSdpCandidate(ProtocolType type, IPEndPoint ep, int priority, int id, int component, JingleCandidateType ctype) : base(type, ep, priority, component)
@@ -88,11 +90,6 @@ namespace InstantMessage.Protocols.XMPP
 		public int CompareTo(XmppSdpCandidate other)
 		{
 			return Priority.CompareTo(other.Priority) + (Priority == other.Priority ? Id.CompareTo(other.Id) : 0);
-		}
-
-		public override string ToString()
-		{
-			return String.Format("Candidate: {0}:[{1}:{2}] - Priority: {3}", ProtocolType, EndPoint.Address, EndPoint.Port, Priority);
 		}
 
 		public JingleCandidateType Type

@@ -447,7 +447,7 @@ namespace InstantMessage.Protocols.XMPP
 		{
 			if (authStrategy != null)
 			{
-				authStrategy.Finalize(message as SaslAuthMessage.SuccessMessage);
+				authStrategy.FinalizeStep(message as SaslAuthMessage.SuccessMessage);
 				authStrategy = null;
 			}
 			xmppStream.InitReader();

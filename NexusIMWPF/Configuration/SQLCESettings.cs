@@ -39,10 +39,8 @@ namespace NexusIM
 
 		private void UpgradeDatafile()
 		{
-			SqlCeEngine engine = new SqlCeEngine(ConnectionString);
-			engine.Upgrade();
-
-			engine.Dispose();
+			using (SqlCeEngine engine = new SqlCeEngine(ConnectionString))
+				engine.Upgrade();
 		}
 		private void VerifyIntegrity()
 		{

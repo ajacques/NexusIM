@@ -62,7 +62,7 @@ namespace InstantMessage.Protocols.XMPP
 			}
 		}
 
-		public void Finalize(SaslAuthMessage.SuccessMessage message)
+		public void FinalizeStep(SaslAuthMessage.SuccessMessage message)
 		{
 		}
 

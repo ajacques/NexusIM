@@ -76,8 +76,8 @@
     <ApplicationIcon>nexusim.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Hardcodet.Wpf.TaskbarNotification" Condition=" '$(OS)' == 'Windows_NT' ">
-      <HintPath>..\..\wpf-notifyicon\NotifyIconWpf\bin\Release\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\packages\Hardcodet.Wpf.TaskbarNotification.1.0.4.0\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack" Condition=" '$(OS)' == 'Windows_NT' ">
       <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -325,6 +325,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="NexusIMWPF_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Service References\NexusCore\CoreService.xsd">
       <SubType>Designer</SubType>
