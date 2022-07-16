@@ -21,6 +21,12 @@ namespace NexusIM.Misc
 			string hostname = String.Format("_xmpp-client._tcp.{0}", protocol.Server);
 
 			var targets = DnsResolver.ResolveService(hostname).GroupBy(s => s.Priority);
+
+			if (!targets.Any())
+            {
+				throw new Exception("Did not find any endpoints for " + hostname);
+            }
+
 			var ips = targets.First();
 			int weightsum = ips.Sum(s => s.Weight);
 

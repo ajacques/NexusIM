@@ -55,6 +55,11 @@ namespace InstantMessage
 				}
 			}
 		}
+		public Exception LastError
+		{
+			get;
+			set;
+		}
 		public ProtocolSource Source
 		{
 			get;

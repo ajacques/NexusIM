@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NexusIM</RootNamespace>
     <AssemblyName>NexusIMWPF</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -23,14 +23,14 @@
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.20901.0</ExpressionBlendVersion>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>../InstantMessage.snk</AssemblyOriginatorKeyFile>
     <TargetZone>Internet</TargetZone>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <ManifestCertificateThumbprint>9BF9B2E0E124846FD780854753B8577F6AD0AB06</ManifestCertificateThumbprint>
     <ManifestKeyFile>NexusIMWPF_TemporaryKey.pfx</ManifestKeyFile>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
     <PublishUrl>\\UBUNTUSERVER\HTDocs\appdeploy\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Web</InstallFrom>
@@ -76,23 +76,30 @@
     <ApplicationIcon>nexusim.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
-      <HintPath>..\packages\Hardcodet.Wpf.TaskbarNotification.1.0.4.0\lib\net40\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    <Reference Include="Hardcodet.NotifyIcon.Wpf, Version=1.1.0.0, Culture=neutral, PublicKeyToken=682384a853a08aad, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.1.0\lib\net472\Hardcodet.NotifyIcon.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack" Condition=" '$(OS)' == 'Windows_NT' ">
-      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack.1.1.3\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Sensors" Condition=" '$(OS)' == 'Windows_NT' ">
-      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack.ExtendedLinguisticServices, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack.1.1.3\lib\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.Shell" Condition=" '$(OS)' == 'Windows_NT' ">
-      <HintPath>..\..\..\References\WindowsApiCodePack\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack.Sensors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack.1.1.3\lib\Microsoft.WindowsAPICodePack.Sensors.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack.1.1.3\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack.1.1.3\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
     </Reference>
     <Reference Include="System, Version=4.0.0.0" />
     <Reference Include="System.Core, Version=4.0.0.0" />
     <Reference Include="System.Data.Linq, Version=4.0.0.0" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" Condition=" '$(OS)' == 'Windows_NT' " />
-    <Reference Include="Microsoft.SqlServerCe.VersionManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" Condition=" '$(OS)' == 'Windows_NT' " />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" Condition=" '$(OS)' == 'Windows_NT' ">
+      <HintPath>..\packages\System.Data.SqlServerCe_unofficial.4.0.8482.1\lib\net20\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Deployment" Condition=" '$(OS)' == 'Windows_NT' " />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -577,9 +584,12 @@
     <Content Include="DataCache.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Windows Logo.png" />
     <Resource Include="Images\cataduck.jpg" />
     <Resource Include="Resources\default_profile_pic.png" />
     <Resource Include="nexusim.ico" />
+    <Resource Include="license.txt" />
+    <Content Include="Microsoft.WindowsAPICodePack.dll" />
     <Content Include="UserProfile.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

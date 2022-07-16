@@ -151,6 +151,7 @@ namespace NexusIM.Managers
 
 		private static void ConnectIfNeeded(IMProtocolWrapper extraData)
 		{
+			extraData.LastError = null;
 			if (!Connected)
 				return;
 			
@@ -170,6 +171,7 @@ namespace NexusIM.Managers
 						extraData.Protocol.Disconnect();
 					}
 				} catch (Exception e) {
+					extraData.LastError = e;
 					Trace.WriteLine(String.Format(CultureInfo.InvariantCulture, "AccountManager: Exception thrown while attempting protocol connection. [Type: {0}, Username: {1}]", extraData.Protocol.Protocol, extraData.Protocol.Username));
 					Trace.WriteLine(e.Message);
 					Trace.WriteLine(e.StackTrace);

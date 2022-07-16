@@ -81,30 +81,47 @@ namespace NexusIM
 			IntPtr resultPtr;
 
 			QueryResult result = SafeNativeMethods.DnsQuery(hostname, type, QueryOptions.None, 0, out resultPtr, 0);
-
 			IList<TResult> records = new List<TResult>();
 
-			if (result == QueryResult.NoRecords)
-				return records;
-
-			TRecord record;
-			FieldInfo pNextField = typeof(TRecord).GetField("pNext");
-
-			while (resultPtr != IntPtr.Zero)
+			try
 			{
-				record = (TRecord)Marshal.PtrToStructure(resultPtr, typeof(TRecord));
-				records.Add(translator(record));
 
-				resultPtr = (IntPtr)pNextField.GetValue(record);
-			}
+				if (result == QueryResult.NoRecords)
+					return records;
 
-			SafeNativeMethods.DnsRecordListFree(resultPtr, 1);
-			resultPtr = IntPtr.Zero;
+				TRecord record;
+				FieldInfo pNextField = typeof(TRecord).GetField("pNext");
 
-			return records;
+				while (resultPtr != IntPtr.Zero)
+				{
+					UnknownRecord unknownRecord = (UnknownRecord)Marshal.PtrToStructure(resultPtr, typeof(UnknownRecord));
+					if (unknownRecord.wType != ((short)type))
+                    {
+						continue;
+                    }
+					record = (TRecord)Marshal.PtrToStructure(resultPtr, typeof(TRecord));
+					records.Add(translator(record));
+
+					resultPtr = (IntPtr)pNextField.GetValue(record);
+				}
+			} finally
+			{
+				SafeNativeMethods.DnsRecordListFree(resultPtr, 1);
+            }
+
+            return records;
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
+		private struct UnknownRecord
+		{
+			public IntPtr pNext;
+			[MarshalAs(UnmanagedType.LPWStr)]
+			public string pName;
+			public short wType;
+		}
+
+			[StructLayout(LayoutKind.Sequential)]
 		private struct ARecord
 		{
 			public IntPtr pNext;

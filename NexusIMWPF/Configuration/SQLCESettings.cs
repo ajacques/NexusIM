@@ -10,7 +10,6 @@ using InstantMessage;
 using InstantMessage.Protocols.Irc;
 using InstantMessage.Protocols.Yahoo;
 using InstantMessage.Protocols.XMPP;
-using Microsoft.SqlServerCe.VersionManagement;
 using NexusIM.Managers;
 using System.Data;
 
@@ -26,15 +25,6 @@ namespace NexusIM
 
 		public void Prepare()
 		{
-			SqlCeVersion version = SqlCeVersionManager.GetVersion(ConnectionString);
-			Trace.Write("SqlCeSettings: Database file version: " + version);
-			if (version < new SqlCeVersion(4, 0))
-			{
-				Trace.WriteLine(" ... Upgrading");
-				UpgradeDatafile();
-				VerifyIntegrity();
-			} else
-				Trace.WriteLine(String.Empty);
 		}
 
 		private void UpgradeDatafile()

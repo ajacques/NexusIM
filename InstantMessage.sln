@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{4796554E-5940-4DDB-82C6-FB945728D462}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}"
@@ -39,13 +41,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexusIMTests", "NexusIMTests\NexusIMTests.csproj", "{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = InstantMessage.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -168,17 +163,27 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB} = {4796554E-5940-4DDB-82C6-FB945728D462}
 		{132DC845-7C7B-4585-A851-06BCEC013610} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{1802A725-59E0-4C4C-AE74-0D901A9FEB38} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
+		{C96933B7-1EC5-422E-9FEA-5ABDF2A7CBDB} = {4796554E-5940-4DDB-82C6-FB945728D462}
 		{80D4A705-5573-46DD-BC98-5E80F8DA2752} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
-		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{E851D4D7-09AB-4A1B-BCE6-5BA5AB7D9832} = {1802A725-59E0-4C4C-AE74-0D901A9FEB38}
-		{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4} = {1802A725-59E0-4C4C-AE74-0D901A9FEB38}
 		{3A3471A3-0520-4455-B2CB-3085C56D98AF} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
 		{2EDD4E27-C303-4B43-9952-D134E10C4D71} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
+		{C7160D19-C079-4F3A-ABA9-8E27BD61CD90} = {18BC5DE3-0643-4985-8FAC-8A9D5ACBB873}
 		{77CD6071-AB8D-45E0-949E-A35F81AAAD18} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
 		{25D06793-6B31-4CF5-8204-B67D4DFED61F} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
+		{9B97B80F-19A6-4DA8-9BF6-FEBAB72E2CA4} = {1802A725-59E0-4C4C-AE74-0D901A9FEB38}
 		{C4AB9F05-6902-4BE8-BAAE-0C0EBC114B77} = {B06929F7-6BD1-4167-B95B-29955A6F00DC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {107BFB1B-FD11-489A-AEDF-F43170554904}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = InstantMessage.vsmdi
 	EndGlobalSection
 EndGlobal
